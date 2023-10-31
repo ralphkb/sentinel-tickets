@@ -1,0 +1,14 @@
+# Exclude logs.txt file
+logs.txt
+
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+
+# Config file
+config.yml
+
+# Database directories
+data/
