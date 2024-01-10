@@ -120,8 +120,8 @@ async function saveTranscript(interaction, message, saveImages = false) {
 	}
   }
 
-// Sanitizing function for future use  
-  async function sanitizeInput(input) {
+// Sanitizing function  
+  function sanitizeInput(input) {
 	const formattingCharacters = ['_', '*', '`', '~', '|', '-'];
 	const escapedInput = input.replace(new RegExp(`[${formattingCharacters.join('')}]`, 'g'), '\\$&');
 	return escapedInput;

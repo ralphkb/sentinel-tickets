@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { mainDB } = require('../../index.js');
+const { mainDB, sanitizeInput } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.blacklist.enabled,
@@ -23,11 +23,11 @@ module.exports = {
 
         const alreadyBlacklistedEmbed = new EmbedBuilder()
         .setColor(config.commands.blacklist.embedFailed.color)
-        .setDescription(`${config.commands.blacklist.embedFailed.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, user.tag))
+        .setDescription(`${config.commands.blacklist.embedFailed.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, sanitizeInput(user.tag)))
 
         const blacklistedEmbed = new EmbedBuilder()
         .setColor(config.commands.blacklist.embedSuccess.color)
-        .setDescription(`${config.commands.blacklist.embedSuccess.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, user.tag))
+        .setDescription(`${config.commands.blacklist.embedSuccess.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, sanitizeInput(user.tag)))
 
         const blacklistedUsers = await mainDB.get('blacklistedUsers');
         if (blacklistedUsers.includes(user.id)) {

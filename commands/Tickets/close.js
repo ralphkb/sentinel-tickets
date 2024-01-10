@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { client, ticketsDB, mainDB, ticketCategories } = require('../../index.js');
+const { client, ticketsDB, mainDB, ticketCategories, sanitizeInput } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.close.enabled,
@@ -31,15 +31,15 @@ module.exports = {
         .setColor(config.commands.close.LogEmbed.color)
         .setTitle(config.commands.close.LogEmbed.title)
         .addFields([
-            { name: config.commands.close.LogEmbed.field_staff, value: `> <@!${interaction.user.id}>\n> ${interaction.user.tag}` },
-            { name: config.commands.close.LogEmbed.field_user, value: `> <@!${ticketUserID.id}>\n> ${ticketUserID.tag}` },
-            { name: config.commands.close.LogEmbed.field_ticket, value: `> #${interaction.channel.name}\n> ${ticketType}` },
+            { name: config.commands.close.LogEmbed.field_staff, value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}` },
+            { name: config.commands.close.LogEmbed.field_user, value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}` },
+            { name: config.commands.close.LogEmbed.field_ticket, value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}` },
          ])
         .setTimestamp()
         .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
         .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
 
-        if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${claimUser.tag}` })
+        if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}` })
 
         let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
         await logsChannel.send({ embeds: [logEmbed]})
@@ -67,7 +67,7 @@ module.exports = {
         const embed = new EmbedBuilder()
         .setColor(config.commands.close.embed.color)
         .setTitle(config.commands.close.embed.title)
-        .setDescription(`${config.commands.close.embed.description}`.replace(/\{user\}/g, `${interaction.user}`).replace(/\{user\.tag\}/g, `${interaction.user.tag}`))
+        .setDescription(`${config.commands.close.embed.description}`.replace(/\{user\}/g, `${interaction.user}`).replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag)))
         .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}` })
         .setTimestamp()
 

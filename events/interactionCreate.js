@@ -6,7 +6,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { mainDB, ticketsDB, ticketCategories } = require('../index.js');
+const { mainDB, ticketsDB, ticketCategories, sanitizeInput } = require('../index.js');
 const buttonCooldown = new Map();
 
 module.exports = {
@@ -163,8 +163,8 @@ module.exports = {
                   .setTitle("Ticket Transcript")
                   .setDescription(`Saved by <@!${interaction.user.id}>`)
                   .addFields([
-                      { name: "Ticket Creator", value: `<@!${ticketUserID.id}>\n${ticketUserID.tag}`, inline: true },
-                      { name: "Ticket Name", value: `<#${interaction.channel.id}>\n${interaction.channel.name}`, inline: true },
+                      { name: "Ticket Creator", value: `<@!${ticketUserID.id}>\n${sanitizeInput(ticketUserID.tag)}`, inline: true },
+                      { name: "Ticket Name", value: `<#${interaction.channel.id}>\n${sanitizeInput(interaction.channel.name)}`, inline: true },
                       { name: "Category", value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`, inline: true },
                     ])
                   .setFooter({ text: `${ticketUserID.tag}`, iconURL: `${ticketUserID.displayAvatarURL({ dynamic: true })}` })
@@ -188,9 +188,9 @@ module.exports = {
                 .setColor(config.default_embed_color)
                 .setTitle('Ticket Logs | Ticket Re-Opened')
                 .addFields([
-                    { name: '• Re-Opened By', value: `> <@!${interaction.user.id}>\n> ${interaction.user.tag}` },
-                    { name: '• Ticket Creator', value: `> <@!${ticketUserID.id}>\n> ${ticketUserID.tag}` },
-                    { name: '• Ticket', value: `> #${interaction.channel.name}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
+                    { name: '• Re-Opened By', value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}` },
+                    { name: '• Ticket Creator', value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}` },
+                    { name: '• Ticket', value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
                  ])
                 .setTimestamp()
                 .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
@@ -201,7 +201,7 @@ module.exports = {
 
                 const embed = new EmbedBuilder()
                 .setColor(config.default_embed_color)
-                .setDescription(`This ticket has been re-opened by <@!${interaction.user.id}> (${interaction.user.tag})`)
+                .setDescription(`This ticket has been re-opened by **<@!${interaction.user.id}> (${sanitizeInput(interaction.user.tag)})**`)
 
                 Object.keys(ticketCategories).forEach(async (id) => {
                     if (ticketButton === id) {
@@ -250,15 +250,15 @@ module.exports = {
                 .setColor("#FF0000")
                 .setTitle('Ticket Logs | Ticket Deleted')
                 .addFields([
-                    { name: '• Deleted By', value: `> <@!${interaction.user.id}>\n> ${interaction.user.tag}` },
-                    { name: '• Ticket Creator', value: `> <@!${ticketUserID.id}>\n> ${ticketUserID.tag}` },
-                    { name: '• Ticket', value: `> #${interaction.channel.name}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
+                    { name: '• Deleted By', value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}` },
+                    { name: '• Ticket Creator', value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}` },
+                    { name: '• Ticket', value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
                  ])
                 .setTimestamp()
                 .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
                 .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
         
-                if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${claimUser.tag}` });
+                if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}` });
                 let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
                 await logsChannel.send({ embeds: [logEmbed], files: [attachment] });
 
@@ -296,15 +296,15 @@ module.exports = {
                 .setColor("#FF2400")
                 .setTitle('Ticket Logs | Ticket Closed')
                 .addFields([
-                    { name: '• Closed By', value: `> <@!${interaction.user.id}>\n> ${interaction.user.tag}` },
-                    { name: '• Ticket Creator', value: `> <@!${ticketUserID.id}>\n> ${ticketUserID.tag}` },
-                    { name: '• Ticket', value: `> #${interaction.channel.name}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
+                    { name: '• Closed By', value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}` },
+                    { name: '• Ticket Creator', value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}` },
+                    { name: '• Ticket', value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
                  ])
                 .setTimestamp()
                 .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
                 .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
         
-                if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${claimUser.tag}` });
+                if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}` });
                 let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
                 await logsChannel.send({ embeds: [logEmbed]});
 
@@ -331,7 +331,7 @@ module.exports = {
                 const embed = new EmbedBuilder()
                 .setColor(config.commands.close.embed.color)
                 .setTitle(config.commands.close.embed.title)
-                .setDescription(config.commands.close.embed.description.replace(/\{user\}/g, `${interaction.user}`).replace(/\{user\.tag\}/g, `${interaction.user.tag}`))
+                .setDescription(config.commands.close.embed.description.replace(/\{user\}/g, `${interaction.user}`).replace(/\{user\.tag\}/g, `${sanitizeInput(interaction.user.tag)}`))
                 .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}` })
                 .setTimestamp()
 
@@ -388,7 +388,7 @@ module.exports = {
                   interaction.channel.messages.fetch(await ticketsDB.get(`${interaction.channel.id}.msgID`)).then(async message => {
 
                     const embed = message.embeds[0]
-                    embed.fields[embed.fields.length - 1] = { name: "Claimed by", value: `> <@!${interaction.user.id}> (${interaction.user.tag})` }
+                    embed.fields[embed.fields.length - 1] = { name: "Claimed by", value: `> <@!${interaction.user.id}> (${sanitizeInput(interaction.user.tag)})` }
               
                     const closeButton = new ButtonBuilder()
                     .setCustomId('closeTicket')
@@ -444,8 +444,8 @@ module.exports = {
                 .setColor(config.default_embed_color)
                 .setTitle("Ticket Logs | Ticket Claimed")
                 .addFields([
-                    { name: "• Executor", value: `> <@!${interaction.user.id}>\n> ${interaction.user.tag}` },
-                    { name: "• Ticket", value: `> <#${interaction.channel.id}>\n> #${interaction.channel.name}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
+                    { name: "• Executor", value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}` },
+                    { name: "• Ticket", value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
                   ])
                 .setTimestamp()
                 .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
@@ -518,8 +518,8 @@ module.exports = {
                 .setColor("#FF2400")
                 .setTitle("Ticket Logs | Ticket Unclaimed")
                 .addFields([
-                    { name: "• Executor", value: `> <@!${interaction.user.id}>\n> ${interaction.user.tag}` },
-                    { name: "• Ticket", value: `> <#${interaction.channel.id}>\n> #${interaction.channel.name}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
+                    { name: "• Executor", value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}` },
+                    { name: "• Ticket", value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}` },
                   ])
                 .setTimestamp()
                 .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
@@ -576,7 +576,6 @@ module.exports = {
                 try {
                     const TICKETCOUNT = await mainDB.get('totalTickets');
                     const USERNAME = interaction.user.username;
-                    const ticketType = await ticketsDB.get(`${interaction.channel.id}.ticketType`);
                     const configValue = category.ticketName;
 
                     let channelName;
@@ -590,7 +589,7 @@ module.exports = {
                     name: channelName,
                     type: ChannelType.GuildText,
                     parent: category.categoryID,
-                    topic: `Ticket Creator: ${interaction.user.tag} | Ticket Type: ${ticketType}`,
+                    topic: `Ticket Creator: ${sanitizeInput(interaction.user.tag)} | Ticket Type: ${category.name}`,
                     permissionOverwrites: [
                         {
                           id: interaction.guild.id,
@@ -619,7 +618,7 @@ module.exports = {
                       let newTicketOpened = new EmbedBuilder()
                       .setTitle("Ticket Created!")
                       .setColor(config.default_embed_color)
-                      .setDescription(`Your new ticket (<#${channel.id}>) has been created, **${interaction.user.username}!**`)
+                      .setDescription(`Your new ticket (<#${channel.id}>) has been created, **${sanitizeInput(interaction.user.username)}!**`)
                       .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
                       .setTimestamp();
                       const actionRow4 = new ActionRowBuilder()
@@ -652,8 +651,8 @@ module.exports = {
                             .setColor(config.default_embed_color)
                             .setTitle('Ticket Logs | Ticket Created')
                             .addFields([
-                                { name: '• Ticket Creator', value: `> <@!${interaction.user.id}>\n> ${interaction.user.tag}` },
-                                { name: '• Ticket', value: `> #${channel.name}` },
+                                { name: '• Ticket Creator', value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}` },
+                                { name: '• Ticket', value: `> #${sanitizeInput(channel.name)}` },
                              ])
                             .setTimestamp()
                             .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))

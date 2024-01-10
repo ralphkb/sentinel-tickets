@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { ticketsDB } = require('../index.js');
+const { ticketsDB, sanitizeInput } = require('../index.js');
 
 module.exports = {
 	name: Events.GuildMemberRemove,
@@ -26,7 +26,7 @@ module.exports = {
                 const leftEmbed = new EmbedBuilder()
                 .setColor(config.userLeftEmbed.embed_color)
                 .setTitle(config.userLeftEmbed.embed_title)
-                .setDescription(`${config.userLeftEmbed.embed_description}`.replace(/\{user\}/g, member.user.tag))
+                .setDescription(`${config.userLeftEmbed.embed_description}`.replace(/\{user\}/g, sanitizeInput(member.user.tag)))
                 .setFooter({ text: `${member.user.tag}`, iconURL: `${member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
                 .setTimestamp()
                 ticketChannel.send({ embeds: [leftEmbed], components: [leftRow] })

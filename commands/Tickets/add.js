@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { ticketsDB } = require('../../index.js');
+const { ticketsDB, sanitizeInput } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.add.enabled,
@@ -35,13 +35,13 @@ module.exports = {
 
         let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
     
-        const log = new EmbedBuilder()
+        const logEmbed = new EmbedBuilder()
         .setColor(config.commands.add.LogEmbed.color)
         .setTitle(config.commands.add.LogEmbed.title)
         .addFields([
-            { name: config.commands.add.LogEmbed.field_staff, value: `> ${interaction.user}\n> ${interaction.user.tag}` },
-            { name: config.commands.add.LogEmbed.field_user, value: `> ${user}\n> ${user.tag}` },
-            { name: config.commands.add.LogEmbed.field_ticket, value: `> ${interaction.channel}\n> #${interaction.channel.name}` },
+            { name: config.commands.add.LogEmbed.field_staff, value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}` },
+            { name: config.commands.add.LogEmbed.field_user, value: `> ${user}\n> ${sanitizeInput(user.tag)}` },
+            { name: config.commands.add.LogEmbed.field_ticket, value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}` },
          ])
         .setTimestamp()
         .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
@@ -49,9 +49,9 @@ module.exports = {
 
         const embed = new EmbedBuilder()
         .setColor(config.commands.add.embed.color)
-        .setDescription(`${config.commands.add.embed.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, user.tag))
+        .setDescription(`${config.commands.add.embed.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, sanitizeInput(user.tag)))
         interaction.reply({ embeds: [embed] });
-        logsChannel.send({ embeds: [log] });
+        logsChannel.send({ embeds: [logEmbed] });
 
     }
 

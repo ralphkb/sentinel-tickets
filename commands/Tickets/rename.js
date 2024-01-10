@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { ticketsDB } = require('../../index.js');
+const { ticketsDB, sanitizeInput } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.rename.enabled,
@@ -31,9 +31,9 @@ module.exports = {
     .setColor(config.commands.rename.LogEmbed.color)
     .setTitle(config.commands.rename.LogEmbed.title)
     .addFields([
-        { name: config.commands.rename.LogEmbed.field_staff, value: `> ${interaction.user}\n> ${interaction.user.tag}` },
-        { name: config.commands.rename.LogEmbed.field_oldname, value: `> #${interaction.channel.name}` },
-        { name: config.commands.rename.LogEmbed.field_newname, value: `> ${interaction.channel}\n> #${newName}` },
+        { name: config.commands.rename.LogEmbed.field_staff, value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}` },
+        { name: config.commands.rename.LogEmbed.field_oldname, value: `> #${sanitizeInput(interaction.channel.name)}` },
+        { name: config.commands.rename.LogEmbed.field_newname, value: `> ${interaction.channel}\n> #${sanitizeInput(newName)}` },
      ])
     .setTimestamp()
     .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
@@ -41,7 +41,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
     .setColor(config.commands.rename.embed.color)
-    .setDescription(`${config.commands.rename.embed.description}`.replace(/\{name\}/g, `${newName}`))
+    .setDescription(`${config.commands.rename.embed.description}`.replace(/\{name\}/g, sanitizeInput(newName)))
 
     interaction.reply({ embeds: [embed] });
     logsChannel.send({ embeds: [log] });
