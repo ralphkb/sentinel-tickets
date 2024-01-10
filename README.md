@@ -29,7 +29,8 @@ This is a ticket bot project that aims to provide a free and open source solutio
 - Configuration to customize many of the messages and options.
 - Option to configure the amount of max opened tickets at one time.
 - Ticket claiming feature that can be turned on/off.
-- Ticket transcripts.
+- Automatic saving of transcripts upon ticket deletion and force deletion.
+- Option to manually save a transcript with images downloaded, use with caution as it increases the transcript size.
 - Ticket logs for multiple ticket events, such as ticket create, close, delete, force delete, reopen, claim, unclaim etc.
 - Option to ping support roles on ticket creation.
 - Option to edit the activity of the bot.

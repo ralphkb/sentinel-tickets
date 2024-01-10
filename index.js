@@ -22,7 +22,7 @@ const mainDB = new QuickDB({ filePath: "data/main.sqlite" });
 const ticketsDB = new QuickDB({ filePath: "data/tickets.sqlite" });
 
 (async function() {
-	// Initialize totalTickets to 0 if it doesn't exist
+	// Initialize totalTickets to 1 if it doesn't exist
 	if (!(await mainDB.has('totalTickets'))) {
 	  await mainDB.set('totalTickets', 1);
 	}
@@ -72,10 +72,10 @@ config.TicketCategories.forEach((category) => {
   };
 });
 
-async function saveTranscript(interaction, message) {
+async function saveTranscript(interaction, message, saveImages = false) {
 	const createTranscriptOptions = {
 	  limit: -1,
-	  saveImages: false,
+	  saveImages,
 	  returnType: 'buffer',
 	  poweredBy: false
 	};

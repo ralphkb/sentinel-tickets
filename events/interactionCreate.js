@@ -156,7 +156,7 @@ module.exports = {
                   };
 
                   let ticketUserID = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.userID`));
-                  let attachment = await saveTranscript(interaction);
+                  let attachment = await saveTranscript(interaction, null, true);
 
                   const embed = new EmbedBuilder()
                   .setColor(config.default_embed_color)
