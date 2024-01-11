@@ -162,19 +162,19 @@ commands:
     permission: "KickMembers"
     embedFailed:
       color: "#2FF200"
-      description: "**{user} ({user.tag})** is already in the blacklist." # Use {user} for the username of the member and {user.tag} to have the member tagged
+      description: "**{target} ({target.tag})** is already in the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
     embedSuccess:
       color: "#2FF200"
-      description: "**{user} ({user.tag})** has been added to the blacklist." # Use {user} for the username of the member and {user.tag} to have the member tagged
+      description: "**{target} ({target.tag})** has been added to the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
   unblacklist:
     enabled: true
     permission: "KickMembers"
     embedFailed:
       color: "#2FF200"
-      description: "**{user} ({user.tag})** is not currently in the blacklist." # Use {user} for the username of the member and {user.tag} to have the member tagged
+      description: "**{target} ({target.tag})** is not currently in the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
     embedSuccess:
       color: "#2FF200"
-      description: "**{user} ({user.tag})** has been removed from the blacklist." # Use {user} for the username of the member and {user.tag} to have the member tagged
+      description: "**{target} ({target.tag})** has been removed from the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
   ping:
     enabled: true
     permission: "KickMembers"

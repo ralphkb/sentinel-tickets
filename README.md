@@ -42,7 +42,7 @@ This is a ticket bot project that aims to provide a free and open source solutio
     - Alert Ticket Creator
     - Close Ticket to archive them until deleting them
     - Delete Tickets
-    - Blacklist Users
+    - Blacklist Users or Roles
 
 ## Usage
 1. Open .env file and fill it with your bot's token, guild ID and client ID

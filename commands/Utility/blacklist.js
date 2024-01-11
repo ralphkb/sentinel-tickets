@@ -10,7 +10,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('blacklist')
         .setDescription('Add a user to the blacklist.')
-        .addUserOption((option) => option.setName('user').setDescription('User').setRequired(true))
+        .addUserOption((option) => option.setName('user').setDescription('Select a user').setRequired(false))
+        .addRoleOption((option) => option.setName('role').setDescription('Select a role').setRequired(false))
         .setDefaultMemberPermissions(PermissionFlagsBits[config.commands.blacklist.permission])
         .setDMPermission(false),
     async execute(interaction) {
@@ -20,24 +21,51 @@ module.exports = {
           };
 
         let user = interaction.options.getUser("user");
+        let role = interaction.options.getRole("role");
 
-        const alreadyBlacklistedEmbed = new EmbedBuilder()
-        .setColor(config.commands.blacklist.embedFailed.color)
-        .setDescription(`${config.commands.blacklist.embedFailed.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, sanitizeInput(user.tag)))
-
-        const blacklistedEmbed = new EmbedBuilder()
-        .setColor(config.commands.blacklist.embedSuccess.color)
-        .setDescription(`${config.commands.blacklist.embedSuccess.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, sanitizeInput(user.tag)))
+        if ((!user && !role) || (user && role)) {
+            return interaction.reply({ content: 'Please provide either a user or a role, but not both.', ephemeral: true });
+        }
 
         const blacklistedUsers = await mainDB.get('blacklistedUsers');
+
+        if (user) {
+        const alreadyBlacklistedEmbedUser = new EmbedBuilder()
+        .setColor(config.commands.blacklist.embedFailed.color)
+        .setDescription(`${config.commands.blacklist.embedFailed.description}`.replace(/\{target\}/g, user).replace(/\{target\.tag\}/g, sanitizeInput(user.tag)))
+
+        const blacklistedEmbedUser = new EmbedBuilder()
+        .setColor(config.commands.blacklist.embedSuccess.color)
+        .setDescription(`${config.commands.blacklist.embedSuccess.description}`.replace(/\{target\}/g, user).replace(/\{target\.tag\}/g, sanitizeInput(user.tag)))
+
         if (blacklistedUsers.includes(user.id)) {
             // User is already blacklisted
-            return interaction.reply({ embeds: [alreadyBlacklistedEmbed], ephemeral: true });
+            return interaction.reply({ embeds: [alreadyBlacklistedEmbedUser], ephemeral: true });
         }
         
         // User is not blacklisted
         await mainDB.push('blacklistedUsers', user.id);
-        interaction.reply({ embeds: [blacklistedEmbed], ephemeral: true });
+        interaction.reply({ embeds: [blacklistedEmbedUser], ephemeral: true });
+      }
+
+        if (role) {
+            const alreadyBlacklistedEmbedRole = new EmbedBuilder()
+            .setColor(config.commands.blacklist.embedFailed.color)
+            .setDescription(`${config.commands.blacklist.embedFailed.description}`.replace(/\{target\}/g, role).replace(/\{target\.tag\}/g, sanitizeInput(role.name)))
+
+            const blacklistedEmbedRole = new EmbedBuilder()
+            .setColor(config.commands.blacklist.embedSuccess.color)
+            .setDescription(`${config.commands.blacklist.embedSuccess.description}`.replace(/\{target\}/g, role).replace(/\{target\.tag\}/g, sanitizeInput(role.name)))
+
+            if (blacklistedUsers.includes(role.id)) {
+                // Role is already blacklisted
+                return interaction.reply({ embeds: [alreadyBlacklistedEmbedRole], ephemeral: true });
+            }
+            
+            // Role is not blacklisted
+            await mainDB.push('blacklistedUsers', role.id);
+            interaction.reply({ embeds: [blacklistedEmbedRole], ephemeral: true });
+        }
 
     }
 
