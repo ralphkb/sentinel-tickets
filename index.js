@@ -99,7 +99,7 @@ async function saveTranscript(interaction, message, saveImages = false) {
 	return null;
   }
 
-// Logging function for future use  
+// Logging function
   async function logMessage(message) {
 	const date = new Date();
 	const options = {

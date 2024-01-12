@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { client, ticketsDB, mainDB, ticketCategories, sanitizeInput } = require('../../index.js');
+const { client, ticketsDB, mainDB, ticketCategories, sanitizeInput, logMessage } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.close.enabled,
@@ -42,7 +42,8 @@ module.exports = {
         if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}` })
 
         let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
-        await logsChannel.send({ embeds: [logEmbed]})
+        await logsChannel.send({ embeds: [logEmbed]});
+        logMessage(`${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`);
 
         const reOpenButton = new ButtonBuilder()
         .setCustomId('reOpen')

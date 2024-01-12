@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { ticketCategories } = require('../../index.js');
+const { ticketCategories, logMessage } = require('../../index.js');
 
 module.exports = {
 	enabled: config.commands.panel.enabled,
@@ -58,6 +58,7 @@ module.exports = {
          await interaction.reply({ content: 'Sending the panel in this channel...', ephemeral: true });
 		 // Send the panel embed and action rows
 		 await interaction.channel.send({ embeds: [panelEmbed], components: actionRows });
+		 logMessage(`${interaction.user.tag} sent the ticket panel in the channel #${interaction.channel.name}`);
 
 	}
 };

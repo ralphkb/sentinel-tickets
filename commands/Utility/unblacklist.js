@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { mainDB, sanitizeInput } = require('../../index.js');
+const { mainDB, sanitizeInput, logMessage } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.unblacklist.enabled,
@@ -41,6 +41,7 @@ module.exports = {
         if (blacklistedUsers.includes(user.id)) {
             // User is blacklisted
             await mainDB.pull('blacklistedUsers', user.id);
+            logMessage(`${interaction.user.tag} removed ${user.tag} from the blacklist.`);
             return interaction.reply({ embeds: [unblacklistedEmbedUser], ephemeral: true });
           }
           
@@ -60,6 +61,7 @@ module.exports = {
             if (blacklistedUsers.includes(role.id)) {
                 // User is blacklisted
                 await mainDB.pull('blacklistedUsers', role.id);
+                logMessage(`${interaction.user.tag} removed ${role.name} from the blacklist.`);
                 return interaction.reply({ embeds: [unblacklistedEmbedRole], ephemeral: true });
               }
               

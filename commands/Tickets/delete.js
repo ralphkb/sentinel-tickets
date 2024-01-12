@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { client, ticketsDB, mainDB, saveTranscript, sanitizeInput } = require('../../index.js');
+const { client, ticketsDB, mainDB, saveTranscript, sanitizeInput, logMessage } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.delete.enabled,
@@ -43,7 +43,8 @@ module.exports = {
         let attachment = await saveTranscript(interaction);
 
         let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
-        await logsChannel.send({ embeds: [logEmbed], files: [attachment] })
+        await logsChannel.send({ embeds: [logEmbed], files: [attachment] });
+        logMessage(`${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`);
 
         const deleteTicketTime = config.deleteTicketTime;
         const deleteTime = deleteTicketTime * 1000;

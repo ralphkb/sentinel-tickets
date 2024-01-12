@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { ticketsDB } = require('../../index.js');
+const { ticketsDB, logMessage, client } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.alert.enabled,
@@ -21,8 +21,8 @@ module.exports = {
         if (!interaction.member.roles.cache.some((role) => config.support_role_ids.includes(role.id))) {
             return interaction.reply({ content: config.errors.not_allowed, ephemeral: true });
           };
-    
-        const { userID } = await ticketsDB.get(interaction.channel.id);
+          
+        const user = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.userID`));
     
         const closeButton = new ButtonBuilder()
         .setCustomId('closeTicket')
@@ -39,7 +39,8 @@ module.exports = {
         .setDescription(config.commands.alert.embed.description)
         .setTimestamp()
         
-        interaction.reply({ content: `<@${userID}>`, embeds: [embed], components: [ticketAlertRow] });
+        interaction.reply({ content: `<@${user.id}>`, embeds: [embed], components: [ticketAlertRow] });
+        logMessage(`${interaction.user.tag} sent an alert to ${user.tag} in the ticket #${interaction.channel.name}`);
 
     }
 

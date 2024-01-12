@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { ticketsDB, sanitizeInput } = require('../../index.js');
+const { ticketsDB, sanitizeInput, logMessage } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.add.enabled,
@@ -52,6 +52,7 @@ module.exports = {
         .setDescription(`${config.commands.add.embed.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, sanitizeInput(user.tag)))
         interaction.reply({ embeds: [embed] });
         logsChannel.send({ embeds: [logEmbed] });
+        logMessage(`${interaction.user.tag} added ${user.tag} to the ticket #${interaction.channel.name}`);
 
     }
 

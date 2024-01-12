@@ -1,12 +1,11 @@
 const { Events, Collection, InteractionType, EmbedBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits } = require('discord.js');
-const { client, saveTranscript } = require('../index.js');
+const { client, saveTranscript, mainDB, ticketsDB, ticketCategories, sanitizeInput, logMessage } = require('../index.js');
 const dotenv = require('dotenv');
 dotenv.config();
 const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { mainDB, ticketsDB, ticketCategories, sanitizeInput } = require('../index.js');
 const buttonCooldown = new Map();
 
 module.exports = {
@@ -173,8 +172,9 @@ module.exports = {
                   .setTimestamp()
 
                   let transcriptChannel = interaction.guild.channels.cache.get(config.transcripts_channel_id);
-                  transcriptChannel.send({ embeds: [embed], files: [attachment] })
-                  interaction.reply({ content: `Transcript saved to <#${transcriptChannel.id}>`, ephemeral: true })
+                  transcriptChannel.send({ embeds: [embed], files: [attachment] });
+                  interaction.reply({ content: `Transcript saved to <#${transcriptChannel.id}>`, ephemeral: true });
+                  logMessage(`${interaction.user.tag} manually saved the transcript of ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`);
 
               }
 
@@ -233,6 +233,7 @@ module.exports = {
                await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
                await mainDB.push('openTickets', interaction.channel.id);
                await interaction.followUp({ embeds: [embed] });
+               logMessage(`${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`);
 
               }
               // Ticket Delete button
@@ -263,6 +264,7 @@ module.exports = {
                 if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}` });
                 let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
                 await logsChannel.send({ embeds: [logEmbed], files: [attachment] });
+                logMessage(`${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`);
 
                 const deleteTicketTime = config.deleteTicketTime;
                 const deleteTime = deleteTicketTime * 1000;
@@ -309,6 +311,7 @@ module.exports = {
                 if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}` });
                 let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
                 await logsChannel.send({ embeds: [logEmbed]});
+                logMessage(`${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`);
 
                 const reOpenButton = new ButtonBuilder()
                 .setCustomId('reOpen')
@@ -452,7 +455,8 @@ module.exports = {
                 .setTimestamp()
                 .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
                 .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
-                logsChannel.send({ embeds: [logEmbed] })
+                logsChannel.send({ embeds: [logEmbed] });
+                logMessage(`${interaction.user.tag} claimed the ticket #${interaction.channel.name}`);
               
                 })
 
@@ -526,7 +530,9 @@ module.exports = {
                 .setTimestamp()
                 .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
                 .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
-                logsChannel.send({ embeds: [logEmbed] })
+                logsChannel.send({ embeds: [logEmbed] });
+                logMessage(`${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`);
+
                 })
 
               }
@@ -661,7 +667,8 @@ module.exports = {
                             .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
                           
                             let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
-                            await logsChannel.send({ embeds: [logEmbed]})
+                            await logsChannel.send({ embeds: [logEmbed]});
+                            logMessage(`${interaction.user.tag} created the ticket #${channel.name}`);
   
   
                       await message.pin().then(() => { setTimeout(async () => {

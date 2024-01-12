@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { ticketsDB, sanitizeInput } = require('../../index.js');
+const { ticketsDB, sanitizeInput, logMessage } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.rename.enabled,
@@ -45,6 +45,8 @@ module.exports = {
 
     interaction.reply({ embeds: [embed] });
     logsChannel.send({ embeds: [log] });
+    logMessage(`${interaction.user.tag} renamed the ticket #${interaction.channel.name} to #${newName}`);
+
     }
 
 }
