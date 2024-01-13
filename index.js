@@ -42,7 +42,7 @@ const ticketsDB = new QuickDB({ filePath: "data/tickets.sqlite" });
 const ticketCategories = [];
 
 config.TicketCategories.forEach((category) => {
-  const { id, name, categoryID, closedCategoryID, buttonEmoji, buttonLabel, buttonStyle, embedTitle, color, description, ticketName, modalTitle, questions } = category;
+  const { id, name, categoryID, closedCategoryID, buttonEmoji, buttonLabel, buttonStyle, menuEmoji, menuLabel, menuDescription, embedTitle, color, description, ticketName, modalTitle, questions } = category;
 
   const extractedQuestions = questions.map((question) => {
 	const { label, placeholder, style, required, minLength } = question;
@@ -63,6 +63,9 @@ config.TicketCategories.forEach((category) => {
 	buttonEmoji,
 	buttonLabel,
 	buttonStyle,
+	menuEmoji,
+	menuLabel,
+	menuDescription,
 	embedTitle,
 	color,
 	description,

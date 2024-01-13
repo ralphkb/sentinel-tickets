@@ -2,6 +2,8 @@
 # Ticket bot general settings
 # ==============================================
 
+panelMethod: "Buttons" # The method of the panel, can be either Buttons or Menu
+menuPlaceholder: "Select a category to open a ticket." # The placeholder of the select menu
 default_embed_color: "#2FF200" # The default embed color
 logs_channel_id: "111111111111111111" # The ID of the logs channel
 transcripts_channel_id: "111111111111111111" # The ID of the transcripts channel
@@ -29,9 +31,12 @@ TicketCategories:
     name: "report" # The name of the category, it will be in lowercase anyways
     categoryID: "111111111111111111" # The ID of the category where those tickets will be created
     closedCategoryID: "111111111111111111" # The ID of the category where the closed tickets will go
-    buttonEmoji: "👮" # The emoji of the type
+    buttonEmoji: "👮" # The emoji of the button
     buttonLabel: "Report a user" # The name of the button
     buttonStyle: "Success" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+    menuEmoji: "👮" # The emoji of the select menu option
+    menuLabel: "Report a user" # The name of the select menu option
+    menuDescription: "Click on this option to open a report user ticket!" # The description of the select menu option
     embedTitle: "Report Ticket" # The title of the embed
     color: "#FFD700" # The color of embed in the opened ticket
     description: "Welcome to your report ticket! Please be patient while a staff member responds to your report." # The description of the embed in the created ticket, right above the questions fields
@@ -57,9 +62,12 @@ TicketCategories:
     name: "other"
     categoryID: "111111111111111111" # The ID of the category where those tickets will be created
     closedCategoryID: "111111111111111111" # The ID of the category where the closed tickets will go
-    buttonEmoji: "🤔" # The emoji of the type
+    buttonEmoji: "🤔" # The emoji of the button
     buttonLabel: "Other" # The name of the button
     buttonStyle: "Primary" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+    menuEmoji: "🤔" # The emoji of the select menu option
+    menuLabel: "Other" # The name of the select menu option
+    menuDescription: "Click on this option to open a miscellaneous ticket!" # The description of the select menu option
     embedTitle: "Other Ticket" # The title of the embed
     color: "#ADD8E6" # The color of embed in the opened ticket
     description: "Welcome to your other ticket! Please be patient while a staff member responds to your questions." # The description of the embed in the created ticket, right above the questions fields

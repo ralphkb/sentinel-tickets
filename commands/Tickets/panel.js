@@ -1,4 +1,4 @@
-const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
@@ -23,6 +23,8 @@ module.exports = {
 		  .setTitle(config.commands.panel.embed.title)
 		  .setDescription(config.commands.panel.embed.description)
 		  .setFooter({ text: config.commands.panel.embed.footer_msg, iconURL: config.commands.panel.embed.footer_icon_url })
+
+		  if (config.panelMethod === "Buttons") {
 
 		 // Creating the buttons, action rows and more
 		 const buttons = [];
@@ -59,6 +61,47 @@ module.exports = {
 		 // Send the panel embed and action rows
 		 await interaction.channel.send({ embeds: [panelEmbed], components: actionRows });
 		 logMessage(`${interaction.user.tag} sent the ticket panel in the channel #${interaction.channel.name}`);
+
+		} else if (config.panelMethod === "Menu") {
+		  
+         // Create an array to hold select menu options
+		 const options = [];
+
+         // Get the custom IDs from the `ticketCategories` object using `Object.keys()`
+		 const customIds = Object.keys(ticketCategories);
+
+		 // Iterate over the custom IDs
+		 for (const customId of customIds) {
+			const category = ticketCategories[customId];
+			// Create an option for each category using the properties from `ticketCategories`
+			const option = new StringSelectMenuOptionBuilder()
+			  .setLabel(category.menuLabel)
+			  .setDescription(category.menuDescription)
+			  .setEmoji(category.menuEmoji)
+			  .setValue(customId);
+
+			// Add the option to the array
+            options.push(option);
+		 }
+
+		 // Creating the select menu with the options
+		 const selectMenu = new StringSelectMenuBuilder()
+		 .setCustomId("categoryMenu")
+		 .setPlaceholder(config.menuPlaceholder)
+		 .setMinValues(1)
+		 .setMaxValues(1)
+		 .addOptions(options);
+
+		 // Create an action row to store the select menu
+		 const actionRowsMenus = new ActionRowBuilder().addComponents(selectMenu);
+		  
+		 // Send an initial response to acknowledge receipt of the command
+         await interaction.reply({ content: 'Sending the panel in this channel...', ephemeral: true });
+		 // Send the panel embed and action row
+		 await interaction.channel.send({ embeds: [panelEmbed], components: [actionRowsMenus] });
+		 logMessage(`${interaction.user.tag} sent the ticket panel in the channel #${interaction.channel.name}`);
+			
+		}
 
 	}
 };
