@@ -1,4 +1,4 @@
-const { Events, Collection, InteractionType, EmbedBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits } = require('discord.js');
+const { Events, Collection, InteractionType, EmbedBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits, StringSelectMenuBuilder } = require('discord.js');
 const { client, saveTranscript, mainDB, ticketsDB, ticketCategories, sanitizeInput, logMessage } = require('../index.js');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -11,6 +11,25 @@ const buttonCooldown = new Map();
 module.exports = {
 	name: Events.InteractionCreate,
     async execute(interaction) {
+
+      const blacklistedUsers = await mainDB.get('blacklistedUsers');
+      const userRoles = interaction.member.roles.cache.map(role => role.id);
+      const cooldown = config.buttons_cooldown * 1000;
+      const cooldownEnd = cooldown - (Date.now() - buttonCooldown.get(interaction.user.id));
+      const timeReadable = Math.floor(cooldownEnd / 1000);
+      const cooldownEmbed = new EmbedBuilder()
+        .setTitle(config.cooldownEmbed.title)
+        .setColor(config.cooldownEmbed.color)
+        .setDescription(`${config.cooldownEmbed.description}`.replace(/\{time\}/g, `${timeReadable}`))
+        .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
+        .setTimestamp();
+      const maxOpenTickets = config.maxOpenTickets
+      const ticketAlreadyOpened = new EmbedBuilder()
+        .setTitle(config.maxOpenTicketsEmbed.title)
+        .setColor(config.maxOpenTicketsEmbed.color)
+        .setDescription(`${config.maxOpenTicketsEmbed.description}`.replace(/\{max\}/g, `${maxOpenTickets}`))
+        .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
+        .setTimestamp();
 
         if (interaction.isChatInputCommand()) {
 
@@ -49,53 +68,116 @@ module.exports = {
             }
           } else if (interaction.isStringSelectMenu()) {
 
-            // Select menus to be added in the future
+            if (interaction.customId === 'categoryMenu') {
 
-         } else if (interaction.isButton()) {
-
-            const blacklistedUsers = await mainDB.get('blacklistedUsers');
-            const userRoles = interaction.member.roles.cache.map(role => role.id);
+            // Reset the select menu upon selection
+            const ticketPanelMsgID = await mainDB.get('ticketPanelMsgID');
+            const selectMenuOptions = await mainDB.get('selectMenuOptions');
+            await interaction.channel.messages.fetch(ticketPanelMsgID).then(async message => {
+              const selectMenu = new StringSelectMenuBuilder()
+              .setCustomId("categoryMenu")
+              .setPlaceholder(config.menuPlaceholder)
+              .setMinValues(1)
+              .setMaxValues(1)
+              .addOptions(selectMenuOptions);
+              
+              const updatedActionRow = new ActionRowBuilder().addComponents(selectMenu);
+              await message.edit({ components: [updatedActionRow] });
+            });
 
             if (blacklistedUsers.includes(interaction.user.id) || userRoles.some(roleId => blacklistedUsers.includes(roleId))) {
               return interaction.reply({ content: config.errors.blacklisted, ephemeral: true });
             }
 
-            const cooldown = config.buttons_cooldown * 1000;
-            const cooldownEnd = cooldown - (Date.now() - buttonCooldown.get(interaction.user.id));
+            if(buttonCooldown.has(interaction.user.id)) return interaction.reply({ embeds: [cooldownEmbed], ephemeral: true });
 
-              const timeReadable = Math.floor(cooldownEnd / 1000);
-              const cooldownEmbed = new EmbedBuilder()
-                .setTitle(config.cooldownEmbed.title)
-                .setColor(config.cooldownEmbed.color)
-                .setDescription(`You have to wait **${timeReadable}** seconds before clicking this button!`)
-                .setDescription(`${config.cooldownEmbed.description}`.replace(/\{time\}/g, `${timeReadable}`))
-                .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
-                .setTimestamp();
+            const userTicketCount = interaction.guild.channels.cache.reduce(async (count, channel) => {
+              if (await ticketsDB.has(channel.id)) {
+                const { userID, status } = await ticketsDB.get(channel.id);
+                if (userID === interaction.user.id && status !== "Closed") {
+                  return (await count) + 1;
+                }
+              }
+              return await count;
+            }, Promise.resolve(0));
+            
+            if (await userTicketCount >= maxOpenTickets) {
+              return interaction.reply({ embeds: [ticketAlreadyOpened], ephemeral: true });
+            }
+
+              const customIds = Object.keys(ticketCategories);
+              
+              customIds.forEach(async (customId) => {
+                if (interaction.values[0] === customId) {
+
+                    buttonCooldown.set(interaction.user.id, Date.now());
+                    setTimeout(() => buttonCooldown.delete(interaction.user.id), cooldown);
+                    const category = ticketCategories[customId];
+
+                    const modal = new ModalBuilder()
+                    .setCustomId(`${customId}-modal`)
+                    .setTitle(category.modalTitle);
+
+                    const modalQuestions = [];
+                    const actionRows =[];
+                    let questionIndex = 0;
+
+                    category.questions.forEach((question) => {
+                        const { label, placeholder, style, required, minLength } = question;
+                      
+                        const modalQuestion = new TextInputBuilder()
+                          .setCustomId(`question${questionIndex + 1}`)
+                          .setLabel(label)
+                          .setStyle(style)
+                          .setPlaceholder(placeholder)
+                          .setMinLength(minLength)
+                          .setRequired(required);
+
+                          if (style === 'Paragraph') {
+                            modalQuestion.setMaxLength(1000);
+                        }
+                      
+                        modalQuestions.push(modalQuestion);
+                        questionIndex++;
+                      });
+
+
+                      modalQuestions.forEach(question => {
+                        const actionRow = new ActionRowBuilder().addComponents(question);
+                        actionRows.push(actionRow);
+                      });
+
+                      actionRows.forEach(actionRow => {
+                        modal.addComponents(actionRow);
+                      });
+
+                      await interaction.showModal(modal);
+
+                }
+              });
+
+            }
+
+         } else if (interaction.isButton()) {
+
+            if (blacklistedUsers.includes(interaction.user.id) || userRoles.some(roleId => blacklistedUsers.includes(roleId))) {
+              return interaction.reply({ content: config.errors.blacklisted, ephemeral: true });
+            }
             
              if(buttonCooldown.has(interaction.user.id)) return interaction.reply({ embeds: [cooldownEmbed], ephemeral: true });
-    
-            let maxOpenTickets = config.maxOpenTickets
-            let currentlyOpenTickets = 0
-            let ticketAlreadyOpened = new EmbedBuilder()
-            .setTitle(config.maxOpenTicketsEmbed.title)
-            .setColor(config.maxOpenTicketsEmbed.color)
-            .setDescription(`${config.maxOpenTicketsEmbed.description}`.replace(/\{max\}/g, `${maxOpenTickets}`))
-            .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
-            .setTimestamp();
-    
-            await interaction.guild.channels.cache.forEach(async channel => {
-                if(await ticketsDB.has(channel.id)) {
-                const { userID } = await ticketsDB.get(channel.id);
-                if(userID && userID === interaction.user.id && await ticketsDB.get(`${channel.id}.status`) !== "Closed") {
-                currentlyOpenTickets++
+
+              const userTicketCount = interaction.guild.channels.cache.reduce(async (count, channel) => {
+                if (await ticketsDB.has(channel.id)) {
+                  const { userID, status } = await ticketsDB.get(channel.id);
+                  if (userID === interaction.user.id && status !== "Closed") {
+                    return (await count) + 1;
+                  }
                 }
-            }
-            });
-    
-            if (currentlyOpenTickets >= maxOpenTickets) {
-                return interaction.reply({ embeds: [ticketAlreadyOpened], ephemeral: true }).then(() => {
-                  currentlyOpenTickets = 0;
-                });
+                return await count;
+              }, Promise.resolve(0));
+              
+              if (await userTicketCount >= maxOpenTickets) {
+                return interaction.reply({ embeds: [ticketAlreadyOpened], ephemeral: true });
               }
 
               const customIds = Object.keys(ticketCategories);

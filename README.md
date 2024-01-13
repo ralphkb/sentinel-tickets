@@ -23,8 +23,8 @@ This is a ticket bot project that aims to provide a free and open source solutio
 
 ## Features
 
-- Multiple Categories: Organize support requests in different categories.
-- Intuitive Ticket Panel: Create and manage tickets with ease using buttons, select menu will be added in the future at some point.
+- Up to 25 Categories: Organize support requests in different categories.
+- Intuitive Ticket Panel: Create and manage tickets with ease using buttons or a select menu.
 - Modal Questions: Gather necessary information before opening a ticket.
 - Configuration to customize many of the messages and options.
 - Option to configure the amount of max opened tickets at one time.
@@ -32,6 +32,7 @@ This is a ticket bot project that aims to provide a free and open source solutio
 - Automatic saving of transcripts upon ticket deletion and force deletion.
 - Option to manually save a transcript with images downloaded, use with caution as it increases the transcript size.
 - Ticket logs for multiple ticket events, such as ticket create, close, delete, force delete, reopen, claim, unclaim etc.
+- Precise and organized logs of errors and all ticket events in a logs.txt file.
 - Option to ping support roles on ticket creation.
 - Option to edit the activity of the bot.
 - Multiple Commands: Efficiently manage tickets with various commands.

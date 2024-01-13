@@ -236,9 +236,9 @@ errors:
 cooldownEmbed:
   title: "Cooldown"
   color: "#FF0000"
-  description: "You have to wait **${time}** seconds before clicking this button!" # Use {time} for the remaining cooldown time in seconds
+  description: "You have to wait **{time}** seconds before clicking this button!" # Use {time} for the remaining cooldown time in seconds
 
 maxOpenTicketsEmbed:
   title: "Maximum Tickets Open"
   color: "#FF0000"
-  description: "You may only have **${max} ticket(s)** open at a time." # Use {max} for the maximum number of tickets that can be opened at once
+  description: "You may only have **{max} ticket(s)** open at a time." # Use {max} for the maximum number of tickets that can be opened at once
