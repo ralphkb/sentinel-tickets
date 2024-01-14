@@ -107,6 +107,9 @@ commands:
       color: "2FF200"
       title: "Ticket Close Notification"
       description: "This ticket will be closed soon if no response has been received."
+  transcript:
+    enabled: true
+    permission: "KickMembers"
   close:
     enabled: true
     permission: "KickMembers"
