@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { reloadAllSlashCommands } = require('../../index.js');
+const { reloadAllSlashCommands, logMessage } = require('../../index.js');
 
 module.exports = {
     enabled: true,
@@ -12,6 +12,7 @@ module.exports = {
 
         await reloadAllSlashCommands();
         await interaction.reply({ content: 'Reloaded all slash commands, use with caution due to rate limits. This command should only be used if you had issues loading slash commands changes due to bot updates.', ephemeral: true });
+        logMessage(`${interaction.user.tag} reloaded all the slash commands.`);
 
     }
 
