@@ -110,6 +110,12 @@ commands:
   transcript:
     enabled: true
     permission: "KickMembers"
+  claim:
+    enabled: true
+    permission: "KickMembers"
+  unclaim:
+    enabled: true
+    permission: "KickMembers"
   close:
     enabled: true
     permission: "KickMembers"
