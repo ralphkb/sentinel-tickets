@@ -149,7 +149,8 @@ module.exports = {
 	saveTranscript,
 	logMessage,
 	ticketCategories,
-	sanitizeInput
+	sanitizeInput,
+	reloadAllSlashCommands
   };
 
 // Holding commands cooldown data 
@@ -315,6 +316,20 @@ client.on('ready', async () => {
 	  console.error('An error occurred during initialization:', error);
 	}
   });
+
+// Function to reload all slash commands
+async function reloadAllSlashCommands() {
+  const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
+  await rest.put(
+	Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
+	{
+	  body: commands,
+	}
+  );
+
+  console.log('All slash commands have been reloaded! Please use with caution due to rate limits.');
+  console.log(commands.map((command) => command.name));
+}  
 
 // Log in to Discord with your app's token
 client.login(process.env.BOT_TOKEN).catch(error => {
