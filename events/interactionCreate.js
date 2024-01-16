@@ -91,20 +91,6 @@ module.exports = {
 
             if(buttonCooldown.has(interaction.user.id)) return interaction.reply({ embeds: [cooldownEmbed], ephemeral: true });
 
-            const userTicketCount = interaction.guild.channels.cache.reduce(async (count, channel) => {
-              if (await ticketsDB.has(channel.id)) {
-                const { userID, status } = await ticketsDB.get(channel.id);
-                if (userID === interaction.user.id && status !== "Closed") {
-                  return (await count) + 1;
-                }
-              }
-              return await count;
-            }, Promise.resolve(0));
-            
-            if (await userTicketCount >= maxOpenTickets) {
-              return interaction.reply({ embeds: [ticketAlreadyOpened], ephemeral: true });
-            }
-
               const customIds = Object.keys(ticketCategories);
               
               customIds.forEach(async (customId) => {
@@ -113,6 +99,20 @@ module.exports = {
                     buttonCooldown.set(interaction.user.id, Date.now());
                     setTimeout(() => buttonCooldown.delete(interaction.user.id), cooldown);
                     const category = ticketCategories[customId];
+
+                    const userTicketCount = interaction.guild.channels.cache.reduce(async (count, channel) => {
+                      if (await ticketsDB.has(channel.id)) {
+                        const { userID, status } = await ticketsDB.get(channel.id);
+                        if (userID === interaction.user.id && status !== "Closed") {
+                          return (await count) + 1;
+                        }
+                      }
+                      return await count;
+                    }, Promise.resolve(0));
+                    
+                    if (await userTicketCount >= maxOpenTickets) {
+                      return interaction.reply({ embeds: [ticketAlreadyOpened], ephemeral: true });
+                    }
 
                     const modal = new ModalBuilder()
                     .setCustomId(`${customId}-modal`)
@@ -166,20 +166,6 @@ module.exports = {
             
              if(buttonCooldown.has(interaction.user.id)) return interaction.reply({ embeds: [cooldownEmbed], ephemeral: true });
 
-              const userTicketCount = interaction.guild.channels.cache.reduce(async (count, channel) => {
-                if (await ticketsDB.has(channel.id)) {
-                  const { userID, status } = await ticketsDB.get(channel.id);
-                  if (userID === interaction.user.id && status !== "Closed") {
-                    return (await count) + 1;
-                  }
-                }
-                return await count;
-              }, Promise.resolve(0));
-              
-              if (await userTicketCount >= maxOpenTickets) {
-                return interaction.reply({ embeds: [ticketAlreadyOpened], ephemeral: true });
-              }
-
               const customIds = Object.keys(ticketCategories);
 
               customIds.forEach(async (customId) => {
@@ -188,6 +174,20 @@ module.exports = {
                     buttonCooldown.set(interaction.user.id, Date.now());
                     setTimeout(() => buttonCooldown.delete(interaction.user.id), cooldown);
                     const category = ticketCategories[customId];
+
+                    const userTicketCount = interaction.guild.channels.cache.reduce(async (count, channel) => {
+                      if (await ticketsDB.has(channel.id)) {
+                        const { userID, status } = await ticketsDB.get(channel.id);
+                        if (userID === interaction.user.id && status !== "Closed") {
+                          return (await count) + 1;
+                        }
+                      }
+                      return await count;
+                    }, Promise.resolve(0));
+                    
+                    if (await userTicketCount >= maxOpenTickets) {
+                      return interaction.reply({ embeds: [ticketAlreadyOpened], ephemeral: true });
+                    }
 
                     const modal = new ModalBuilder()
                     .setCustomId(`${customId}-modal`)
