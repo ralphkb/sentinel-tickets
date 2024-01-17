@@ -354,6 +354,24 @@ module.exports = {
                 const deleteEmbed = new EmbedBuilder()
                   .setColor(config.commands.delete.embed.color)
                   .setDescription(`${config.commands.delete.embed.description}`.replace(/\{time\}/g, `${deleteTicketTime}`));
+
+                // DM the user with an embed and the transcript of the ticket if the option is enabled
+                if (config.DMUserSettings.enabled) {
+                const dmEmbed = new EmbedBuilder()
+                  .setColor(config.DMUserSettings.embed.color)
+                  .setTitle(config.DMUserSettings.embed.title)
+                  .setThumbnail(interaction.guild.iconURL())
+                  .setDescription(config.DMUserSettings.embed.description)
+                  .addFields(
+                    { name: 'Server', value: `> ${interaction.guild.name}`, inline: true },
+                    { name: 'Ticket', value: `> #${sanitizeInput(interaction.channel.name)}`, inline: true },
+                    { name: 'Category', value: `> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`, inline: true })
+                  .addFields(
+                    { name: 'Ticket Author', value: `> ${sanitizeInput(ticketUserID.tag)}`, inline: true },
+                    { name: 'Deleted By', value: `> ${sanitizeInput(interaction.user.tag)}`, inline: true },
+                    { name: 'Claimed By', value: `> ${claimUser ? sanitizeInput(claimUser.tag) : 'None'}`, inline: true });
+                  await ticketUserID.send({ embeds: [dmEmbed], files: [attachment] });
+                }
                 
                 await interaction.followUp({ embeds: [deleteEmbed] });
                 

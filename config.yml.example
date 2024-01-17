@@ -80,6 +80,15 @@ TicketCategories:
         required: true # If this input is required or not, can be true or false
         minLength: 10 # Set the minimum number of characters required for submission
 
+# ==============================================
+# Ticket DM user settings
+# ==============================================
+DMUserSettings:
+  enabled: true # Enable or disable sending a direct message to a user once their ticket has been deleted. It would contain the transcript and an embed. 
+  embed:
+    color: "2FF200"
+    title: "Ticket Deleted"
+    description: "Your support ticket has been deleted. Here is your transcript and other information." # This description will show up on top of the other information in the DM embed.
 
 # ==============================================
 # Slash commands settings
