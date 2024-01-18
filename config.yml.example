@@ -7,6 +7,7 @@ menuPlaceholder: "Select a category to open a ticket." # The placeholder of the 
 default_embed_color: "#2FF200" # The default embed color
 logs_channel_id: "111111111111111111" # The ID of the logs channel
 transcripts_channel_id: "111111111111111111" # The ID of the transcripts channel
+transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT", note that the TXT option is limited to 400 messages
 support_role_ids: ["111111111111111111"] # The IDs of the staff roles on your server, for example ["000000000000000000", "111111111111111111"]
 commands_cooldown: "5" # The cooldown of commands in seconds
 buttons_cooldown: "5" # The cooldown of buttons in seconds

@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { client, ticketsDB, sanitizeInput, logMessage, saveTranscript } = require('../../index.js');
+const { client, ticketsDB, sanitizeInput, logMessage, saveTranscript, saveTranscriptTxt } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.transcript.enabled,
@@ -23,7 +23,13 @@ module.exports = {
           };
 
           let ticketUserID = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.userID`));
-          let attachment = await saveTranscript(interaction, null, true);
+
+          let attachment;
+          if (config.transcriptType === 'HTML') {
+            attachment = await saveTranscript(interaction, null, true);
+          } else if (config.transcriptType === 'TXT') {
+            attachment = await saveTranscriptTxt(interaction);
+          }
 
           const embed = new EmbedBuilder()
           .setColor(config.default_embed_color)

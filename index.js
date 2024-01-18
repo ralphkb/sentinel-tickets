@@ -20,6 +20,15 @@ if (!fs.existsSync(dataDir)) {
 
 const mainDB = new QuickDB({ filePath: "data/main.sqlite" });
 const ticketsDB = new QuickDB({ filePath: "data/tickets.sqlite" });
+const date = new Date();
+const options = {
+  timeZoneName: 'short',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+  hour12: true
+};
+const timeString = date.toLocaleString('en-US', options);
 
 (async function() {
 	// Initialize totalTickets to 1 if it doesn't exist
@@ -102,18 +111,102 @@ async function saveTranscript(interaction, message, saveImages = false) {
 	return null;
   }
 
+async function saveTranscriptTxt(interaction) {
+   const channel = interaction.channel;
+   let lastId;
+   let transcript = "";
+
+   // Add some useful information to the top of the transcript
+   let ticketUserID = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.userID`));
+   let claimUser = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.claimUser`));
+
+   transcript += `Server: ${interaction.guild.name}\nTicket: #${interaction.channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${interaction.user.tag}\nClaimed By: ${claimUser ? sanitizeInput(claimUser.tag) : 'None'}\n\n`;
+   let totalFetched = 0;
+   let checkpointLine = 7; // The line number where the writing begins on every iteration
+
+   while (totalFetched < 400) {
+       const options = { limit: 100 };
+       if (lastId) {
+           options.before = lastId;
+       }
+
+       const fetched = await channel.messages.fetch(options);
+       if (fetched.size === 0) {
+           break;
+       }
+
+	   totalFetched += fetched.size;
+       lastId = fetched.last().id;
+
+	   const newLines = fetched
+	   .map(m => {
+		   let messageText = `[${new Date(m.createdTimestamp).toLocaleString()}] ${m.author.username}: `;
+   
+		   if (m.content) {
+			   messageText += m.content;
+			   if (m.attachments.size > 0) {
+				   messageText += ' ';
+			   }
+		   }
+   
+		   if (m.attachments.size > 0) {
+			   const attachmentText = m.attachments.map(attachment => attachment.proxyURL).join('\n');
+			   messageText += attachmentText;
+		   }
+   
+		   if (m.embeds.length > 0) {
+			const embedText = m.embeds
+				.map(embed => {
+					let embedFields = '';
+		
+					if (embed.fields && embed.fields.length > 0) {
+						embedFields = embed.fields
+							.map(field => `${field.name} : ${field.value}`)
+							.join('\n');
+					}
+		
+					let embedContent = '';
+					if (embed.title) {
+						embedContent += `Embed Title: ${embed.title}\n`;
+					}
+					if (embed.description) {
+						embedContent += `Embed Description: ${embed.description}\n`;
+					}
+					if (embedFields) {
+						embedContent += `${embedFields}\n`;
+					}
+		
+					return embedContent.trim();
+				})
+				.filter(embedText => embedText !== '')
+				.join('\n');
+		
+			messageText += embedText;
+		}
+   
+		   return messageText;
+	   })
+	   .reverse()
+	   .join('\n');
+
+		   // Insert the new lines at the specified checkpoint line
+		   const transcriptLines = transcript.split('\n');
+		   transcriptLines.splice(checkpointLine, 0, newLines);
+		   transcript = transcriptLines.join('\n');
+   }
+
+   transcript += `\n\nTotal messages: ${totalFetched}`;
+
+   if (transcript.length < 1) {
+       transcript = "The Transcript of this ticket is empty";
+   }
+
+   return new AttachmentBuilder(Buffer.from(transcript), { name: `${channel.name}-transcript.txt` });
+}
+
+
 // Logging function
   async function logMessage(message) {
-	const date = new Date();
-	const options = {
-	  timeZoneName: 'short',
-	  hour: 'numeric',
-	  minute: 'numeric',
-	  second: 'numeric',
-	  hour12: true
-	};
-  
-	const timeString = date.toLocaleString('en-US', options);
 	const logMessage = `[${timeString}] [Bot v${packageJson.version}] [NodeJS ${process.version}] [LOG] ${message}\n\n`;
   
 	try {
@@ -150,7 +243,8 @@ module.exports = {
 	logMessage,
 	ticketCategories,
 	sanitizeInput,
-	reloadAllSlashCommands
+	reloadAllSlashCommands,
+	saveTranscriptTxt
   };
 
 // Holding commands cooldown data 
@@ -174,16 +268,6 @@ for (const file of eventFiles) {
 
 // Function to log errors
 async function logError(errorType, error) {
-	const date = new Date();
-	const options = {
-	  timeZoneName: 'short',
-	  hour: 'numeric',
-	  minute: 'numeric',
-	  second: 'numeric',
-	  hour12: true
-	};
-
-	const timeString = date.toLocaleString('en-US', options);
 	const errorMessage = `[${timeString}] [Bot v${packageJson.version}] [NodeJS ${process.version}] [${errorType}]\n${error.stack}\n\n`;
   
 	try {

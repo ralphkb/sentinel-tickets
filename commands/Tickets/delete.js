@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { client, ticketsDB, mainDB, saveTranscript, sanitizeInput, logMessage } = require('../../index.js');
+const { client, ticketsDB, mainDB, saveTranscript, sanitizeInput, logMessage, saveTranscriptTxt } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.delete.enabled,
@@ -40,7 +40,12 @@ module.exports = {
 
         if (claimUser) logEmbed.addFields({ name: '• Claimed By', value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}` })
           
-        let attachment = await saveTranscript(interaction);
+        let attachment;
+        if (config.transcriptType === 'HTML') {
+          attachment = await saveTranscript(interaction);
+        } else if (config.transcriptType === 'TXT') {
+          attachment = await saveTranscriptTxt(interaction);
+        }
 
         let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
         await logsChannel.send({ embeds: [logEmbed], files: [attachment] });

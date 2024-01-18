@@ -1,5 +1,5 @@
 const { Events, Collection, InteractionType, EmbedBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits, StringSelectMenuBuilder } = require('discord.js');
-const { client, saveTranscript, mainDB, ticketsDB, ticketCategories, sanitizeInput, logMessage } = require('../index.js');
+const { client, saveTranscript, mainDB, ticketsDB, ticketCategories, sanitizeInput, logMessage, saveTranscriptTxt } = require('../index.js');
 const dotenv = require('dotenv');
 dotenv.config();
 const fs = require('fs');
@@ -239,7 +239,12 @@ module.exports = {
                   };
 
                   let ticketUserID = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.userID`));
-                  let attachment = await saveTranscript(interaction, null, true);
+                  let attachment;
+                  if (config.transcriptType === 'HTML') {
+                    attachment = await saveTranscript(interaction, null, true);
+                  } else if (config.transcriptType === 'TXT') {
+                    attachment = await saveTranscriptTxt(interaction);
+                  }
 
                   const embed = new EmbedBuilder()
                   .setColor(config.default_embed_color)
@@ -327,7 +332,12 @@ module.exports = {
                   
                 await interaction.channel.messages.fetch(await ticketsDB.get(`${interaction.channel.id}.closeMsgID`)).then(msg => msg.delete());
                 await interaction.deferReply();
-                let attachment = await saveTranscript(interaction);
+                let attachment;
+                if (config.transcriptType === 'HTML') {
+                  attachment = await saveTranscript(interaction);
+                } else if (config.transcriptType === 'TXT') {
+                  attachment = await saveTranscriptTxt(interaction);
+                }
                 let ticketUserID = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.userID`));
                 let claimUser = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.claimUser`));
 
