@@ -1,7 +1,7 @@
-# Sentinel Tickets Discord Bot Project
+# Sentinel Tickets Discord Bot
 
 ## Introduction
-This is a ticket bot project that aims to provide a free and open source solution for managing tickets on Discord. The bot is designed to be lightweight, without any watermarks or unnecessary bloat. It allows users to create, track, and manage tickets seamlessly.
+This is a ticket bot that aims to provide a free and open source solution for managing tickets on Discord. The bot is designed to be lightweight, without any watermarks or unnecessary bloat. It allows users to create, track, and manage tickets seamlessly.
 
 ## Requirements
 - Tested on latest Node.js v18
@@ -31,6 +31,8 @@ This is a ticket bot project that aims to provide a free and open source solutio
 - Ticket claiming feature that can be turned on/off.
 - Automatic saving of transcripts upon ticket deletion and force deletion.
 - Option to manually save a transcript with images downloaded, use with caution as it increases the transcript size.
+- Option to DM users on ticket deletion with their transcript and an embed with useful information.
+- Option to select Transcript type, can be HTML or TXT however HTML is recommended.
 - Ticket logs for multiple ticket events, such as ticket create, close, delete, force delete, reopen, claim, unclaim etc.
 - Precise and organized logs of errors and all ticket events in a logs.txt file.
 - Option to ping support roles on ticket creation.
@@ -44,6 +46,8 @@ This is a ticket bot project that aims to provide a free and open source solutio
     - Close Ticket to archive them until deleting them
     - Delete Tickets
     - Blacklist Users or Roles
+    - Save Transcripts
+    - Claim/Unclaim Tickets
 
 ## Usage
 1. Open .env file and fill it with your bot's token, guild ID and client ID
