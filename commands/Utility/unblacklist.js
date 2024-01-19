@@ -9,7 +9,7 @@ module.exports = {
     enabled: config.commands.unblacklist.enabled,
     data: new SlashCommandBuilder()
         .setName('unblacklist')
-        .setDescription('Remove a user from the blacklist.')
+        .setDescription('Remove a user or role from the blacklist.')
         .addUserOption((option) => option.setName('user').setDescription('Select a user').setRequired(false))
         .addRoleOption((option) => option.setName('role').setDescription('Select a role').setRequired(false))
         .setDefaultMemberPermissions(PermissionFlagsBits[config.commands.unblacklist.permission])

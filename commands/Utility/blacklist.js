@@ -9,7 +9,7 @@ module.exports = {
     enabled: config.commands.blacklist.enabled,
     data: new SlashCommandBuilder()
         .setName('blacklist')
-        .setDescription('Add a user to the blacklist.')
+        .setDescription('Add a user or role to the blacklist.')
         .addUserOption((option) => option.setName('user').setDescription('Select a user').setRequired(false))
         .addRoleOption((option) => option.setName('role').setDescription('Select a role').setRequired(false))
         .setDefaultMemberPermissions(PermissionFlagsBits[config.commands.blacklist.permission])
