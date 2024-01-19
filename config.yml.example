@@ -103,12 +103,12 @@ commands:
     permission: "KickMembers"
     embed:
       color: "2FF200"
-      description: "Added **{user} ({user.tag})** to the ticket." # Use {user} for the username of the member and {user.tag} to have the member tagged
+      description: "Added **{target} ({target.tag})** to the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
     LogEmbed:
       color: "2FF200"
-      title: "Ticket Logs | User Added"
+      title: "Ticket Logs | Target Added"
       field_staff: "• Staff"
-      field_user: "• User"
+      field_target: "• Target"
       field_ticket: "• Ticket"
   alert:
     enabled: true
@@ -165,12 +165,12 @@ commands:
     permission: "KickMembers"
     embed:
       color: "#FF0000"
-      description: "Removed **user (user.tag)** from the ticket." # Use {user} for the username of the member and {user.tag} to have the member tagged
+      description: "Removed **{target} ({target.tag})** from the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
     LogEmbed:
       color: "#FF0000"
-      title: "Ticket Logs | User Removed"
+      title: "Ticket Logs | Target Removed"
       field_staff: "• Staff"
-      field_user: "• User"
+      field_target: "• Target"
       field_ticket: "• Ticket"
   rename:
     enabled: true

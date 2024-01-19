@@ -9,8 +9,9 @@ module.exports = {
     enabled: config.commands.remove.enabled,
     data: new SlashCommandBuilder()
         .setName('remove')
-        .setDescription('Remove a user from a ticket channel.')
-        .addUserOption((option) => option.setName('user').setDescription('User').setRequired(true))
+        .setDescription('Remove a user or role from a ticket channel.')
+        .addUserOption((option) => option.setName('user').setDescription('Select a user').setRequired(false))
+        .addRoleOption((option) => option.setName('role').setDescription('Select a role').setRequired(false))
         .setDefaultMemberPermissions(PermissionFlagsBits[config.commands.remove.permission])
         .setDMPermission(false),
     async execute(interaction) {
@@ -24,15 +25,22 @@ module.exports = {
           };
 
         let user = interaction.options.getUser("user");
-        interaction.channel.permissionOverwrites.delete(user);    
+        let role = interaction.options.getRole("role");
         let logsChannel = interaction.guild.channels.cache.get(config.logs_channel_id);
+
+        if ((!user && !role) || (user && role)) {
+            return interaction.reply({ content: 'Please provide either a user or a role, but not both.', ephemeral: true });
+        }
+
+        if (user) {
+        interaction.channel.permissionOverwrites.delete(user);
     
         const logEmbed = new EmbedBuilder()
         .setColor(config.commands.remove.LogEmbed.color)
         .setTitle(config.commands.remove.LogEmbed.title)
         .addFields([
             { name: config.commands.remove.LogEmbed.field_staff, value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}` },
-            { name: config.commands.remove.LogEmbed.field_user, value: `> ${user}\n> ${sanitizeInput(user.tag)}` },
+            { name: config.commands.remove.LogEmbed.field_target, value: `> ${user}\n> ${sanitizeInput(user.tag)}` },
             { name: config.commands.remove.LogEmbed.field_ticket, value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}` },
          ])
         .setTimestamp()
@@ -41,11 +49,36 @@ module.exports = {
 
         const embed = new EmbedBuilder()
         .setColor(config.commands.remove.embed.color)
-        .setDescription(`${config.commands.remove.embed.description}`.replace(/\{user\}/g, user).replace(/\{user\.tag\}/g, sanitizeInput(user.tag)))
+        .setDescription(`${config.commands.remove.embed.description}`.replace(/\{target\}/g, user).replace(/\{target\.tag\}/g, sanitizeInput(user.tag)))
     
         interaction.reply({ embeds: [embed] });
         logsChannel.send({ embeds: [logEmbed] });
         logMessage(`${interaction.user.tag} removed ${user.tag} from the ticket #${interaction.channel.name}`);
+        }
+
+        if (role) {
+            interaction.channel.permissionOverwrites.delete(role);
+        
+            const logEmbed = new EmbedBuilder()
+            .setColor(config.commands.remove.LogEmbed.color)
+            .setTitle(config.commands.remove.LogEmbed.title)
+            .addFields([
+                { name: config.commands.remove.LogEmbed.field_staff, value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}` },
+                { name: config.commands.remove.LogEmbed.field_target, value: `> ${role}\n> ${sanitizeInput(role.name)}` },
+                { name: config.commands.remove.LogEmbed.field_ticket, value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}` },
+             ])
+            .setTimestamp()
+            .setThumbnail(interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
+            .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
+    
+            const embed = new EmbedBuilder()
+            .setColor(config.commands.remove.embed.color)
+            .setDescription(`${config.commands.remove.embed.description}`.replace(/\{target\}/g, role).replace(/\{target\.tag\}/g, sanitizeInput(role.name)))
+        
+            interaction.reply({ embeds: [embed] });
+            logsChannel.send({ embeds: [logEmbed] });
+            logMessage(`${interaction.user.tag} removed ${role.name} from the ticket #${interaction.channel.name}`);
+            }
 
     }
 
