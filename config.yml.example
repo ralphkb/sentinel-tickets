@@ -126,6 +126,17 @@ commands:
   unclaim:
     enabled: true
     permission: "KickMembers"
+  move:
+    enabled: true
+    permission: "KickMembers"
+    embed:
+      color: "2FF200"
+      description: "Moved this ticket to the **{category}** category." # Use {category} for the name of the category
+    LogEmbed:
+      color: "2FF200"
+      title: "Ticket Logs | Ticket Moved"
+      field_staff: "• Staff"
+      field_ticket: "• Ticket"						
   close:
     enabled: true
     permission: "KickMembers"
