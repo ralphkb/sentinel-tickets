@@ -39,8 +39,8 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Option to edit the activity of the bot.
 - Multiple Commands: Efficiently manage tickets with various commands.
     - Send the tickets panel in any channel
-    - Add User to a ticket
-    - Remove User from a ticket
+    - Add Users or Roles to a ticket
+    - Remove Users or Roles from a ticket
     - Rename Ticket Channel
     - Alert Ticket Creator
     - Close Ticket to archive them until deleting them
@@ -48,6 +48,8 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Blacklist Users or Roles
     - Save Transcripts
     - Claim/Unclaim Tickets
+    - Move tickets to another category
+    - Pin tickets in a category
 
 ## Usage
 1. Open .env file and fill it with your bot's token, guild ID and client ID
