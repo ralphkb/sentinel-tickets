@@ -143,6 +143,12 @@ commands:
     embed:
       color: "2FF200"
       description: "This ticket has been pinned."
+  slowmode:
+    enabled: true
+    permission: "KickMembers"
+    embed:
+      color: "2FF200"
+      description: "A slowmode of **{time}** seconds has been added to this ticket." # Use {time} for the time in seconds
   close:
     enabled: true
     permission: "KickMembers"
