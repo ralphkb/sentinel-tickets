@@ -3,7 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
-const { ticketsDB, logMessage } = require('../../index.js');
+const { ticketsDB, logMessage, formatTime } = require('../../index.js');
 
 module.exports = {
     enabled: config.commands.slowmode.enabled,
@@ -22,15 +22,27 @@ module.exports = {
         if (!interaction.member.roles.cache.some((role) => config.support_role_ids.includes(role.id))) {
             return interaction.reply({ content: config.errors.not_allowed, ephemeral: true });
           };
+          
+          const time = interaction.options.getInteger('time');
+          const currentSlowmode = interaction.channel.rateLimitPerUser;
 
-        const time = interaction.options.getInteger('time');
-        await interaction.channel.setRateLimitPerUser(time);
+          if (currentSlowmode === time) {
+            return interaction.reply({ content: "This ticket channel already has that slowmode.", ephemeral: true });
+          }
 
-        const embed = new EmbedBuilder()
-        .setColor(config.commands.slowmode.embed.color)
-        .setDescription(`${config.commands.slowmode.embed.description}`.replace(/\{time\}/g, time))
-        interaction.reply({ embeds: [embed] });
-        logMessage(`${interaction.user.tag} added a slow mode of ${time} seconds to the ticket #${interaction.channel.name}`);
+          if (time === 0) {
+            await interaction.channel.setRateLimitPerUser(0);
+            return interaction.reply({ content: "The slowmode has been removed from this ticket.", ephemeral: true });
+          }
+
+          await interaction.channel.setRateLimitPerUser(time);
+          const formattedTime = formatTime(time);
+          
+          const embed = new EmbedBuilder()
+            .setColor(config.commands.slowmode.embed.color)
+            .setDescription(`${config.commands.slowmode.embed.description}`.replace(/\{time\}/g, formattedTime));
+          interaction.reply({ embeds: [embed] });
+          logMessage(`${interaction.user.tag} added a slow mode of ${formattedTime} to the ticket #${interaction.channel.name}`);
 
     }
 
