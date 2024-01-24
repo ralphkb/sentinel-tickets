@@ -33,6 +33,12 @@ module.exports = {
         }
 
         if (user) {
+
+        // Check that the user is already in the ticket channel
+        if (interaction.channel.members.has(user.id)) {
+            return interaction.reply({ content: 'That user is already in this ticket.', ephemeral: true });
+        }
+        
         interaction.channel.permissionOverwrites.create(user, {
             'ViewChannel': true,
             'SendMessages': true,
@@ -62,6 +68,12 @@ module.exports = {
         }
 
         if (role) {
+
+            // Check that the role is already in the ticket channel
+            if (interaction.channel.permissionsFor(role.id).has('ViewChannel')) {
+                return interaction.reply({ content: 'That role is already in this ticket.', ephemeral: true });
+            }
+
             interaction.channel.permissionOverwrites.create(role, {
                 'ViewChannel': true,
                 'SendMessages': true,

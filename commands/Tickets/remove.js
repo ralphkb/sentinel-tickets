@@ -33,6 +33,12 @@ module.exports = {
         }
 
         if (user) {
+
+        // Check if the user is in the ticket channel
+        if (!interaction.channel.members.has(user.id)) {
+            return interaction.reply({ content: 'That user is not in this ticket.', ephemeral: true });
+        }
+
         interaction.channel.permissionOverwrites.delete(user);
     
         const logEmbed = new EmbedBuilder()
@@ -57,6 +63,12 @@ module.exports = {
         }
 
         if (role) {
+
+            // Check if the role is in the ticket channel
+            if (!interaction.channel.permissionsFor(role.id).has('ViewChannel')) {
+                return interaction.reply({ content: 'That role is not in this ticket.', ephemeral: true });
+            }
+            
             interaction.channel.permissionOverwrites.delete(role);
         
             const logEmbed = new EmbedBuilder()
