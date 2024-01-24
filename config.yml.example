@@ -140,6 +140,8 @@ commands:
   pin:
     enabled: true
     permission: "KickMembers"
+    emoji: "📌"
+    alreadyPinned: "This ticket is already pinned!"
     embed:
       color: "2FF200"
       description: "This ticket has been pinned."

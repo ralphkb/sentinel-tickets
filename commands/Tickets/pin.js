@@ -22,8 +22,8 @@ module.exports = {
             return interaction.reply({ content: config.errors.not_allowed, ephemeral: true });
           };
 
-        if (interaction.channel.name.includes("📌")) {
-            return interaction.reply({ content: "This ticket is already pinned!", ephemeral: true });
+        if (interaction.channel.name.includes(config.commands.pin.emoji)) {
+            return interaction.reply({ content: config.commands.pin.alreadyPinned, ephemeral: true });
           };
 
           interaction.channel.setPosition(0)
@@ -31,7 +31,7 @@ module.exports = {
               return new Promise(resolve => setTimeout(resolve, 1000));
           })
           .then(() => {
-              interaction.channel.setName(`📌${interaction.channel.name}`);
+              interaction.channel.setName(`${config.commands.pin.emoji}${interaction.channel.name}`);
           });
 
         const embed = new EmbedBuilder()
