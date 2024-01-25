@@ -9,7 +9,6 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 ## Table of Contents
 - [🛠️ Installation](#installation)
 - [✨ Features](#features)
-- [💻 Usage](#usage)
 - [📚 Documentation](#documentation)
 - [🐛 Bug Reporting](#bug-reporting)
 - [📃 License](#license)
@@ -20,6 +19,9 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 3. Change to the project directory, for example: `cd ticket-bot-project`
 4. Run `npm install` to install the dependencies
 5. Rename .env.example to .env and config.yml.example to config.yml
+6. Open .env file and fill it with your bot's token, guild ID and client ID
+7. Open config.yml to configure the settings and messages to your liking, make sure to properly configure the ticket categories
+8. Start the bot: `npm start`
 
 ## Features
 
@@ -50,14 +52,10 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Claim/Unclaim Tickets
     - Move tickets to another category
     - Pin tickets in a category
-
-## Usage
-1. Open .env file and fill it with your bot's token, guild ID and client ID
-2. Open config.yml to configure the settings and messages to your liking, make sure to properly configure the ticket categories
-3. Start the bot: `npm start`
+    - Add a custom slowmode to a ticket
 
 ## Documentation
-This project is still new, a wiki/documentation for it will be released in the future.
+The Wiki will be improved over time and can be found here: https://github.com/ralphkb/sentinel-tickets/wiki
 
 ## Bug Reporting
 - For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
