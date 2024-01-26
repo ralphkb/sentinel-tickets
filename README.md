@@ -8,6 +8,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 
 ## Table of Contents
 - [🛠️ Installation](#installation)
+- [🔄 Updating](#updating)
 - [✨ Features](#features)
 - [📚 Documentation](#documentation)
 - [🐛 Bug Reporting](#bug-reporting)
@@ -15,13 +16,21 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 
 ## Installation
 1. Install Node.js if not already installed (v18 recommended): [Node.js Installation Guide](https://nodejs.org/en/download/)
-2. Clone the repository: `git clone https://github.com/ralphkb/sentinel-tickets.git`
-3. Change to the project directory, for example: `cd ticket-bot-project`
+2. Clone the repository: `git clone https://github.com/ralphkb/sentinel-tickets.git` or download the latest release: https://github.com/ralphkb/sentinel-tickets/releases
+3. Change to the project directory, for example: `cd ticket-bot-project` or the directory where you uploaded the release files.
 4. Run `npm install` to install the dependencies
 5. Rename .env.example to .env and config.yml.example to config.yml
 6. Open .env file and fill it with your bot's token, guild ID and client ID
 7. Open config.yml to configure the settings and messages to your liking, make sure to properly configure the ticket categories
 8. Start the bot: `npm start`
+
+## Updating
+1. Make a backup of your current bot directory in case of issues so you have the option to revert back.
+2. Make sure not to delete your `data` directory otherwise you might run into issues with tickets that you did not delete yet.
+3. Download the new release/files and replace the current files with the ones you downloaded.
+4. If you already followed the installation process, you can use the latest `config.yml.example` you downloaded to manually add any new config options to your `config.yml`.
+5. If any dependencies got updated, you will have to delete your `node_modules` directory and run `npm install` again after you've already uploaded the new files.
+6. Start the updated bot using `npm start`
 
 ## Features
 
