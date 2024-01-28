@@ -27,12 +27,12 @@ module.exports = {
           const currentSlowmode = interaction.channel.rateLimitPerUser;
 
           if (currentSlowmode === time) {
-            return interaction.reply({ content: "This ticket channel already has that slowmode.", ephemeral: true });
+            return interaction.reply({ content: config.commands.slowmode.alreadySlowmode, ephemeral: true });
           }
 
           if (time === 0) {
             await interaction.channel.setRateLimitPerUser(0);
-            return interaction.reply({ content: "The slowmode has been removed from this ticket.", ephemeral: true });
+            return interaction.reply({ content: config.commands.slowmode.slowmodeRemoved, ephemeral: true });
           }
 
           await interaction.channel.setRateLimitPerUser(time);

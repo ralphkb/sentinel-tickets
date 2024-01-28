@@ -148,6 +148,8 @@ commands:
   slowmode:
     enabled: true
     permission: "KickMembers"
+    alreadySlowmode: "This ticket channel already has that slowmode."
+    slowmodeRemoved: "The slowmode has been removed from this ticket."
     embed:
       color: "2FF200"
       description: "A slowmode of **{time}** has been added to this ticket." # Use {time} for the time in hh mm ss format, example: 1h 5m 7s
