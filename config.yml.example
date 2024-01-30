@@ -271,6 +271,19 @@ userLeftEmbed:
   embed_description: "The user {user} left the server" # You can use {user} as a placeholder for the username of the member who left & \n for a new line
 
 # ==============================================
+# Working Hours Settings
+# ==============================================
+
+# Note: if the working hours system is not working, it's most likely due to incorrect configuration of the min and max hours.
+workingHours:
+  enabled: false # Enable or disable the working hours feature
+  timezone: "Europe/Paris" # The timezone of the working hours, options on this link should work: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  min: "09:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
+  max: "17:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
+  blockTicketCreation: true # Enable or disable the blocking of ticket creation outside the working hours
+  addField: true # If working hours is enabled, this option will enable or disable the addition of the working hours field to the ticket creation embed
+
+# ==============================================
 # Misc Locale
 # ==============================================
 

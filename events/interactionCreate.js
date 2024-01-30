@@ -7,6 +7,8 @@ const yaml = require('yaml');
 const configFile = fs.readFileSync('./config.yml', 'utf8');
 const config = yaml.parse(configFile);
 const buttonCooldown = new Map();
+const moment = require('moment-timezone');
+const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -30,6 +32,13 @@ module.exports = {
         .setDescription(`${config.maxOpenTicketsEmbed.description}`.replace(/\{max\}/g, `${maxOpenTickets}`))
         .setFooter({ text: `${interaction.user.tag}`, iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}` })
         .setTimestamp();
+        const userTimezone = config.workingHours.timezone;
+        const openingTime = config.workingHours.min;
+        const closingTime = config.workingHours.max;
+
+        const userCurrentTime = moment.tz(userTimezone);
+        const openingTimeToday = userCurrentTime.clone().startOf('day').set({hour: openingTime.split(':')[0], minute: openingTime.split(':')[1]});
+        const closingTimeToday = userCurrentTime.clone().startOf('day').set({hour: closingTime.split(':')[0], minute: closingTime.split(':')[1]});
 
         if (interaction.isChatInputCommand()) {
 
@@ -90,7 +99,15 @@ module.exports = {
             }
 
             if(buttonCooldown.has(interaction.user.id)) return interaction.reply({ embeds: [cooldownEmbed], ephemeral: true });
-
+			
+            if (timeRegex.test(config.workingHours.min) && timeRegex.test(config.workingHours.max)) {
+            
+            if (config.workingHours.enabled && config.workingHours.blockTicketCreation) {
+              if (userCurrentTime.isBefore(openingTimeToday) || userCurrentTime.isAfter(closingTimeToday)) {
+                return interaction.reply({ content: `Tickets are only open between <t:${openingTimeToday.unix()}:t> and <t:${closingTimeToday.unix()}:t>. The current time now is <t:${Math.floor(new Date().getTime() / 1000)}:t>.`, ephemeral: true });
+              }
+            }
+          }
               const customIds = Object.keys(ticketCategories);
               
               customIds.forEach(async (customId) => {
@@ -166,6 +183,14 @@ module.exports = {
             
              if(buttonCooldown.has(interaction.user.id)) return interaction.reply({ embeds: [cooldownEmbed], ephemeral: true });
 
+             if (timeRegex.test(config.workingHours.min) && timeRegex.test(config.workingHours.max)) {
+            
+              if (config.workingHours.enabled && config.workingHours.blockTicketCreation) {
+                if (userCurrentTime.isBefore(openingTimeToday) || userCurrentTime.isAfter(closingTimeToday)) {
+                  return interaction.reply({ content: `Tickets are only open between <t:${openingTimeToday.unix()}:t> and <t:${closingTimeToday.unix()}:t>. The current time now is <t:${Math.floor(new Date().getTime() / 1000)}:t>.`, ephemeral: true });
+                }
+              }
+            }
               const customIds = Object.keys(ticketCategories);
 
               customIds.forEach(async (customId) => {
@@ -673,6 +698,9 @@ module.exports = {
                   openedEmbed.addFields({ name: `${label}`, value: `>>> ${value}` });
                 }
 
+                if (config.workingHours.enabled && config.workingHours.addField) {
+                  openedEmbed.addFields({ name: 'Working Hours', value: `> <t:${openingTimeToday.unix()}:t> to <t:${closingTimeToday.unix()}:t>` });
+                }
                 const closeButton = new ButtonBuilder()
                 .setCustomId('closeTicket')
                 .setLabel(config.closeButton.label)
