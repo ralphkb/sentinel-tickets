@@ -292,6 +292,13 @@ module.exports = {
 
               // Ticket Re-Open button
               if (interaction.customId === 'reOpen') {
+
+                if (config.reOpenStaffOnly) {
+                if (!interaction.member.roles.cache.some((role) => config.support_role_ids.includes(role.id))) {
+                  return interaction.reply({ content: config.errors.not_allowed, ephemeral: true });
+                };
+              }
+
                 await interaction.deferReply();
 
                 let ticketUserID = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.userID`));
