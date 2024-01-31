@@ -517,12 +517,12 @@ module.exports = {
 
               // Ticket Claim button
               if(interaction.customId === 'ticketclaim') {
-                await interaction.deferReply({ ephemeral: true });
 
                 if (!interaction.member.roles.cache.some((role) => config.support_role_ids.includes(role.id))) {
                     return interaction.reply({ content: config.errors.not_allowed, ephemeral: true });
                   };
 
+                  await interaction.deferReply({ ephemeral: true });
                   const embed = new EmbedBuilder()
                   .setTitle("Ticket Claimed")
                   .setColor(config.default_embed_color)
@@ -606,11 +606,11 @@ module.exports = {
 
               // Ticket Unclaim button
               if(interaction.customId === 'ticketunclaim') {
+
+                if (await ticketsDB.get(`${interaction.channel.id}.claimed`) === false) return interaction.reply({ content: "This ticket has not been claimed!", ephemeral: true });
+                if (await ticketsDB.get(`${interaction.channel.id}.claimUser`) !== interaction.user.id) return interaction.reply({ content: `You did not claim this ticket, only the user that claimed this ticket can unclaim it! (<@!${await ticketsDB.get(`${interaction.channel.id}.claimUser`)}>)`, ephemeral: true  });
+
                 await interaction.deferReply({ ephemeral: true });
-
-                if (await ticketsDB.get(`${interaction.channel.id}.claimed`) === false) return interaction.editReply({ content: "This ticket has not been claimed!", ephemeral: true });
-                if (await ticketsDB.get(`${interaction.channel.id}.claimUser`) !== interaction.user.id) return interaction.editReply({ content: `You did not claim this ticket, only the user that claimed this ticket can unclaim it! (<@!${await ticketsDB.get(`${interaction.channel.id}.claimUser`)}>)`, ephemeral: true  });
-
                 let ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
 
                 Object.keys(ticketCategories).forEach(async (id) => {
