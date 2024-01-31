@@ -282,7 +282,10 @@ workingHours:
   min: "09:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
   max: "17:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
   blockTicketCreation: true # Enable or disable the blocking of ticket creation outside the working hours
+  blockTicketMsg: "Tickets are only open between {openingTime} and {closingTime}. The current time now is {now}." # The message displayed when the ticket creation is blocked, use {openingTime} for the opening time, {closingTime} for the closing time and {now} for the current time
   addField: true # If working hours is enabled, this option will enable or disable the addition of the working hours field to the ticket creation embed
+  fieldTitle: "Working Hours" # The title of the working hours field
+  fieldValue: "> {openingTime} to {closingTime}" # The value of the working hours field, use {openingTime} for the opening time and {closingTime} for the closing time
 
 # ==============================================
 # Misc Locale

@@ -104,7 +104,7 @@ module.exports = {
             
             if (config.workingHours.enabled && config.workingHours.blockTicketCreation) {
               if (userCurrentTime.isBefore(openingTimeToday) || userCurrentTime.isAfter(closingTimeToday)) {
-                return interaction.reply({ content: `Tickets are only open between <t:${openingTimeToday.unix()}:t> and <t:${closingTimeToday.unix()}:t>. The current time now is <t:${Math.floor(new Date().getTime() / 1000)}:t>.`, ephemeral: true });
+                return interaction.reply({ content: `${config.workingHours.blockTicketMsg}`.replace(/\{openingTime\}/g, `<t:${openingTimeToday.unix()}:t>`).replace(/\{closingTime\}/g, `<t:${closingTimeToday.unix()}:t>`).replace(/\{now\}/g, `<t:${Math.floor(new Date().getTime() / 1000)}:t>`), ephemeral: true });
               }
             }
           }
@@ -187,7 +187,7 @@ module.exports = {
             
               if (config.workingHours.enabled && config.workingHours.blockTicketCreation) {
                 if (userCurrentTime.isBefore(openingTimeToday) || userCurrentTime.isAfter(closingTimeToday)) {
-                  return interaction.reply({ content: `Tickets are only open between <t:${openingTimeToday.unix()}:t> and <t:${closingTimeToday.unix()}:t>. The current time now is <t:${Math.floor(new Date().getTime() / 1000)}:t>.`, ephemeral: true });
+                  return interaction.reply({ content: `${config.workingHours.blockTicketMsg}`.replace(/\{openingTime\}/g, `<t:${openingTimeToday.unix()}:t>`).replace(/\{closingTime\}/g, `<t:${closingTimeToday.unix()}:t>`).replace(/\{now\}/g, `<t:${Math.floor(new Date().getTime() / 1000)}:t>`), ephemeral: true });
                 }
               }
             }
@@ -706,7 +706,7 @@ module.exports = {
                 }
 
                 if (config.workingHours.enabled && config.workingHours.addField) {
-                  openedEmbed.addFields({ name: 'Working Hours', value: `> <t:${openingTimeToday.unix()}:t> to <t:${closingTimeToday.unix()}:t>` });
+                  openedEmbed.addFields({ name: config.workingHours.fieldTitle, value: `${config.workingHours.fieldValue}`.replace(/\{openingTime\}/g, `<t:${openingTimeToday.unix()}:t>`).replace(/\{closingTime\}/g, `<t:${closingTimeToday.unix()}:t>`) });
                 }
                 const closeButton = new ButtonBuilder()
                 .setCustomId('closeTicket')
