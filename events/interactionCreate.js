@@ -428,12 +428,13 @@ module.exports = {
               //Ticket Close Button
               if (interaction.customId === 'closeTicket') {
 
-                await ticketsDB.set(`${interaction.channel.id}.closeUserID`, interaction.user.id);
-
-                if (!interaction.member.roles.cache.some((role) => config.support_role_ids.includes(role.id))) {
+                if (config.closeStaffOnly) {
+                  if (!interaction.member.roles.cache.some((role) => config.support_role_ids.includes(role.id))) {
                     return interaction.reply({ content: config.errors.not_allowed, ephemeral: true });
                   };
+                }
 
+                await ticketsDB.set(`${interaction.channel.id}.closeUserID`, interaction.user.id);
                 let ticketUserID = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.userID`));
                 let claimUser = client.users.cache.get(await ticketsDB.get(`${interaction.channel.id}.claimUser`));
                 let ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
