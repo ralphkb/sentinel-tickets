@@ -18,6 +18,10 @@ module.exports = {
             return interaction.reply({ content: config.errors.not_in_a_ticket, ephemeral: true });
           }
 
+        if (await ticketsDB.get(`${interaction.channel.id}.status`) === "Closed") {
+            return interaction.reply({ content: "This ticket is already closed!", ephemeral: true });
+          }   
+
         if (!interaction.member.roles.cache.some((role) => config.support_role_ids.includes(role.id))) {
             return interaction.reply({ content: config.errors.not_allowed, ephemeral: true });
           };

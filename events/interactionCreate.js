@@ -427,6 +427,10 @@ module.exports = {
 
               //Ticket Close Button
               if (interaction.customId === 'closeTicket') {
+                
+                if (await ticketsDB.get(`${interaction.channel.id}.status`) === "Closed") {
+                  return interaction.reply({ content: "This ticket is already closed!", ephemeral: true });
+                } 
 
                 if (config.closeStaffOnly) {
                   if (!interaction.member.roles.cache.some((role) => config.support_role_ids.includes(role.id))) {
