@@ -22,7 +22,7 @@ module.exports = {
             return interaction.reply({ content: config.errors.not_allowed, ephemeral: true });
           }
 
-        if (config.claimButton === false) {
+        if (config.claimFeature === false) {
             return interaction.reply({ content: "The claim feature is currently disabled.", ephemeral: true });
         } 
 
@@ -57,15 +57,16 @@ module.exports = {
       
             const claimButton = new ButtonBuilder()
             .setCustomId('ticketclaim')
-            .setLabel("Claim (Staff Only)")
-            .setEmoji('👋')
-            .setStyle(ButtonStyle.Success)  
+            .setLabel(config.claimButton.label)
+            .setEmoji(config.claimButton.emoji)
+            .setStyle(ButtonStyle[config.claimButton.style])  
             .setDisabled(true)
       
             const unClaimButton = new ButtonBuilder()
             .setCustomId('ticketunclaim')
-            .setLabel("Unclaim (Staff Only)")
-            .setStyle(ButtonStyle.Danger)
+            .setLabel(config.unclaimButton.label)
+            .setEmoji(config.unclaimButton.emoji)
+            .setStyle(ButtonStyle[config.unclaimButton.style])  
       
             let actionRow2 = new ActionRowBuilder().addComponents(closeButton, claimButton, unClaimButton);
             message.edit({ embeds: [embed], components: [actionRow2] });

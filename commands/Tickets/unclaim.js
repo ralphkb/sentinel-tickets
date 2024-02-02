@@ -22,7 +22,7 @@ module.exports = {
             return interaction.reply({ content: config.errors.not_allowed, ephemeral: true });
           }
 
-        if (config.claimButton === false) {
+        if (config.claimFeature === false) {
             return interaction.reply({ content: "The claim feature is currently disabled.", ephemeral: true });
         } 
 
@@ -74,9 +74,9 @@ module.exports = {
         
               const claimButton = new ButtonBuilder()
               .setCustomId('ticketclaim')
-              .setLabel("Claim (Staff Only)")
-              .setEmoji('👋')
-              .setStyle(ButtonStyle.Success)
+              .setLabel(config.claimButton.label)
+              .setEmoji(config.claimButton.emoji)
+              .setStyle(ButtonStyle[config.claimButton.style])  
       
               let actionRow3 = new ActionRowBuilder().addComponents(closeButton, claimButton);
       

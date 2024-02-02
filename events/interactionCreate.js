@@ -550,15 +550,16 @@ module.exports = {
               
                     const claimButton = new ButtonBuilder()
                     .setCustomId('ticketclaim')
-                    .setLabel("Claim (Staff Only)")
-                    .setEmoji('👋')
-                    .setStyle(ButtonStyle.Success)  
+                    .setLabel(config.claimButton.label)
+                    .setEmoji(config.claimButton.emoji)
+                    .setStyle(ButtonStyle[config.claimButton.style])  
                     .setDisabled(true)
               
                     const unClaimButton = new ButtonBuilder()
                     .setCustomId('ticketunclaim')
-                    .setLabel("Unclaim (Staff Only)")
-                    .setStyle(ButtonStyle.Danger)
+                    .setLabel(config.unclaimButton.label)
+                    .setEmoji(config.unclaimButton.emoji)
+                    .setStyle(ButtonStyle[config.unclaimButton.style])  
               
                     let actionRow2 = new ActionRowBuilder().addComponents(closeButton, claimButton, unClaimButton);
                     message.edit({ embeds: [embed], components: [actionRow2] });
@@ -654,9 +655,9 @@ module.exports = {
               
                     const claimButton = new ButtonBuilder()
                     .setCustomId('ticketclaim')
-                    .setLabel("Claim (Staff Only)")
-                    .setEmoji('👋')
-                    .setStyle(ButtonStyle.Success)
+                    .setLabel(config.claimButton.label)
+                    .setEmoji(config.claimButton.emoji)
+                    .setStyle(ButtonStyle[config.claimButton.style])  
             
                     let actionRow3 = new ActionRowBuilder().addComponents(closeButton, claimButton);
             
@@ -721,12 +722,12 @@ module.exports = {
 
                 const answerRow = new ActionRowBuilder().addComponents(closeButton);
           
-                if (config.claimButton) {
+                if (config.claimFeature) {
                   const claimButton = new ButtonBuilder()
                     .setCustomId('ticketclaim')
-                    .setLabel("Claim (Staff Only)")
-                    .setEmoji('👋')
-                    .setStyle(ButtonStyle.Success);
+                    .setLabel(config.claimButton.label)
+                    .setEmoji(config.claimButton.emoji)
+                    .setStyle(ButtonStyle[config.claimButton.style])  
                 
                   answerRow.addComponents(claimButton);
                 }
