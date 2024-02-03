@@ -139,6 +139,18 @@ commands:
       title: "Ticket Logs | Ticket Moved"
       field_staff: "• Staff"
       field_ticket: "• Ticket"
+  transfer:
+    enabled: true
+    permission: "KickMembers"
+    embed:
+      color: "2FF200"
+      description: "The ownership of this ticket has been transferred to **{user} ({user.tag})**." # Use {user} for the user such as @User and {user.tag} for the name of the user without it being mentioned such as User
+    LogEmbed:
+      color: "2FF200"
+      title: "Ticket Logs | Ticket Creator Transferred"
+      field_staff: "• Staff"
+      field_ticket: "• Ticket"
+      field_transfer: "• Transfer Details"
   pin:
     enabled: true
     permission: "KickMembers"
