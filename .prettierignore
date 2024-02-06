@@ -12,3 +12,5 @@ package.json
 package-lock.json
 logs.txt
 README.md
+config.yml
+config.yml.example
