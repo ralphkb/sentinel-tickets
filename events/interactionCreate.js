@@ -181,20 +181,27 @@ module.exports = {
               userCurrentTime.isBefore(openingTimeToday) ||
               userCurrentTime.isAfter(closingTimeToday)
             ) {
+              const workingHoursEmbed = new EmbedBuilder()
+                .setTitle(config.workingHours.blockTicketEmbed.embed_title)
+                .setColor(config.workingHours.blockTicketEmbed.embed_color)
+                .setDescription(
+                  `${config.workingHours.blockTicketEmbed.embed_description}`
+                    .replace(
+                      /\{openingTime\}/g,
+                      `<t:${openingTimeToday.unix()}:t>`,
+                    )
+                    .replace(
+                      /\{closingTime\}/g,
+                      `<t:${closingTimeToday.unix()}:t>`,
+                    )
+                    .replace(
+                      /\{now\}/g,
+                      `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
+                    ),
+                )
+                .setTimestamp();
               return interaction.reply({
-                content: `${config.workingHours.blockTicketMsg}`
-                  .replace(
-                    /\{openingTime\}/g,
-                    `<t:${openingTimeToday.unix()}:t>`,
-                  )
-                  .replace(
-                    /\{closingTime\}/g,
-                    `<t:${closingTimeToday.unix()}:t>`,
-                  )
-                  .replace(
-                    /\{now\}/g,
-                    `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
-                  ),
+                embeds: [workingHoursEmbed],
                 ephemeral: true,
               });
             }
@@ -298,14 +305,27 @@ module.exports = {
             userCurrentTime.isBefore(openingTimeToday) ||
             userCurrentTime.isAfter(closingTimeToday)
           ) {
+            const workingHoursEmbed = new EmbedBuilder()
+              .setTitle(config.workingHours.blockTicketEmbed.embed_title)
+              .setColor(config.workingHours.blockTicketEmbed.embed_color)
+              .setDescription(
+                `${config.workingHours.blockTicketEmbed.embed_description}`
+                  .replace(
+                    /\{openingTime\}/g,
+                    `<t:${openingTimeToday.unix()}:t>`,
+                  )
+                  .replace(
+                    /\{closingTime\}/g,
+                    `<t:${closingTimeToday.unix()}:t>`,
+                  )
+                  .replace(
+                    /\{now\}/g,
+                    `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
+                  ),
+              )
+              .setTimestamp();
             return interaction.reply({
-              content: `${config.workingHours.blockTicketMsg}`
-                .replace(/\{openingTime\}/g, `<t:${openingTimeToday.unix()}:t>`)
-                .replace(/\{closingTime\}/g, `<t:${closingTimeToday.unix()}:t>`)
-                .replace(
-                  /\{now\}/g,
-                  `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
-                ),
+              embeds: [workingHoursEmbed],
               ephemeral: true,
             });
           }
