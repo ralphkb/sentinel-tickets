@@ -38,6 +38,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Intuitive Ticket Panel: Create and manage tickets with ease using buttons or a select menu.
 - Modal Questions: Gather necessary information before opening a ticket.
 - Configuration to customize many of the messages and options.
+- Working Hours feature with an option to specify the timezone and block ticket creation outside the working hours.
 - Option to configure the amount of max opened tickets at one time.
 - Ticket claiming feature that can be turned on/off.
 - Automatic saving of transcripts upon ticket deletion and force deletion.
@@ -62,13 +63,15 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Move tickets to another category
     - Pin tickets in a category
     - Add a custom slowmode to a ticket
+    - Transfer ticket ownership to another user
 
 ## Documentation
 The Wiki will be improved over time and can be found here: https://github.com/ralphkb/sentinel-tickets/wiki
 
 ## Bug Reporting
 - For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
-This is a free project that I enjoy working on in my free time, I cannot guarantee support however I will try my best to fix bugs and sort out issues. As my first public project for the open source community, I am still learning and improving, thank you for your understanding! 😄
+This is a free project that I enjoy working on in my free time, I cannot guarantee support however I will try my best to fix bugs, sort issues and add new features! I am still learning and improving, thank you for your understanding.  
+If you find value in this project, consider leaving a star! 😄
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
