@@ -15,6 +15,7 @@ const {
   sanitizeInput,
   logMessage,
   ticketCategories,
+  mainDB,
 } = require('../../index.js');
 
 module.exports = {
@@ -63,6 +64,7 @@ module.exports = {
     }
 
     await interaction.deferReply({ ephemeral: true });
+    const totalClaims = await mainDB.get('totalClaims');
 
     const embed = new EmbedBuilder()
       .setTitle('Ticket Claimed')
@@ -179,6 +181,7 @@ module.exports = {
             iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
           });
         logsChannel.send({ embeds: [logEmbed] });
+        await mainDB.set('totalClaims', totalClaims + 1);
         logMessage(
           `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
         );

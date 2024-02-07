@@ -47,6 +47,11 @@ const timeString = date.toLocaleString('en-US', options);
     await mainDB.set('openTickets', []);
   }
 
+  // Initialize totalClaims to 0 if it doesn't exist
+  if (!(await mainDB.has('totalClaims'))) {
+    await mainDB.set('totalClaims', 0);
+  }
+
   // Initialize blacklistedUsers to an empty array if it doesn't exist
   if (!(await mainDB.has('blacklistedUsers'))) {
     await mainDB.set('blacklistedUsers', []);

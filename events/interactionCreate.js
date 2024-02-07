@@ -906,6 +906,7 @@ module.exports = {
         }
 
         await interaction.deferReply({ ephemeral: true });
+        const totalClaims = await mainDB.get('totalClaims');
         const embed = new EmbedBuilder()
           .setTitle('Ticket Claimed')
           .setColor(config.default_embed_color)
@@ -1024,6 +1025,7 @@ module.exports = {
                 iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
               });
             logsChannel.send({ embeds: [logEmbed] });
+            await mainDB.set('totalClaims', totalClaims + 1);
             logMessage(
               `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
             );
@@ -1049,6 +1051,7 @@ module.exports = {
           });
 
         await interaction.deferReply({ ephemeral: true });
+        const totalClaims = await mainDB.get('totalClaims');
         let ticketButton = await ticketsDB.get(
           `${interaction.channel.id}.button`,
         );
@@ -1146,6 +1149,7 @@ module.exports = {
                 iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
               });
             logsChannel.send({ embeds: [logEmbed] });
+            await mainDB.set('totalClaims', totalClaims - 1);
             logMessage(
               `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,
             );
