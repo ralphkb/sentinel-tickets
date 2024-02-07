@@ -2,10 +2,13 @@ const {
   EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+  ActionRowBuilder,
+  StringSelectMenuOptionBuilder,
+  StringSelectMenuBuilder,
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
   client,
@@ -15,13 +18,13 @@ const {
   sanitizeInput,
   logMessage,
   saveTranscriptTxt,
-} = require('../../index.js');
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.delete.enabled,
   data: new SlashCommandBuilder()
-    .setName('delete')
-    .setDescription('Delete a ticket.')
+    .setName("delete")
+    .setDescription("Delete a ticket.")
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.delete.permission],
     )
@@ -75,26 +78,26 @@ module.exports = {
       .setTimestamp()
       .setThumbnail(
         interaction.user.displayAvatarURL({
-          format: 'png',
+          format: "png",
           dynamic: true,
           size: 1024,
         }),
       )
       .setFooter({
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       });
 
     if (claimUser)
       logEmbed.addFields({
-        name: '• Claimed By',
+        name: "• Claimed By",
         value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
       });
 
     let attachment;
-    if (config.transcriptType === 'HTML') {
+    if (config.transcriptType === "HTML") {
       attachment = await saveTranscript(interaction);
-    } else if (config.transcriptType === 'TXT') {
+    } else if (config.transcriptType === "TXT") {
       attachment = await saveTranscriptTxt(interaction);
     }
 
@@ -127,42 +130,87 @@ module.exports = {
         .setDescription(config.DMUserSettings.embed.description)
         .addFields(
           {
-            name: 'Server',
+            name: "Server",
             value: `> ${interaction.guild.name}`,
             inline: true,
           },
           {
-            name: 'Ticket',
+            name: "Ticket",
             value: `> #${sanitizeInput(interaction.channel.name)}`,
             inline: true,
           },
-          { name: 'Category', value: `> ${ticketType}`, inline: true },
+          {
+            name: "Category",
+            value: `> ${ticketType}`,
+            inline: true,
+          },
         )
         .addFields(
           {
-            name: 'Ticket Author',
+            name: "Ticket Author",
             value: `> ${sanitizeInput(ticketUserID.tag)}`,
             inline: true,
           },
           {
-            name: 'Deleted By',
+            name: "Deleted By",
             value: `> ${sanitizeInput(interaction.user.tag)}`,
             inline: true,
           },
           {
-            name: 'Claimed By',
-            value: `> ${claimUser ? sanitizeInput(claimUser.tag) : 'None'}`,
+            name: "Claimed By",
+            value: `> ${claimUser ? sanitizeInput(claimUser.tag) : "None"}`,
             inline: true,
           },
         );
-      await ticketUserID.send({ embeds: [dmEmbed], files: [attachment] });
+
+      const options = [];
+      for (let i = 1; i <= 5; i++) {
+        const option = new StringSelectMenuOptionBuilder()
+          .setLabel(`${i} ${i > 1 ? "stars" : "star"}`)
+          .setEmoji(config.DMUserSettings.ratingSystem.menu.emoji)
+          .setValue(`${i}-star`);
+
+        options.push(option);
+      }
+
+      const selectMenu = new StringSelectMenuBuilder()
+        .setCustomId("ratingMenu")
+        .setPlaceholder(config.DMUserSettings.ratingSystem.menu.placeholder)
+        .setMinValues(1)
+        .setMaxValues(1)
+        .addOptions(options);
+
+      const actionRowMenu = new ActionRowBuilder().addComponents(selectMenu);
+
+      const ratingEmbed = new EmbedBuilder()
+        .setColor(config.DMUserSettings.ratingSystem.embed.color)
+        .setTitle(config.DMUserSettings.ratingSystem.embed.title)
+        .setDescription(config.DMUserSettings.ratingSystem.embed.description)
+        .setFooter({
+          text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+        });
+
+      if (config.DMUserSettings.ratingSystem.enabled === false) {
+        await ticketUserID.send({ embeds: [dmEmbed], files: [attachment] });
+      }
+      if (config.DMUserSettings.ratingSystem.enabled === true) {
+        await mainDB.set(`ratingMenuOptions`, options);
+        await ticketUserID.send({
+          embeds: [dmEmbed],
+          files: [attachment],
+        });
+        await ticketUserID.send({
+          embeds: [ratingEmbed],
+          components: [actionRowMenu],
+        });
+      }
     }
 
     await interaction.reply({ embeds: [deleteEmbed] });
 
     setTimeout(async () => {
       await ticketsDB.delete(interaction.channel.id);
-      await mainDB.pull('openTickets', interaction.channel.id);
+      await mainDB.pull("openTickets", interaction.channel.id);
       await interaction.channel.delete();
     }, deleteTime);
   },

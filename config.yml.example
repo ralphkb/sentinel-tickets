@@ -87,11 +87,27 @@ TicketCategories:
 # Ticket DM user settings
 # ==============================================
 DMUserSettings:
-  enabled: true # Enable or disable sending a direct message to a user once their ticket has been deleted. It would contain the transcript and an embed. 
+  enabled: true # Enable or disable sending a direct message to a user once their ticket has been deleted. It would contain the transcript and an embed.
   embed:
     color: "2FF200"
     title: "Ticket Deleted"
     description: "Your support ticket has been deleted. Here is your transcript and other information." # This description will show up on top of the other information in the DM embed.
+  ratingSystem:
+    enabled: false
+    embed:
+      color: "2FF200"
+      title: "Ticket Feedback & Rating"
+      description: "We value your feedback! Please take a moment to share your thoughts and rate our support system. Your rating can be between 1 and 5 stars by using the select menu below. Thank you for helping us improve."
+    menu:
+      emoji: "⭐"
+      placeholder: "Select a Rating"
+    modalTitle: "Ticket Feedback"
+    questions: # Maximum number of questions is 5, you must keep a minimum of 1 to use this feature
+      - label: "What is your feedback?"
+        placeholder: "Write your feedback here."
+        style: "Paragraph" # Short or Paragraph
+        required: true # If this input is required or not, can be true or false (must be kept to true when there is only 1 question)
+        minLength: 80 # Set the minimum number of characters required for submission
 
 # ==============================================
 # Slash commands settings

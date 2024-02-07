@@ -11,7 +11,8 @@ const {
   ChannelType,
   PermissionFlagsBits,
   StringSelectMenuBuilder,
-} = require('discord.js');
+  StringSelectMenuOptionBuilder,
+} = require("discord.js");
 const {
   client,
   saveTranscript,
@@ -21,22 +22,21 @@ const {
   sanitizeInput,
   logMessage,
   saveTranscriptTxt,
-} = require('../index.js');
-const dotenv = require('dotenv');
+} = require("../index.js");
+const dotenv = require("dotenv");
 dotenv.config();
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const buttonCooldown = new Map();
-const moment = require('moment-timezone');
+const moment = require("moment-timezone");
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction) {
-    const blacklistedUsers = await mainDB.get('blacklistedUsers');
-    const userRoles = interaction.member.roles.cache.map((role) => role.id);
+    const blacklistedUsers = await mainDB.get("blacklistedUsers");
     const cooldown = config.buttons_cooldown * 1000;
     const cooldownEnd =
       cooldown - (Date.now() - buttonCooldown.get(interaction.user.id));
@@ -52,7 +52,7 @@ module.exports = {
       )
       .setFooter({
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       })
       .setTimestamp();
     const maxOpenTickets = config.maxOpenTickets;
@@ -67,7 +67,7 @@ module.exports = {
       )
       .setFooter({
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       })
       .setTimestamp();
     const userTimezone = config.workingHours.timezone;
@@ -77,17 +77,17 @@ module.exports = {
     const userCurrentTime = moment.tz(userTimezone);
     const openingTimeToday = userCurrentTime
       .clone()
-      .startOf('day')
+      .startOf("day")
       .set({
-        hour: openingTime.split(':')[0],
-        minute: openingTime.split(':')[1],
+        hour: openingTime.split(":")[0],
+        minute: openingTime.split(":")[1],
       });
     const closingTimeToday = userCurrentTime
       .clone()
-      .startOf('day')
+      .startOf("day")
       .set({
-        hour: closingTime.split(':')[0],
-        minute: closingTime.split(':')[1],
+        hour: closingTime.split(":")[0],
+        minute: closingTime.split(":")[1],
       });
 
     if (interaction.isChatInputCommand()) {
@@ -128,20 +128,20 @@ module.exports = {
       } catch (error) {
         console.error(error);
         await interaction.reply({
-          content: 'There was an error while executing this command!',
+          content: "There was an error while executing this command!",
           ephemeral: true,
         });
       }
     } else if (interaction.isStringSelectMenu()) {
-      if (interaction.customId === 'categoryMenu') {
+      if (interaction.customId === "categoryMenu") {
         // Reset the select menu upon selection
-        const ticketPanelMsgID = await mainDB.get('ticketPanelMsgID');
-        const selectMenuOptions = await mainDB.get('selectMenuOptions');
+        const ticketPanelMsgID = await mainDB.get("ticketPanelMsgID");
+        const selectMenuOptions = await mainDB.get("selectMenuOptions");
         await interaction.channel.messages
           .fetch(ticketPanelMsgID)
           .then(async (message) => {
             const selectMenu = new StringSelectMenuBuilder()
-              .setCustomId('categoryMenu')
+              .setCustomId("categoryMenu")
               .setPlaceholder(config.menuPlaceholder)
               .setMinValues(1)
               .setMaxValues(1)
@@ -153,6 +153,7 @@ module.exports = {
             await message.edit({ components: [updatedActionRow] });
           });
 
+        const userRoles = interaction.member.roles.cache.map((role) => role.id);
         if (
           blacklistedUsers.includes(interaction.user.id) ||
           userRoles.some((roleId) => blacklistedUsers.includes(roleId))
@@ -222,7 +223,7 @@ module.exports = {
               async (count, channel) => {
                 if (await ticketsDB.has(channel.id)) {
                   const { userID, status } = await ticketsDB.get(channel.id);
-                  if (userID === interaction.user.id && status !== 'Closed') {
+                  if (userID === interaction.user.id && status !== "Closed") {
                     return (await count) + 1;
                   }
                 }
@@ -258,7 +259,7 @@ module.exports = {
                 .setMinLength(minLength)
                 .setRequired(required);
 
-              if (style === 'Paragraph') {
+              if (style === "Paragraph") {
                 modalQuestion.setMaxLength(1000);
               }
 
@@ -279,7 +280,74 @@ module.exports = {
           }
         });
       }
+
+      if (interaction.customId === "ratingMenu") {
+        // Reset the select menu upon selection
+        const ratingMenuOptions = await mainDB.get("ratingMenuOptions");
+        await interaction.user.dmChannel.messages
+          .fetch(interaction.message.id)
+          .then(async (message) => {
+            const selectMenu = new StringSelectMenuBuilder()
+              .setCustomId("ratingMenu")
+              .setPlaceholder(
+                config.DMUserSettings.ratingSystem.menu.placeholder,
+              )
+              .setMinValues(1)
+              .setMaxValues(1)
+              .addOptions(ratingMenuOptions);
+
+            const updatedActionRow = new ActionRowBuilder().addComponents(
+              selectMenu,
+            );
+            await message.edit({ components: [updatedActionRow] });
+          });
+
+        for (let i = 1; i <= 5; i++) {
+          if (interaction.values[0] === `${i}-star`) {
+            const modal = new ModalBuilder()
+              .setCustomId(`${i}-ratingModal`)
+              .setTitle(config.DMUserSettings.ratingSystem.modalTitle);
+
+            const modalQuestions = [];
+            const actionRows = [];
+            let questionIndex = 0;
+            const questions = config.DMUserSettings.ratingSystem.questions;
+
+            questions.forEach((question) => {
+              const { label, placeholder, style, required, minLength } =
+                question;
+
+              const modalQuestion = new TextInputBuilder()
+                .setCustomId(`ratingQuestion${questionIndex + 1}`)
+                .setLabel(label)
+                .setStyle(style)
+                .setPlaceholder(placeholder)
+                .setMinLength(minLength)
+                .setRequired(required);
+
+              if (style === "Paragraph") {
+                modalQuestion.setMaxLength(1000);
+              }
+
+              modalQuestions.push(modalQuestion);
+              questionIndex++;
+            });
+
+            modalQuestions.forEach((question) => {
+              const actionRow = new ActionRowBuilder().addComponents(question);
+              actionRows.push(actionRow);
+            });
+
+            actionRows.forEach((actionRow) => {
+              modal.addComponents(actionRow);
+            });
+
+            await interaction.showModal(modal);
+          }
+        }
+      }
     } else if (interaction.isButton()) {
+      const userRoles = interaction.member.roles.cache.map((role) => role.id);
       if (
         blacklistedUsers.includes(interaction.user.id) ||
         userRoles.some((roleId) => blacklistedUsers.includes(roleId))
@@ -346,7 +414,7 @@ module.exports = {
             async (count, channel) => {
               if (await ticketsDB.has(channel.id)) {
                 const { userID, status } = await ticketsDB.get(channel.id);
-                if (userID === interaction.user.id && status !== 'Closed') {
+                if (userID === interaction.user.id && status !== "Closed") {
                   return (await count) + 1;
                 }
               }
@@ -381,7 +449,7 @@ module.exports = {
               .setMinLength(minLength)
               .setRequired(required);
 
-            if (style === 'Paragraph') {
+            if (style === "Paragraph") {
               modalQuestion.setMaxLength(1000);
             }
 
@@ -403,7 +471,7 @@ module.exports = {
       });
 
       // Ticket Transcript button
-      if (interaction.customId === 'createTranscript') {
+      if (interaction.customId === "createTranscript") {
         if (
           !interaction.member.roles.cache.some((role) =>
             config.support_role_ids.includes(role.id),
@@ -419,29 +487,29 @@ module.exports = {
           await ticketsDB.get(`${interaction.channel.id}.userID`),
         );
         let attachment;
-        if (config.transcriptType === 'HTML') {
+        if (config.transcriptType === "HTML") {
           attachment = await saveTranscript(interaction, null, true);
-        } else if (config.transcriptType === 'TXT') {
+        } else if (config.transcriptType === "TXT") {
           attachment = await saveTranscriptTxt(interaction);
         }
 
         const embed = new EmbedBuilder()
           .setColor(config.default_embed_color)
-          .setTitle('Ticket Transcript')
+          .setTitle("Ticket Transcript")
           .setDescription(`Saved by <@!${interaction.user.id}>`)
           .addFields([
             {
-              name: 'Ticket Creator',
+              name: "Ticket Creator",
               value: `<@!${ticketUserID.id}>\n${sanitizeInput(ticketUserID.tag)}`,
               inline: true,
             },
             {
-              name: 'Ticket Name',
+              name: "Ticket Name",
               value: `<#${interaction.channel.id}>\n${sanitizeInput(interaction.channel.name)}`,
               inline: true,
             },
             {
-              name: 'Category',
+              name: "Category",
               value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
               inline: true,
             },
@@ -466,7 +534,7 @@ module.exports = {
       }
 
       // Ticket Re-Open button
-      if (interaction.customId === 'reOpen') {
+      if (interaction.customId === "reOpen") {
         if (config.reOpenStaffOnly) {
           if (
             !interaction.member.roles.cache.some((role) =>
@@ -494,32 +562,32 @@ module.exports = {
 
         const logEmbed = new EmbedBuilder()
           .setColor(config.default_embed_color)
-          .setTitle('Ticket Logs | Ticket Re-Opened')
+          .setTitle("Ticket Logs | Ticket Re-Opened")
           .addFields([
             {
-              name: '• Re-Opened By',
+              name: "• Re-Opened By",
               value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
             },
             {
-              name: '• Ticket Creator',
+              name: "• Ticket Creator",
               value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
             },
             {
-              name: '• Ticket',
+              name: "• Ticket",
               value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
             },
           ])
           .setTimestamp()
           .setThumbnail(
             interaction.user.displayAvatarURL({
-              format: 'png',
+              format: "png",
               dynamic: true,
               size: 1024,
             }),
           )
           .setFooter({
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
           });
 
         let logsChannel = interaction.guild.channels.cache.get(
@@ -580,15 +648,15 @@ module.exports = {
         await interaction.channel.messages
           .fetch(await ticketsDB.get(`${interaction.channel.id}.closeMsgID`))
           .then((msg) => msg.delete());
-        await ticketsDB.set(`${interaction.channel.id}.status`, 'Open');
-        await mainDB.push('openTickets', interaction.channel.id);
+        await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
+        await mainDB.push("openTickets", interaction.channel.id);
         await interaction.followUp({ embeds: [embed] });
         logMessage(
           `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
         );
       }
       // Ticket Delete button
-      if (interaction.customId === 'deleteTicket') {
+      if (interaction.customId === "deleteTicket") {
         if (
           !interaction.member.roles.cache.some((role) =>
             config.support_role_ids.includes(role.id),
@@ -605,9 +673,9 @@ module.exports = {
           .then((msg) => msg.delete());
         await interaction.deferReply();
         let attachment;
-        if (config.transcriptType === 'HTML') {
+        if (config.transcriptType === "HTML") {
           attachment = await saveTranscript(interaction);
-        } else if (config.transcriptType === 'TXT') {
+        } else if (config.transcriptType === "TXT") {
           attachment = await saveTranscriptTxt(interaction);
         }
         let ticketUserID = client.users.cache.get(
@@ -618,38 +686,38 @@ module.exports = {
         );
 
         const logEmbed = new EmbedBuilder()
-          .setColor('#FF0000')
-          .setTitle('Ticket Logs | Ticket Deleted')
+          .setColor("#FF0000")
+          .setTitle("Ticket Logs | Ticket Deleted")
           .addFields([
             {
-              name: '• Deleted By',
+              name: "• Deleted By",
               value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
             },
             {
-              name: '• Ticket Creator',
+              name: "• Ticket Creator",
               value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
             },
             {
-              name: '• Ticket',
+              name: "• Ticket",
               value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
             },
           ])
           .setTimestamp()
           .setThumbnail(
             interaction.user.displayAvatarURL({
-              format: 'png',
+              format: "png",
               dynamic: true,
               size: 1024,
             }),
           )
           .setFooter({
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
           });
 
         if (claimUser)
           logEmbed.addFields({
-            name: '• Claimed By',
+            name: "• Claimed By",
             value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
           });
         let logsChannel = interaction.guild.channels.cache.get(
@@ -681,57 +749,102 @@ module.exports = {
             .setDescription(config.DMUserSettings.embed.description)
             .addFields(
               {
-                name: 'Server',
+                name: "Server",
                 value: `> ${interaction.guild.name}`,
                 inline: true,
               },
               {
-                name: 'Ticket',
+                name: "Ticket",
                 value: `> #${sanitizeInput(interaction.channel.name)}`,
                 inline: true,
               },
               {
-                name: 'Category',
+                name: "Category",
                 value: `> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
                 inline: true,
               },
             )
             .addFields(
               {
-                name: 'Ticket Author',
+                name: "Ticket Author",
                 value: `> ${sanitizeInput(ticketUserID.tag)}`,
                 inline: true,
               },
               {
-                name: 'Deleted By',
+                name: "Deleted By",
                 value: `> ${sanitizeInput(interaction.user.tag)}`,
                 inline: true,
               },
               {
-                name: 'Claimed By',
-                value: `> ${claimUser ? sanitizeInput(claimUser.tag) : 'None'}`,
+                name: "Claimed By",
+                value: `> ${claimUser ? sanitizeInput(claimUser.tag) : "None"}`,
                 inline: true,
               },
             );
-          await ticketUserID.send({ embeds: [dmEmbed], files: [attachment] });
+
+          const options = [];
+          for (let i = 1; i <= 5; i++) {
+            const option = new StringSelectMenuOptionBuilder()
+              .setLabel(`${i} ${i > 1 ? "stars" : "star"}`)
+              .setEmoji(config.DMUserSettings.ratingSystem.menu.emoji)
+              .setValue(`${i}-star`);
+
+            options.push(option);
+          }
+
+          const selectMenu = new StringSelectMenuBuilder()
+            .setCustomId("ratingMenu")
+            .setPlaceholder(config.DMUserSettings.ratingSystem.menu.placeholder)
+            .setMinValues(1)
+            .setMaxValues(1)
+            .addOptions(options);
+
+          const actionRowMenu = new ActionRowBuilder().addComponents(
+            selectMenu,
+          );
+
+          const ratingEmbed = new EmbedBuilder()
+            .setColor(config.DMUserSettings.ratingSystem.embed.color)
+            .setTitle(config.DMUserSettings.ratingSystem.embed.title)
+            .setDescription(
+              config.DMUserSettings.ratingSystem.embed.description,
+            )
+            .setFooter({
+              text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+            });
+
+          if (config.DMUserSettings.ratingSystem.enabled === false) {
+            await ticketUserID.send({ embeds: [dmEmbed], files: [attachment] });
+          }
+          if (config.DMUserSettings.ratingSystem.enabled === true) {
+            await mainDB.set(`ratingMenuOptions`, options);
+            await ticketUserID.send({
+              embeds: [dmEmbed],
+              files: [attachment],
+            });
+            await ticketUserID.send({
+              embeds: [ratingEmbed],
+              components: [actionRowMenu],
+            });
+          }
         }
 
         await interaction.followUp({ embeds: [deleteEmbed] });
 
         setTimeout(async () => {
           await ticketsDB.delete(interaction.channel.id);
-          await mainDB.pull('openTickets', interaction.channel.id);
+          await mainDB.pull("openTickets", interaction.channel.id);
           await interaction.channel.delete();
         }, deleteTime);
       }
 
       //Ticket Close Button
-      if (interaction.customId === 'closeTicket') {
+      if (interaction.customId === "closeTicket") {
         if (
-          (await ticketsDB.get(`${interaction.channel.id}.status`)) === 'Closed'
+          (await ticketsDB.get(`${interaction.channel.id}.status`)) === "Closed"
         ) {
           return interaction.reply({
-            content: 'This ticket is already closed!',
+            content: "This ticket is already closed!",
             ephemeral: true,
           });
         }
@@ -764,38 +877,38 @@ module.exports = {
         );
 
         const logEmbed = new EmbedBuilder()
-          .setColor('#FF2400')
-          .setTitle('Ticket Logs | Ticket Closed')
+          .setColor("#FF2400")
+          .setTitle("Ticket Logs | Ticket Closed")
           .addFields([
             {
-              name: '• Closed By',
+              name: "• Closed By",
               value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
             },
             {
-              name: '• Ticket Creator',
+              name: "• Ticket Creator",
               value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
             },
             {
-              name: '• Ticket',
+              name: "• Ticket",
               value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
             },
           ])
           .setTimestamp()
           .setThumbnail(
             interaction.user.displayAvatarURL({
-              format: 'png',
+              format: "png",
               dynamic: true,
               size: 1024,
             }),
           )
           .setFooter({
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
           });
 
         if (claimUser)
           logEmbed.addFields({
-            name: '• Claimed By',
+            name: "• Claimed By",
             value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
           });
         let logsChannel = interaction.guild.channels.cache.get(
@@ -807,19 +920,19 @@ module.exports = {
         );
 
         const reOpenButton = new ButtonBuilder()
-          .setCustomId('reOpen')
+          .setCustomId("reOpen")
           .setLabel(config.reOpenButton.label)
           .setEmoji(config.reOpenButton.emoji)
           .setStyle(ButtonStyle[config.reOpenButton.style]);
 
         const transcriptButton = new ButtonBuilder()
-          .setCustomId('createTranscript')
+          .setCustomId("createTranscript")
           .setLabel(config.transcriptButton.label)
           .setEmoji(config.transcriptButton.emoji)
           .setStyle(ButtonStyle[config.transcriptButton.style]);
 
         const deleteButton = new ButtonBuilder()
-          .setCustomId('deleteTicket')
+          .setCustomId("deleteTicket")
           .setLabel(config.deleteButton.label)
           .setEmoji(config.deleteButton.emoji)
           .setStyle(ButtonStyle[config.deleteButton.style]);
@@ -865,8 +978,8 @@ module.exports = {
             messageID = message.id;
           });
         await ticketsDB.set(`${interaction.channel.id}.closeMsgID`, messageID);
-        await ticketsDB.set(`${interaction.channel.id}.status`, 'Closed');
-        await mainDB.pull('openTickets', interaction.channel.id);
+        await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
+        await mainDB.pull("openTickets", interaction.channel.id);
 
         Object.keys(ticketCategories).forEach(async (id) => {
           if (ticketButton === id) {
@@ -893,7 +1006,7 @@ module.exports = {
       }
 
       // Ticket Claim button
-      if (interaction.customId === 'ticketclaim') {
+      if (interaction.customId === "ticketclaim") {
         if (
           !interaction.member.roles.cache.some((role) =>
             config.support_role_ids.includes(role.id),
@@ -906,9 +1019,9 @@ module.exports = {
         }
 
         await interaction.deferReply({ ephemeral: true });
-        const totalClaims = await mainDB.get('totalClaims');
+        const totalClaims = await mainDB.get("totalClaims");
         const embed = new EmbedBuilder()
-          .setTitle('Ticket Claimed')
+          .setTitle("Ticket Claimed")
           .setColor(config.default_embed_color)
           .setDescription(
             `This ticket has been claimed by <@!${interaction.user.id}>\nThey will be assisting you shortly!`,
@@ -919,7 +1032,7 @@ module.exports = {
             iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
           });
         interaction.editReply({
-          content: 'You successfully claimed this ticket!',
+          content: "You successfully claimed this ticket!",
           ephemeral: true,
         });
         interaction.channel.send({ embeds: [embed], ephemeral: false });
@@ -929,25 +1042,25 @@ module.exports = {
           .then(async (message) => {
             const embed = message.embeds[0];
             embed.fields[embed.fields.length - 1] = {
-              name: 'Claimed by',
+              name: "Claimed by",
               value: `> <@!${interaction.user.id}> (${sanitizeInput(interaction.user.tag)})`,
             };
 
             const closeButton = new ButtonBuilder()
-              .setCustomId('closeTicket')
+              .setCustomId("closeTicket")
               .setLabel(config.closeButton.label)
               .setEmoji(config.closeButton.emoji)
               .setStyle(ButtonStyle[config.closeButton.style]);
 
             const claimButton = new ButtonBuilder()
-              .setCustomId('ticketclaim')
+              .setCustomId("ticketclaim")
               .setLabel(config.claimButton.label)
               .setEmoji(config.claimButton.emoji)
               .setStyle(ButtonStyle[config.claimButton.style])
               .setDisabled(true);
 
             const unClaimButton = new ButtonBuilder()
-              .setCustomId('ticketunclaim')
+              .setCustomId("ticketunclaim")
               .setLabel(config.unclaimButton.label)
               .setEmoji(config.unclaimButton.emoji)
               .setStyle(ButtonStyle[config.unclaimButton.style]);
@@ -1001,31 +1114,31 @@ module.exports = {
 
             const logEmbed = new EmbedBuilder()
               .setColor(config.default_embed_color)
-              .setTitle('Ticket Logs | Ticket Claimed')
+              .setTitle("Ticket Logs | Ticket Claimed")
               .addFields([
                 {
-                  name: '• Executor',
+                  name: "• Executor",
                   value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
                 },
                 {
-                  name: '• Ticket',
+                  name: "• Ticket",
                   value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
                 },
               ])
               .setTimestamp()
               .setThumbnail(
                 interaction.user.displayAvatarURL({
-                  format: 'png',
+                  format: "png",
                   dynamic: true,
                   size: 1024,
                 }),
               )
               .setFooter({
                 text: `${interaction.user.tag}`,
-                iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+                iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
               });
             logsChannel.send({ embeds: [logEmbed] });
-            await mainDB.set('totalClaims', totalClaims + 1);
+            await mainDB.set("totalClaims", totalClaims + 1);
             logMessage(
               `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
             );
@@ -1033,12 +1146,12 @@ module.exports = {
       }
 
       // Ticket Unclaim button
-      if (interaction.customId === 'ticketunclaim') {
+      if (interaction.customId === "ticketunclaim") {
         if (
           (await ticketsDB.get(`${interaction.channel.id}.claimed`)) === false
         )
           return interaction.reply({
-            content: 'This ticket has not been claimed!',
+            content: "This ticket has not been claimed!",
             ephemeral: true,
           });
         if (
@@ -1051,7 +1164,7 @@ module.exports = {
           });
 
         await interaction.deferReply({ ephemeral: true });
-        const totalClaims = await mainDB.get('totalClaims');
+        const totalClaims = await mainDB.get("totalClaims");
         let ticketButton = await ticketsDB.get(
           `${interaction.channel.id}.button`,
         );
@@ -1072,8 +1185,8 @@ module.exports = {
         });
 
         const embed = new EmbedBuilder()
-          .setTitle('Ticket Unclaimed')
-          .setColor('#FF2400')
+          .setTitle("Ticket Unclaimed")
+          .setColor("#FF2400")
           .setDescription(
             `This ticket has been unclaimed by <@!${interaction.user.id}>`,
           )
@@ -1083,7 +1196,7 @@ module.exports = {
             iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
           });
         interaction.editReply({
-          content: 'You successfully unclaimed this ticket!',
+          content: "You successfully unclaimed this ticket!",
           ephemeral: true,
         });
         interaction.channel.send({ embeds: [embed] });
@@ -1093,18 +1206,18 @@ module.exports = {
           .then(async (message) => {
             const embed = message.embeds[0];
             embed.fields[embed.fields.length - 1] = {
-              name: 'Claimed by',
-              value: '> This ticket has not been claimed!',
+              name: "Claimed by",
+              value: "> This ticket has not been claimed!",
             };
 
             const closeButton = new ButtonBuilder()
-              .setCustomId('closeTicket')
+              .setCustomId("closeTicket")
               .setLabel(config.closeButton.label)
               .setEmoji(config.closeButton.emoji)
               .setStyle(ButtonStyle[config.closeButton.style]);
 
             const claimButton = new ButtonBuilder()
-              .setCustomId('ticketclaim')
+              .setCustomId("ticketclaim")
               .setLabel(config.claimButton.label)
               .setEmoji(config.claimButton.emoji)
               .setStyle(ButtonStyle[config.claimButton.style]);
@@ -1117,39 +1230,39 @@ module.exports = {
             message.edit({ embeds: [embed], components: [actionRow3] });
 
             await ticketsDB.set(`${interaction.channel.id}.claimed`, false);
-            await ticketsDB.set(`${interaction.channel.id}.claimUser`, '');
+            await ticketsDB.set(`${interaction.channel.id}.claimUser`, "");
 
             let logsChannel = interaction.guild.channels.cache.get(
               config.logs_channel_id,
             );
 
             const logEmbed = new EmbedBuilder()
-              .setColor('#FF2400')
-              .setTitle('Ticket Logs | Ticket Unclaimed')
+              .setColor("#FF2400")
+              .setTitle("Ticket Logs | Ticket Unclaimed")
               .addFields([
                 {
-                  name: '• Executor',
+                  name: "• Executor",
                   value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
                 },
                 {
-                  name: '• Ticket',
+                  name: "• Ticket",
                   value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
                 },
               ])
               .setTimestamp()
               .setThumbnail(
                 interaction.user.displayAvatarURL({
-                  format: 'png',
+                  format: "png",
                   dynamic: true,
                   size: 1024,
                 }),
               )
               .setFooter({
                 text: `${interaction.user.tag}`,
-                iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+                iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
               });
             logsChannel.send({ embeds: [logEmbed] });
-            await mainDB.set('totalClaims', totalClaims - 1);
+            await mainDB.set("totalClaims", totalClaims - 1);
             logMessage(
               `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,
             );
@@ -1167,10 +1280,10 @@ module.exports = {
             .setColor(category.color)
             .setAuthor({
               name: `${category.embedTitle}`,
-              iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+              iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
             })
             .setThumbnail(
-              `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+              `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
             )
             .setDescription(category.description)
             .setFooter({
@@ -1205,7 +1318,7 @@ module.exports = {
             });
           }
           const closeButton = new ButtonBuilder()
-            .setCustomId('closeTicket')
+            .setCustomId("closeTicket")
             .setLabel(config.closeButton.label)
             .setEmoji(config.closeButton.emoji)
             .setStyle(ButtonStyle[config.closeButton.style]);
@@ -1214,7 +1327,7 @@ module.exports = {
 
           if (config.claimFeature) {
             const claimButton = new ButtonBuilder()
-              .setCustomId('ticketclaim')
+              .setCustomId("ticketclaim")
               .setLabel(config.claimButton.label)
               .setEmoji(config.claimButton.emoji)
               .setStyle(ButtonStyle[config.claimButton.style]);
@@ -1223,14 +1336,14 @@ module.exports = {
           }
 
           try {
-            const TICKETCOUNT = await mainDB.get('totalTickets');
+            const TICKETCOUNT = await mainDB.get("totalTickets");
             const USERNAME = interaction.user.username;
             const configValue = category.ticketName;
 
             let channelName;
-            if (configValue === 'USERNAME') {
+            if (configValue === "USERNAME") {
               channelName = `${category.name}-${USERNAME}`;
-            } else if (configValue === 'TICKETCOUNT') {
+            } else if (configValue === "TICKETCOUNT") {
               channelName = `${category.name}-${TICKETCOUNT}`;
             }
 
@@ -1284,8 +1397,8 @@ module.exports = {
                 const rolesToMention = pingRoles
                   ? config.ping_role_ids
                       .map((roleId) => `<@&${roleId}>`)
-                      .join(' ')
-                  : '';
+                      .join(" ")
+                  : "";
 
                 await channel
                   .send({
@@ -1296,22 +1409,22 @@ module.exports = {
                   })
                   .then(async (message) => {
                     let newTicketOpened = new EmbedBuilder()
-                      .setTitle('Ticket Created!')
+                      .setTitle("Ticket Created!")
                       .setColor(config.default_embed_color)
                       .setDescription(
                         `Your new ticket (<#${channel.id}>) has been created, **${sanitizeInput(interaction.user.username)}!**`,
                       )
                       .setFooter({
                         text: `${interaction.user.tag}`,
-                        iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+                        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
                       })
                       .setTimestamp();
                     const actionRow4 = new ActionRowBuilder().addComponents(
                       new ButtonBuilder()
                         .setStyle(ButtonStyle.Link)
                         .setURL(`${channel.url}`)
-                        .setLabel('Click Here')
-                        .setEmoji('🎫'),
+                        .setLabel("Click Here")
+                        .setEmoji("🎫"),
                     );
                     await interaction.editReply({
                       embeds: [newTicketOpened],
@@ -1325,37 +1438,37 @@ module.exports = {
                       button: customId,
                       msgID: message.id,
                       claimed: false,
-                      claimUser: '',
-                      status: 'Open',
-                      closeUserID: '',
+                      claimUser: "",
+                      status: "Open",
+                      closeUserID: "",
                     });
 
-                    await mainDB.push('openTickets', `${channel.id}`);
+                    await mainDB.push("openTickets", `${channel.id}`);
 
                     const logEmbed = new EmbedBuilder()
                       .setColor(config.default_embed_color)
-                      .setTitle('Ticket Logs | Ticket Created')
+                      .setTitle("Ticket Logs | Ticket Created")
                       .addFields([
                         {
-                          name: '• Ticket Creator',
+                          name: "• Ticket Creator",
                           value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
                         },
                         {
-                          name: '• Ticket',
+                          name: "• Ticket",
                           value: `> #${sanitizeInput(channel.name)}`,
                         },
                       ])
                       .setTimestamp()
                       .setThumbnail(
                         interaction.user.displayAvatarURL({
-                          format: 'png',
+                          format: "png",
                           dynamic: true,
                           size: 1024,
                         }),
                       )
                       .setFooter({
                         text: `${interaction.user.tag}`,
-                        iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+                        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
                       });
 
                     let logsChannel = interaction.guild.channels.cache.get(
@@ -1380,13 +1493,73 @@ module.exports = {
                   });
               });
 
-            await mainDB.set('totalTickets', TICKETCOUNT + 1);
+            await mainDB.set("totalTickets", TICKETCOUNT + 1);
           } catch (error) {
-            console.error('Error creating ticket:', error);
+            console.error("Error creating ticket:", error);
             return null;
           }
         }
       });
+
+      for (let i = 1; i <= 5; i++) {
+        if (interaction.customId === `${i}-ratingModal`) {
+          await interaction.deferReply({ ephemeral: true });
+          const message = await interaction.user.dmChannel.messages.fetch(
+            interaction.message.id,
+          );
+          await message.edit({ components: [] });
+          const currentFooter = message.embeds[0].footer.text;
+          const ratingEmbed = new EmbedBuilder()
+            .setColor(config.default_embed_color)
+            .setTitle("Ticket Logs | Ticket Feedback")
+            .setThumbnail(
+              `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+            )
+            .setFooter({
+              text: `${interaction.user.tag}`,
+              iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+            })
+            .setTimestamp();
+          const questions = config.DMUserSettings.ratingSystem.questions;
+
+          ratingEmbed.addFields({
+            name: "• Ticket Creator",
+            value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+          });
+
+          ratingEmbed.addFields({
+            name: "• Ticket",
+            value: `> ${sanitizeInput(currentFooter)}`,
+          });
+
+          for (
+            let questionIndex = 0;
+            questionIndex < questions.length;
+            questionIndex++
+          ) {
+            const question = questions[questionIndex];
+            const { label } = question;
+            const value = interaction.fields.getTextInputValue(
+              `ratingQuestion${questionIndex + 1}`,
+            );
+
+            ratingEmbed.addFields({
+              name: `• ${label}`,
+              value: `>>> ${value}`,
+            });
+          }
+          ratingEmbed.addFields({
+            name: "• Ticket Rating",
+            value: `${"⭐".repeat(i)} **(${i}/5)**`,
+          });
+          let logsChannel = client.channels.cache.get(config.logs_channel_id);
+          await logsChannel.send({ embeds: [ratingEmbed] });
+          await interaction.editReply({
+            content: "Your feedback has been sent successfully!",
+            ephemeral: true,
+          });
+        }
+      }
     }
   },
 };
