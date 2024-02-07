@@ -7,18 +7,18 @@ const {
   ButtonStyle,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketCategories, logMessage, mainDB } = require('../../index.js');
+const { ticketCategories, logMessage, mainDB } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.panel.enabled,
   data: new SlashCommandBuilder()
-    .setName('panel')
-    .setDescription('Send the ticket panel in the channel.')
+    .setName("panel")
+    .setDescription("Send the ticket panel in the channel.")
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.panel.permission],
     )
@@ -44,7 +44,7 @@ module.exports = {
         iconURL: config.commands.panel.embed.footer_icon_url,
       });
 
-    if (config.panelMethod === 'Buttons') {
+    if (config.panelMethod === "Buttons") {
       // Creating the buttons, action rows and more
       const buttons = [];
 
@@ -77,7 +77,7 @@ module.exports = {
 
       // Send an initial response to acknowledge receipt of the command
       await interaction.reply({
-        content: 'Sending the panel in this channel...',
+        content: "Sending the panel in this channel...",
         ephemeral: true,
       });
       // Send the panel embed and action rows
@@ -88,7 +88,7 @@ module.exports = {
       logMessage(
         `${interaction.user.tag} sent the ticket panel in the channel #${interaction.channel.name}`,
       );
-    } else if (config.panelMethod === 'Menu') {
+    } else if (config.panelMethod === "Menu") {
       // Create an array to hold select menu options
       const options = [];
 
@@ -111,7 +111,7 @@ module.exports = {
 
       // Creating the select menu with the options
       const selectMenu = new StringSelectMenuBuilder()
-        .setCustomId('categoryMenu')
+        .setCustomId("categoryMenu")
         .setPlaceholder(config.menuPlaceholder)
         .setMinValues(1)
         .setMaxValues(1)
@@ -122,7 +122,7 @@ module.exports = {
 
       // Send an initial response to acknowledge receipt of the command
       await interaction.reply({
-        content: 'Sending the panel in this channel...',
+        content: "Sending the panel in this channel...",
         ephemeral: true,
       });
       // Send the panel embed and action row

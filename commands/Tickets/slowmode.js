@@ -2,25 +2,25 @@ const {
   EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, logMessage, formatTime } = require('../../index.js');
+const { ticketsDB, logMessage, formatTime } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.slowmode.enabled,
   data: new SlashCommandBuilder()
-    .setName('slowmode')
-    .setDescription('Add slowmode to a ticket channel.')
+    .setName("slowmode")
+    .setDescription("Add slowmode to a ticket channel.")
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.slowmode.permission],
     )
     .addIntegerOption((option) =>
       option
-        .setName('time')
-        .setDescription('Input a time in seconds')
+        .setName("time")
+        .setDescription("Input a time in seconds")
         .setRequired(true)
         .setMaxValue(21600),
     )
@@ -44,7 +44,7 @@ module.exports = {
       });
     }
 
-    const time = interaction.options.getInteger('time');
+    const time = interaction.options.getInteger("time");
     const currentSlowmode = interaction.channel.rateLimitPerUser;
 
     if (currentSlowmode === time) {

@@ -5,18 +5,18 @@ const {
   ButtonBuilder,
   ButtonStyle,
   ActionRowBuilder,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, logMessage, client } = require('../../index.js');
+const { ticketsDB, logMessage, client } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.alert.enabled,
   data: new SlashCommandBuilder()
-    .setName('alert')
-    .setDescription('Alert the ticket creator.')
+    .setName("alert")
+    .setDescription("Alert the ticket creator.")
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.alert.permission],
     )
@@ -45,7 +45,7 @@ module.exports = {
     );
 
     const closeButton = new ButtonBuilder()
-      .setCustomId('closeTicket')
+      .setCustomId("closeTicket")
       .setLabel(config.closeButton.label)
       .setEmoji(config.closeButton.emoji)
       .setStyle(ButtonStyle[config.closeButton.style]);

@@ -4,12 +4,12 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, sanitizeInput } = require('../index.js');
+const { ticketsDB, sanitizeInput } = require("../index.js");
 
 module.exports = {
   name: Events.GuildMemberRemove,
@@ -21,7 +21,7 @@ module.exports = {
           let ticketChannel = member.guild.channels.cache.get(channel.id);
 
           const ticketDeleteButton = new ButtonBuilder()
-            .setCustomId('deleteTicket')
+            .setCustomId("deleteTicket")
             .setLabel(config.deleteButton.label)
             .setEmoji(config.deleteButton.emoji)
             .setStyle(ButtonStyle[config.deleteButton.style]);
@@ -41,7 +41,7 @@ module.exports = {
             )
             .setFooter({
               text: `${member.user.tag}`,
-              iconURL: `${member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+              iconURL: `${member.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
             })
             .setTimestamp();
           ticketChannel.send({ embeds: [leftEmbed], components: [leftRow] });

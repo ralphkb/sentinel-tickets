@@ -5,10 +5,10 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
   ticketsDB,
@@ -16,13 +16,13 @@ const {
   logMessage,
   ticketCategories,
   mainDB,
-} = require('../../index.js');
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.claim.enabled,
   data: new SlashCommandBuilder()
-    .setName('claim')
-    .setDescription('Claim a ticket')
+    .setName("claim")
+    .setDescription("Claim a ticket")
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.claim.permission],
     )
@@ -48,7 +48,7 @@ module.exports = {
 
     if (config.claimFeature === false) {
       return interaction.reply({
-        content: 'The claim feature is currently disabled.',
+        content: "The claim feature is currently disabled.",
         ephemeral: true,
       });
     }
@@ -64,10 +64,10 @@ module.exports = {
     }
 
     await interaction.deferReply({ ephemeral: true });
-    const totalClaims = await mainDB.get('totalClaims');
+    const totalClaims = await mainDB.get("totalClaims");
 
     const embed = new EmbedBuilder()
-      .setTitle('Ticket Claimed')
+      .setTitle("Ticket Claimed")
       .setColor(config.default_embed_color)
       .setDescription(
         `This ticket has been claimed by <@!${interaction.user.id}>\nThey will be assisting you shortly!`,
@@ -78,7 +78,7 @@ module.exports = {
         iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
       });
     interaction.editReply({
-      content: 'You successfully claimed this ticket!',
+      content: "You successfully claimed this ticket!",
       ephemeral: true,
     });
     interaction.channel.send({ embeds: [embed], ephemeral: false });
@@ -88,25 +88,25 @@ module.exports = {
       .then(async (message) => {
         const embed = message.embeds[0];
         embed.fields[embed.fields.length - 1] = {
-          name: 'Claimed by',
+          name: "Claimed by",
           value: `> <@!${interaction.user.id}> (${sanitizeInput(interaction.user.tag)})`,
         };
 
         const closeButton = new ButtonBuilder()
-          .setCustomId('closeTicket')
+          .setCustomId("closeTicket")
           .setLabel(config.closeButton.label)
           .setEmoji(config.closeButton.emoji)
           .setStyle(ButtonStyle[config.closeButton.style]);
 
         const claimButton = new ButtonBuilder()
-          .setCustomId('ticketclaim')
+          .setCustomId("ticketclaim")
           .setLabel(config.claimButton.label)
           .setEmoji(config.claimButton.emoji)
           .setStyle(ButtonStyle[config.claimButton.style])
           .setDisabled(true);
 
         const unClaimButton = new ButtonBuilder()
-          .setCustomId('ticketunclaim')
+          .setCustomId("ticketunclaim")
           .setLabel(config.unclaimButton.label)
           .setEmoji(config.unclaimButton.emoji)
           .setStyle(ButtonStyle[config.unclaimButton.style]);
@@ -157,31 +157,31 @@ module.exports = {
 
         const logEmbed = new EmbedBuilder()
           .setColor(config.default_embed_color)
-          .setTitle('Ticket Logs | Ticket Claimed')
+          .setTitle("Ticket Logs | Ticket Claimed")
           .addFields([
             {
-              name: '• Executor',
+              name: "• Executor",
               value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
             },
             {
-              name: '• Ticket',
+              name: "• Ticket",
               value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
             },
           ])
           .setTimestamp()
           .setThumbnail(
             interaction.user.displayAvatarURL({
-              format: 'png',
+              format: "png",
               dynamic: true,
               size: 1024,
             }),
           )
           .setFooter({
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
           });
         logsChannel.send({ embeds: [logEmbed] });
-        await mainDB.set('totalClaims', totalClaims + 1);
+        await mainDB.set("totalClaims", totalClaims + 1);
         logMessage(
           `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
         );

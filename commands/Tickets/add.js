@@ -2,23 +2,23 @@ const {
   EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, sanitizeInput, logMessage } = require('../../index.js');
+const { ticketsDB, sanitizeInput, logMessage } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.add.enabled,
   data: new SlashCommandBuilder()
-    .setName('add')
-    .setDescription('Add a user or role to a ticket channel.')
+    .setName("add")
+    .setDescription("Add a user or role to a ticket channel.")
     .addUserOption((option) =>
-      option.setName('user').setDescription('Select a user').setRequired(false),
+      option.setName("user").setDescription("Select a user").setRequired(false),
     )
     .addRoleOption((option) =>
-      option.setName('role').setDescription('Select a role').setRequired(false),
+      option.setName("role").setDescription("Select a role").setRequired(false),
     )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.add.permission],
@@ -43,15 +43,15 @@ module.exports = {
       });
     }
 
-    let user = interaction.options.getUser('user');
-    let role = interaction.options.getRole('role');
+    let user = interaction.options.getUser("user");
+    let role = interaction.options.getRole("role");
     let logsChannel = interaction.guild.channels.cache.get(
       config.logs_channel_id,
     );
 
     if ((!user && !role) || (user && role)) {
       return interaction.reply({
-        content: 'Please provide either a user or a role, but not both.',
+        content: "Please provide either a user or a role, but not both.",
         ephemeral: true,
       });
     }
@@ -60,7 +60,7 @@ module.exports = {
       // Check that the user is already in the ticket channel
       if (interaction.channel.members.has(user.id)) {
         return interaction.reply({
-          content: 'That user is already in this ticket.',
+          content: "That user is already in this ticket.",
           ephemeral: true,
         });
       }
@@ -93,14 +93,14 @@ module.exports = {
         .setTimestamp()
         .setThumbnail(
           interaction.user.displayAvatarURL({
-            format: 'png',
+            format: "png",
             dynamic: true,
             size: 1024,
           }),
         )
         .setFooter({
           text: `${interaction.user.tag}`,
-          iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+          iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
         });
 
       const embed = new EmbedBuilder()
@@ -119,9 +119,9 @@ module.exports = {
 
     if (role) {
       // Check that the role is already in the ticket channel
-      if (interaction.channel.permissionsFor(role.id).has('ViewChannel')) {
+      if (interaction.channel.permissionsFor(role.id).has("ViewChannel")) {
         return interaction.reply({
-          content: 'That role is already in this ticket.',
+          content: "That role is already in this ticket.",
           ephemeral: true,
         });
       }
@@ -154,14 +154,14 @@ module.exports = {
         .setTimestamp()
         .setThumbnail(
           interaction.user.displayAvatarURL({
-            format: 'png',
+            format: "png",
             dynamic: true,
             size: 1024,
           }),
         )
         .setFooter({
           text: `${interaction.user.tag}`,
-          iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+          iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
         });
 
       const embed = new EmbedBuilder()

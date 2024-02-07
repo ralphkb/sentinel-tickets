@@ -5,10 +5,10 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
   ticketsDB,
@@ -16,13 +16,13 @@ const {
   logMessage,
   ticketCategories,
   mainDB,
-} = require('../../index.js');
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.unclaim.enabled,
   data: new SlashCommandBuilder()
-    .setName('unclaim')
-    .setDescription('Unclaim a ticket')
+    .setName("unclaim")
+    .setDescription("Unclaim a ticket")
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.unclaim.permission],
     )
@@ -48,14 +48,14 @@ module.exports = {
 
     if (config.claimFeature === false) {
       return interaction.reply({
-        content: 'The claim feature is currently disabled.',
+        content: "The claim feature is currently disabled.",
         ephemeral: true,
       });
     }
 
     if ((await ticketsDB.get(`${interaction.channel.id}.claimed`)) === false) {
       return interaction.reply({
-        content: 'This ticket has not been claimed!',
+        content: "This ticket has not been claimed!",
         ephemeral: true,
       });
     }
@@ -71,7 +71,7 @@ module.exports = {
     }
 
     await interaction.deferReply({ ephemeral: true });
-    const totalClaims = await mainDB.get('totalClaims');
+    const totalClaims = await mainDB.get("totalClaims");
 
     let ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
 
@@ -91,8 +91,8 @@ module.exports = {
     });
 
     const embed = new EmbedBuilder()
-      .setTitle('Ticket Unclaimed')
-      .setColor('#FF2400')
+      .setTitle("Ticket Unclaimed")
+      .setColor("#FF2400")
       .setDescription(
         `This ticket has been unclaimed by <@!${interaction.user.id}>`,
       )
@@ -102,7 +102,7 @@ module.exports = {
         iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
       });
     interaction.editReply({
-      content: 'You successfully unclaimed this ticket!',
+      content: "You successfully unclaimed this ticket!",
       ephemeral: true,
     });
     interaction.channel.send({ embeds: [embed] });
@@ -112,18 +112,18 @@ module.exports = {
       .then(async (message) => {
         const embed = message.embeds[0];
         embed.fields[embed.fields.length - 1] = {
-          name: 'Claimed by',
-          value: '> This ticket has not been claimed!',
+          name: "Claimed by",
+          value: "> This ticket has not been claimed!",
         };
 
         const closeButton = new ButtonBuilder()
-          .setCustomId('closeTicket')
+          .setCustomId("closeTicket")
           .setLabel(config.closeButton.label)
           .setEmoji(config.closeButton.emoji)
           .setStyle(ButtonStyle[config.closeButton.style]);
 
         const claimButton = new ButtonBuilder()
-          .setCustomId('ticketclaim')
+          .setCustomId("ticketclaim")
           .setLabel(config.claimButton.label)
           .setEmoji(config.claimButton.emoji)
           .setStyle(ButtonStyle[config.claimButton.style]);
@@ -136,39 +136,39 @@ module.exports = {
         message.edit({ embeds: [embed], components: [actionRow3] });
 
         await ticketsDB.set(`${interaction.channel.id}.claimed`, false);
-        await ticketsDB.set(`${interaction.channel.id}.claimUser`, '');
+        await ticketsDB.set(`${interaction.channel.id}.claimUser`, "");
 
         let logsChannel = interaction.guild.channels.cache.get(
           config.logs_channel_id,
         );
 
         const logEmbed = new EmbedBuilder()
-          .setColor('#FF2400')
-          .setTitle('Ticket Logs | Ticket Unclaimed')
+          .setColor("#FF2400")
+          .setTitle("Ticket Logs | Ticket Unclaimed")
           .addFields([
             {
-              name: '• Executor',
+              name: "• Executor",
               value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
             },
             {
-              name: '• Ticket',
+              name: "• Ticket",
               value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
             },
           ])
           .setTimestamp()
           .setThumbnail(
             interaction.user.displayAvatarURL({
-              format: 'png',
+              format: "png",
               dynamic: true,
               size: 1024,
             }),
           )
           .setFooter({
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
           });
         logsChannel.send({ embeds: [logEmbed] });
-        await mainDB.set('totalClaims', totalClaims - 1);
+        await mainDB.set("totalClaims", totalClaims - 1);
         logMessage(
           `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,
         );

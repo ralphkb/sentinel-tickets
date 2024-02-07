@@ -5,10 +5,10 @@ const {
   ButtonBuilder,
   ButtonStyle,
   ActionRowBuilder,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
   client,
@@ -17,13 +17,13 @@ const {
   ticketCategories,
   sanitizeInput,
   logMessage,
-} = require('../../index.js');
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.close.enabled,
   data: new SlashCommandBuilder()
-    .setName('close')
-    .setDescription('Close a ticket.')
+    .setName("close")
+    .setDescription("Close a ticket.")
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.close.permission],
     )
@@ -37,10 +37,10 @@ module.exports = {
     }
 
     if (
-      (await ticketsDB.get(`${interaction.channel.id}.status`)) === 'Closed'
+      (await ticketsDB.get(`${interaction.channel.id}.status`)) === "Closed"
     ) {
       return interaction.reply({
-        content: 'This ticket is already closed!',
+        content: "This ticket is already closed!",
         ephemeral: true,
       });
     }
@@ -87,19 +87,19 @@ module.exports = {
       .setTimestamp()
       .setThumbnail(
         interaction.user.displayAvatarURL({
-          format: 'png',
+          format: "png",
           dynamic: true,
           size: 1024,
         }),
       )
       .setFooter({
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       });
 
     if (claimUser)
       logEmbed.addFields({
-        name: '• Claimed By',
+        name: "• Claimed By",
         value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
       });
 
@@ -112,19 +112,19 @@ module.exports = {
     );
 
     const reOpenButton = new ButtonBuilder()
-      .setCustomId('reOpen')
+      .setCustomId("reOpen")
       .setLabel(config.reOpenButton.label)
       .setEmoji(config.reOpenButton.emoji)
       .setStyle(ButtonStyle[config.reOpenButton.style]);
 
     const transcriptButton = new ButtonBuilder()
-      .setCustomId('createTranscript')
+      .setCustomId("createTranscript")
       .setLabel(config.transcriptButton.label)
       .setEmoji(config.transcriptButton.emoji)
       .setStyle(ButtonStyle[config.transcriptButton.style]);
 
     const deleteButton = new ButtonBuilder()
-      .setCustomId('deleteTicket')
+      .setCustomId("deleteTicket")
       .setLabel(config.deleteButton.label)
       .setEmoji(config.deleteButton.emoji)
       .setStyle(ButtonStyle[config.deleteButton.style]);
@@ -167,8 +167,8 @@ module.exports = {
         messageID = message.id;
       });
     await ticketsDB.set(`${interaction.channel.id}.closeMsgID`, messageID);
-    await ticketsDB.set(`${interaction.channel.id}.status`, 'Closed');
-    await mainDB.pull('openTickets', interaction.channel.id);
+    await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
+    await mainDB.pull("openTickets", interaction.channel.id);
 
     Object.keys(ticketCategories).forEach(async (id) => {
       if (ticketButton === id) {

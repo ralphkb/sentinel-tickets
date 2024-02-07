@@ -2,17 +2,17 @@ const {
   EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
   ticketsDB,
   sanitizeInput,
   logMessage,
   ticketCategories,
-} = require('../../index.js');
+} = require("../../index.js");
 const customIds = Object.keys(ticketCategories);
 const choices = customIds.map((customId) => {
   const category = ticketCategories[customId];
@@ -22,12 +22,12 @@ const choices = customIds.map((customId) => {
 module.exports = {
   enabled: config.commands.move.enabled,
   data: new SlashCommandBuilder()
-    .setName('move')
-    .setDescription('Move a ticket channel from one category to another.')
+    .setName("move")
+    .setDescription("Move a ticket channel from one category to another.")
     .addStringOption((option) =>
       option
-        .setName('category')
-        .setDescription('Input a Category Name')
+        .setName("category")
+        .setDescription("Input a Category Name")
         .setRequired(true),
     )
     .setDefaultMemberPermissions(
@@ -53,21 +53,21 @@ module.exports = {
       });
     }
 
-    let option = interaction.options.getString('category').toLowerCase();
+    let option = interaction.options.getString("category").toLowerCase();
     let ticketType = await ticketsDB.get(
       `${interaction.channel.id}.ticketType`,
     );
 
     if (!choices.includes(option)) {
       return interaction.reply({
-        content: `Invalid option. Available options are: ${choices.join(', ')}`,
+        content: `Invalid option. Available options are: ${choices.join(", ")}`,
         ephemeral: true,
       });
     }
 
     if (option === ticketType) {
       return interaction.reply({
-        content: 'This ticket is already in that category.',
+        content: "This ticket is already in that category.",
         ephemeral: true,
       });
     }
@@ -101,14 +101,14 @@ module.exports = {
       .setTimestamp()
       .setThumbnail(
         interaction.user.displayAvatarURL({
-          format: 'png',
+          format: "png",
           dynamic: true,
           size: 1024,
         }),
       )
       .setFooter({
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       });
     logsChannel.send({ embeds: [logEmbed] });
 

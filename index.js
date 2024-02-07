@@ -5,56 +5,56 @@ const {
   Collection,
   AttachmentBuilder,
   ActivityType,
-} = require('discord.js');
-const dotenv = require('dotenv');
-const fs = require('fs');
-const path = require('path');
-const packageJson = require('./package.json');
-const { QuickDB } = require('quick.db');
-const discordHtmlTranscripts = require('discord-html-transcripts');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v10');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const dotenv = require("dotenv");
+const fs = require("fs");
+const path = require("path");
+const packageJson = require("./package.json");
+const { QuickDB } = require("quick.db");
+const discordHtmlTranscripts = require("discord-html-transcripts");
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v10");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 
 // Check if the data directory exists, and if not, create it
-const dataDir = path.join(__dirname, 'data');
+const dataDir = path.join(__dirname, "data");
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
-const mainDB = new QuickDB({ filePath: 'data/main.sqlite' });
-const ticketsDB = new QuickDB({ filePath: 'data/tickets.sqlite' });
+const mainDB = new QuickDB({ filePath: "data/main.sqlite" });
+const ticketsDB = new QuickDB({ filePath: "data/tickets.sqlite" });
 const date = new Date();
 const options = {
-  timeZoneName: 'short',
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric',
+  timeZoneName: "short",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
   hour12: true,
 };
-const timeString = date.toLocaleString('en-US', options);
+const timeString = date.toLocaleString("en-US", options);
 
 (async function () {
   // Initialize totalTickets to 1 if it doesn't exist
-  if (!(await mainDB.has('totalTickets'))) {
-    await mainDB.set('totalTickets', 1);
+  if (!(await mainDB.has("totalTickets"))) {
+    await mainDB.set("totalTickets", 1);
   }
 
   // Initialize openTickets to an empty array if it doesn't exist
-  if (!(await mainDB.has('openTickets'))) {
-    await mainDB.set('openTickets', []);
+  if (!(await mainDB.has("openTickets"))) {
+    await mainDB.set("openTickets", []);
   }
 
   // Initialize totalClaims to 0 if it doesn't exist
-  if (!(await mainDB.has('totalClaims'))) {
-    await mainDB.set('totalClaims', 0);
+  if (!(await mainDB.has("totalClaims"))) {
+    await mainDB.set("totalClaims", 0);
   }
 
   // Initialize blacklistedUsers to an empty array if it doesn't exist
-  if (!(await mainDB.has('blacklistedUsers'))) {
-    await mainDB.set('blacklistedUsers', []);
+  if (!(await mainDB.has("blacklistedUsers"))) {
+    await mainDB.set("blacklistedUsers", []);
   }
 })();
 
@@ -116,7 +116,7 @@ async function saveTranscript(interaction, message, saveImages = false) {
   const createTranscriptOptions = {
     limit: -1,
     saveImages,
-    returnType: 'buffer',
+    returnType: "buffer",
     poweredBy: false,
   };
 
@@ -147,7 +147,7 @@ async function saveTranscript(interaction, message, saveImages = false) {
 async function saveTranscriptTxt(interaction) {
   const channel = interaction.channel;
   let lastId;
-  let transcript = '';
+  let transcript = "";
 
   // Add some useful information to the top of the transcript
   let ticketUserID = client.users.cache.get(
@@ -157,7 +157,7 @@ async function saveTranscriptTxt(interaction) {
     await ticketsDB.get(`${interaction.channel.id}.claimUser`),
   );
 
-  transcript += `Server: ${interaction.guild.name}\nTicket: #${interaction.channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${interaction.user.tag}\nClaimed By: ${claimUser ? sanitizeInput(claimUser.tag) : 'None'}\n\n`;
+  transcript += `Server: ${interaction.guild.name}\nTicket: #${interaction.channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${interaction.user.tag}\nClaimed By: ${claimUser ? sanitizeInput(claimUser.tag) : "None"}\n\n`;
   let totalFetched = 0;
   let checkpointLine = 7; // The line number where the writing begins on every iteration
 
@@ -182,29 +182,29 @@ async function saveTranscriptTxt(interaction) {
         if (m.content) {
           messageText += m.content;
           if (m.attachments.size > 0) {
-            messageText += ' ';
+            messageText += " ";
           }
         }
 
         if (m.attachments.size > 0) {
           const attachmentText = m.attachments
             .map((attachment) => attachment.proxyURL)
-            .join('\n');
+            .join("\n");
           messageText += attachmentText;
         }
 
         if (m.embeds.length > 0) {
           const embedText = m.embeds
             .map((embed) => {
-              let embedFields = '';
+              let embedFields = "";
 
               if (embed.fields && embed.fields.length > 0) {
                 embedFields = embed.fields
                   .map((field) => `${field.name} : ${field.value}`)
-                  .join('\n');
+                  .join("\n");
               }
 
-              let embedContent = '';
+              let embedContent = "";
               if (embed.title) {
                 embedContent += `Embed Title: ${embed.title}\n`;
               }
@@ -217,8 +217,8 @@ async function saveTranscriptTxt(interaction) {
 
               return embedContent.trim();
             })
-            .filter((embedText) => embedText !== '')
-            .join('\n');
+            .filter((embedText) => embedText !== "")
+            .join("\n");
 
           messageText += embedText;
         }
@@ -226,18 +226,18 @@ async function saveTranscriptTxt(interaction) {
         return messageText;
       })
       .reverse()
-      .join('\n');
+      .join("\n");
 
     // Insert the new lines at the specified checkpoint line
-    const transcriptLines = transcript.split('\n');
+    const transcriptLines = transcript.split("\n");
     transcriptLines.splice(checkpointLine, 0, newLines);
-    transcript = transcriptLines.join('\n');
+    transcript = transcriptLines.join("\n");
   }
 
   transcript += `\n\nTotal messages: ${totalFetched}`;
 
   if (transcript.length < 1) {
-    transcript = 'The Transcript of this ticket is empty';
+    transcript = "The Transcript of this ticket is empty";
   }
 
   return new AttachmentBuilder(Buffer.from(transcript), {
@@ -252,11 +252,11 @@ function formatTime(seconds) {
   const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
 
-  let result = '';
+  let result = "";
   if (d > 0) result += `${d}d `;
   if (h > 0) result += `${h}h `;
   if (m > 0) result += `${m}m `;
-  if (s > 0 || result === '') result += `${s}s`;
+  if (s > 0 || result === "") result += `${s}s`;
 
   return result.trim();
 }
@@ -266,18 +266,18 @@ async function logMessage(message) {
   const logMessage = `[${timeString}] [Bot v${packageJson.version}] [NodeJS ${process.version}] [LOG] ${message}\n\n`;
 
   try {
-    await fs.promises.appendFile('./logs.txt', logMessage);
+    await fs.promises.appendFile("./logs.txt", logMessage);
   } catch (err) {
-    console.log('Error writing to log file:', err);
+    console.log("Error writing to log file:", err);
   }
 }
 
 // Sanitizing function
 function sanitizeInput(input) {
-  const formattingCharacters = ['_', '*', '`', '~', '|', '-'];
+  const formattingCharacters = ["_", "*", "`", "~", "|", "-"];
   const escapedInput = input.replace(
-    new RegExp(`[${formattingCharacters.join('')}]`, 'g'),
-    '\\$&',
+    new RegExp(`[${formattingCharacters.join("")}]`, "g"),
+    "\\$&",
   );
   return escapedInput;
 }
@@ -311,10 +311,10 @@ module.exports = {
 client.cooldowns = new Collection();
 
 // Reading event files
-const eventsPath = path.join(__dirname, 'events');
+const eventsPath = path.join(__dirname, "events");
 const eventFiles = fs
   .readdirSync(eventsPath)
-  .filter((file) => file.endsWith('.js'));
+  .filter((file) => file.endsWith(".js"));
 
 for (const file of eventFiles) {
   const filePath = path.join(eventsPath, file);
@@ -333,39 +333,39 @@ async function logError(errorType, error) {
   const errorMessage = `[${timeString}] [Bot v${packageJson.version}] [NodeJS ${process.version}] [${errorType}]\n${error.stack}\n\n`;
 
   try {
-    await fs.promises.appendFile('./logs.txt', errorMessage);
+    await fs.promises.appendFile("./logs.txt", errorMessage);
   } catch (err) {
-    console.log('Error writing to log file:', err);
+    console.log("Error writing to log file:", err);
   }
 }
 
-client.on('warn', async (error) => {
+client.on("warn", async (error) => {
   console.log(error);
-  logError('WARN', error);
+  logError("WARN", error);
 });
 
-client.on('error', async (error) => {
+client.on("error", async (error) => {
   console.log(error);
-  logError('ERROR', error);
+  logError("ERROR", error);
 });
 
-process.on('unhandledRejection', async (error) => {
+process.on("unhandledRejection", async (error) => {
   console.log(error);
-  logError('unhandledRejection', error);
+  logError("unhandledRejection", error);
 });
 
-process.on('uncaughtException', async (error) => {
+process.on("uncaughtException", async (error) => {
   console.log(error);
-  logError('uncaughtException', error);
+  logError("uncaughtException", error);
 });
 
 client.commands = new Collection();
 const commands = [];
-const commandFolders = fs.readdirSync('./commands');
+const commandFolders = fs.readdirSync("./commands");
 for (const folder of commandFolders) {
   const commandFiles = fs
     .readdirSync(`./commands/${folder}`)
-    .filter((file) => file.endsWith('.js'));
+    .filter((file) => file.endsWith(".js"));
   for (const file of commandFiles) {
     const command = require(`./commands/${folder}/${file}`);
     if (command.enabled) {
@@ -376,10 +376,10 @@ for (const folder of commandFolders) {
   }
 }
 
-client.on('ready', async () => {
+client.on("ready", async () => {
   try {
     const rest = new REST({
-      version: '10',
+      version: "10",
     }).setToken(process.env.BOT_TOKEN);
 
     (async () => {
@@ -420,10 +420,10 @@ client.on('ready', async () => {
             },
           );
 
-          console.log('New slash commands registered successfully.');
+          console.log("New slash commands registered successfully.");
           console.log(commands.map((command) => command.name));
         } else {
-          console.log('No new slash commands to register.');
+          console.log("No new slash commands to register.");
         }
 
         // Remove the existing slash commands if there are any
@@ -440,10 +440,10 @@ client.on('ready', async () => {
             ),
           );
 
-          console.log('Existing slash commands removed successfully.');
+          console.log("Existing slash commands removed successfully.");
           console.log(removedCommands.map((command) => command.name));
         } else {
-          console.log('No existing slash commands to remove.');
+          console.log("No existing slash commands to remove.");
         }
       } catch (error) {
         if (error) {
@@ -467,20 +467,20 @@ client.on('ready', async () => {
       status: config.status.botStatus,
     };
 
-    if (config.status.botActivityType === 'Streaming') {
+    if (config.status.botActivityType === "Streaming") {
       presence.activities[0].url = config.status.streamingOptionURL;
     }
 
     client.user.setPresence(presence);
     console.log(`The ticket bot is now ready! Logged in as ${client.user.tag}`);
   } catch (error) {
-    console.error('An error occurred during initialization:', error);
+    console.error("An error occurred during initialization:", error);
   }
 });
 
 // Function to reload all slash commands
 async function reloadAllSlashCommands() {
-  const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
+  const rest = new REST({ version: "10" }).setToken(process.env.BOT_TOKEN);
   await rest.put(
     Routes.applicationGuildCommands(
       process.env.CLIENT_ID,
@@ -492,28 +492,28 @@ async function reloadAllSlashCommands() {
   );
 
   console.log(
-    'All slash commands have been reloaded! Please use with caution due to rate limits.',
+    "All slash commands have been reloaded! Please use with caution due to rate limits.",
   );
   console.log(commands.map((command) => command.name));
 }
 
 // Log in to Discord with your app's token
 client.login(process.env.BOT_TOKEN).catch((error) => {
-  if (error.message.includes('An invalid token was provided')) {
+  if (error.message.includes("An invalid token was provided")) {
     console.log(error);
-    logError('INVALID_TOKEN', error);
+    logError("INVALID_TOKEN", error);
     process.exit();
   } else if (
     error.message.includes(
-      'Privileged intent provided is not enabled or whitelisted.',
+      "Privileged intent provided is not enabled or whitelisted.",
     )
   ) {
     console.log(error);
-    logError('DISALLOWED_INTENTS', error);
+    logError("DISALLOWED_INTENTS", error);
     process.exit();
   } else {
     console.log(error);
-    logError('ERROR', error);
+    logError("ERROR", error);
     process.exit();
   }
 });

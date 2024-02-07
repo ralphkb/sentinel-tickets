@@ -2,20 +2,20 @@ const {
   EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, sanitizeInput, logMessage } = require('../../index.js');
+const { ticketsDB, sanitizeInput, logMessage } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.rename.enabled,
   data: new SlashCommandBuilder()
-    .setName('rename')
-    .setDescription('Rename a ticket.')
+    .setName("rename")
+    .setDescription("Rename a ticket.")
     .addStringOption((option) =>
-      option.setName('name').setDescription('name').setRequired(true),
+      option.setName("name").setDescription("name").setRequired(true),
     )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.rename.permission],
@@ -40,7 +40,7 @@ module.exports = {
       });
     }
 
-    let newName = interaction.options.getString('name');
+    let newName = interaction.options.getString("name");
     interaction.channel.setName(`${newName}`);
     let logsChannel = interaction.guild.channels.cache.get(
       config.logs_channel_id,
@@ -66,14 +66,14 @@ module.exports = {
       .setTimestamp()
       .setThumbnail(
         interaction.user.displayAvatarURL({
-          format: 'png',
+          format: "png",
           dynamic: true,
           size: 1024,
         }),
       )
       .setFooter({
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       });
 
     const embed = new EmbedBuilder()

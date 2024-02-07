@@ -2,10 +2,10 @@ const {
   EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
   client,
@@ -14,13 +14,13 @@ const {
   logMessage,
   saveTranscript,
   saveTranscriptTxt,
-} = require('../../index.js');
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.transcript.enabled,
   data: new SlashCommandBuilder()
-    .setName('transcript')
-    .setDescription('Manually save the transcript of a ticket.')
+    .setName("transcript")
+    .setDescription("Manually save the transcript of a ticket.")
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.transcript.permission],
     )
@@ -49,29 +49,29 @@ module.exports = {
     );
 
     let attachment;
-    if (config.transcriptType === 'HTML') {
+    if (config.transcriptType === "HTML") {
       attachment = await saveTranscript(interaction, null, true);
-    } else if (config.transcriptType === 'TXT') {
+    } else if (config.transcriptType === "TXT") {
       attachment = await saveTranscriptTxt(interaction);
     }
 
     const embed = new EmbedBuilder()
       .setColor(config.default_embed_color)
-      .setTitle('Ticket Transcript')
+      .setTitle("Ticket Transcript")
       .setDescription(`Saved by <@!${interaction.user.id}>`)
       .addFields([
         {
-          name: 'Ticket Creator',
+          name: "Ticket Creator",
           value: `<@!${ticketUserID.id}>\n${sanitizeInput(ticketUserID.tag)}`,
           inline: true,
         },
         {
-          name: 'Ticket Name',
+          name: "Ticket Name",
           value: `<#${interaction.channel.id}>\n${sanitizeInput(interaction.channel.name)}`,
           inline: true,
         },
         {
-          name: 'Category',
+          name: "Category",
           value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
           inline: true,
         },

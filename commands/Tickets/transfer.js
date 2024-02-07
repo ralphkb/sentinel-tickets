@@ -2,25 +2,25 @@ const {
   EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
   ticketsDB,
   sanitizeInput,
   logMessage,
   client,
-} = require('../../index.js');
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.transfer.enabled,
   data: new SlashCommandBuilder()
-    .setName('transfer')
-    .setDescription('Transfer the ownership of a ticket to another user.')
+    .setName("transfer")
+    .setDescription("Transfer the ownership of a ticket to another user.")
     .addUserOption((option) =>
-      option.setName('user').setDescription('Select a user').setRequired(true),
+      option.setName("user").setDescription("Select a user").setRequired(true),
     )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.transfer.permission],
@@ -45,7 +45,7 @@ module.exports = {
       });
     }
 
-    let optionUser = interaction.options.getUser('user');
+    let optionUser = interaction.options.getUser("user");
     let ticketType = await ticketsDB.get(
       `${interaction.channel.id}.ticketType`,
     );
@@ -55,7 +55,7 @@ module.exports = {
 
     if (optionUser === currentUser) {
       return interaction.reply({
-        content: 'This user is already the creator of this ticket.',
+        content: "This user is already the creator of this ticket.",
         ephemeral: true,
       });
     }
@@ -99,14 +99,14 @@ module.exports = {
       .setTimestamp()
       .setThumbnail(
         interaction.user.displayAvatarURL({
-          format: 'png',
+          format: "png",
           dynamic: true,
           size: 1024,
         }),
       )
       .setFooter({
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       });
     logsChannel.send({ embeds: [logEmbed] });
 

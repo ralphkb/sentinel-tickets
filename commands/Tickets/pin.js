@@ -2,18 +2,18 @@ const {
   EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, logMessage } = require('../../index.js');
+const { ticketsDB, logMessage } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.pin.enabled,
   data: new SlashCommandBuilder()
-    .setName('pin')
-    .setDescription('Pin the ticket channel in the category.')
+    .setName("pin")
+    .setDescription("Pin the ticket channel in the category.")
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.pin.permission],
     )

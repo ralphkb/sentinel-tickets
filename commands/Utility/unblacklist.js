@@ -2,23 +2,23 @@ const {
   EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
-} = require('discord.js');
-const fs = require('fs');
-const yaml = require('yaml');
-const configFile = fs.readFileSync('./config.yml', 'utf8');
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { mainDB, sanitizeInput, logMessage } = require('../../index.js');
+const { mainDB, sanitizeInput, logMessage } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.unblacklist.enabled,
   data: new SlashCommandBuilder()
-    .setName('unblacklist')
-    .setDescription('Remove a user or role from the blacklist.')
+    .setName("unblacklist")
+    .setDescription("Remove a user or role from the blacklist.")
     .addUserOption((option) =>
-      option.setName('user').setDescription('Select a user').setRequired(false),
+      option.setName("user").setDescription("Select a user").setRequired(false),
     )
     .addRoleOption((option) =>
-      option.setName('role').setDescription('Select a role').setRequired(false),
+      option.setName("role").setDescription("Select a role").setRequired(false),
     )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.unblacklist.permission],
@@ -36,17 +36,17 @@ module.exports = {
       });
     }
 
-    let user = interaction.options.getUser('user');
-    let role = interaction.options.getRole('role');
+    let user = interaction.options.getUser("user");
+    let role = interaction.options.getRole("role");
 
     if ((!user && !role) || (user && role)) {
       return interaction.reply({
-        content: 'Please provide either a user or a role, but not both.',
+        content: "Please provide either a user or a role, but not both.",
         ephemeral: true,
       });
     }
 
-    const blacklistedUsers = await mainDB.get('blacklistedUsers');
+    const blacklistedUsers = await mainDB.get("blacklistedUsers");
 
     if (user) {
       const notBlacklistedEmbedUser = new EmbedBuilder()
@@ -67,7 +67,7 @@ module.exports = {
 
       if (blacklistedUsers.includes(user.id)) {
         // User is blacklisted
-        await mainDB.pull('blacklistedUsers', user.id);
+        await mainDB.pull("blacklistedUsers", user.id);
         logMessage(
           `${interaction.user.tag} removed ${user.tag} from the blacklist.`,
         );
@@ -103,7 +103,7 @@ module.exports = {
 
       if (blacklistedUsers.includes(role.id)) {
         // User is blacklisted
-        await mainDB.pull('blacklistedUsers', role.id);
+        await mainDB.pull("blacklistedUsers", role.id);
         logMessage(
           `${interaction.user.tag} removed ${role.name} from the blacklist.`,
         );
