@@ -57,7 +57,7 @@ const timeString = date.toLocaleString("en-US", options);
     await mainDB.set("totalReviews", 0);
   }
 
-  // Initialize totalReviews to an empty array if it doesn't exist
+  // Initialize ratings to an empty array if it doesn't exist
   if (!(await mainDB.has("ratings"))) {
     await mainDB.set("ratings", []);
   }
