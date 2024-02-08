@@ -8,6 +8,7 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const { mainDB } = require("../../index.js");
+const packageJson = require("../../package.json");
 
 module.exports = {
   enabled: config.commands.stats.enabled,
@@ -23,7 +24,7 @@ module.exports = {
     const openTickets = (await mainDB.get("openTickets")) ?? [];
     const totalClaims = (await mainDB.get("totalClaims")) ?? 0;
     const totalReviews = (await mainDB.get("totalReviews")) ?? 0;
-    const ratingsArray = await mainDB.get("ratings");
+    const ratingsArray = (await mainDB.get("ratings")) ?? [];
     const averageRating =
       ratingsArray.reduce((total, current) => total + current, 0) /
       ratingsArray.length;
@@ -32,19 +33,22 @@ module.exports = {
     const ramUsageMB = (ramUsage / 1024 / 1024).toFixed(2);
 
     const stats = new EmbedBuilder()
-      .setTitle("Statistics")
+      .setTitle("📊 Statistics")
       .setThumbnail(interaction.guild.iconURL())
       .setColor(config.default_embed_color)
       .addFields([
-        { name: "Total Tickets:", value: `${totalTickets}` },
-        { name: "Total Open Tickets:", value: `${totalOpenTickets}` },
-        { name: "Total Claimed Tickets:", value: `${totalClaims}` },
-        { name: "Total Reviews:", value: `${totalReviews}` },
         {
-          name: "Average Rating:",
-          value: `${ratingsArray.length ? averageRating.toFixed(1) : 0}`,
+          name: "🎫 Tickets",
+          value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${totalOpenTickets}\n> Total Claimed Tickets: ${totalClaims}`,
         },
-        { name: "Current RAM Usage:", value: `${ramUsageMB} MB` },
+        {
+          name: "⭐ Reviews",
+          value: `> Total Reviews: ${totalReviews}\n> Average Rating: ${ratingsArray.length ? averageRating.toFixed(1) : 0}/5.0`,
+        },
+        {
+          name: "🤖 Bot",
+          value: `> Version: v${packageJson.version}\n> RAM Usage: ${ramUsageMB} MB`,
+        },
       ])
       .setTimestamp()
       .setFooter({
