@@ -1556,6 +1556,7 @@ module.exports = {
           let logsChannel = client.channels.cache.get(config.logs_channel_id);
           await logsChannel.send({ embeds: [ratingEmbed] });
           await mainDB.set("totalReviews", totalReviews + 1);
+          await mainDB.push("ratings", i);
           await interaction.editReply({
             content: "Your feedback has been sent successfully!",
             ephemeral: true,
