@@ -1561,6 +1561,9 @@ module.exports = {
             content: "Your feedback has been sent successfully!",
             ephemeral: true,
           });
+          logMessage(
+            `${interaction.user.tag} rated the ticket "${currentFooter}" with ${i} stars`,
+          );
         }
       }
     }
