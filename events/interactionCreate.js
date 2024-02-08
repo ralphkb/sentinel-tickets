@@ -1504,6 +1504,7 @@ module.exports = {
       for (let i = 1; i <= 5; i++) {
         if (interaction.customId === `${i}-ratingModal`) {
           await interaction.deferReply({ ephemeral: true });
+          const totalReviews = await mainDB.get("totalReviews");
           const message = await interaction.user.dmChannel.messages.fetch(
             interaction.message.id,
           );
@@ -1554,6 +1555,7 @@ module.exports = {
           });
           let logsChannel = client.channels.cache.get(config.logs_channel_id);
           await logsChannel.send({ embeds: [ratingEmbed] });
+          await mainDB.set("totalReviews", totalReviews + 1);
           await interaction.editReply({
             content: "Your feedback has been sent successfully!",
             ephemeral: true,

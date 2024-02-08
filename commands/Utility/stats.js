@@ -22,6 +22,7 @@ module.exports = {
     const totalTickets = (await mainDB.get("totalTickets")) ?? 0;
     const openTickets = (await mainDB.get("openTickets")) ?? [];
     const totalClaims = (await mainDB.get("totalClaims")) ?? 0;
+    const totalReviews = (await mainDB.get("totalReviews")) ?? 0;
     const totalOpenTickets = openTickets.length;
     const ramUsage = process.memoryUsage().heapUsed;
     const ramUsageMB = (ramUsage / 1024 / 1024).toFixed(2);
@@ -34,6 +35,7 @@ module.exports = {
         { name: "Total Tickets:", value: `${totalTickets}` },
         { name: "Total Open Tickets:", value: `${totalOpenTickets}` },
         { name: "Total Claimed Tickets:", value: `${totalClaims}` },
+        { name: "Total Reviews:", value: `${totalReviews}` },
         { name: "Current RAM Usage:", value: `${ramUsageMB} MB` },
       ])
       .setTimestamp()
