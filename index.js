@@ -162,7 +162,7 @@ async function saveTranscriptTxt(interaction) {
     await ticketsDB.get(`${interaction.channel.id}.claimUser`),
   );
 
-  transcript += `Server: ${interaction.guild.name}\nTicket: #${interaction.channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${interaction.user.tag}\nClaimed By: ${claimUser ? sanitizeInput(claimUser.tag) : "None"}\n\n`;
+  transcript += `Server: ${interaction.guild.name}\nTicket: #${interaction.channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${interaction.user.tag}\nClaimed By: ${claimUser ? claimUser.tag : "None"}\n\n`;
   let totalFetched = 0;
   let checkpointLine = 7; // The line number where the writing begins on every iteration
 
