@@ -22,6 +22,7 @@ const {
   sanitizeInput,
   logMessage,
   saveTranscriptTxt,
+  checkSupportRole,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -472,11 +473,8 @@ module.exports = {
 
       // Ticket Transcript button
       if (interaction.customId === "createTranscript") {
-        if (
-          !interaction.member.roles.cache.some((role) =>
-            config.support_role_ids.includes(role.id),
-          )
-        ) {
+        const hasSupportRole = await checkSupportRole(interaction);
+        if (!hasSupportRole) {
           return interaction.reply({
             content: config.errors.not_allowed,
             ephemeral: true,
@@ -536,11 +534,8 @@ module.exports = {
       // Ticket Re-Open button
       if (interaction.customId === "reOpen") {
         if (config.reOpenStaffOnly) {
-          if (
-            !interaction.member.roles.cache.some((role) =>
-              config.support_role_ids.includes(role.id),
-            )
-          ) {
+          const hasSupportRole = await checkSupportRole(interaction);
+          if (!hasSupportRole) {
             return interaction.reply({
               content: config.errors.not_allowed,
               ephemeral: true,
@@ -614,7 +609,7 @@ module.exports = {
               });
             }
 
-            config.support_role_ids.forEach(async (roleId) => {
+            category.support_role_ids.forEach(async (roleId) => {
               await interaction.channel.permissionOverwrites.create(roleId, {
                 ViewChannel: true,
                 SendMessages: true,
@@ -657,11 +652,8 @@ module.exports = {
       }
       // Ticket Delete button
       if (interaction.customId === "deleteTicket") {
-        if (
-          !interaction.member.roles.cache.some((role) =>
-            config.support_role_ids.includes(role.id),
-          )
-        ) {
+        const hasSupportRole = await checkSupportRole(interaction);
+        if (!hasSupportRole) {
           return interaction.reply({
             content: config.errors.not_allowed,
             ephemeral: true,
@@ -850,11 +842,8 @@ module.exports = {
         }
 
         if (config.closeStaffOnly) {
-          if (
-            !interaction.member.roles.cache.some((role) =>
-              config.support_role_ids.includes(role.id),
-            )
-          ) {
+          const hasSupportRole = await checkSupportRole(interaction);
+          if (!hasSupportRole) {
             return interaction.reply({
               content: config.errors.not_allowed,
               ephemeral: true,
@@ -988,7 +977,7 @@ module.exports = {
               lockPermissions: false,
             });
 
-            config.support_role_ids.forEach(async (roleId) => {
+            category.support_role_ids.forEach(async (roleId) => {
               await interaction.channel.permissionOverwrites
                 .edit(roleId, {
                   SendMessages: false,
@@ -1007,11 +996,8 @@ module.exports = {
 
       // Ticket Claim button
       if (interaction.customId === "ticketclaim") {
-        if (
-          !interaction.member.roles.cache.some((role) =>
-            config.support_role_ids.includes(role.id),
-          )
-        ) {
+        const hasSupportRole = await checkSupportRole(interaction);
+        if (!hasSupportRole) {
           return interaction.reply({
             content: config.errors.not_allowed,
             ephemeral: true,
@@ -1078,16 +1064,18 @@ module.exports = {
 
             Object.keys(ticketCategories).forEach(async (id) => {
               if (ticketButton === id) {
-                config.support_role_ids.forEach(async (roleId) => {
-                  await interaction.channel.permissionOverwrites
-                    .edit(roleId, {
-                      SendMessages: true,
-                      ViewChannel: true,
-                    })
-                    .catch((error) => {
-                      console.error(`Error updating permissions:`, error);
-                    });
-                });
+                ticketCategories[id].support_role_ids.forEach(
+                  async (roleId) => {
+                    await interaction.channel.permissionOverwrites
+                      .edit(roleId, {
+                        SendMessages: true,
+                        ViewChannel: true,
+                      })
+                      .catch((error) => {
+                        console.error(`Error updating permissions:`, error);
+                      });
+                  },
+                );
               }
             });
 
@@ -1171,7 +1159,7 @@ module.exports = {
 
         Object.keys(ticketCategories).forEach(async (id) => {
           if (ticketButton === id) {
-            config.support_role_ids.forEach(async (roleId) => {
+            ticketCategories[id].support_role_ids.forEach(async (roleId) => {
               await interaction.channel.permissionOverwrites
                 .edit(roleId, {
                   SendMessages: true,
@@ -1379,7 +1367,7 @@ module.exports = {
                       PermissionFlagsBits.ReadMessageHistory,
                     ],
                   },
-                  ...config.support_role_ids.map((roleId) => ({
+                  ...category.support_role_ids.map((roleId) => ({
                     id: roleId,
                     allow: [
                       PermissionFlagsBits.ViewChannel,
@@ -1393,9 +1381,9 @@ module.exports = {
               })
               .then(async (channel) => {
                 const pingRoles =
-                  config.pingRoles && config.ping_role_ids.length > 0;
+                  category.pingRoles && category.ping_role_ids.length > 0;
                 const rolesToMention = pingRoles
-                  ? config.ping_role_ids
+                  ? category.ping_role_ids
                       .map((roleId) => `<@&${roleId}>`)
                       .join(" ")
                   : "";

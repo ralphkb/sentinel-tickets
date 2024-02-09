@@ -17,6 +17,7 @@ const {
   ticketCategories,
   sanitizeInput,
   logMessage,
+  checkSupportRole,
 } = require("../../index.js");
 
 module.exports = {
@@ -45,11 +46,8 @@ module.exports = {
       });
     }
 
-    if (
-      !interaction.member.roles.cache.some((role) =>
-        config.support_role_ids.includes(role.id),
-      )
-    ) {
+    const hasSupportRole = await checkSupportRole(interaction);
+    if (!hasSupportRole) {
       return interaction.reply({
         content: config.errors.not_allowed,
         ephemeral: true,
@@ -177,7 +175,7 @@ module.exports = {
           lockPermissions: false,
         });
 
-        config.support_role_ids.forEach(async (roleId) => {
+        category.support_role_ids.forEach(async (roleId) => {
           await interaction.channel.permissionOverwrites
             .edit(roleId, {
               SendMessages: false,

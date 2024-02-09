@@ -27,7 +27,7 @@ module.exports = {
   async execute(interaction) {
     if (
       !interaction.member.roles.cache.some((role) =>
-        config.support_role_ids.includes(role.id),
+        config.rolesThatCanBlacklist.includes(role.id),
       )
     ) {
       return interaction.reply({

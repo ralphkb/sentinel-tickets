@@ -12,6 +12,7 @@ const {
   sanitizeInput,
   logMessage,
   ticketCategories,
+  checkSupportRole,
 } = require("../../index.js");
 const customIds = Object.keys(ticketCategories);
 const choices = customIds.map((customId) => {
@@ -42,11 +43,8 @@ module.exports = {
       });
     }
 
-    if (
-      !interaction.member.roles.cache.some((role) =>
-        config.support_role_ids.includes(role.id),
-      )
-    ) {
+    const hasSupportRole = await checkSupportRole(interaction);
+    if (!hasSupportRole) {
       return interaction.reply({
         content: config.errors.not_allowed,
         ephemeral: true,

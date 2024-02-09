@@ -12,6 +12,7 @@ const {
   sanitizeInput,
   logMessage,
   client,
+  checkSupportRole,
 } = require("../../index.js");
 
 module.exports = {
@@ -34,11 +35,8 @@ module.exports = {
       });
     }
 
-    if (
-      !interaction.member.roles.cache.some((role) =>
-        config.support_role_ids.includes(role.id),
-      )
-    ) {
+    const hasSupportRole = await checkSupportRole(interaction);
+    if (!hasSupportRole) {
       return interaction.reply({
         content: config.errors.not_allowed,
         ephemeral: true,

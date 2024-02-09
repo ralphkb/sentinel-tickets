@@ -16,6 +16,7 @@ const {
   logMessage,
   ticketCategories,
   mainDB,
+  checkSupportRole,
 } = require("../../index.js");
 
 module.exports = {
@@ -35,11 +36,8 @@ module.exports = {
       });
     }
 
-    if (
-      !interaction.member.roles.cache.some((role) =>
-        config.support_role_ids.includes(role.id),
-      )
-    ) {
+    const hasSupportRole = await checkSupportRole(interaction);
+    if (!hasSupportRole) {
       return interaction.reply({
         content: config.errors.not_allowed,
         ephemeral: true,
@@ -77,7 +75,7 @@ module.exports = {
 
     Object.keys(ticketCategories).forEach(async (id) => {
       if (ticketButton === id) {
-        config.support_role_ids.forEach(async (roleId) => {
+        ticketCategories[id].support_role_ids.forEach(async (roleId) => {
           await interaction.channel.permissionOverwrites
             .edit(roleId, {
               SendMessages: true,

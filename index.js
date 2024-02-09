@@ -77,6 +77,9 @@ config.TicketCategories.forEach((category) => {
     name,
     categoryID,
     closedCategoryID,
+    support_role_ids,
+    pingRoles,
+    ping_role_ids,
     buttonEmoji,
     buttonLabel,
     buttonStyle,
@@ -107,6 +110,9 @@ config.TicketCategories.forEach((category) => {
     name,
     categoryID,
     closedCategoryID,
+    support_role_ids,
+    pingRoles,
+    ping_role_ids,
     buttonEmoji,
     buttonLabel,
     buttonStyle,
@@ -122,6 +128,23 @@ config.TicketCategories.forEach((category) => {
   };
 });
 
+async function checkSupportRole(interaction) {
+  const customIds = Object.keys(ticketCategories);
+  let foundId;
+  const ticketType = await ticketsDB.get(
+    `${interaction.channel.id}.ticketType`,
+  );
+  for (const id of customIds) {
+    if (ticketCategories[id].name === ticketType) {
+      foundId = id;
+      break;
+    }
+  }
+  const allowedRoles = ticketCategories[foundId].support_role_ids;
+  return interaction.member.roles.cache.some((role) =>
+    allowedRoles.includes(role.id),
+  );
+}
 async function saveTranscript(interaction, message, saveImages = false) {
   const createTranscriptOptions = {
     limit: -1,
@@ -315,6 +338,7 @@ module.exports = {
   reloadAllSlashCommands,
   saveTranscriptTxt,
   formatTime,
+  checkSupportRole,
 };
 
 // Holding commands cooldown data

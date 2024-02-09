@@ -7,7 +7,12 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, sanitizeInput, logMessage } = require("../../index.js");
+const {
+  ticketsDB,
+  sanitizeInput,
+  logMessage,
+  checkSupportRole,
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.remove.enabled,
@@ -32,11 +37,8 @@ module.exports = {
       });
     }
 
-    if (
-      !interaction.member.roles.cache.some((role) =>
-        config.support_role_ids.includes(role.id),
-      )
-    ) {
+    const hasSupportRole = await checkSupportRole(interaction);
+    if (!hasSupportRole) {
       return interaction.reply({
         content: config.errors.not_allowed,
         ephemeral: true,
