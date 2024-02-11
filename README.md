@@ -38,16 +38,18 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Intuitive Ticket Panel: Create and manage tickets with ease using buttons or a select menu.
 - Modal Questions: Gather necessary information before opening a ticket.
 - Configuration to customize many of the messages and options.
+- Option to configure support roles per ticket category.
+- Option to ping support roles on ticket creation per ticket category.
 - Working Hours feature with an option to specify the timezone and block ticket creation outside the working hours.
 - Option to configure the amount of max opened tickets at one time.
 - Ticket claiming feature that can be turned on/off.
 - Automatic saving of transcripts upon ticket deletion and force deletion.
 - Option to manually save a transcript with images downloaded, use with caution as it increases the transcript size.
 - Option to DM users on ticket deletion with their transcript and an embed with useful information.
+- Configurable rating/feedback system with logs of the responses.
 - Option to select Transcript type, can be HTML or TXT however HTML is recommended.
 - Ticket logs for multiple ticket events, such as ticket create, close, delete, force delete, reopen, claim, unclaim etc.
 - Precise and organized logs of errors and all ticket events in a logs.txt file.
-- Option to ping support roles on ticket creation.
 - Option to edit the activity of the bot.
 - Multiple Commands: Efficiently manage tickets with various commands.
     - Send the tickets panel in any channel
@@ -57,6 +59,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Alert Ticket Creator
     - Close Ticket to archive them until deleting them
     - Delete Tickets
+    - Re-Open Tickets
     - Blacklist Users or Roles
     - Save Transcripts
     - Claim/Unclaim Tickets
@@ -64,6 +67,12 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Pin tickets in a category
     - Add a custom slowmode to a ticket
     - Transfer ticket ownership to another user
+- Useful statistics such as:
+    - Total Tickets
+    - Total Open Tickets
+    - Total Claimed Tickets
+    - Total Reviews
+    - Average Rating
 
 ## Documentation
 The Wiki will be improved over time and can be found here: https://github.com/ralphkb/sentinel-tickets/wiki
