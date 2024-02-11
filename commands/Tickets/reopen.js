@@ -94,11 +94,17 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor(config.commands.reopen.embed.color)
+      .setTitle(config.commands.reopen.embed.title)
       .setDescription(
         `${config.commands.reopen.embed.description}`
           .replace(/\{user\}/g, `${interaction.user}`)
           .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag)),
-      );
+      )
+      .setFooter({
+        text: `${interaction.user.tag}`,
+        iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
+      })
+      .setTimestamp();
 
     Object.keys(ticketCategories).forEach(async (id) => {
       if (ticketButton === id) {

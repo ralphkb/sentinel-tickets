@@ -205,6 +205,7 @@ commands:
     permission: "KickMembers"
     embed:
       color: "#2FF200"
+      title: "Ticket Re-Opened"
       description: "This ticket has been re-opened by **{user} ({user.tag})**" # Use {user} for the username of the staff and {user.tag} to have the staff tagged
     LogEmbed:
       color: "#2FF200"

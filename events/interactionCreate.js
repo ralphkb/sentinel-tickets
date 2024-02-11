@@ -592,9 +592,15 @@ module.exports = {
 
         const embed = new EmbedBuilder()
           .setColor(config.default_embed_color)
+          .setTitle("Ticket Re-Opened")
           .setDescription(
             `This ticket has been re-opened by **<@!${interaction.user.id}> (${sanitizeInput(interaction.user.tag)})**`,
-          );
+          )
+          .setFooter({
+            text: `${interaction.user.tag}`,
+            iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
+          })
+          .setTimestamp();
 
         Object.keys(ticketCategories).forEach(async (id) => {
           if (ticketButton === id) {
