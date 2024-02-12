@@ -220,6 +220,19 @@ module.exports = {
             );
             const category = ticketCategories[customId];
 
+            if (
+              category.creatorRoles.length > 0 &&
+              !userRoles.some((roleId) =>
+                category.creatorRoles.includes(roleId),
+              )
+            ) {
+              return interaction.reply({
+                content:
+                  "You are not allowed to create tickets in this category.",
+                ephemeral: true,
+              });
+            }
+
             const userTicketCount = interaction.guild.channels.cache.reduce(
               async (count, channel) => {
                 if (await ticketsDB.has(channel.id)) {
@@ -410,6 +423,17 @@ module.exports = {
             cooldown,
           );
           const category = ticketCategories[customId];
+
+          if (
+            category.creatorRoles.length > 0 &&
+            !userRoles.some((roleId) => category.creatorRoles.includes(roleId))
+          ) {
+            return interaction.reply({
+              content:
+                "You are not allowed to create tickets in this category.",
+              ephemeral: true,
+            });
+          }
 
           const userTicketCount = interaction.guild.channels.cache.reduce(
             async (count, channel) => {
