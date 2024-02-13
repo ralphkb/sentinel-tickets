@@ -181,6 +181,21 @@ commands:
     embed:
       color: "2FF200"
       description: "This ticket has been pinned."
+  priority:
+    enabled: true
+    permission: "KickMembers"
+    emojis:
+      low: "🟢"
+      medium: "🟡"
+      high: "🔴"
+    alreadyPriority: "This ticket is already assigned a priority!"
+    notPriority: "This ticket is not assigned a priority!"
+    embedAdd: # The embed used when adding a priority
+      color: "2FF200"
+      description: "The priority of this ticket has been set to **{priority}**." # Use {priority} for the name of the priority
+    embedRemove: # The embed used when removing a priority
+      color: "FF2400"
+      description: "The priority of this ticket has been removed."
   slowmode:
     enabled: true
     permission: "KickMembers"
