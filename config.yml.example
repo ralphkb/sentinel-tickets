@@ -245,6 +245,7 @@ commands:
   panel:
     enabled: true
     permission: "ManageChannels"
+    support_role_ids: [] # The IDs of the staff roles on your server that can use the panel command, they must also have the permission above, keep it empty to not require a role.
     embed:
       color: "2FF200" # The color of the panel embed
       title: "Support Tickets" # The title of the panel embed

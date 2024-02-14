@@ -12,12 +12,7 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const {
-  ticketCategories,
-  logMessage,
-  mainDB,
-  checkSupportRole,
-} = require("../../index.js");
+const { ticketCategories, logMessage, mainDB } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.panel.enabled,
@@ -29,8 +24,12 @@ module.exports = {
     )
     .setDMPermission(false),
   async execute(interaction) {
-    const hasSupportRole = await checkSupportRole(interaction);
-    if (!hasSupportRole) {
+    if (
+      config.commands.panel.support_role_ids.length > 0 &&
+      !interaction.member.roles.cache.some((role) =>
+        config.commands.panel.support_role_ids.includes(role.id),
+      )
+    ) {
       return interaction.reply({
         content: config.errors.not_allowed,
         ephemeral: true,
