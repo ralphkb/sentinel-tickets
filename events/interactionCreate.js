@@ -136,10 +136,9 @@ module.exports = {
     } else if (interaction.isStringSelectMenu()) {
       if (interaction.customId === "categoryMenu") {
         // Reset the select menu upon selection
-        const ticketPanelMsgID = await mainDB.get("ticketPanelMsgID");
         const selectMenuOptions = await mainDB.get("selectMenuOptions");
         await interaction.channel.messages
-          .fetch(ticketPanelMsgID)
+          .fetch(interaction.message.id)
           .then(async (message) => {
             const selectMenu = new StringSelectMenuBuilder()
               .setCustomId("categoryMenu")

@@ -129,9 +129,8 @@ module.exports = {
       // Send the panel embed and action row
       await interaction.channel
         .send({ embeds: [panelEmbed], components: [actionRowsMenus] })
-        .then(async function (message) {
+        .then(async function () {
           await mainDB.set(`selectMenuOptions`, options);
-          await mainDB.set(`ticketPanelMsgID`, message.id);
         });
       logMessage(
         `${interaction.user.tag} sent the ticket panel in the channel #${interaction.channel.name}`,
