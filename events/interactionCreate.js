@@ -675,6 +675,23 @@ module.exports = {
         await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
         await mainDB.push("openTickets", interaction.channel.id);
         await interaction.followUp({ embeds: [embed] });
+        if (
+          config.reopenDM.enabled &&
+          interaction.user.id !== ticketUserID.id
+        ) {
+          // DM the ticket creator with an embed reminder that their ticket got reopened
+          const reopenDMEmbed = new EmbedBuilder()
+            .setColor(config.reopenDM.embed.color)
+            .setTitle(config.reopenDM.embed.title)
+            .setDescription(
+              `${config.reopenDM.embed.description}`
+                .replace(/\{ticketName\}/g, `${interaction.channel.name}`)
+                .replace(/\{user\}/g, `<@!${interaction.user.id}>`)
+                .replace(/\{server\}/g, `${interaction.guild.name}`),
+            );
+
+          await ticketUserID.send({ embeds: [reopenDMEmbed] });
+        }
         logMessage(
           `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
         );
