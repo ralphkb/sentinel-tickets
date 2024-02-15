@@ -100,6 +100,7 @@ DMUserSettings:
     description: "Your support ticket has been deleted. Here is your transcript and other information." # This description will show up on top of the other information in the DM embed.
   ratingSystem:
     enabled: false
+    logChannel: "" # The ID of the channel where the feedback and rating logs will be sent, keep it empty "" to use the default log channel.
     embed:
       color: "2FF200"
       title: "Ticket Feedback & Rating"

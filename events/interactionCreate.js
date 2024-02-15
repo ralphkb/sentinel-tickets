@@ -1570,8 +1570,11 @@ module.exports = {
             name: "• Ticket Rating",
             value: `${"⭐".repeat(i)} **(${i}/5)**`,
           });
-          let logsChannel = client.channels.cache.get(config.logs_channel_id);
-          await logsChannel.send({ embeds: [ratingEmbed] });
+          let logChannelId =
+            config.DMUserSettings.ratingSystem.logChannel ||
+            config.logs_channel_id;
+          let logChannel = client.channels.cache.get(logChannelId);
+          await logChannel.send({ embeds: [ratingEmbed] });
           await mainDB.set("totalReviews", totalReviews + 1);
           await mainDB.push("ratings", i);
           await interaction.editReply({
