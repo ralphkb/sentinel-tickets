@@ -1104,26 +1104,28 @@ module.exports = {
             );
             message.edit({ embeds: [embed], components: [actionRow2] });
 
-            let ticketButton = await ticketsDB.get(
-              `${interaction.channel.id}.button`,
-            );
+            if (config.claim1on1) {
+              let ticketButton = await ticketsDB.get(
+                `${interaction.channel.id}.button`,
+              );
 
-            Object.keys(ticketCategories).forEach(async (id) => {
-              if (ticketButton === id) {
-                ticketCategories[id].support_role_ids.forEach(
-                  async (roleId) => {
-                    await interaction.channel.permissionOverwrites
-                      .edit(roleId, {
-                        SendMessages: true,
-                        ViewChannel: true,
-                      })
-                      .catch((error) => {
-                        console.error(`Error updating permissions:`, error);
-                      });
-                  },
-                );
-              }
-            });
+              Object.keys(ticketCategories).forEach(async (id) => {
+                if (ticketButton === id) {
+                  ticketCategories[id].support_role_ids.forEach(
+                    async (roleId) => {
+                      await interaction.channel.permissionOverwrites
+                        .edit(roleId, {
+                          SendMessages: false,
+                          ViewChannel: true,
+                        })
+                        .catch((error) => {
+                          console.error(`Error updating permissions:`, error);
+                        });
+                    },
+                  );
+                }
+              });
+            }
 
             await interaction.channel.permissionOverwrites.edit(
               interaction.user,
@@ -1233,6 +1235,7 @@ module.exports = {
           content: "You successfully unclaimed this ticket!",
           ephemeral: true,
         });
+        interaction.channel.permissionOverwrites.delete(interaction.user);
         interaction.channel.send({ embeds: [embed] });
 
         interaction.channel.messages

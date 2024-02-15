@@ -103,6 +103,7 @@ module.exports = {
       content: "You successfully unclaimed this ticket!",
       ephemeral: true,
     });
+    interaction.channel.permissionOverwrites.delete(interaction.user);
     interaction.channel.send({ embeds: [embed] });
 
     interaction.channel.messages
