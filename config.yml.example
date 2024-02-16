@@ -11,6 +11,7 @@ transcripts_channel_id: "111111111111111111" # The ID of the transcripts channel
 transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT", note that the TXT option is limited to 400 messages
 reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
 closeStaffOnly: true # When enabled, only staff members with support roles can use the close ticket button
+closeRemoveUser: false # When enabled, the ticket creator will be removed from the ticket when it is closed and added back if the ticket is re-opened
 commands_cooldown: "5" # The cooldown of commands in seconds
 buttons_cooldown: "5" # The cooldown of buttons in seconds
 maxOpenTickets: "1" # The maximum number of open tickets a user can have at one time

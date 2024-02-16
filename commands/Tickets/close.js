@@ -167,6 +167,9 @@ module.exports = {
     await ticketsDB.set(`${interaction.channel.id}.closeMsgID`, messageID);
     await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
     await mainDB.pull("openTickets", interaction.channel.id);
+    if (config.closeRemoveUser) {
+      interaction.channel.permissionOverwrites.delete(ticketUserID);
+    }
 
     Object.keys(ticketCategories).forEach(async (id) => {
       if (ticketButton === id) {
