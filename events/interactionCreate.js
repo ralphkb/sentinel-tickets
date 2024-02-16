@@ -1018,6 +1018,20 @@ module.exports = {
         if (config.closeRemoveUser) {
           interaction.channel.permissionOverwrites.delete(ticketUserID);
         }
+        if (config.closeDM.enabled && interaction.user.id !== ticketUserID.id) {
+          // DM the ticket creator with an embed that their ticket got closed
+          const closeDMEmbed = new EmbedBuilder()
+            .setColor(config.closeDM.embed.color)
+            .setTitle(config.closeDM.embed.title)
+            .setDescription(
+              `${config.closeDM.embed.description}`
+                .replace(/\{ticketName\}/g, `${interaction.channel.name}`)
+                .replace(/\{user\}/g, `<@!${interaction.user.id}>`)
+                .replace(/\{server\}/g, `${interaction.guild.name}`),
+            );
+
+          await ticketUserID.send({ embeds: [closeDMEmbed] });
+        }
 
         Object.keys(ticketCategories).forEach(async (id) => {
           if (ticketButton === id) {
