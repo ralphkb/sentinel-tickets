@@ -45,6 +45,14 @@ module.exports = {
         iconURL: config.commands.panel.embed.footer_icon_url,
       });
 
+    if (config.commands.panel.embed.imageURL) {
+      panelEmbed.setImage(config.commands.panel.embed.imageURL);
+    }
+
+    if (config.commands.panel.embed.thumbnailURL) {
+      panelEmbed.setThumbnail(config.commands.panel.embed.thumbnailURL);
+    }
+
     if (config.panelMethod === "Buttons") {
       // Creating the buttons, action rows and more
       const buttons = [];

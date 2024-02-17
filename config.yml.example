@@ -255,6 +255,8 @@ commands:
       description: "To create a support ticket, click on one of the buttons below depending on what help you need." # Use \n to create a new line for this embed description if needed
       footer_msg: "Sentinel Tickets" # Footer message
       footer_icon_url: "" # The link to the image in the footer
+      imageURL: "" # Add an image to the embed
+      thumbnailURL: "" # Add a thumbnail to the embed
   remove:
     enabled: true
     permission: "KickMembers"
