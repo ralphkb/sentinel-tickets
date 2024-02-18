@@ -85,10 +85,11 @@ module.exports = {
       .fetch(await ticketsDB.get(`${interaction.channel.id}.msgID`))
       .then(async (message) => {
         const embed = message.embeds[0];
-        embed.fields[embed.fields.length - 1] = {
+        const claimedByField = {
           name: "Claimed by",
           value: `> <@!${interaction.user.id}> (${sanitizeInput(interaction.user.tag)})`,
         };
+        embed.fields.push(claimedByField);
 
         const closeButton = new ButtonBuilder()
           .setCustomId("closeTicket")

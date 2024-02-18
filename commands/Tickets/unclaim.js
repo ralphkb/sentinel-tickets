@@ -110,10 +110,7 @@ module.exports = {
       .fetch(await ticketsDB.get(`${interaction.channel.id}.msgID`))
       .then(async (message) => {
         const embed = message.embeds[0];
-        embed.fields[embed.fields.length - 1] = {
-          name: "Claimed by",
-          value: "> This ticket has not been claimed!",
-        };
+        embed.fields.pop();
 
         const closeButton = new ButtonBuilder()
           .setCustomId("closeTicket")
