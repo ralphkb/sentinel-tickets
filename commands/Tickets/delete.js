@@ -188,19 +188,32 @@ module.exports = {
           text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
         });
 
-      if (config.DMUserSettings.ratingSystem.enabled === false) {
-        await ticketUserID.send({ embeds: [dmEmbed], files: [attachment] });
-      }
-      if (config.DMUserSettings.ratingSystem.enabled === true) {
-        await mainDB.set(`ratingMenuOptions`, options);
-        await ticketUserID.send({
-          embeds: [dmEmbed],
-          files: [attachment],
-        });
-        await ticketUserID.send({
-          embeds: [ratingEmbed],
-          components: [actionRowMenu],
-        });
+      try {
+        if (config.DMUserSettings.ratingSystem.enabled === false) {
+          await ticketUserID.send({ embeds: [dmEmbed], files: [attachment] });
+        }
+        if (config.DMUserSettings.ratingSystem.enabled === true) {
+          await mainDB.set(`ratingMenuOptions`, options);
+          await ticketUserID.send({
+            embeds: [dmEmbed],
+            files: [attachment],
+          });
+          await ticketUserID.send({
+            embeds: [ratingEmbed],
+            components: [actionRowMenu],
+          });
+        }
+      } catch (error) {
+        const DMErrorEmbed = new EmbedBuilder()
+          .setColor(config.DMErrors.embed.color)
+          .setTitle(config.DMErrors.embed.title)
+          .setDescription(`${config.DMErrors.embed.description}`);
+        let logChannelId = config.DMErrors.channel || config.logs_channel_id;
+        let logChannel = client.channels.cache.get(logChannelId);
+        await logChannel.send({ embeds: [DMErrorEmbed] });
+        logMessage(
+          `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
+        );
       }
     }
 

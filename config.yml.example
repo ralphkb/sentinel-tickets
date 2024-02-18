@@ -411,3 +411,10 @@ maxOpenTicketsEmbed:
   title: "Maximum Tickets Open"
   color: "#FF0000"
   description: "You may only have **{max} ticket(s)** open at a time." # Use {max} for the maximum number of tickets that can be opened at once
+
+DMErrors:
+  channel: "" # The ID of the channel where the DM error logs will be sent, keeping it empty "" will fallback to the default log channel.
+  embed:
+    color: "#FF0000"
+    title: "DMs Disabled"
+    description: "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings)."

@@ -157,7 +157,6 @@ module.exports = {
     await mainDB.push("openTickets", interaction.channel.id);
     await interaction.reply({ embeds: [embed] });
     if (config.reopenDM.enabled && interaction.user.id !== ticketUserID.id) {
-      // DM the ticket creator with an embed reminder that their ticket got reopened
       const reopenDMEmbed = new EmbedBuilder()
         .setColor(config.reopenDM.embed.color)
         .setTitle(config.reopenDM.embed.title)
@@ -168,7 +167,20 @@ module.exports = {
             .replace(/\{server\}/g, `${interaction.guild.name}`),
         );
 
-      await ticketUserID.send({ embeds: [reopenDMEmbed] });
+      try {
+        await ticketUserID.send({ embeds: [reopenDMEmbed] });
+      } catch (error) {
+        const DMErrorEmbed = new EmbedBuilder()
+          .setColor(config.DMErrors.embed.color)
+          .setTitle(config.DMErrors.embed.title)
+          .setDescription(`${config.DMErrors.embed.description}`);
+        let logChannelId = config.DMErrors.channel || config.logs_channel_id;
+        let logChannel = client.channels.cache.get(logChannelId);
+        await logChannel.send({ embeds: [DMErrorEmbed] });
+        logMessage(
+          `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
+        );
+      }
     }
     logMessage(
       `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,

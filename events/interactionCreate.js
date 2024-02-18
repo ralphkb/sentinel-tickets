@@ -679,7 +679,6 @@ module.exports = {
           config.reopenDM.enabled &&
           interaction.user.id !== ticketUserID.id
         ) {
-          // DM the ticket creator with an embed reminder that their ticket got reopened
           const reopenDMEmbed = new EmbedBuilder()
             .setColor(config.reopenDM.embed.color)
             .setTitle(config.reopenDM.embed.title)
@@ -690,7 +689,21 @@ module.exports = {
                 .replace(/\{server\}/g, `${interaction.guild.name}`),
             );
 
-          await ticketUserID.send({ embeds: [reopenDMEmbed] });
+          try {
+            await ticketUserID.send({ embeds: [reopenDMEmbed] });
+          } catch (error) {
+            const DMErrorEmbed = new EmbedBuilder()
+              .setColor(config.DMErrors.embed.color)
+              .setTitle(config.DMErrors.embed.title)
+              .setDescription(`${config.DMErrors.embed.description}`);
+            let logChannelId =
+              config.DMErrors.channel || config.logs_channel_id;
+            let logChannel = client.channels.cache.get(logChannelId);
+            await logChannel.send({ embeds: [DMErrorEmbed] });
+            logMessage(
+              `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
+            );
+          }
         }
         logMessage(
           `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
@@ -851,19 +864,36 @@ module.exports = {
               text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
             });
 
-          if (config.DMUserSettings.ratingSystem.enabled === false) {
-            await ticketUserID.send({ embeds: [dmEmbed], files: [attachment] });
-          }
-          if (config.DMUserSettings.ratingSystem.enabled === true) {
-            await mainDB.set(`ratingMenuOptions`, options);
-            await ticketUserID.send({
-              embeds: [dmEmbed],
-              files: [attachment],
-            });
-            await ticketUserID.send({
-              embeds: [ratingEmbed],
-              components: [actionRowMenu],
-            });
+          try {
+            if (config.DMUserSettings.ratingSystem.enabled === false) {
+              await ticketUserID.send({
+                embeds: [dmEmbed],
+                files: [attachment],
+              });
+            }
+            if (config.DMUserSettings.ratingSystem.enabled === true) {
+              await mainDB.set(`ratingMenuOptions`, options);
+              await ticketUserID.send({
+                embeds: [dmEmbed],
+                files: [attachment],
+              });
+              await ticketUserID.send({
+                embeds: [ratingEmbed],
+                components: [actionRowMenu],
+              });
+            }
+          } catch (error) {
+            const DMErrorEmbed = new EmbedBuilder()
+              .setColor(config.DMErrors.embed.color)
+              .setTitle(config.DMErrors.embed.title)
+              .setDescription(`${config.DMErrors.embed.description}`);
+            let logChannelId =
+              config.DMErrors.channel || config.logs_channel_id;
+            let logChannel = client.channels.cache.get(logChannelId);
+            await logChannel.send({ embeds: [DMErrorEmbed] });
+            logMessage(
+              `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
+            );
           }
         }
 
@@ -1019,7 +1049,6 @@ module.exports = {
           interaction.channel.permissionOverwrites.delete(ticketUserID);
         }
         if (config.closeDM.enabled && interaction.user.id !== ticketUserID.id) {
-          // DM the ticket creator with an embed that their ticket got closed
           const closeDMEmbed = new EmbedBuilder()
             .setColor(config.closeDM.embed.color)
             .setTitle(config.closeDM.embed.title)
@@ -1030,7 +1059,21 @@ module.exports = {
                 .replace(/\{server\}/g, `${interaction.guild.name}`),
             );
 
-          await ticketUserID.send({ embeds: [closeDMEmbed] });
+          try {
+            await ticketUserID.send({ embeds: [closeDMEmbed] });
+          } catch (error) {
+            const DMErrorEmbed = new EmbedBuilder()
+              .setColor(config.DMErrors.embed.color)
+              .setTitle(config.DMErrors.embed.title)
+              .setDescription(`${config.DMErrors.embed.description}`);
+            let logChannelId =
+              config.DMErrors.channel || config.logs_channel_id;
+            let logChannel = client.channels.cache.get(logChannelId);
+            await logChannel.send({ embeds: [DMErrorEmbed] });
+            logMessage(
+              `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
+            );
+          }
         }
 
         Object.keys(ticketCategories).forEach(async (id) => {
