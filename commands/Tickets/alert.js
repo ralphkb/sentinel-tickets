@@ -65,6 +65,31 @@ module.exports = {
       embeds: [embed],
       components: [ticketAlertRow],
     });
+    if (config.alertDM.enabled) {
+      const alertDMEmbed = new EmbedBuilder()
+        .setColor(config.alertDM.embed.color)
+        .setTitle(config.alertDM.embed.title)
+        .setDescription(
+          `${config.alertDM.embed.description}`
+            .replace(/\{ticketName\}/g, `${interaction.channel.name}`)
+            .replace(/\{server\}/g, `${interaction.guild.name}`),
+        );
+
+      try {
+        await user.send({ embeds: [alertDMEmbed] });
+      } catch (error) {
+        const DMErrorEmbed = new EmbedBuilder()
+          .setColor(config.DMErrors.embed.color)
+          .setTitle(config.DMErrors.embed.title)
+          .setDescription(`${config.DMErrors.embed.description}`);
+        let logChannelId = config.DMErrors.channel || config.logs_channel_id;
+        let logChannel = client.channels.cache.get(logChannelId);
+        await logChannel.send({ embeds: [DMErrorEmbed] });
+        logMessage(
+          `The bot could not DM ${user.tag} because their DMs were closed`,
+        );
+      }
+    }
     logMessage(
       `${interaction.user.tag} sent an alert to ${user.tag} in the ticket #${interaction.channel.name}`,
     );

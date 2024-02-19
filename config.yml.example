@@ -375,6 +375,18 @@ closeDM:
     description: "Your ticket **#{ticketName}** has been closed by {user} in **{server}**." # You can use {ticketName} for the name of the ticket, {user} for the name of the user who reopened the ticket, {server} for your server name & \n for a new line
 
 # ==============================================
+# Alert DM embed
+# ==============================================
+
+# In this section you can adjust settings related to the embed that gets sent in a user's DMs when a staff uses the alert command in their ticket
+alertDM:
+  enabled: false # Enable or disable the DM embed
+  embed:
+    color: "#FF0000" # The color of the embed
+    title: "Ticket Close Notification" # The title of the embed
+    description: "Your ticket **#{ticketName}** in **{server}** will be closed soon if no response has been received." # You can use {ticketName} for the name of the ticket, {server} for your server name & \n for a new line
+
+# ==============================================
 # Working Hours Settings
 # ==============================================
 
