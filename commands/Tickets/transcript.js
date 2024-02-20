@@ -80,12 +80,11 @@ module.exports = {
       })
       .setTimestamp();
 
-    let transcriptChannel = interaction.guild.channels.cache.get(
-      config.transcripts_channel_id,
-    );
-    transcriptChannel.send({ embeds: [embed], files: [attachment] });
+    let logChannelId = config.logs.transcripts || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    await logChannel.send({ embeds: [embed], files: [attachment] });
     interaction.reply({
-      content: `Transcript saved to <#${transcriptChannel.id}>`,
+      content: `Transcript saved to <#${logChannel.id}>`,
       ephemeral: true,
     });
     logMessage(

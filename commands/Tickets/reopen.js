@@ -87,9 +87,8 @@ module.exports = {
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       });
 
-    let logsChannel = interaction.guild.channels.cache.get(
-      config.logs_channel_id,
-    );
+    let logChannelId = config.logs.ticketReopen || config.logs.default;
+    let logsChannel = interaction.guild.channels.cache.get(logChannelId);
     await logsChannel.send({ embeds: [logEmbed] });
 
     const embed = new EmbedBuilder()
@@ -174,7 +173,7 @@ module.exports = {
           .setColor(config.DMErrors.embed.color)
           .setTitle(config.DMErrors.embed.title)
           .setDescription(`${config.DMErrors.embed.description}`);
-        let logChannelId = config.DMErrors.channel || config.logs_channel_id;
+        let logChannelId = config.logs.DMErrors || config.logs.default;
         let logChannel = client.channels.cache.get(logChannelId);
         await logChannel.send({ embeds: [DMErrorEmbed] });
         logMessage(

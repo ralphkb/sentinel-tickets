@@ -79,9 +79,8 @@ module.exports = {
     await ticketsDB.set(`${interaction.channel.id}.ticketType`, option);
     await interaction.channel.setParent(categoryID, { lockPermissions: false });
 
-    let logsChannel = interaction.guild.channels.cache.get(
-      config.logs_channel_id,
-    );
+    let logChannelId = config.logs.ticketMove || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
     const logEmbed = new EmbedBuilder()
       .setColor(config.commands.move.LogEmbed.color)
@@ -108,7 +107,7 @@ module.exports = {
         text: `${interaction.user.tag}`,
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       });
-    logsChannel.send({ embeds: [logEmbed] });
+    logChannel.send({ embeds: [logEmbed] });
 
     const embed = new EmbedBuilder()
       .setColor(config.commands.move.embed.color)

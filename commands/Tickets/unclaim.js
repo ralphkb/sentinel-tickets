@@ -134,9 +134,8 @@ module.exports = {
         await ticketsDB.set(`${interaction.channel.id}.claimed`, false);
         await ticketsDB.set(`${interaction.channel.id}.claimUser`, "");
 
-        let logsChannel = interaction.guild.channels.cache.get(
-          config.logs_channel_id,
-        );
+        let logChannelId = config.logs.ticketUnclaim || config.logs.default;
+        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
 
         const logEmbed = new EmbedBuilder()
           .setColor("#FF2400")

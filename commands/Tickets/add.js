@@ -47,9 +47,8 @@ module.exports = {
 
     let user = interaction.options.getUser("user");
     let role = interaction.options.getRole("role");
-    let logsChannel = interaction.guild.channels.cache.get(
-      config.logs_channel_id,
-    );
+    let logChannelId = config.logs.userAdd || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
     if ((!user && !role) || (user && role)) {
       return interaction.reply({
@@ -113,7 +112,7 @@ module.exports = {
             .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
         );
       interaction.reply({ embeds: [embed] });
-      logsChannel.send({ embeds: [logEmbed] });
+      logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} added ${user.tag} to the ticket #${interaction.channel.name}`,
       );
@@ -174,7 +173,7 @@ module.exports = {
             .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
         );
       interaction.reply({ embeds: [embed] });
-      logsChannel.send({ embeds: [logEmbed] });
+      logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} added ${role.name} to the ticket #${interaction.channel.name}`,
       );

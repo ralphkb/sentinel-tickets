@@ -99,9 +99,8 @@ module.exports = {
       attachment = await saveTranscriptTxt(interaction);
     }
 
-    let logsChannel = interaction.guild.channels.cache.get(
-      config.logs_channel_id,
-    );
+    let logChannelId = config.logs.ticketDelete || config.logs.default;
+    let logsChannel = interaction.guild.channels.cache.get(logChannelId);
     await logsChannel.send({ embeds: [logEmbed], files: [attachment] });
     logMessage(
       `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
@@ -208,7 +207,7 @@ module.exports = {
           .setColor(config.DMErrors.embed.color)
           .setTitle(config.DMErrors.embed.title)
           .setDescription(`${config.DMErrors.embed.description}`);
-        let logChannelId = config.DMErrors.channel || config.logs_channel_id;
+        let logChannelId = config.logs.DMErrors || config.logs.default;
         let logChannel = client.channels.cache.get(logChannelId);
         await logChannel.send({ embeds: [DMErrorEmbed] });
         logMessage(

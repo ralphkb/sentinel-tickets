@@ -6,8 +6,6 @@ panelMethod: "Buttons" # The method of the panel, can be either Buttons or Menu
 menuPlaceholder: "Select a category to open a ticket." # The placeholder of the select menu
 default_embed_color: "#2FF200" # The default embed color
 rolesThatCanBlacklist: ["111111111111111111"] # The IDs of the staff roles on your server which should have access to blacklisting and unblacklisting users from creating tickets, for example ["000000000000000000", "111111111111111111"]
-logs_channel_id: "111111111111111111" # The ID of the logs channel
-transcripts_channel_id: "111111111111111111" # The ID of the transcripts channel
 transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT", note that the TXT option is limited to 400 messages
 reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
 closeStaffOnly: true # When enabled, only staff members with support roles can use the close ticket button
@@ -102,7 +100,6 @@ DMUserSettings:
     description: "Your support ticket has been deleted. Here is your transcript and other information." # This description will show up on top of the other information in the DM embed.
   ratingSystem:
     enabled: false
-    logChannel: "" # The ID of the channel where the feedback and rating logs will be sent, keep it empty "" to use the default log channel.
     embed:
       color: "2FF200"
       title: "Ticket Feedback & Rating"
@@ -406,6 +403,29 @@ workingHours:
   fieldValue: "> {openingTime} to {closingTime}" # The value of the working hours field, use {openingTime} for the opening time and {closingTime} for the closing time
 
 # ==============================================
+# Log channels
+# ==============================================
+
+# This section allows you to configure the channels where the bot will send different logs. Make sure to at least configure the default log channel.
+# By leaving a channel empty "" the bot will fallback to the default log channel.
+logs:
+  default: "111111111111111111" # The ID of the default log channel
+  transcripts: "111111111111111111" # The ID of the log channel for manual transcripts obtained with the transcript button or command
+  userAdd: ""
+  userRemove: ""
+  ticketCreate: ""
+  ticketClose: ""
+  ticketReopen: ""
+  ticketDelete: ""
+  ticketClaim: ""
+  ticketUnclaim: ""
+  ticketMove: ""
+  ticketRename: ""
+  ticketTransfer: ""
+  ticketFeedback: ""
+  DMErrors: ""
+
+# ==============================================
 # Misc Locale
 # ==============================================
 
@@ -425,7 +445,6 @@ maxOpenTicketsEmbed:
   description: "You may only have **{max} ticket(s)** open at a time." # Use {max} for the maximum number of tickets that can be opened at once
 
 DMErrors:
-  channel: "" # The ID of the channel where the DM error logs will be sent, keeping it empty "" will fallback to the default log channel.
   embed:
     color: "#FF0000"
     title: "DMs Disabled"

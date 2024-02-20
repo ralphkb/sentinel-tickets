@@ -82,7 +82,7 @@ module.exports = {
           .setColor(config.DMErrors.embed.color)
           .setTitle(config.DMErrors.embed.title)
           .setDescription(`${config.DMErrors.embed.description}`);
-        let logChannelId = config.DMErrors.channel || config.logs_channel_id;
+        let logChannelId = config.logs.DMErrors || config.logs.default;
         let logChannel = client.channels.cache.get(logChannelId);
         await logChannel.send({ embeds: [DMErrorEmbed] });
         logMessage(

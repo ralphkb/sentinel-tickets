@@ -541,12 +541,11 @@ module.exports = {
           })
           .setTimestamp();
 
-        let transcriptChannel = interaction.guild.channels.cache.get(
-          config.transcripts_channel_id,
-        );
-        transcriptChannel.send({ embeds: [embed], files: [attachment] });
+        let logChannelId = config.logs.transcripts || config.logs.default;
+        let logChannel = interaction.guild.channels.cache.get(logChannelId);
+        await logChannel.send({ embeds: [embed], files: [attachment] });
         interaction.reply({
-          content: `Transcript saved to <#${transcriptChannel.id}>`,
+          content: `Transcript saved to <#${logChannel.id}>`,
           ephemeral: true,
         });
         logMessage(
@@ -608,9 +607,8 @@ module.exports = {
             iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
           });
 
-        let logsChannel = interaction.guild.channels.cache.get(
-          config.logs_channel_id,
-        );
+        let logChannelId = config.logs.ticketReopen || config.logs.default;
+        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
         await logsChannel.send({ embeds: [logEmbed] });
 
         const embed = new EmbedBuilder()
@@ -696,8 +694,7 @@ module.exports = {
               .setColor(config.DMErrors.embed.color)
               .setTitle(config.DMErrors.embed.title)
               .setDescription(`${config.DMErrors.embed.description}`);
-            let logChannelId =
-              config.DMErrors.channel || config.logs_channel_id;
+            let logChannelId = config.logs.DMErrors || config.logs.default;
             let logChannel = client.channels.cache.get(logChannelId);
             await logChannel.send({ embeds: [DMErrorEmbed] });
             logMessage(
@@ -771,9 +768,8 @@ module.exports = {
             name: "• Claimed By",
             value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
           });
-        let logsChannel = interaction.guild.channels.cache.get(
-          config.logs_channel_id,
-        );
+        let logChannelId = config.logs.ticketDelete || config.logs.default;
+        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
         await logsChannel.send({ embeds: [logEmbed], files: [attachment] });
         logMessage(
           `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
@@ -887,8 +883,7 @@ module.exports = {
               .setColor(config.DMErrors.embed.color)
               .setTitle(config.DMErrors.embed.title)
               .setDescription(`${config.DMErrors.embed.description}`);
-            let logChannelId =
-              config.DMErrors.channel || config.logs_channel_id;
+            let logChannelId = config.logs.DMErrors || config.logs.default;
             let logChannel = client.channels.cache.get(logChannelId);
             await logChannel.send({ embeds: [DMErrorEmbed] });
             logMessage(
@@ -976,9 +971,8 @@ module.exports = {
             name: "• Claimed By",
             value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
           });
-        let logsChannel = interaction.guild.channels.cache.get(
-          config.logs_channel_id,
-        );
+        let logChannelId = config.logs.ticketClose || config.logs.default;
+        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
         await logsChannel.send({ embeds: [logEmbed] });
         logMessage(
           `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
@@ -1066,8 +1060,7 @@ module.exports = {
               .setColor(config.DMErrors.embed.color)
               .setTitle(config.DMErrors.embed.title)
               .setDescription(`${config.DMErrors.embed.description}`);
-            let logChannelId =
-              config.DMErrors.channel || config.logs_channel_id;
+            let logChannelId = config.logs.DMErrors || config.logs.default;
             let logChannel = client.channels.cache.get(logChannelId);
             await logChannel.send({ embeds: [DMErrorEmbed] });
             logMessage(
@@ -1205,9 +1198,9 @@ module.exports = {
               interaction.user.id,
             );
 
-            let logsChannel = interaction.guild.channels.cache.get(
-              config.logs_channel_id,
-            );
+            let logChannelId = config.logs.ticketClaim || config.logs.default;
+            let logsChannel =
+              interaction.guild.channels.cache.get(logChannelId);
 
             const logEmbed = new EmbedBuilder()
               .setColor(config.default_embed_color)
@@ -1327,9 +1320,9 @@ module.exports = {
             await ticketsDB.set(`${interaction.channel.id}.claimed`, false);
             await ticketsDB.set(`${interaction.channel.id}.claimUser`, "");
 
-            let logsChannel = interaction.guild.channels.cache.get(
-              config.logs_channel_id,
-            );
+            let logChannelId = config.logs.ticketUnclaim || config.logs.default;
+            let logsChannel =
+              interaction.guild.channels.cache.get(logChannelId);
 
             const logEmbed = new EmbedBuilder()
               .setColor("#FF2400")
@@ -1566,10 +1559,11 @@ module.exports = {
                         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
                       });
 
-                    let logsChannel = interaction.guild.channels.cache.get(
-                      config.logs_channel_id,
-                    );
-                    await logsChannel.send({ embeds: [logEmbed] });
+                    let logChannelId =
+                      config.logs.ticketCreate || config.logs.default;
+                    let logChannel =
+                      interaction.guild.channels.cache.get(logChannelId);
+                    await logChannel.send({ embeds: [logEmbed] });
                     logMessage(
                       `${interaction.user.tag} created the ticket #${channel.name}`,
                     );
@@ -1648,9 +1642,7 @@ module.exports = {
             name: "• Ticket Rating",
             value: `${"⭐".repeat(i)} **(${i}/5)**`,
           });
-          let logChannelId =
-            config.DMUserSettings.ratingSystem.logChannel ||
-            config.logs_channel_id;
+          let logChannelId = config.logs.ticketFeedback || config.logs.default;
           let logChannel = client.channels.cache.get(logChannelId);
           await logChannel.send({ embeds: [ratingEmbed] });
           await mainDB.set("totalReviews", totalReviews + 1);

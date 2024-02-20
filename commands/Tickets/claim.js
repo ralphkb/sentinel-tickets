@@ -152,9 +152,8 @@ module.exports = {
           interaction.user.id,
         );
 
-        let logsChannel = interaction.guild.channels.cache.get(
-          config.logs_channel_id,
-        );
+        let logChannelId = config.logs.ticketClaim || config.logs.default;
+        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
 
         const logEmbed = new EmbedBuilder()
           .setColor(config.default_embed_color)

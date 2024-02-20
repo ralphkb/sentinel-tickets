@@ -73,9 +73,8 @@ module.exports = {
       await interaction.channel.setName(`${ticketType}-${optionUser.username}`);
     }
 
-    let logsChannel = interaction.guild.channels.cache.get(
-      config.logs_channel_id,
-    );
+    let logChannelId = config.logs.ticketTransfer || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
     const logEmbed = new EmbedBuilder()
       .setColor(config.commands.transfer.LogEmbed.color)
@@ -106,7 +105,7 @@ module.exports = {
         text: `${interaction.user.tag}`,
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       });
-    logsChannel.send({ embeds: [logEmbed] });
+    logChannel.send({ embeds: [logEmbed] });
 
     const embed = new EmbedBuilder()
       .setColor(config.commands.transfer.embed.color)

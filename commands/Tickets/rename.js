@@ -44,9 +44,8 @@ module.exports = {
 
     let newName = interaction.options.getString("name");
     interaction.channel.setName(`${newName}`);
-    let logsChannel = interaction.guild.channels.cache.get(
-      config.logs_channel_id,
-    );
+    let logChannelId = config.logs.ticketRename || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
     const log = new EmbedBuilder()
       .setColor(config.commands.rename.LogEmbed.color)
@@ -88,7 +87,7 @@ module.exports = {
       );
 
     interaction.reply({ embeds: [embed] });
-    logsChannel.send({ embeds: [log] });
+    logChannel.send({ embeds: [log] });
     logMessage(
       `${interaction.user.tag} renamed the ticket #${interaction.channel.name} to #${newName}`,
     );

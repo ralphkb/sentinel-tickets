@@ -47,9 +47,8 @@ module.exports = {
 
     let user = interaction.options.getUser("user");
     let role = interaction.options.getRole("role");
-    let logsChannel = interaction.guild.channels.cache.get(
-      config.logs_channel_id,
-    );
+    let logChannelId = config.logs.userRemove || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
     if ((!user && !role) || (user && role)) {
       return interaction.reply({
@@ -108,7 +107,7 @@ module.exports = {
         );
 
       interaction.reply({ embeds: [embed] });
-      logsChannel.send({ embeds: [logEmbed] });
+      logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} removed ${user.tag} from the ticket #${interaction.channel.name}`,
       );
@@ -164,7 +163,7 @@ module.exports = {
         );
 
       interaction.reply({ embeds: [embed] });
-      logsChannel.send({ embeds: [logEmbed] });
+      logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} removed ${role.name} from the ticket #${interaction.channel.name}`,
       );
