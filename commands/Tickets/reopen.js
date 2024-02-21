@@ -49,6 +49,7 @@ module.exports = {
       });
     }
 
+    await interaction.deferReply();
     let ticketUserID = client.users.cache.get(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
@@ -154,7 +155,7 @@ module.exports = {
       .then((msg) => msg.delete());
     await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
     await mainDB.push("openTickets", interaction.channel.id);
-    await interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
     if (config.reopenDM.enabled && interaction.user.id !== ticketUserID.id) {
       const reopenDMEmbed = new EmbedBuilder()
         .setColor(config.reopenDM.embed.color)

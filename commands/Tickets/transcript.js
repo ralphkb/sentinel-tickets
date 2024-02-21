@@ -41,6 +41,7 @@ module.exports = {
         ephemeral: true,
       });
     }
+    await interaction.deferReply({ ephemeral: true });
 
     let ticketUserID = client.users.cache.get(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
@@ -83,7 +84,7 @@ module.exports = {
     let logChannelId = config.logs.transcripts || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
     await logChannel.send({ embeds: [embed], files: [attachment] });
-    interaction.reply({
+    interaction.editReply({
       content: `Transcript saved to <#${logChannel.id}>`,
       ephemeral: true,
     });

@@ -54,6 +54,7 @@ module.exports = {
       });
     }
 
+    await interaction.deferReply();
     let ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
     let ticketUserID = client.users.cache.get(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
@@ -159,7 +160,7 @@ module.exports = {
 
     let messageID;
     await interaction
-      .reply({ embeds: [embed], components: [row], fetchReply: true })
+      .editReply({ embeds: [embed], components: [row], fetchReply: true })
       .then(async function (message) {
         messageID = message.id;
       });

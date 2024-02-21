@@ -503,6 +503,7 @@ module.exports = {
             ephemeral: true,
           });
         }
+        await interaction.deferReply({ ephemeral: true });
 
         let ticketUserID = client.users.cache.get(
           await ticketsDB.get(`${interaction.channel.id}.userID`),
@@ -544,7 +545,7 @@ module.exports = {
         let logChannelId = config.logs.transcripts || config.logs.default;
         let logChannel = interaction.guild.channels.cache.get(logChannelId);
         await logChannel.send({ embeds: [embed], files: [attachment] });
-        interaction.reply({
+        interaction.followUp({
           content: `Transcript saved to <#${logChannel.id}>`,
           ephemeral: true,
         });
@@ -716,10 +717,10 @@ module.exports = {
           });
         }
 
+        await interaction.deferReply();
         await interaction.channel.messages
           .fetch(await ticketsDB.get(`${interaction.channel.id}.closeMsgID`))
           .then((msg) => msg.delete());
-        await interaction.deferReply();
         let attachment;
         if (config.transcriptType === "HTML") {
           attachment = await saveTranscript(interaction);
@@ -892,7 +893,7 @@ module.exports = {
           }
         }
 
-        await interaction.followUp({ embeds: [deleteEmbed] });
+        await interaction.editReply({ embeds: [deleteEmbed] });
 
         setTimeout(async () => {
           await ticketsDB.delete(interaction.channel.id);
@@ -922,6 +923,7 @@ module.exports = {
           }
         }
 
+        await interaction.deferReply();
         await ticketsDB.set(
           `${interaction.channel.id}.closeUserID`,
           interaction.user.id,
@@ -1032,7 +1034,7 @@ module.exports = {
 
         let messageID;
         await interaction
-          .reply({ embeds: [embed], components: [row], fetchReply: true })
+          .editReply({ embeds: [embed], components: [row], fetchReply: true })
           .then(async function (message) {
             messageID = message.id;
           });

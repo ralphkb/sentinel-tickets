@@ -46,6 +46,7 @@ module.exports = {
       });
     }
 
+    await interaction.deferReply();
     let ticketUserID = client.users.cache.get(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
@@ -216,7 +217,7 @@ module.exports = {
       }
     }
 
-    await interaction.reply({ embeds: [deleteEmbed] });
+    await interaction.editReply({ embeds: [deleteEmbed] });
 
     setTimeout(async () => {
       await ticketsDB.delete(interaction.channel.id);
