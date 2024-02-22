@@ -5,6 +5,7 @@ const {
   Collection,
   AttachmentBuilder,
   ActivityType,
+  EmbedBuilder,
 } = require("discord.js");
 const dotenv = require("dotenv");
 const fs = require("fs");
@@ -147,6 +148,90 @@ async function checkSupportRole(interaction) {
     allowedRoles.includes(role.id),
   );
 }
+
+async function configEmbed(configPath, defaultValues = {}) {
+  const embed = new EmbedBuilder();
+
+  if (
+    config[configPath].description !== "" &&
+    config[configPath].description !== null
+  ) {
+    embed.setDescription(
+      config[configPath].description || defaultValues.description,
+    );
+  }
+
+  if (config[configPath].color !== "" && config[configPath].color !== null) {
+    embed.setColor(config[configPath].color || defaultValues.color);
+  }
+
+  if (config[configPath].title !== "" && config[configPath].title !== null) {
+    embed.setTitle(config[configPath].title || defaultValues.title);
+  }
+
+  if (config[configPath].URL !== "" && config[configPath].URL !== null) {
+    embed.setURL(config[configPath].URL || defaultValues.URL);
+  }
+
+  if (config[configPath].image !== "" && config[configPath].image !== null) {
+    embed.setImage(config[configPath].image || defaultValues.image);
+  }
+
+  if (
+    config[configPath].thumbnail !== "" &&
+    config[configPath].thumbnail !== null
+  ) {
+    embed.setThumbnail(config[configPath].thumbnail || defaultValues.thumbnail);
+  }
+
+  if (config[configPath].timestamp === true) {
+    embed.setTimestamp();
+  } else if (
+    config[configPath].timestamp !== false &&
+    defaultValues.timestamp === true
+  ) {
+    embed.setTimestamp();
+  }
+
+  // Setting author and footer
+  if (
+    config[configPath]?.author?.name !== "" &&
+    config[configPath]?.author?.name !== null
+  ) {
+    const authorValues = {
+      name: config[configPath]?.author?.name || defaultValues.author?.name,
+      url:
+        config[configPath]?.author?.url !== "" &&
+        config[configPath]?.author?.url !== null
+          ? config[configPath]?.author?.url || defaultValues.author?.url
+          : undefined,
+      iconURL:
+        config[configPath]?.author?.iconURL !== "" &&
+        config[configPath]?.author?.iconURL !== null
+          ? config[configPath]?.author?.iconURL || defaultValues.author?.iconURL
+          : undefined,
+    };
+    embed.setAuthor(authorValues);
+  }
+
+  if (
+    config[configPath]?.footer?.text !== "" &&
+    config[configPath]?.footer?.text !== null
+  ) {
+    const footerValues = {
+      text: config[configPath]?.footer?.text || defaultValues.footer?.text,
+      iconURL:
+        config[configPath]?.footer?.iconURL !== "" &&
+        config[configPath]?.footer?.iconURL !== null
+          ? config[configPath]?.footer?.iconURL || defaultValues.footer?.iconURL
+          : undefined,
+    };
+    embed.setFooter(footerValues);
+  }
+
+  return embed;
+}
+
 async function saveTranscript(interaction, message, saveImages = false) {
   const createTranscriptOptions = {
     limit: -1,
@@ -341,6 +426,7 @@ module.exports = {
   saveTranscriptTxt,
   formatTime,
   checkSupportRole,
+  configEmbed,
 };
 
 // Holding commands cooldown data
