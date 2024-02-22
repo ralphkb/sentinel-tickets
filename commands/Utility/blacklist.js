@@ -1,13 +1,14 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { mainDB, sanitizeInput, logMessage } = require("../../index.js");
+const {
+  mainDB,
+  sanitizeInput,
+  logMessage,
+  configEmbed,
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.blacklist.enabled,
@@ -49,21 +50,43 @@ module.exports = {
     const blacklistedUsers = await mainDB.get("blacklistedUsers");
 
     if (user) {
-      const alreadyBlacklistedEmbedUser = new EmbedBuilder()
-        .setColor(config.commands.blacklist.embedFailed.color)
-        .setDescription(
-          `${config.commands.blacklist.embedFailed.description}`
-            .replace(/\{target\}/g, user)
-            .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
-        );
+      const failedDefault = {
+        color: "#2FF200",
+        description: "**{target} ({target.tag})** is already in the blacklist.",
+      };
+      const alreadyBlacklistedEmbedUser = await configEmbed(
+        "blacklistFailedEmbed",
+        failedDefault,
+      );
 
-      const blacklistedEmbedUser = new EmbedBuilder()
-        .setColor(config.commands.blacklist.embedSuccess.color)
-        .setDescription(
-          `${config.commands.blacklist.embedSuccess.description}`
+      if (
+        alreadyBlacklistedEmbedUser.data &&
+        alreadyBlacklistedEmbedUser.data.description
+      ) {
+        alreadyBlacklistedEmbedUser.setDescription(
+          alreadyBlacklistedEmbedUser.data.description
             .replace(/\{target\}/g, user)
             .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
         );
+      }
+
+      const successDefault = {
+        color: "#2FF200",
+        description:
+          "**{target} ({target.tag})** has been added to the blacklist.",
+      };
+      const blacklistedEmbedUser = await configEmbed(
+        "blacklistSuccessEmbed",
+        successDefault,
+      );
+
+      if (blacklistedEmbedUser.data && blacklistedEmbedUser.data.description) {
+        blacklistedEmbedUser.setDescription(
+          blacklistedEmbedUser.data.description
+            .replace(/\{target\}/g, user)
+            .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
+        );
+      }
 
       if (blacklistedUsers.includes(user.id)) {
         // User is already blacklisted
@@ -80,21 +103,43 @@ module.exports = {
     }
 
     if (role) {
-      const alreadyBlacklistedEmbedRole = new EmbedBuilder()
-        .setColor(config.commands.blacklist.embedFailed.color)
-        .setDescription(
-          `${config.commands.blacklist.embedFailed.description}`
-            .replace(/\{target\}/g, role)
-            .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
-        );
+      const failedDefault = {
+        color: "#2FF200",
+        description: "**{target} ({target.tag})** is already in the blacklist.",
+      };
+      const alreadyBlacklistedEmbedRole = await configEmbed(
+        "blacklistFailedEmbed",
+        failedDefault,
+      );
 
-      const blacklistedEmbedRole = new EmbedBuilder()
-        .setColor(config.commands.blacklist.embedSuccess.color)
-        .setDescription(
-          `${config.commands.blacklist.embedSuccess.description}`
+      if (
+        alreadyBlacklistedEmbedRole.data &&
+        alreadyBlacklistedEmbedRole.data.description
+      ) {
+        alreadyBlacklistedEmbedRole.setDescription(
+          alreadyBlacklistedEmbedRole.data.description
             .replace(/\{target\}/g, role)
             .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
         );
+      }
+
+      const successDefault = {
+        color: "#2FF200",
+        description:
+          "**{target} ({target.tag})** has been added to the blacklist.",
+      };
+      const blacklistedEmbedRole = await configEmbed(
+        "blacklistSuccessEmbed",
+        successDefault,
+      );
+
+      if (blacklistedEmbedRole.data && blacklistedEmbedRole.data.description) {
+        blacklistedEmbedRole.setDescription(
+          blacklistedEmbedRole.data.description
+            .replace(/\{target\}/g, role)
+            .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
+        );
+      }
 
       if (blacklistedUsers.includes(role.id)) {
         // Role is already blacklisted

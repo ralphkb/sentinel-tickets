@@ -125,9 +125,6 @@ commands:
   add:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "2FF200"
-      description: "Added **{target} ({target.tag})** to the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
     LogEmbed:
       color: "2FF200"
       title: "Ticket Logs | Target Added"
@@ -137,10 +134,6 @@ commands:
   alert:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "2FF200"
-      title: "Ticket Close Notification"
-      description: "This ticket will be closed soon if no response has been received."
   transcript:
     enabled: true
     permission: "KickMembers"
@@ -246,20 +239,9 @@ commands:
     enabled: true
     permission: "ManageChannels"
     support_role_ids: [] # The IDs of the staff roles on your server that can use the panel command, they must also have the permission above, keep it empty to not require a role.
-    embed:
-      color: "2FF200" # The color of the panel embed
-      title: "Support Tickets" # The title of the panel embed
-      description: "To create a support ticket, click on one of the buttons below depending on what help you need." # Use \n to create a new line for this embed description if needed
-      footer_msg: "Sentinel Tickets" # Footer message
-      footer_icon_url: "" # The link to the image in the footer
-      imageURL: "" # Add an image to the embed
-      thumbnailURL: "" # Add a thumbnail to the embed
   remove:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "#FF0000"
-      description: "Removed **{target} ({target.tag})** from the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
     LogEmbed:
       color: "#FF0000"
       title: "Ticket Logs | Target Removed"
@@ -281,21 +263,9 @@ commands:
   blacklist:
     enabled: true
     permission: "KickMembers"
-    embedFailed:
-      color: "#2FF200"
-      description: "**{target} ({target.tag})** is already in the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
-    embedSuccess:
-      color: "#2FF200"
-      description: "**{target} ({target.tag})** has been added to the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
   unblacklist:
     enabled: true
     permission: "KickMembers"
-    embedFailed:
-      color: "#2FF200"
-      description: "**{target} ({target.tag})** is not currently in the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
-    embedSuccess:
-      color: "#2FF200"
-      description: "**{target} ({target.tag})** has been removed from the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
   ping:
     enabled: true
     permission: "KickMembers"
@@ -424,6 +394,150 @@ logs:
   ticketTransfer: ""
   ticketFeedback: ""
   DMErrors: ""
+
+# ==============================================
+# Embeds Locale
+# ==============================================
+
+# NOTE: While configuring embed options, you can leave it as an empty string to not use the option or set it to anything you want.
+# By deleting an option entirely from this part of the config, the bot will try to fallback to a default value otherwise it will skip the option.
+# For example, if you remove the thumbnail option, the bot will use the default thumbnail if available, otherwise no thumbnail will be added.
+
+# Panel command embed
+panelEmbed:
+  color: "#2FF200"
+  title: "Support Tickets"
+  description: "To create a support ticket, click on one of the buttons below depending on what help you need." # Use \n to create a new line for this embed description if needed
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "Sentinel Tickets"
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Blacklist command embed when it fails to blacklist a user or role
+blacklistFailedEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** is already in the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Blacklist command embed when it is successful in blacklisting a user or role
+blacklistSuccessEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** has been added to the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Unblacklist command embed when it fails to unblacklist a user or role
+unblacklistFailedEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Unblacklist command embed when it is successful in unblacklisting a user or role
+unblacklistSuccessEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** has been removed from the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# User and role add embed
+addEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "Added **{target} ({target.tag})** to the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Alert command embed
+alertEmbed:
+  color: "#2FF200"
+  title: "Ticket Close Notification"
+  description: "This ticket will be closed soon if no response has been received."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# User and role remove embed
+removeEmbed:
+  color: "#FF0000"
+  title: ""
+  description: "Removed **{target} ({target.tag})** from the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
 
 # ==============================================
 # Misc Locale

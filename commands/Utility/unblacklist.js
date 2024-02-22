@@ -1,13 +1,14 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { mainDB, sanitizeInput, logMessage } = require("../../index.js");
+const {
+  mainDB,
+  sanitizeInput,
+  logMessage,
+  configEmbed,
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.unblacklist.enabled,
@@ -49,21 +50,47 @@ module.exports = {
     const blacklistedUsers = await mainDB.get("blacklistedUsers");
 
     if (user) {
-      const notBlacklistedEmbedUser = new EmbedBuilder()
-        .setColor(config.commands.unblacklist.embedFailed.color)
-        .setDescription(
-          `${config.commands.unblacklist.embedFailed.description}`
-            .replace(/\{target\}/g, user)
-            .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
-        );
+      const failedDefault = {
+        color: "#2FF200",
+        description:
+          "**{target} ({target.tag})** is not currently in the blacklist.",
+      };
+      const notBlacklistedEmbedUser = await configEmbed(
+        "unblacklistFailedEmbed",
+        failedDefault,
+      );
 
-      const unblacklistedEmbedUser = new EmbedBuilder()
-        .setColor(config.commands.unblacklist.embedSuccess.color)
-        .setDescription(
-          `${config.commands.unblacklist.embedSuccess.description}`
+      if (
+        notBlacklistedEmbedUser.data &&
+        notBlacklistedEmbedUser.data.description
+      ) {
+        notBlacklistedEmbedUser.setDescription(
+          notBlacklistedEmbedUser.data.description
             .replace(/\{target\}/g, user)
             .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
         );
+      }
+
+      const successDefault = {
+        color: "#2FF200",
+        description:
+          "**{target} ({target.tag})** has been removed from the blacklist.",
+      };
+      const unblacklistedEmbedUser = await configEmbed(
+        "unblacklistSuccessEmbed",
+        successDefault,
+      );
+
+      if (
+        unblacklistedEmbedUser.data &&
+        unblacklistedEmbedUser.data.description
+      ) {
+        unblacklistedEmbedUser.setDescription(
+          unblacklistedEmbedUser.data.description
+            .replace(/\{target\}/g, user)
+            .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
+        );
+      }
 
       if (blacklistedUsers.includes(user.id)) {
         // User is blacklisted
@@ -85,21 +112,47 @@ module.exports = {
     }
 
     if (role) {
-      const notBlacklistedEmbedRole = new EmbedBuilder()
-        .setColor(config.commands.unblacklist.embedFailed.color)
-        .setDescription(
-          `${config.commands.unblacklist.embedFailed.description}`
-            .replace(/\{target\}/g, role)
-            .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
-        );
+      const failedDefault = {
+        color: "#2FF200",
+        description:
+          "**{target} ({target.tag})** is not currently in the blacklist.",
+      };
+      const notBlacklistedEmbedRole = await configEmbed(
+        "unblacklistFailedEmbed",
+        failedDefault,
+      );
 
-      const unblacklistedEmbedRole = new EmbedBuilder()
-        .setColor(config.commands.unblacklist.embedSuccess.color)
-        .setDescription(
-          `${config.commands.unblacklist.embedSuccess.description}`
+      if (
+        notBlacklistedEmbedRole.data &&
+        notBlacklistedEmbedRole.data.description
+      ) {
+        notBlacklistedEmbedRole.setDescription(
+          notBlacklistedEmbedRole.data.description
             .replace(/\{target\}/g, role)
             .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
         );
+      }
+
+      const successDefault = {
+        color: "#2FF200",
+        description:
+          "**{target} ({target.tag})** has been removed from the blacklist.",
+      };
+      const unblacklistedEmbedRole = await configEmbed(
+        "unblacklistSuccessEmbed",
+        successDefault,
+      );
+
+      if (
+        unblacklistedEmbedRole.data &&
+        unblacklistedEmbedRole.data.description
+      ) {
+        unblacklistedEmbedRole.setDescription(
+          unblacklistedEmbedRole.data.description
+            .replace(/\{target\}/g, role)
+            .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
+        );
+      }
 
       if (blacklistedUsers.includes(role.id)) {
         // User is blacklisted

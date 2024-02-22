@@ -1377,8 +1377,7 @@ module.exports = {
             )
             .setDescription(category.description)
             .setFooter({
-              text: config.commands.panel.embed.footer_msg,
-              iconURL: config.commands.panel.embed.footer_icon_url,
+              text: "Sentinel Tickets", // TODO: improve this later
             })
             .setTimestamp();
 

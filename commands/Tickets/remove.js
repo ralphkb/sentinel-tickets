@@ -12,6 +12,7 @@ const {
   sanitizeInput,
   logMessage,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 
 module.exports = {
@@ -98,16 +99,23 @@ module.exports = {
           iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
         });
 
-      const embed = new EmbedBuilder()
-        .setColor(config.commands.remove.embed.color)
-        .setDescription(
-          `${config.commands.remove.embed.description}`
+      const defaultValues = {
+        color: "#FF0000",
+        description: "Removed **{target} ({target.tag})** from the ticket.",
+      };
+
+      const userRemoveEmbed = await configEmbed("removeEmbed", defaultValues);
+
+      if (userRemoveEmbed.data && userRemoveEmbed.data.description) {
+        userRemoveEmbed.setDescription(
+          userRemoveEmbed.data.description
             .replace(/\{target\}/g, user)
             .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
         );
+      }
 
-      interaction.reply({ embeds: [embed] });
-      logChannel.send({ embeds: [logEmbed] });
+      await interaction.reply({ embeds: [userRemoveEmbed] });
+      await logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} removed ${user.tag} from the ticket #${interaction.channel.name}`,
       );
@@ -154,16 +162,23 @@ module.exports = {
           iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
         });
 
-      const embed = new EmbedBuilder()
-        .setColor(config.commands.remove.embed.color)
-        .setDescription(
-          `${config.commands.remove.embed.description}`
+      const defaultValues = {
+        color: "#FF0000",
+        description: "Removed **{target} ({target.tag})** from the ticket.",
+      };
+
+      const roleRemoveEmbed = await configEmbed("removeEmbed", defaultValues);
+
+      if (roleRemoveEmbed.data && roleRemoveEmbed.data.description) {
+        roleRemoveEmbed.setDescription(
+          roleRemoveEmbed.data.description
             .replace(/\{target\}/g, role)
             .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
         );
+      }
 
-      interaction.reply({ embeds: [embed] });
-      logChannel.send({ embeds: [logEmbed] });
+      await interaction.reply({ embeds: [roleRemoveEmbed] });
+      await logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} removed ${role.name} from the ticket #${interaction.channel.name}`,
       );

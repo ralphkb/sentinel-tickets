@@ -12,6 +12,7 @@ const {
   sanitizeInput,
   logMessage,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 
 module.exports = {
@@ -104,15 +105,23 @@ module.exports = {
           iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
         });
 
-      const embed = new EmbedBuilder()
-        .setColor(config.commands.add.embed.color)
-        .setDescription(
-          `${config.commands.add.embed.description}`
+      const defaultValues = {
+        color: "#2FF200",
+        description: "Added **{target} ({target.tag})** to the ticket.",
+      };
+
+      const userAddEmbed = await configEmbed("addEmbed", defaultValues);
+
+      if (userAddEmbed.data && userAddEmbed.data.description) {
+        userAddEmbed.setDescription(
+          userAddEmbed.data.description
             .replace(/\{target\}/g, user)
             .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
         );
-      interaction.reply({ embeds: [embed] });
-      logChannel.send({ embeds: [logEmbed] });
+      }
+
+      await interaction.reply({ embeds: [userAddEmbed] });
+      await logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} added ${user.tag} to the ticket #${interaction.channel.name}`,
       );
@@ -165,15 +174,22 @@ module.exports = {
           iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
         });
 
-      const embed = new EmbedBuilder()
-        .setColor(config.commands.add.embed.color)
-        .setDescription(
-          `${config.commands.add.embed.description}`
+      const defaultValues = {
+        color: "#2FF200",
+        description: "Added **{target} ({target.tag})** to the ticket.",
+      };
+
+      const roleAddEmbed = await configEmbed("addEmbed", defaultValues);
+
+      if (roleAddEmbed.data && roleAddEmbed.data.description) {
+        roleAddEmbed.setDescription(
+          roleAddEmbed.data.description
             .replace(/\{target\}/g, role)
             .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
         );
-      interaction.reply({ embeds: [embed] });
-      logChannel.send({ embeds: [logEmbed] });
+      }
+      await interaction.reply({ embeds: [roleAddEmbed] });
+      await logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} added ${role.name} to the ticket #${interaction.channel.name}`,
       );

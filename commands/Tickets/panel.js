@@ -1,5 +1,4 @@
 const {
-  EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
   ActionRowBuilder,
@@ -12,7 +11,12 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketCategories, logMessage, mainDB } = require("../../index.js");
+const {
+  ticketCategories,
+  logMessage,
+  mainDB,
+  configEmbed,
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.panel.enabled,
@@ -36,22 +40,18 @@ module.exports = {
       });
     }
 
-    const panelEmbed = new EmbedBuilder()
-      .setColor(config.commands.panel.embed.color)
-      .setTitle(config.commands.panel.embed.title)
-      .setDescription(config.commands.panel.embed.description)
-      .setFooter({
-        text: config.commands.panel.embed.footer_msg,
-        iconURL: config.commands.panel.embed.footer_icon_url,
-      });
+    const defaultValues = {
+      color: "#2FF200",
+      title: "Support Tickets",
+      description:
+        "To create a support ticket, click on one of the buttons below depending on what help you need.",
+      timestamp: true,
+      footer: {
+        text: "Sentinel Tickets",
+      },
+    };
 
-    if (config.commands.panel.embed.imageURL) {
-      panelEmbed.setImage(config.commands.panel.embed.imageURL);
-    }
-
-    if (config.commands.panel.embed.thumbnailURL) {
-      panelEmbed.setThumbnail(config.commands.panel.embed.thumbnailURL);
-    }
+    const panelEmbed = await configEmbed("panelEmbed", defaultValues);
 
     if (config.panelMethod === "Buttons") {
       // Creating the buttons, action rows and more

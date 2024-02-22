@@ -15,6 +15,7 @@ const {
   logMessage,
   client,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 
 module.exports = {
@@ -54,15 +55,19 @@ module.exports = {
 
     const ticketAlertRow = new ActionRowBuilder().addComponents(closeButton);
 
-    const embed = new EmbedBuilder()
-      .setColor(config.commands.alert.embed.color)
-      .setTitle(config.commands.alert.embed.title)
-      .setDescription(config.commands.alert.embed.description)
-      .setTimestamp();
+    const defaultValues = {
+      color: "#2FF200",
+      title: "Ticket Close Notification",
+      description:
+        "This ticket will be closed soon if no response has been received.",
+      timestamp: true,
+    };
+
+    const alertEmbed = await configEmbed("alertEmbed", defaultValues);
 
     interaction.reply({
       content: `<@${user.id}>`,
-      embeds: [embed],
+      embeds: [alertEmbed],
       components: [ticketAlertRow],
     });
     if (config.alertDM.enabled) {
