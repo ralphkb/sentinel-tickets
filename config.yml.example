@@ -1,5 +1,5 @@
 # ==============================================
-# Ticket bot general settings
+# Paramètre générale
 # ==============================================
 
 panelMethod: "Buttons" # The method of the panel, can be either Buttons or Menu
@@ -23,7 +23,7 @@ status:
   botStatus: "online" # The status of the bot, can be "online", "idle", "dnd", "invisible", note that the streaming type requires the "online" status
 
 # ==============================================
-# Ticket Category settings
+# Paramètre des catégories
 # ==============================================
 
 # The limit set by discord is 25, though it is highly recommended not to use such a high amount of types considering each types uses 2 categories and the discord limit is 50 categories, you would no longer have categories left to use for your normal discord channels...
@@ -90,7 +90,7 @@ TicketCategories:
         minLength: 10 # Set the minimum number of characters required for submission
 
 # ==============================================
-# Ticket DM user settings
+# Paramètre des messages privés
 # ==============================================
 DMUserSettings:
   enabled: true # Enable or disable sending a direct message to a user once their ticket has been deleted. It would contain the transcript and an embed.
@@ -116,7 +116,7 @@ DMUserSettings:
         minLength: 80 # Set the minimum number of characters required for submission
 
 # ==============================================
-# Slash commands settings
+# Paramètre des commandes slash
 # ==============================================
 
 # You can disable a command by setting enabled: false for any of them, although it's recommended you keep all of them enabled
@@ -274,7 +274,7 @@ commands:
     permission: "KickMembers"
 
 # ==============================================
-# General button settings
+# Paramètre générale des boutons
 # ==============================================
 
 closeButton:
@@ -308,7 +308,7 @@ unclaimButton:
   style: "Danger" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
 
 # ==============================================
-# User Leave Settings
+# Paramètre des DM au utilisateur qui quitte
 # ==============================================
 
 # In this section you can adjust settings related to the embed that gets sent in a ticket if the ticket creator left the discord server
@@ -318,7 +318,7 @@ userLeftEmbed:
   embed_description: "The user {user} left the server" # You can use {user} as a placeholder for the username of the member who left & \n for a new line
 
 # ==============================================
-# Re-Open DM embed
+# Paramètre des DM si le ticket et ré-ouvert
 # ==============================================
 
 # In this section you can adjust settings related to the embed that gets sent in a user's DMs if their ticket has been re-opened
@@ -330,7 +330,7 @@ reopenDM:
     description: "Your ticket **#{ticketName}** has been reopened by {user} in **{server}**." # You can use {ticketName} for the name of the ticket, {user} for the name of the user who reopened the ticket, {server} for your server name & \n for a new line
 
 # ==============================================
-# Close DM embed
+# Paramètre des DM au utilisateur quand le ticket ferme
 # ==============================================
 
 # In this section you can adjust settings related to the embed that gets sent in a user's DMs if their ticket has been closed
@@ -342,7 +342,7 @@ closeDM:
     description: "Your ticket **#{ticketName}** has been closed by {user} in **{server}**." # You can use {ticketName} for the name of the ticket, {user} for the name of the user who reopened the ticket, {server} for your server name & \n for a new line
 
 # ==============================================
-# Alert DM embed
+# Paramètre des DM au utilisateur quand ils sont alertés
 # ==============================================
 
 # In this section you can adjust settings related to the embed that gets sent in a user's DMs when a staff uses the alert command in their ticket
@@ -354,7 +354,7 @@ alertDM:
     description: "Your ticket **#{ticketName}** in **{server}** will be closed soon if no response has been received." # You can use {ticketName} for the name of the ticket, {server} for your server name & \n for a new line
 
 # ==============================================
-# Working Hours Settings
+# Paramètre des horaires de travail
 # ==============================================
 
 # Note: if the working hours system is not working, it's most likely due to incorrect configuration of the min and max hours.
@@ -373,7 +373,7 @@ workingHours:
   fieldValue: "> {openingTime} to {closingTime}" # The value of the working hours field, use {openingTime} for the opening time and {closingTime} for the closing time
 
 # ==============================================
-# Log channels
+# Paramètre des salons de logs
 # ==============================================
 
 # This section allows you to configure the channels where the bot will send different logs. Make sure to at least configure the default log channel.
@@ -396,7 +396,7 @@ logs:
   DMErrors: ""
 
 # ==============================================
-# Embeds Locale
+# Paramètre des embeds
 # ==============================================
 
 # NOTE: While configuring embed options, you can leave it as an empty string to not use the option or set it to anything you want.
@@ -540,7 +540,7 @@ removeEmbed:
     url: ""
 
 # ==============================================
-# Misc Locale
+# Paramètre autres.
 # ==============================================
 
 errors:
