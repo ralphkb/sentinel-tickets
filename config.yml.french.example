@@ -18,9 +18,9 @@ claimFeature: false # Activer ou désactiver le bouton/la fonction de réclamati
 claim1on1: false # Lorsque cette fonctionnalité est activée, lors de la réclamation d'un ticket, seul le créateur du ticket et le personnel ayant réclamé le ticket pourront discuter dedans
 status:
   botActivityText: "Tickets de support" # Le message d'activité du bot
-  botActivityType: "Watching" # Le type d'activité du bot, peut être "Joue à", "Diffuse", "Écoute", "Regarde", "Participe à une compétition"
+  botActivityType: "Watching" # Le type d'activité du bot, peut être "Playing", "Streaming", "Listening", "Watching", "Competing"
   streamingOptionURL: "" # L'URL au cas où vous utilisez l'option de diffusion
-  botStatus: "online" # Le statut du bot, peut être "en ligne", "inactif", "ne pas déranger", "invisible", notez que le type de diffusion nécessite le statut "en ligne"
+  botStatus: "online" # Le statut du bot, peut être "online", "idle", "dnd", "invisible", notez que le type de diffusion nécessite le statut "online"
 
 # ==============================================
 # Paramètre des catégories
