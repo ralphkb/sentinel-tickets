@@ -1,0 +1,565 @@
+# ==============================================
+# Ticket bot general settings
+# ==============================================
+
+panelMethod: "Buttons" # The method of the panel, can be either Buttons or Menu
+menuPlaceholder: "Select a category to open a ticket." # The placeholder of the select menu
+default_embed_color: "#2FF200" # The default embed color
+rolesThatCanBlacklist: ["111111111111111111"] # The IDs of the staff roles on your server which should have access to blacklisting and unblacklisting users from creating tickets, for example ["000000000000000000", "111111111111111111"]
+transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT", note that the TXT option is limited to 400 messages
+reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
+closeStaffOnly: true # When enabled, only staff members with support roles can use the close ticket button
+closeRemoveUser: false # When enabled, the ticket creator will be removed from the ticket when it is closed and added back if the ticket is re-opened
+commands_cooldown: "5" # The cooldown of commands in seconds
+buttons_cooldown: "5" # The cooldown of buttons in seconds
+maxOpenTickets: "1" # The maximum number of open tickets a user can have at one time
+deleteTicketTime: "5" # The time in seconds before a ticket is deleted
+claimFeature: false # Enable or disable the claim button/feature
+claim1on1: false # When this feature is enabled, upon the claiming of a ticket only the ticket creator and the staff who claimed the ticket will be able to chat in it
+status:
+  botActivityText: "Support Tickets" # The activity message of the bot
+  botActivityType: "Watching" # The activity type of the bot, can be "Playing", "Streaming", "Listening", "Watching", "Competing"
+  streamingOptionURL: "" # The URL in case you use the streaming option
+  botStatus: "online" # The status of the bot, can be "online", "idle", "dnd", "invisible", note that the streaming type requires the "online" status
+
+# ==============================================
+# Ticket Category settings
+# ==============================================
+
+# The limit set by discord is 25, though it is highly recommended not to use such a high amount of types considering each types uses 2 categories and the discord limit is 50 categories, you would no longer have categories left to use for your normal discord channels...
+TicketCategories:
+  - id: 1 # Unique ID for each category, ONLY USE NUMBERS (It is suggested to just increment this value by 1 each time)
+    name: "report" # The name of the category, it will be in lowercase anyways
+    categoryID: "111111111111111111" # The ID of the category where those tickets will be created
+    closedCategoryID: "111111111111111111" # The ID of the category where the closed tickets will go
+    support_role_ids: ["000000000000000000", "111111111111111111"] # The IDs of the staff roles on your server that can access only this ticket category, for example ["000000000000000000", "111111111111111111"]
+    pingRoles: false # Enable or disable pinging roles when a ticket is opened in this category
+    ping_role_ids: [] # The IDs of the roles you want to ping when a ticket is opened in this category, for example ["000000000000000000", "111111111111111111"]
+    creatorRoles: [] # The IDs of the roles that can create tickets in this category, keep it empty to allow all roles to create tickets
+    buttonEmoji: "👮" # The emoji of the button
+    buttonLabel: "Report a user" # The name of the button
+    buttonStyle: "Success" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+    menuEmoji: "👮" # The emoji of the select menu option
+    menuLabel: "Report a user" # The name of the select menu option
+    menuDescription: "Click on this option to open a report user ticket!" # The description of the select menu option
+    embedTitle: "Report Ticket" # The title of the embed
+    color: "#FFD700" # The color of embed in the opened ticket
+    description: "Welcome to your report ticket! Please be patient while a staff member responds to your report." # The description of the embed in the created ticket, right above the questions fields
+    ticketName: "TICKETCOUNT" # Can be USERNAME or TICKETCOUNT, will be called name-ticketName such as "report-12348"
+    modalTitle: "User Report Format" # The title of the modal
+    questions: # Maximum number of questions is 5, you should at least keep 1 question since that information will always help you in any ticket
+      - label: "What is your username?"
+        placeholder: "Write your username"
+        style: "Short" # Short or Paragraph
+        required: true # If this input is required or not, can be true or false
+        minLength: 3 # Set the minimum number of characters required for submission
+      - label: "Reported username?"
+        placeholder: "Write their username"
+        style: "Short"
+        required: true
+        minLength: 3
+      - label: "Why are you reporting them?"
+        placeholder: "Explain with details"
+        style: "Paragraph"
+        required: true
+        minLength: 50
+  - id: 2 # Unique ID for each category
+    name: "other"
+    categoryID: "111111111111111111" # The ID of the category where those tickets will be created
+    closedCategoryID: "111111111111111111" # The ID of the category where the closed tickets will go
+    support_role_ids: ["000000000000000000"] # The IDs of the staff roles on your server that can access only this ticket category, for example ["000000000000000000", "111111111111111111"]
+    pingRoles: true # Enable or disable pinging roles when a ticket is opened in this category
+    ping_role_ids: ["000000000000000000"] # The IDs of the roles you want to ping when a ticket is opened in this category,, for example ["000000000000000000", "111111111111111111"]
+    creatorRoles: [] # The IDs of the roles that can create tickets in this category, keep it empty to allow all roles to create tickets
+    buttonEmoji: "🤔" # The emoji of the button
+    buttonLabel: "Other" # The name of the button
+    buttonStyle: "Primary" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+    menuEmoji: "🤔" # The emoji of the select menu option
+    menuLabel: "Other" # The name of the select menu option
+    menuDescription: "Click on this option to open a miscellaneous ticket!" # The description of the select menu option
+    embedTitle: "Other Ticket" # The title of the embed
+    color: "#ADD8E6" # The color of embed in the opened ticket
+    description: "Welcome to your other ticket! Please be patient while a staff member responds to your questions." # The description of the embed in the created ticket, right above the questions fields
+    ticketName: "USERNAME" # Can be USERNAME or TICKETCOUNT
+    modalTitle: "Other Ticket Format" # The title of the modal
+    questions: # Maximum number of questions is 5, you should at least keep 1 question since that information will always help you in any ticket
+      - label: "What is your question?"
+        placeholder: "Write your question"
+        style: "Paragraph" # Short or Paragraph
+        required: true # If this input is required or not, can be true or false
+        minLength: 10 # Set the minimum number of characters required for submission
+
+# ==============================================
+# Ticket DM user settings
+# ==============================================
+DMUserSettings:
+  enabled: true # Enable or disable sending a direct message to a user once their ticket has been deleted. It would contain the transcript and an embed.
+  embed:
+    color: "2FF200"
+    title: "Ticket Deleted"
+    description: "Your support ticket has been deleted. Here is your transcript and other information." # This description will show up on top of the other information in the DM embed.
+  ratingSystem:
+    enabled: false
+    embed:
+      color: "2FF200"
+      title: "Ticket Feedback & Rating"
+      description: "We value your feedback! Please take a moment to share your thoughts and rate our support system. Your rating can be between 1 and 5 stars by using the select menu below. Thank you for helping us improve."
+    menu:
+      emoji: "⭐"
+      placeholder: "Select a Rating"
+    modalTitle: "Ticket Feedback"
+    questions: # Maximum number of questions is 5, you must keep a minimum of 1 to use this feature
+      - label: "What is your feedback?"
+        placeholder: "Write your feedback here."
+        style: "Paragraph" # Short or Paragraph
+        required: true # If this input is required or not, can be true or false (must be kept to true when there is only 1 question)
+        minLength: 80 # Set the minimum number of characters required for submission
+
+# ==============================================
+# Slash commands settings
+# ==============================================
+
+# You can disable a command by setting enabled: false for any of them, although it's recommended you keep all of them enabled
+# For information regarding what options you have as permissions for each command, check out this link: https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags
+commands:
+  add:
+    enabled: true
+    permission: "KickMembers"
+    LogEmbed:
+      color: "2FF200"
+      title: "Ticket Logs | Target Added"
+      field_staff: "• Staff"
+      field_target: "• Target"
+      field_ticket: "• Ticket"
+  alert:
+    enabled: true
+    permission: "KickMembers"
+  transcript:
+    enabled: true
+    permission: "KickMembers"
+  claim:
+    enabled: true
+    permission: "KickMembers"
+  unclaim:
+    enabled: true
+    permission: "KickMembers"
+  move:
+    enabled: true
+    permission: "KickMembers"
+    embed:
+      color: "2FF200"
+      description: "Moved this ticket to the **{category}** category." # Use {category} for the name of the category
+    LogEmbed:
+      color: "2FF200"
+      title: "Ticket Logs | Ticket Moved"
+      field_staff: "• Staff"
+      field_ticket: "• Ticket"
+  transfer:
+    enabled: true
+    permission: "KickMembers"
+    embed:
+      color: "2FF200"
+      description: "The ownership of this ticket has been transferred to **{user} ({user.tag})**." # Use {user} for the user such as @User and {user.tag} for the name of the user without it being mentioned such as User
+    LogEmbed:
+      color: "2FF200"
+      title: "Ticket Logs | Ticket Creator Transferred"
+      field_staff: "• Staff"
+      field_ticket: "• Ticket"
+      field_transfer: "• Transfer Details"
+  pin:
+    enabled: true
+    permission: "KickMembers"
+    emoji: "📌"
+    alreadyPinned: "This ticket is already pinned!"
+    embed:
+      color: "2FF200"
+      description: "This ticket has been pinned."
+  priority:
+    enabled: true
+    permission: "KickMembers"
+    emojis:
+      low: "🟢"
+      medium: "🟡"
+      high: "🔴"
+    alreadyPriority: "This ticket is already assigned a priority!"
+    notPriority: "This ticket is not assigned a priority!"
+    embedAdd: # The embed used when adding a priority
+      color: "2FF200"
+      description: "The priority of this ticket has been set to **{priority}**." # Use {priority} for the name of the priority
+    embedRemove: # The embed used when removing a priority
+      color: "FF2400"
+      description: "The priority of this ticket has been removed."
+  slowmode:
+    enabled: true
+    permission: "KickMembers"
+    alreadySlowmode: "This ticket channel already has that slowmode."
+    slowmodeRemoved: "The slowmode has been removed from this ticket."
+    embed:
+      color: "2FF200"
+      description: "A slowmode of **{time}** has been added to this ticket." # Use {time} for the time in hh mm ss format, example: 1h 5m 7s
+  close:
+    enabled: true
+    permission: "KickMembers"
+    embed:
+      color: "#FF2400"
+      title: "Ticket Closed"
+      description: "This ticket was closed by **{user} ({user.tag})**" # Use {user} for the username of the staff and {user.tag} to have the staff tagged
+    LogEmbed:
+      color: "#FF2400"
+      title: "Ticket Logs | Ticket Closed"
+      field_staff: "• Closed By"
+      field_user: "• Ticket Creator"
+      field_ticket: "• Ticket"
+  reopen:
+    enabled: true
+    permission: "KickMembers"
+    embed:
+      color: "#2FF200"
+      title: "Ticket Re-Opened"
+      description: "This ticket has been re-opened by **{user} ({user.tag})**" # Use {user} for the username of the staff and {user.tag} to have the staff tagged
+    LogEmbed:
+      color: "#2FF200"
+      title: "Ticket Logs | Ticket Re-Opened"
+      field_staff: "• Re-Opened By"
+      field_user: "• Ticket Creator"
+      field_ticket: "• Ticket"
+  delete:
+    enabled: true
+    permission: "KickMembers"
+    embed:
+      color: "#FF0000"
+      description: "Deleting ticket in {time} seconds" # Use {time} for the time in seconds
+    LogEmbed:
+      color: "#FF0000"
+      title: "Ticket Logs | Ticket Force Deleted"
+      field_staff: "• Deleted By"
+      field_user: "• Ticket Creator"
+      field_ticket: "• Ticket"
+  panel:
+    enabled: true
+    permission: "ManageChannels"
+    support_role_ids: [] # The IDs of the staff roles on your server that can use the panel command, they must also have the permission above, keep it empty to not require a role.
+  remove:
+    enabled: true
+    permission: "KickMembers"
+    LogEmbed:
+      color: "#FF0000"
+      title: "Ticket Logs | Target Removed"
+      field_staff: "• Staff"
+      field_target: "• Target"
+      field_ticket: "• Ticket"
+  rename:
+    enabled: true
+    permission: "KickMembers"
+    embed:
+      color: "#2FF200"
+      description: "This ticket has been renamed to **{name}**!" # Use {name} for the new channel name
+    LogEmbed:
+      color: "#2FF200"
+      title: "Ticket Logs | Ticket Renamed"
+      field_staff: "• Staff"
+      field_oldname: "• Ticket Old Name"
+      field_newname: "• Ticket New Name"
+  blacklist:
+    enabled: true
+    permission: "KickMembers"
+  unblacklist:
+    enabled: true
+    permission: "KickMembers"
+  ping:
+    enabled: true
+    permission: "KickMembers"
+  stats:
+    enabled: true
+    permission: "KickMembers"
+
+# ==============================================
+# General button settings
+# ==============================================
+
+closeButton:
+  label: "Close" # The label of the button
+  emoji: "🔒" # The emoji of the button
+  style: "Danger" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+
+reOpenButton:
+  label: "Reopen" # The label of the button
+  emoji: "🔓" # The emoji of the button
+  style: "Success" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+
+transcriptButton:
+  label: "Transcript" # The label of the button
+  emoji: "📝" # The emoji of the button
+  style: "Primary" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+
+deleteButton:
+  label: "Delete" # The label of the button
+  emoji: "⛔" # The emoji of the button
+  style: "Danger" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+
+claimButton:
+  label: "Claim" # The label of the button
+  emoji: "👋" # The emoji of the button
+  style: "Success" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+
+unclaimButton:
+  label: "Unclaim" # The label of the button
+  emoji: "👋" # The emoji of the button
+  style: "Danger" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+
+# ==============================================
+# User Leave Settings
+# ==============================================
+
+# In this section you can adjust settings related to the embed that gets sent in a ticket if the ticket creator left the discord server
+userLeftEmbed:
+  embed_color: "#FF0000" # The color of the embed
+  embed_title: "User left the server" # The title of the embed
+  embed_description: "The user {user} left the server" # You can use {user} as a placeholder for the username of the member who left & \n for a new line
+
+# ==============================================
+# Re-Open DM embed
+# ==============================================
+
+# In this section you can adjust settings related to the embed that gets sent in a user's DMs if their ticket has been re-opened
+reopenDM:
+  enabled: false # Enable or disable the DM embed
+  embed:
+    color: "#2FF200" # The color of the embed
+    title: "Ticket Re-Opened" # The title of the embed
+    description: "Your ticket **#{ticketName}** has been reopened by {user} in **{server}**." # You can use {ticketName} for the name of the ticket, {user} for the name of the user who reopened the ticket, {server} for your server name & \n for a new line
+
+# ==============================================
+# Close DM embed
+# ==============================================
+
+# In this section you can adjust settings related to the embed that gets sent in a user's DMs if their ticket has been closed
+closeDM:
+  enabled: false # Enable or disable the DM embed
+  embed:
+    color: "#FF0000" # The color of the embed
+    title: "Ticket Closed" # The title of the embed
+    description: "Your ticket **#{ticketName}** has been closed by {user} in **{server}**." # You can use {ticketName} for the name of the ticket, {user} for the name of the user who reopened the ticket, {server} for your server name & \n for a new line
+
+# ==============================================
+# Alert DM embed
+# ==============================================
+
+# In this section you can adjust settings related to the embed that gets sent in a user's DMs when a staff uses the alert command in their ticket
+alertDM:
+  enabled: false # Enable or disable the DM embed
+  embed:
+    color: "#FF0000" # The color of the embed
+    title: "Ticket Close Notification" # The title of the embed
+    description: "Your ticket **#{ticketName}** in **{server}** will be closed soon if no response has been received." # You can use {ticketName} for the name of the ticket, {server} for your server name & \n for a new line
+
+# ==============================================
+# Working Hours Settings
+# ==============================================
+
+# Note: if the working hours system is not working, it's most likely due to incorrect configuration of the min and max hours.
+workingHours:
+  enabled: false # Enable or disable the working hours feature
+  timezone: "Europe/Paris" # The timezone of the working hours, options on this link should work: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  min: "09:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
+  max: "17:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
+  blockTicketCreation: true # Enable or disable the blocking of ticket creation outside the working hours
+  blockTicketEmbed:
+    embed_color: "#FF0000" # The color of the embed
+    embed_title: "Working Hours" # The title of the embed
+    embed_description: "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}." # The message displayed when the ticket creation is blocked, use {openingTime} for the opening time, {closingTime} for the closing time and {now} for the current time
+  addField: true # If working hours is enabled, this option will enable or disable the addition of the working hours field to the ticket creation embed
+  fieldTitle: "Working Hours" # The title of the working hours field
+  fieldValue: "> {openingTime} to {closingTime}" # The value of the working hours field, use {openingTime} for the opening time and {closingTime} for the closing time
+
+# ==============================================
+# Log channels
+# ==============================================
+
+# This section allows you to configure the channels where the bot will send different logs. Make sure to at least configure the default log channel.
+# By leaving a channel empty "" the bot will fallback to the default log channel.
+logs:
+  default: "111111111111111111" # The ID of the default log channel
+  transcripts: "111111111111111111" # The ID of the log channel for manual transcripts obtained with the transcript button or command
+  userAdd: ""
+  userRemove: ""
+  ticketCreate: ""
+  ticketClose: ""
+  ticketReopen: ""
+  ticketDelete: ""
+  ticketClaim: ""
+  ticketUnclaim: ""
+  ticketMove: ""
+  ticketRename: ""
+  ticketTransfer: ""
+  ticketFeedback: ""
+  DMErrors: ""
+
+# ==============================================
+# Embeds Locale
+# ==============================================
+
+# NOTE: While configuring embed options, you can leave it as an empty string to not use the option or set it to anything you want.
+# By deleting an option entirely from this part of the config, the bot will try to fallback to a default value otherwise it will skip the option.
+# For example, if you remove the thumbnail option, the bot will use the default thumbnail if available, otherwise no thumbnail will be added.
+
+# Panel command embed
+panelEmbed:
+  color: "#2FF200"
+  title: "Support Tickets"
+  description: "To create a support ticket, click on one of the buttons below depending on what help you need." # Use \n to create a new line for this embed description if needed
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "Sentinel Tickets"
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Blacklist command embed when it fails to blacklist a user or role
+blacklistFailedEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** is already in the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Blacklist command embed when it is successful in blacklisting a user or role
+blacklistSuccessEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** has been added to the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Unblacklist command embed when it fails to unblacklist a user or role
+unblacklistFailedEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Unblacklist command embed when it is successful in unblacklisting a user or role
+unblacklistSuccessEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** has been removed from the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# User and role add embed
+addEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "Added **{target} ({target.tag})** to the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Alert command embed
+alertEmbed:
+  color: "#2FF200"
+  title: "Ticket Close Notification"
+  description: "This ticket will be closed soon if no response has been received."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# User and role remove embed
+removeEmbed:
+  color: "#FF0000"
+  title: ""
+  description: "Removed **{target} ({target.tag})** from the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# ==============================================
+# Misc Locale
+# ==============================================
+
+errors:
+  not_in_a_ticket: "You are not in a ticket channel!" # Error displayed when a user tries to use a command in a non-ticket channel
+  not_allowed: "You are not allowed to use this command!" # Error displayed when a user tries to use a staff-only command
+  blacklisted: "You are blacklisted from creating tickets at this time." # Error displayed when a user tries to create a ticket but is blacklisted
+
+cooldownEmbed:
+  title: "Cooldown"
+  color: "#FF0000"
+  description: "You have to wait **{time}** seconds before clicking this button!" # Use {time} for the remaining cooldown time in seconds
+
+maxOpenTicketsEmbed:
+  title: "Maximum Tickets Open"
+  color: "#FF0000"
+  description: "You may only have **{max} ticket(s)** open at a time." # Use {max} for the maximum number of tickets that can be opened at once
+
+DMErrors:
+  embed:
+    color: "#FF0000"
+    title: "DMs Disabled"
+    description: "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings)."
