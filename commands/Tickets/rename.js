@@ -42,6 +42,7 @@ module.exports = {
       });
     }
 
+    await interaction.deferReply();
     let newName = interaction.options.getString("name");
     interaction.channel.setName(`${newName}`);
     let logChannelId = config.logs.ticketRename || config.logs.default;
@@ -86,8 +87,8 @@ module.exports = {
         ),
       );
 
-    interaction.reply({ embeds: [embed] });
-    logChannel.send({ embeds: [log] });
+    await interaction.editReply({ embeds: [embed] });
+    await logChannel.send({ embeds: [log] });
     logMessage(
       `${interaction.user.tag} renamed the ticket #${interaction.channel.name} to #${newName}`,
     );

@@ -57,11 +57,12 @@ module.exports = {
         ephemeral: true,
       });
     }
+    await interaction.deferReply();
 
     if (user) {
       // Check if the user is in the ticket channel
       if (!interaction.channel.members.has(user.id)) {
-        return interaction.reply({
+        return interaction.editReply({
           content: "That user is not in this ticket.",
           ephemeral: true,
         });
@@ -114,7 +115,7 @@ module.exports = {
         );
       }
 
-      await interaction.reply({ embeds: [userRemoveEmbed] });
+      await interaction.editReply({ embeds: [userRemoveEmbed] });
       await logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} removed ${user.tag} from the ticket #${interaction.channel.name}`,
@@ -124,7 +125,7 @@ module.exports = {
     if (role) {
       // Check if the role is in the ticket channel
       if (!interaction.channel.permissionsFor(role.id).has("ViewChannel")) {
-        return interaction.reply({
+        return interaction.editReply({
           content: "That role is not in this ticket.",
           ephemeral: true,
         });
@@ -177,7 +178,7 @@ module.exports = {
         );
       }
 
-      await interaction.reply({ embeds: [roleRemoveEmbed] });
+      await interaction.editReply({ embeds: [roleRemoveEmbed] });
       await logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} removed ${role.name} from the ticket #${interaction.channel.name}`,

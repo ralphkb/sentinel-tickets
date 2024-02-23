@@ -57,11 +57,12 @@ module.exports = {
         ephemeral: true,
       });
     }
+    await interaction.deferReply();
 
     if (user) {
       // Check that the user is already in the ticket channel
       if (interaction.channel.members.has(user.id)) {
-        return interaction.reply({
+        return interaction.editReply({
           content: "That user is already in this ticket.",
           ephemeral: true,
         });
@@ -120,7 +121,7 @@ module.exports = {
         );
       }
 
-      await interaction.reply({ embeds: [userAddEmbed] });
+      await interaction.editReply({ embeds: [userAddEmbed] });
       await logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} added ${user.tag} to the ticket #${interaction.channel.name}`,
@@ -130,7 +131,7 @@ module.exports = {
     if (role) {
       // Check that the role is already in the ticket channel
       if (interaction.channel.permissionsFor(role.id).has("ViewChannel")) {
-        return interaction.reply({
+        return interaction.editReply({
           content: "That role is already in this ticket.",
           ephemeral: true,
         });
@@ -188,7 +189,7 @@ module.exports = {
             .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
         );
       }
-      await interaction.reply({ embeds: [roleAddEmbed] });
+      await interaction.editReply({ embeds: [roleAddEmbed] });
       await logChannel.send({ embeds: [logEmbed] });
       logMessage(
         `${interaction.user.tag} added ${role.name} to the ticket #${interaction.channel.name}`,

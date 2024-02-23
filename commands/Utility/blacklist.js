@@ -39,9 +39,10 @@ module.exports = {
 
     let user = interaction.options.getUser("user");
     let role = interaction.options.getRole("role");
+    await interaction.deferReply({ ephemeral: true });
 
     if ((!user && !role) || (user && role)) {
-      return interaction.reply({
+      return interaction.editReply({
         content: "Please provide either a user or a role, but not both.",
         ephemeral: true,
       });
@@ -90,7 +91,7 @@ module.exports = {
 
       if (blacklistedUsers.includes(user.id)) {
         // User is already blacklisted
-        return interaction.reply({
+        return interaction.editReply({
           embeds: [alreadyBlacklistedEmbedUser],
           ephemeral: true,
         });
@@ -98,7 +99,10 @@ module.exports = {
 
       // User is not blacklisted
       await mainDB.push("blacklistedUsers", user.id);
-      interaction.reply({ embeds: [blacklistedEmbedUser], ephemeral: true });
+      await interaction.editReply({
+        embeds: [blacklistedEmbedUser],
+        ephemeral: true,
+      });
       logMessage(`${interaction.user.tag} added ${user.tag} to the blacklist.`);
     }
 
@@ -143,7 +147,7 @@ module.exports = {
 
       if (blacklistedUsers.includes(role.id)) {
         // Role is already blacklisted
-        return interaction.reply({
+        return interaction.editReply({
           embeds: [alreadyBlacklistedEmbedRole],
           ephemeral: true,
         });
@@ -151,7 +155,10 @@ module.exports = {
 
       // Role is not blacklisted
       await mainDB.push("blacklistedUsers", role.id);
-      interaction.reply({ embeds: [blacklistedEmbedRole], ephemeral: true });
+      await interaction.editReply({
+        embeds: [blacklistedEmbedRole],
+        ephemeral: true,
+      });
       logMessage(
         `${interaction.user.tag} added ${role.name} to the blacklist.`,
       );

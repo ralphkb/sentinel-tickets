@@ -40,6 +40,7 @@ module.exports = {
         ephemeral: true,
       });
     }
+    await interaction.deferReply();
 
     interaction.channel
       .setPosition(0)
@@ -55,7 +56,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor(config.commands.pin.embed.color)
       .setDescription(`${config.commands.pin.embed.description}`);
-    interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
     logMessage(
       `${interaction.user.tag} pinned the ticket #${interaction.channel.name}`,
     );

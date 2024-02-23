@@ -64,6 +64,7 @@ module.exports = {
       });
     }
 
+    await interaction.deferReply();
     await interaction.channel.setRateLimitPerUser(time);
     const formattedTime = formatTime(time);
 
@@ -75,7 +76,7 @@ module.exports = {
           formattedTime,
         ),
       );
-    interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
     logMessage(
       `${interaction.user.tag} added a slow mode of ${formattedTime} to the ticket #${interaction.channel.name}`,
     );

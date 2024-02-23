@@ -73,6 +73,7 @@ module.exports = {
         });
       }
 
+      await interaction.deferReply();
       const option = interaction.options.getString("priority");
       let priorityEmoji;
       switch (option) {
@@ -104,7 +105,7 @@ module.exports = {
             option,
           ),
         );
-      interaction.reply({ embeds: [embedAdd] });
+      await interaction.editReply({ embeds: [embedAdd] });
       logMessage(
         `${interaction.user.tag} updated the priority of the ticket #${interaction.channel.name} to ${option}.`,
       );
@@ -118,6 +119,7 @@ module.exports = {
         });
       }
 
+      await interaction.deferReply();
       const channelName = interaction.channel.name;
       const updatedChannelName = priorityEmoji.reduce((acc, emoji) => {
         return acc.replace(emoji, "");
@@ -127,7 +129,7 @@ module.exports = {
       const embedRemove = new EmbedBuilder()
         .setColor(config.commands.priority.embedRemove.color)
         .setDescription(`${config.commands.priority.embedRemove.description}`);
-      interaction.reply({ embeds: [embedRemove] });
+      await interaction.editReply({ embeds: [embedRemove] });
       logMessage(
         `${interaction.user.tag} removed the priority from the ticket #${interaction.channel.name}.`,
       );

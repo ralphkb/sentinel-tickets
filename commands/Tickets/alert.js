@@ -43,6 +43,7 @@ module.exports = {
       });
     }
 
+    await interaction.deferReply();
     const user = client.users.cache.get(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
@@ -65,7 +66,7 @@ module.exports = {
 
     const alertEmbed = await configEmbed("alertEmbed", defaultValues);
 
-    interaction.reply({
+    interaction.editReply({
       content: `<@${user.id}>`,
       embeds: [alertEmbed],
       components: [ticketAlertRow],

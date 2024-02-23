@@ -40,6 +40,8 @@ module.exports = {
       });
     }
 
+    await interaction.deferReply({ ephemeral: true });
+
     const defaultValues = {
       color: "#2FF200",
       title: "Support Tickets",
@@ -85,7 +87,7 @@ module.exports = {
       }
 
       // Send an initial response to acknowledge receipt of the command
-      await interaction.reply({
+      await interaction.editReply({
         content: "Sending the panel in this channel...",
         ephemeral: true,
       });
@@ -130,7 +132,7 @@ module.exports = {
       const actionRowsMenus = new ActionRowBuilder().addComponents(selectMenu);
 
       // Send an initial response to acknowledge receipt of the command
-      await interaction.reply({
+      await interaction.editReply({
         content: "Sending the panel in this channel...",
         ephemeral: true,
       });

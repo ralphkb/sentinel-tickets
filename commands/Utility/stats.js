@@ -20,6 +20,7 @@ module.exports = {
     )
     .setDMPermission(false),
   async execute(interaction) {
+    await interaction.deferReply();
     const totalTickets = (await mainDB.get("totalTickets")) ?? 0;
     const openTickets = (await mainDB.get("openTickets")) ?? [];
     const totalClaims = (await mainDB.get("totalClaims")) ?? 0;
@@ -55,6 +56,6 @@ module.exports = {
         text: `Requested by: ${interaction.user.username}`,
         iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
       });
-    interaction.reply({ embeds: [stats] });
+    interaction.editReply({ embeds: [stats] });
   },
 };

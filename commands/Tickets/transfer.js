@@ -58,6 +58,7 @@ module.exports = {
       });
     }
 
+    await interaction.deferReply();
     interaction.channel.permissionOverwrites.delete(currentUser);
     await ticketsDB.set(`${interaction.channel.id}.userID`, optionUser.id);
     interaction.channel.permissionOverwrites.create(optionUser, {
@@ -105,7 +106,7 @@ module.exports = {
         text: `${interaction.user.tag}`,
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
       });
-    logChannel.send({ embeds: [logEmbed] });
+    await logChannel.send({ embeds: [logEmbed] });
 
     const embed = new EmbedBuilder()
       .setColor(config.commands.transfer.embed.color)
@@ -114,7 +115,7 @@ module.exports = {
           .replace(/\{user\}/g, optionUser)
           .replace(/\{user\.tag\}/g, sanitizeInput(optionUser.tag)),
       );
-    interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
     logMessage(
       `${interaction.user.tag} transferred the ownership of the ticket #${interaction.channel.name} to the user ${optionUser.tag}.`,
     );

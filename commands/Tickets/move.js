@@ -70,6 +70,8 @@ module.exports = {
       });
     }
 
+    await interaction.deferReply();
+
     // Find the categoryID based on the name
     const category = Object.values(ticketCategories).find(
       (category) => category.name === option,
@@ -117,7 +119,7 @@ module.exports = {
           option,
         ),
       );
-    interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
     logMessage(
       `${interaction.user.tag} moved the ticket #${interaction.channel.name} to the category ${option}.`,
     );

@@ -39,9 +39,10 @@ module.exports = {
 
     let user = interaction.options.getUser("user");
     let role = interaction.options.getRole("role");
+    await interaction.deferReply({ ephemeral: true });
 
     if ((!user && !role) || (user && role)) {
-      return interaction.reply({
+      return interaction.editReply({
         content: "Please provide either a user or a role, but not both.",
         ephemeral: true,
       });
@@ -98,14 +99,14 @@ module.exports = {
         logMessage(
           `${interaction.user.tag} removed ${user.tag} from the blacklist.`,
         );
-        return interaction.reply({
+        return interaction.editReply({
           embeds: [unblacklistedEmbedUser],
           ephemeral: true,
         });
       }
 
       // User is not blacklisted
-      return interaction.reply({
+      return interaction.editReply({
         embeds: [notBlacklistedEmbedUser],
         ephemeral: true,
       });
@@ -160,14 +161,14 @@ module.exports = {
         logMessage(
           `${interaction.user.tag} removed ${role.name} from the blacklist.`,
         );
-        return interaction.reply({
+        return interaction.editReply({
           embeds: [unblacklistedEmbedRole],
           ephemeral: true,
         });
       }
 
       // User is not blacklisted
-      return interaction.reply({
+      return interaction.editReply({
         embeds: [notBlacklistedEmbedRole],
         ephemeral: true,
       });
