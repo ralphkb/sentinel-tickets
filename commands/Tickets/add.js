@@ -1,8 +1,4 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -57,16 +53,16 @@ module.exports = {
         ephemeral: true,
       });
     }
-    await interaction.deferReply();
 
     if (user) {
       // Check that the user is already in the ticket channel
       if (interaction.channel.members.has(user.id)) {
-        return interaction.editReply({
+        return interaction.reply({
           content: "That user is already in this ticket.",
           ephemeral: true,
         });
       }
+      await interaction.deferReply();
 
       interaction.channel.permissionOverwrites.create(user, {
         ViewChannel: true,
@@ -76,35 +72,36 @@ module.exports = {
         EmbedLinks: true,
       });
 
-      const logEmbed = new EmbedBuilder()
-        .setColor(config.commands.add.LogEmbed.color)
-        .setTitle(config.commands.add.LogEmbed.title)
-        .addFields([
-          {
-            name: config.commands.add.LogEmbed.field_staff,
-            value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
-          },
-          {
-            name: config.commands.add.LogEmbed.field_target,
-            value: `> ${user}\n> ${sanitizeInput(user.tag)}`,
-          },
-          {
-            name: config.commands.add.LogEmbed.field_ticket,
-            value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
-          },
-        ])
-        .setTimestamp()
-        .setThumbnail(
-          interaction.user.displayAvatarURL({
-            format: "png",
-            dynamic: true,
-            size: 1024,
-          }),
-        )
-        .setFooter({
+      const logDefaultValues = {
+        color: "#2FF200",
+        title: "Ticket Logs | Target Added",
+        timestamp: true,
+        thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+        footer: {
           text: `${interaction.user.tag}`,
           iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-        });
+        },
+      };
+
+      const logUserAddEmbed = await configEmbed(
+        "logAddEmbed",
+        logDefaultValues,
+      );
+
+      logUserAddEmbed.addFields([
+        {
+          name: config.logAddEmbed.field_staff,
+          value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+        },
+        {
+          name: config.logAddEmbed.field_target,
+          value: `> ${user}\n> ${sanitizeInput(user.tag)}`,
+        },
+        {
+          name: config.logAddEmbed.field_ticket,
+          value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
+        },
+      ]);
 
       const defaultValues = {
         color: "#2FF200",
@@ -122,7 +119,7 @@ module.exports = {
       }
 
       await interaction.editReply({ embeds: [userAddEmbed] });
-      await logChannel.send({ embeds: [logEmbed] });
+      await logChannel.send({ embeds: [logUserAddEmbed] });
       logMessage(
         `${interaction.user.tag} added ${user.tag} to the ticket #${interaction.channel.name}`,
       );
@@ -131,11 +128,12 @@ module.exports = {
     if (role) {
       // Check that the role is already in the ticket channel
       if (interaction.channel.permissionsFor(role.id).has("ViewChannel")) {
-        return interaction.editReply({
+        return interaction.reply({
           content: "That role is already in this ticket.",
           ephemeral: true,
         });
       }
+      await interaction.deferReply();
 
       interaction.channel.permissionOverwrites.create(role, {
         ViewChannel: true,
@@ -145,35 +143,36 @@ module.exports = {
         EmbedLinks: true,
       });
 
-      const logEmbed = new EmbedBuilder()
-        .setColor(config.commands.add.LogEmbed.color)
-        .setTitle(config.commands.add.LogEmbed.title)
-        .addFields([
-          {
-            name: config.commands.add.LogEmbed.field_staff,
-            value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
-          },
-          {
-            name: config.commands.add.LogEmbed.field_target,
-            value: `> ${role}\n> ${sanitizeInput(role.name)}`,
-          },
-          {
-            name: config.commands.add.LogEmbed.field_ticket,
-            value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
-          },
-        ])
-        .setTimestamp()
-        .setThumbnail(
-          interaction.user.displayAvatarURL({
-            format: "png",
-            dynamic: true,
-            size: 1024,
-          }),
-        )
-        .setFooter({
+      const logDefaultValues = {
+        color: "#2FF200",
+        title: "Ticket Logs | Target Added",
+        timestamp: true,
+        thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+        footer: {
           text: `${interaction.user.tag}`,
           iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-        });
+        },
+      };
+
+      const logRoleAddEmbed = await configEmbed(
+        "logAddEmbed",
+        logDefaultValues,
+      );
+
+      logRoleAddEmbed.addFields([
+        {
+          name: config.logAddEmbed.field_staff,
+          value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+        },
+        {
+          name: config.logAddEmbed.field_target,
+          value: `> ${role}\n> ${sanitizeInput(role.name)}`,
+        },
+        {
+          name: config.logAddEmbed.field_ticket,
+          value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
+        },
+      ]);
 
       const defaultValues = {
         color: "#2FF200",
@@ -190,7 +189,7 @@ module.exports = {
         );
       }
       await interaction.editReply({ embeds: [roleAddEmbed] });
-      await logChannel.send({ embeds: [logEmbed] });
+      await logChannel.send({ embeds: [logRoleAddEmbed] });
       logMessage(
         `${interaction.user.tag} added ${role.name} to the ticket #${interaction.channel.name}`,
       );

@@ -1,8 +1,4 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -57,48 +53,49 @@ module.exports = {
         ephemeral: true,
       });
     }
-    await interaction.deferReply();
 
     if (user) {
       // Check if the user is in the ticket channel
       if (!interaction.channel.members.has(user.id)) {
-        return interaction.editReply({
+        return interaction.reply({
           content: "That user is not in this ticket.",
           ephemeral: true,
         });
       }
 
+      await interaction.deferReply();
       interaction.channel.permissionOverwrites.delete(user);
 
-      const logEmbed = new EmbedBuilder()
-        .setColor(config.commands.remove.LogEmbed.color)
-        .setTitle(config.commands.remove.LogEmbed.title)
-        .addFields([
-          {
-            name: config.commands.remove.LogEmbed.field_staff,
-            value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
-          },
-          {
-            name: config.commands.remove.LogEmbed.field_target,
-            value: `> ${user}\n> ${sanitizeInput(user.tag)}`,
-          },
-          {
-            name: config.commands.remove.LogEmbed.field_ticket,
-            value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
-          },
-        ])
-        .setTimestamp()
-        .setThumbnail(
-          interaction.user.displayAvatarURL({
-            format: "png",
-            dynamic: true,
-            size: 1024,
-          }),
-        )
-        .setFooter({
+      const logDefaultValues = {
+        color: "#FF0000",
+        title: "Ticket Logs | Target Removed",
+        timestamp: true,
+        thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+        footer: {
           text: `${interaction.user.tag}`,
           iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-        });
+        },
+      };
+
+      const logUserRemoveEmbed = await configEmbed(
+        "logRemoveEmbed",
+        logDefaultValues,
+      );
+
+      logUserRemoveEmbed.addFields([
+        {
+          name: config.logRemoveEmbed.field_staff,
+          value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+        },
+        {
+          name: config.logRemoveEmbed.field_target,
+          value: `> ${user}\n> ${sanitizeInput(user.tag)}`,
+        },
+        {
+          name: config.logRemoveEmbed.field_ticket,
+          value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
+        },
+      ]);
 
       const defaultValues = {
         color: "#FF0000",
@@ -116,7 +113,7 @@ module.exports = {
       }
 
       await interaction.editReply({ embeds: [userRemoveEmbed] });
-      await logChannel.send({ embeds: [logEmbed] });
+      await logChannel.send({ embeds: [logUserRemoveEmbed] });
       logMessage(
         `${interaction.user.tag} removed ${user.tag} from the ticket #${interaction.channel.name}`,
       );
@@ -125,43 +122,45 @@ module.exports = {
     if (role) {
       // Check if the role is in the ticket channel
       if (!interaction.channel.permissionsFor(role.id).has("ViewChannel")) {
-        return interaction.editReply({
+        return interaction.reply({
           content: "That role is not in this ticket.",
           ephemeral: true,
         });
       }
 
+      await interaction.deferReply();
       interaction.channel.permissionOverwrites.delete(role);
 
-      const logEmbed = new EmbedBuilder()
-        .setColor(config.commands.remove.LogEmbed.color)
-        .setTitle(config.commands.remove.LogEmbed.title)
-        .addFields([
-          {
-            name: config.commands.remove.LogEmbed.field_staff,
-            value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
-          },
-          {
-            name: config.commands.remove.LogEmbed.field_target,
-            value: `> ${role}\n> ${sanitizeInput(role.name)}`,
-          },
-          {
-            name: config.commands.remove.LogEmbed.field_ticket,
-            value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
-          },
-        ])
-        .setTimestamp()
-        .setThumbnail(
-          interaction.user.displayAvatarURL({
-            format: "png",
-            dynamic: true,
-            size: 1024,
-          }),
-        )
-        .setFooter({
+      const logDefaultValues = {
+        color: "#FF0000",
+        title: "Ticket Logs | Target Removed",
+        timestamp: true,
+        thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+        footer: {
           text: `${interaction.user.tag}`,
           iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-        });
+        },
+      };
+
+      const logRoleRemoveEmbed = await configEmbed(
+        "logRemoveEmbed",
+        logDefaultValues,
+      );
+
+      logRoleRemoveEmbed.addFields([
+        {
+          name: config.logRemoveEmbed.field_staff,
+          value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+        },
+        {
+          name: config.logRemoveEmbed.field_target,
+          value: `> ${role}\n> ${sanitizeInput(role.name)}`,
+        },
+        {
+          name: config.logRemoveEmbed.field_ticket,
+          value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
+        },
+      ]);
 
       const defaultValues = {
         color: "#FF0000",
@@ -179,7 +178,7 @@ module.exports = {
       }
 
       await interaction.editReply({ embeds: [roleRemoveEmbed] });
-      await logChannel.send({ embeds: [logEmbed] });
+      await logChannel.send({ embeds: [logRoleRemoveEmbed] });
       logMessage(
         `${interaction.user.tag} removed ${role.name} from the ticket #${interaction.channel.name}`,
       );

@@ -125,12 +125,6 @@ commands:
   add:
     enabled: true
     permission: "KickMembers"
-    LogEmbed:
-      color: "2FF200"
-      title: "Ticket Logs | Target Added"
-      field_staff: "• Staff"
-      field_target: "• Target"
-      field_ticket: "• Ticket"
   alert:
     enabled: true
     permission: "KickMembers"
@@ -146,34 +140,14 @@ commands:
   move:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "2FF200"
-      description: "Moved this ticket to the **{category}** category." # Use {category} for the name of the category
-    LogEmbed:
-      color: "2FF200"
-      title: "Ticket Logs | Ticket Moved"
-      field_staff: "• Staff"
-      field_ticket: "• Ticket"
   transfer:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "2FF200"
-      description: "The ownership of this ticket has been transferred to **{user} ({user.tag})**." # Use {user} for the user such as @User and {user.tag} for the name of the user without it being mentioned such as User
-    LogEmbed:
-      color: "2FF200"
-      title: "Ticket Logs | Ticket Creator Transferred"
-      field_staff: "• Staff"
-      field_ticket: "• Ticket"
-      field_transfer: "• Transfer Details"
   pin:
     enabled: true
     permission: "KickMembers"
     emoji: "📌"
     alreadyPinned: "This ticket is already pinned!"
-    embed:
-      color: "2FF200"
-      description: "This ticket has been pinned."
   priority:
     enabled: true
     permission: "KickMembers"
@@ -183,20 +157,11 @@ commands:
       high: "🔴"
     alreadyPriority: "This ticket is already assigned a priority!"
     notPriority: "This ticket is not assigned a priority!"
-    embedAdd: # The embed used when adding a priority
-      color: "2FF200"
-      description: "The priority of this ticket has been set to **{priority}**." # Use {priority} for the name of the priority
-    embedRemove: # The embed used when removing a priority
-      color: "FF2400"
-      description: "The priority of this ticket has been removed."
   slowmode:
     enabled: true
     permission: "KickMembers"
     alreadySlowmode: "This ticket channel already has that slowmode."
     slowmodeRemoved: "The slowmode has been removed from this ticket."
-    embed:
-      color: "2FF200"
-      description: "A slowmode of **{time}** has been added to this ticket." # Use {time} for the time in hh mm ss format, example: 1h 5m 7s
   close:
     enabled: true
     permission: "KickMembers"
@@ -242,24 +207,9 @@ commands:
   remove:
     enabled: true
     permission: "KickMembers"
-    LogEmbed:
-      color: "#FF0000"
-      title: "Ticket Logs | Target Removed"
-      field_staff: "• Staff"
-      field_target: "• Target"
-      field_ticket: "• Ticket"
   rename:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "#2FF200"
-      description: "This ticket has been renamed to **{name}**!" # Use {name} for the new channel name
-    LogEmbed:
-      color: "#2FF200"
-      title: "Ticket Logs | Ticket Renamed"
-      field_staff: "• Staff"
-      field_oldname: "• Ticket Old Name"
-      field_newname: "• Ticket New Name"
   blacklist:
     enabled: true
     permission: "KickMembers"
@@ -306,16 +256,6 @@ unclaimButton:
   label: "Unclaim" # The label of the button
   emoji: "👋" # The emoji of the button
   style: "Danger" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
-
-# ==============================================
-# User Leave Settings
-# ==============================================
-
-# In this section you can adjust settings related to the embed that gets sent in a ticket if the ticket creator left the discord server
-userLeftEmbed:
-  embed_color: "#FF0000" # The color of the embed
-  embed_title: "User left the server" # The title of the embed
-  embed_description: "The user {user} left the server" # You can use {user} as a placeholder for the username of the member who left & \n for a new line
 
 # ==============================================
 # Re-Open DM embed
@@ -505,6 +445,26 @@ addEmbed:
     iconURL: ""
     url: ""
 
+# Log embed for User and role add command
+logAddEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Target Added"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_target: "• Target"
+  field_ticket: "• Ticket"
+
 # Alert command embed
 alertEmbed:
   color: "#2FF200"
@@ -538,6 +498,222 @@ removeEmbed:
     name: ""
     iconURL: ""
     url: ""
+
+# Log embed for User and role remove command
+logRemoveEmbed:
+  color: "#FF0000"
+  title: "Ticket Logs | Target Removed"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_target: "• Target"
+  field_ticket: "• Ticket"
+
+# Embed that gets sent in a ticket if the ticket creator left the discord server
+userLeftEmbed:
+  color: "#FF0000"
+  title: "User left the server"
+  description: "The user **{user}** left the server." # You can use {user} as a placeholder for the username of the member who left & \n for a new line
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+# Keep those options commented out if you want to use the default values which are the name of the user who left and their icon URL.  
+#  footer:
+#    text: "" 
+#    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Move command embed
+moveEmbed:
+  color: "2FF200"
+  title: ""
+  description: "Moved this ticket to the **{category}** category." # Use {category} for the name of the category
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for move command
+logMoveEmbed:
+  color: "2FF200"
+  title: "Ticket Logs | Ticket Moved"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+
+# Pin command embed
+pinEmbed:
+  color: "2FF200"
+  title: ""
+  description: "This ticket has been pinned."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Priority add command embed
+priorityAddEmbed:
+  color: "2FF200"
+  title: ""
+  description: "The priority of this ticket has been set to **{priority}**." # Use {priority} for the name of the priority
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Priority remove command embed
+priorityRemoveEmbed:
+  color: "FF2400"
+  title: ""
+  description: "The priority of this ticket has been removed."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Rename command embed
+renameEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "This ticket has been renamed to **{name}**!" # Use {name} for the new channel name
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for rename command
+logRenameEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Renamed"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_oldname: "• Ticket Old Name"
+  field_newname: "• Ticket New Name"
+
+# Slowmode command embed
+slowmodeEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "A slowmode of **{time}** has been added to this ticket." # Use {time} for the time in hh mm ss format, example: 1h 5m 7s
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Transfer command embed
+transferEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "The ownership of this ticket has been transferred to **{user} ({user.tag})**." # Use {user} for the user such as @User and {user.tag} for the name of the user without it being mentioned such as User
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for transfer command
+logTransferEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Creator Transferred"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_transfer: "• Transfer Details"
 
 # ==============================================
 # Misc Locale

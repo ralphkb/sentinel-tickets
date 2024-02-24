@@ -1,13 +1,14 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, logMessage, checkSupportRole } = require("../../index.js");
+const {
+  ticketsDB,
+  logMessage,
+  checkSupportRole,
+  configEmbed,
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.priority.enabled,
@@ -97,15 +98,24 @@ module.exports = {
         `${priorityEmoji}${interaction.channel.name}`,
       );
 
-      const embedAdd = new EmbedBuilder()
-        .setColor(config.commands.priority.embedAdd.color)
-        .setDescription(
-          `${config.commands.priority.embedAdd.description}`.replace(
-            /\{priority\}/g,
-            option,
-          ),
+      const defaultValues = {
+        color: "#2FF200",
+        description:
+          "The priority of this ticket has been set to **{priority}**.",
+      };
+
+      const priorityAddEmbed = await configEmbed(
+        "priorityAddEmbed",
+        defaultValues,
+      );
+
+      if (priorityAddEmbed.data && priorityAddEmbed.data.description) {
+        priorityAddEmbed.setDescription(
+          priorityAddEmbed.data.description.replace(/\{priority\}/g, option),
         );
-      await interaction.editReply({ embeds: [embedAdd] });
+      }
+
+      await interaction.editReply({ embeds: [priorityAddEmbed] });
       logMessage(
         `${interaction.user.tag} updated the priority of the ticket #${interaction.channel.name} to ${option}.`,
       );
@@ -126,10 +136,18 @@ module.exports = {
       }, channelName);
 
       interaction.channel.setName(updatedChannelName);
-      const embedRemove = new EmbedBuilder()
-        .setColor(config.commands.priority.embedRemove.color)
-        .setDescription(`${config.commands.priority.embedRemove.description}`);
-      await interaction.editReply({ embeds: [embedRemove] });
+
+      const defaultValues = {
+        color: "FF2400",
+        description: "The priority of this ticket has been removed.",
+      };
+
+      const priorityRemoveEmbed = await configEmbed(
+        "priorityRemoveEmbed",
+        defaultValues,
+      );
+
+      await interaction.editReply({ embeds: [priorityRemoveEmbed] });
       logMessage(
         `${interaction.user.tag} removed the priority from the ticket #${interaction.channel.name}.`,
       );

@@ -1,6 +1,5 @@
 const {
   Events,
-  EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
@@ -9,7 +8,7 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, sanitizeInput } = require("../index.js");
+const { ticketsDB, sanitizeInput, configEmbed } = require("../index.js");
 
 module.exports = {
   name: Events.GuildMemberRemove,
@@ -30,20 +29,26 @@ module.exports = {
             ticketDeleteButton,
           );
 
-          const leftEmbed = new EmbedBuilder()
-            .setColor(config.userLeftEmbed.embed_color)
-            .setTitle(config.userLeftEmbed.embed_title)
-            .setDescription(
-              `${config.userLeftEmbed.embed_description}`.replace(
+          const defaultValues = {
+            color: "#2FF200",
+            title: "User left the server",
+            description: "Added **{target} ({target.tag})** to the ticket.",
+            timestamp: true,
+            footer: {
+              text: `${member.user.tag}`,
+              iconURL: `${member.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+            },
+          };
+
+          const leftEmbed = await configEmbed("userLeftEmbed", defaultValues);
+          if (leftEmbed.data && leftEmbed.data.description) {
+            leftEmbed.setDescription(
+              leftEmbed.data.description.replace(
                 /\{user\}/g,
                 sanitizeInput(member.user.tag),
               ),
-            )
-            .setFooter({
-              text: `${member.user.tag}`,
-              iconURL: `${member.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-            })
-            .setTimestamp();
+            );
+          }
           ticketChannel.send({ embeds: [leftEmbed], components: [leftRow] });
         }
       }

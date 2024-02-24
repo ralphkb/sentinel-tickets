@@ -1,8 +1,4 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -12,6 +8,7 @@ const {
   logMessage,
   formatTime,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 
 module.exports = {
@@ -68,15 +65,19 @@ module.exports = {
     await interaction.channel.setRateLimitPerUser(time);
     const formattedTime = formatTime(time);
 
-    const embed = new EmbedBuilder()
-      .setColor(config.commands.slowmode.embed.color)
-      .setDescription(
-        `${config.commands.slowmode.embed.description}`.replace(
-          /\{time\}/g,
-          formattedTime,
-        ),
+    const defaultValues = {
+      color: "#2FF200",
+      description: "A slowmode of **{time}** has been added to this ticket.",
+    };
+
+    const slowmodeEmbed = await configEmbed("slowmodeEmbed", defaultValues);
+
+    if (slowmodeEmbed.data && slowmodeEmbed.data.description) {
+      slowmodeEmbed.setDescription(
+        slowmodeEmbed.data.description.replace(/\{time\}/g, formattedTime),
       );
-    await interaction.editReply({ embeds: [embed] });
+    }
+    await interaction.editReply({ embeds: [slowmodeEmbed] });
     logMessage(
       `${interaction.user.tag} added a slow mode of ${formattedTime} to the ticket #${interaction.channel.name}`,
     );

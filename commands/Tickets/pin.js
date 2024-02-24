@@ -1,13 +1,14 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, logMessage, checkSupportRole } = require("../../index.js");
+const {
+  ticketsDB,
+  logMessage,
+  checkSupportRole,
+  configEmbed,
+} = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.pin.enabled,
@@ -53,10 +54,13 @@ module.exports = {
         );
       });
 
-    const embed = new EmbedBuilder()
-      .setColor(config.commands.pin.embed.color)
-      .setDescription(`${config.commands.pin.embed.description}`);
-    await interaction.editReply({ embeds: [embed] });
+    const defaultValues = {
+      color: "#2FF200",
+      description: "This ticket has been pinned.",
+    };
+
+    const pinEmbed = await configEmbed("pinEmbed", defaultValues);
+    await interaction.editReply({ embeds: [pinEmbed] });
     logMessage(
       `${interaction.user.tag} pinned the ticket #${interaction.channel.name}`,
     );

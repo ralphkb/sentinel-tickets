@@ -1,8 +1,4 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -12,6 +8,7 @@ const {
   sanitizeInput,
   logMessage,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 
 module.exports = {
@@ -48,47 +45,55 @@ module.exports = {
     let logChannelId = config.logs.ticketRename || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
-    const log = new EmbedBuilder()
-      .setColor(config.commands.rename.LogEmbed.color)
-      .setTitle(config.commands.rename.LogEmbed.title)
-      .addFields([
-        {
-          name: config.commands.rename.LogEmbed.field_staff,
-          value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
-        },
-        {
-          name: config.commands.rename.LogEmbed.field_oldname,
-          value: `> #${sanitizeInput(interaction.channel.name)}`,
-        },
-        {
-          name: config.commands.rename.LogEmbed.field_newname,
-          value: `> ${interaction.channel}\n> #${sanitizeInput(newName)}`,
-        },
-      ])
-      .setTimestamp()
-      .setThumbnail(
-        interaction.user.displayAvatarURL({
-          format: "png",
-          dynamic: true,
-          size: 1024,
-        }),
-      )
-      .setFooter({
+    const logDefaultValues = {
+      color: "#2FF200",
+      title: "Ticket Logs | Ticket Renamed",
+      timestamp: true,
+      thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      footer: {
         text: `${interaction.user.tag}`,
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-      });
+      },
+    };
 
-    const embed = new EmbedBuilder()
-      .setColor(config.commands.rename.embed.color)
-      .setDescription(
-        `${config.commands.rename.embed.description}`.replace(
+    const logRenameEmbed = await configEmbed(
+      "logRenameEmbed",
+      logDefaultValues,
+    );
+
+    logRenameEmbed.addFields([
+      {
+        name: config.logRenameEmbed.field_staff,
+        value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+      },
+      {
+        name: config.logRenameEmbed.field_oldname,
+        value: `> #${sanitizeInput(interaction.channel.name)}`,
+      },
+      {
+        name: config.logRenameEmbed.field_newname,
+        value: `> ${interaction.channel}\n> #${sanitizeInput(newName)}`,
+      },
+    ]);
+
+    const defaultValues = {
+      color: "#2FF200",
+      description: "This ticket has been renamed to **{name}**!",
+    };
+
+    const renameEmbed = await configEmbed("renameEmbed", defaultValues);
+
+    if (renameEmbed.data && renameEmbed.data.description) {
+      renameEmbed.setDescription(
+        renameEmbed.data.description.replace(
           /\{name\}/g,
           sanitizeInput(newName),
         ),
       );
+    }
 
-    await interaction.editReply({ embeds: [embed] });
-    await logChannel.send({ embeds: [log] });
+    await interaction.editReply({ embeds: [renameEmbed] });
+    await logChannel.send({ embeds: [logRenameEmbed] });
     logMessage(
       `${interaction.user.tag} renamed the ticket #${interaction.channel.name} to #${newName}`,
     );

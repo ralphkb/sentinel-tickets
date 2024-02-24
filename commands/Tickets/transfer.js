@@ -1,8 +1,4 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -13,6 +9,7 @@ const {
   logMessage,
   client,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 
 module.exports = {
@@ -77,45 +74,56 @@ module.exports = {
     let logChannelId = config.logs.ticketTransfer || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
-    const logEmbed = new EmbedBuilder()
-      .setColor(config.commands.transfer.LogEmbed.color)
-      .setTitle(config.commands.transfer.LogEmbed.title)
-      .addFields([
-        {
-          name: config.commands.transfer.LogEmbed.field_staff,
-          value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
-        },
-        {
-          name: config.commands.transfer.LogEmbed.field_ticket,
-          value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
-        },
-        {
-          name: config.commands.transfer.LogEmbed.field_transfer,
-          value: `> ${currentUser} (${sanitizeInput(currentUser.tag)}) -> ${optionUser} (${sanitizeInput(optionUser.tag)})`,
-        },
-      ])
-      .setTimestamp()
-      .setThumbnail(
-        interaction.user.displayAvatarURL({
-          format: "png",
-          dynamic: true,
-          size: 1024,
-        }),
-      )
-      .setFooter({
+    const logDefaultValues = {
+      color: "#2FF200",
+      title: "Ticket Logs | Ticket Creator Transferred",
+      timestamp: true,
+      thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      footer: {
         text: `${interaction.user.tag}`,
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-      });
-    await logChannel.send({ embeds: [logEmbed] });
+      },
+    };
 
-    const embed = new EmbedBuilder()
-      .setColor(config.commands.transfer.embed.color)
-      .setDescription(
-        `${config.commands.transfer.embed.description}`
+    const logTransferEmbed = await configEmbed(
+      "logTransferEmbed",
+      logDefaultValues,
+    );
+
+    logTransferEmbed.addFields([
+      {
+        name: config.logTransferEmbed.field_staff,
+        value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+      },
+      {
+        name: config.logTransferEmbed.field_ticket,
+        value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
+      },
+      {
+        name: config.logTransferEmbed.field_transfer,
+        value: `> ${currentUser} (${sanitizeInput(currentUser.tag)}) -> ${optionUser} (${sanitizeInput(optionUser.tag)})`,
+      },
+    ]);
+
+    await logChannel.send({ embeds: [logTransferEmbed] });
+
+    const defaultValues = {
+      color: "#2FF200",
+      description:
+        "The ownership of this ticket has been transferred to **{user} ({user.tag})**.",
+    };
+
+    const transferEmbed = await configEmbed("transferEmbed", defaultValues);
+
+    if (transferEmbed.data && transferEmbed.data.description) {
+      transferEmbed.setDescription(
+        transferEmbed.data.description
           .replace(/\{user\}/g, optionUser)
           .replace(/\{user\.tag\}/g, sanitizeInput(optionUser.tag)),
       );
-    await interaction.editReply({ embeds: [embed] });
+    }
+
+    await interaction.editReply({ embeds: [transferEmbed] });
     logMessage(
       `${interaction.user.tag} transferred the ownership of the ticket #${interaction.channel.name} to the user ${optionUser.tag}.`,
     );

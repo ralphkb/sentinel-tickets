@@ -1,8 +1,4 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -13,6 +9,7 @@ const {
   logMessage,
   ticketCategories,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 const customIds = Object.keys(ticketCategories);
 const choices = customIds.map((customId) => {
@@ -84,42 +81,46 @@ module.exports = {
     let logChannelId = config.logs.ticketMove || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
-    const logEmbed = new EmbedBuilder()
-      .setColor(config.commands.move.LogEmbed.color)
-      .setTitle(config.commands.move.LogEmbed.title)
-      .addFields([
-        {
-          name: config.commands.move.LogEmbed.field_staff,
-          value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
-        },
-        {
-          name: config.commands.move.LogEmbed.field_ticket,
-          value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
-        },
-      ])
-      .setTimestamp()
-      .setThumbnail(
-        interaction.user.displayAvatarURL({
-          format: "png",
-          dynamic: true,
-          size: 1024,
-        }),
-      )
-      .setFooter({
+    const logDefaultValues = {
+      color: "2FF200",
+      title: "Ticket Logs | Ticket Moved",
+      timestamp: true,
+      thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      footer: {
         text: `${interaction.user.tag}`,
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-      });
-    logChannel.send({ embeds: [logEmbed] });
+      },
+    };
 
-    const embed = new EmbedBuilder()
-      .setColor(config.commands.move.embed.color)
-      .setDescription(
-        `${config.commands.move.embed.description}`.replace(
-          /\{category\}/g,
-          option,
-        ),
+    const logMoveEmbed = await configEmbed("logMoveEmbed", logDefaultValues);
+
+    logMoveEmbed.addFields([
+      {
+        name: config.logMoveEmbed.field_staff,
+        value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+      },
+      {
+        name: config.logMoveEmbed.field_ticket,
+        value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
+      },
+    ]);
+
+    await logChannel.send({ embeds: [logMoveEmbed] });
+
+    const defaultValues = {
+      color: "#2FF200",
+      description: "Moved this ticket to the **{category}** category.",
+    };
+
+    const moveEmbed = await configEmbed("moveEmbed", defaultValues);
+
+    if (moveEmbed.data && moveEmbed.data.description) {
+      moveEmbed.setDescription(
+        moveEmbed.data.description.replace(/\{category\}/g, option),
       );
-    await interaction.editReply({ embeds: [embed] });
+    }
+
+    await interaction.editReply({ embeds: [moveEmbed] });
     logMessage(
       `${interaction.user.tag} moved the ticket #${interaction.channel.name} to the category ${option}.`,
     );
