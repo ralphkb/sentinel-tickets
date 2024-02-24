@@ -23,6 +23,7 @@ const {
   logMessage,
   saveTranscriptTxt,
   checkSupportRole,
+  configEmbed,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -1107,22 +1108,34 @@ module.exports = {
 
         await interaction.deferReply({ ephemeral: true });
         const totalClaims = await mainDB.get("totalClaims");
-        const embed = new EmbedBuilder()
-          .setTitle("Ticket Claimed")
-          .setColor(config.default_embed_color)
-          .setDescription(
-            `This ticket has been claimed by <@!${interaction.user.id}>\nThey will be assisting you shortly!`,
-          )
-          .setTimestamp()
-          .setFooter({
+
+        const defaultValues = {
+          color: "#2FF200",
+          title: "Ticket Claimed",
+          description: `This ticket has been claimed by {user}.\nThey will be assisting you shortly!`,
+          timestamp: true,
+          footer: {
             text: `Claimed by ${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
-          });
-        interaction.editReply({
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+          },
+        };
+
+        const claimedEmbed = await configEmbed("claimedEmbed", defaultValues);
+
+        if (claimedEmbed.data && claimedEmbed.data.description) {
+          claimedEmbed.setDescription(
+            claimedEmbed.data.description.replace(
+              /\{user\}/g,
+              interaction.user,
+            ),
+          );
+        }
+
+        await interaction.editReply({
           content: "You successfully claimed this ticket!",
           ephemeral: true,
         });
-        interaction.channel.send({ embeds: [embed], ephemeral: false });
+        interaction.channel.send({ embeds: [claimedEmbed], ephemeral: false });
 
         interaction.channel.messages
           .fetch(await ticketsDB.get(`${interaction.channel.id}.msgID`))
@@ -1204,32 +1217,34 @@ module.exports = {
             let logsChannel =
               interaction.guild.channels.cache.get(logChannelId);
 
-            const logEmbed = new EmbedBuilder()
-              .setColor(config.default_embed_color)
-              .setTitle("Ticket Logs | Ticket Claimed")
-              .addFields([
-                {
-                  name: "• Executor",
-                  value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
-                },
-                {
-                  name: "• Ticket",
-                  value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-                },
-              ])
-              .setTimestamp()
-              .setThumbnail(
-                interaction.user.displayAvatarURL({
-                  format: "png",
-                  dynamic: true,
-                  size: 1024,
-                }),
-              )
-              .setFooter({
+            const logDefaultValues = {
+              color: "#2FF200",
+              title: "Ticket Logs | Ticket Claimed",
+              timestamp: true,
+              thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+              footer: {
                 text: `${interaction.user.tag}`,
                 iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-              });
-            logsChannel.send({ embeds: [logEmbed] });
+              },
+            };
+
+            const logClaimedEmbed = await configEmbed(
+              "logClaimedEmbed",
+              logDefaultValues,
+            );
+
+            logClaimedEmbed.addFields([
+              {
+                name: config.logClaimedEmbed.field_staff,
+                value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+              },
+              {
+                name: config.logClaimedEmbed.field_ticket,
+                value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+              },
+            ]);
+
+            await logsChannel.send({ embeds: [logClaimedEmbed] });
             await mainDB.set("totalClaims", totalClaims + 1);
             logMessage(
               `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
@@ -1276,23 +1291,37 @@ module.exports = {
           }
         });
 
-        const embed = new EmbedBuilder()
-          .setTitle("Ticket Unclaimed")
-          .setColor("#FF2400")
-          .setDescription(
-            `This ticket has been unclaimed by <@!${interaction.user.id}>`,
-          )
-          .setTimestamp()
-          .setFooter({
+        const defaultValues = {
+          color: "#FF2400",
+          title: "Ticket Unclaimed",
+          description: `This ticket has been unclaimed by {user}.`,
+          timestamp: true,
+          footer: {
             text: `Unclaimed by ${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
-          });
-        interaction.editReply({
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+          },
+        };
+
+        const unclaimedEmbed = await configEmbed(
+          "unclaimedEmbed",
+          defaultValues,
+        );
+
+        if (unclaimedEmbed.data && unclaimedEmbed.data.description) {
+          unclaimedEmbed.setDescription(
+            unclaimedEmbed.data.description.replace(
+              /\{user\}/g,
+              interaction.user,
+            ),
+          );
+        }
+
+        await interaction.editReply({
           content: "You successfully unclaimed this ticket!",
           ephemeral: true,
         });
         interaction.channel.permissionOverwrites.delete(interaction.user);
-        interaction.channel.send({ embeds: [embed] });
+        interaction.channel.send({ embeds: [unclaimedEmbed] });
 
         interaction.channel.messages
           .fetch(await ticketsDB.get(`${interaction.channel.id}.msgID`))
@@ -1326,32 +1355,34 @@ module.exports = {
             let logsChannel =
               interaction.guild.channels.cache.get(logChannelId);
 
-            const logEmbed = new EmbedBuilder()
-              .setColor("#FF2400")
-              .setTitle("Ticket Logs | Ticket Unclaimed")
-              .addFields([
-                {
-                  name: "• Executor",
-                  value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
-                },
-                {
-                  name: "• Ticket",
-                  value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-                },
-              ])
-              .setTimestamp()
-              .setThumbnail(
-                interaction.user.displayAvatarURL({
-                  format: "png",
-                  dynamic: true,
-                  size: 1024,
-                }),
-              )
-              .setFooter({
+            const logDefaultValues = {
+              color: "#FF2400",
+              title: "Ticket Logs | Ticket Unclaimed",
+              timestamp: true,
+              thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+              footer: {
                 text: `${interaction.user.tag}`,
                 iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-              });
-            logsChannel.send({ embeds: [logEmbed] });
+              },
+            };
+
+            const logUnclaimedEmbed = await configEmbed(
+              "logUnclaimedEmbed",
+              logDefaultValues,
+            );
+
+            logUnclaimedEmbed.addFields([
+              {
+                name: config.logUnclaimedEmbed.field_staff,
+                value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+              },
+              {
+                name: config.logUnclaimedEmbed.field_staff,
+                value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+              },
+            ]);
+
+            await logsChannel.send({ embeds: [logUnclaimedEmbed] });
             await mainDB.set("totalClaims", totalClaims - 1);
             logMessage(
               `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,

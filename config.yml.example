@@ -715,6 +715,78 @@ logTransferEmbed:
   field_ticket: "• Ticket"
   field_transfer: "• Transfer Details"
 
+# Claimed ticket embed
+claimedEmbed:
+  color: "#2FF200"
+  title: "Ticket Claimed"
+  description: "This ticket has been claimed by {user}.\nThey will be assisting you shortly!" # Use {user} for the user such as @User
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for claiming tickets
+logClaimedEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Claimed"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+
+# Unclaimed ticket embed
+unclaimedEmbed:
+  color: "#FF2400"
+  title: "Ticket Unclaimed"
+  description: "This ticket has been unclaimed by {user}." # Use {user} for the user such as @User
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for unclaiming tickets
+logUnclaimedEmbed:
+  color: "#FF2400"
+  title: "Ticket Logs | Ticket Unclaimed"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+
 # ==============================================
 # Misc Locale
 # ==============================================
