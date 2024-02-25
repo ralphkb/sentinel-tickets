@@ -569,8 +569,12 @@ client.on("ready", async () => {
         }
       } catch (error) {
         if (error) {
+          console.error(
+            "An error occurred during slash command registration:",
+            error,
+          );
           console.log(
-            `The bot was invited with some missing options. Please use the link below to re-invite your bot.`,
+            `The bot may have been invited with some missing options. Please use the link below to re-invite your bot if that is the case.`,
           );
           console.log(
             `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=268823632&scope=bot%20applications.commands`,
