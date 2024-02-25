@@ -2,7 +2,6 @@ const {
   Events,
   Collection,
   InteractionType,
-  EmbedBuilder,
   ModalBuilder,
   ActionRowBuilder,
   TextInputBuilder,
@@ -43,35 +42,50 @@ module.exports = {
     const cooldownEnd =
       cooldown - (Date.now() - buttonCooldown.get(interaction.user.id));
     const timeReadable = Math.floor(cooldownEnd / 1000);
-    const cooldownEmbed = new EmbedBuilder()
-      .setTitle(config.cooldownEmbed.title)
-      .setColor(config.cooldownEmbed.color)
-      .setDescription(
-        `${config.cooldownEmbed.description}`.replace(
-          /\{time\}/g,
-          `${timeReadable}`,
-        ),
-      )
-      .setFooter({
+    const defaultCooldownValues = {
+      color: "#FF0000",
+      title: "Cooldown",
+      description:
+        "You have to wait **{time}** seconds before clicking this button!",
+      timestamp: true,
+      footer: {
         text: `${interaction.user.tag}`,
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-      })
-      .setTimestamp();
+      },
+    };
+    const cooldownEmbed = await configEmbed(
+      "cooldownEmbed",
+      defaultCooldownValues,
+    );
+    if (cooldownEmbed.data && cooldownEmbed.data.description) {
+      cooldownEmbed.setDescription(
+        cooldownEmbed.data.description.replace(/\{time\}/g, `${timeReadable}`),
+      );
+    }
     const maxOpenTickets = config.maxOpenTickets;
-    const ticketAlreadyOpened = new EmbedBuilder()
-      .setTitle(config.maxOpenTicketsEmbed.title)
-      .setColor(config.maxOpenTicketsEmbed.color)
-      .setDescription(
-        `${config.maxOpenTicketsEmbed.description}`.replace(
+    const defaultValues = {
+      color: "#FF0000",
+      title: "Maximum Tickets Open",
+      description: "You may only have **{max} ticket(s)** open at a time.",
+      timestamp: true,
+      footer: {
+        text: `${interaction.user.tag}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      },
+    };
+    const maxOpenTicketsEmbed = await configEmbed(
+      "maxOpenTicketsEmbed",
+      defaultValues,
+    );
+    if (maxOpenTicketsEmbed.data && maxOpenTicketsEmbed.data.description) {
+      maxOpenTicketsEmbed.setDescription(
+        maxOpenTicketsEmbed.data.description.replace(
           /\{max\}/g,
           `${maxOpenTickets}`,
         ),
-      )
-      .setFooter({
-        text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-      })
-      .setTimestamp();
+      );
+    }
+
     const userTimezone = config.workingHours.timezone;
     const openingTime = config.workingHours.min;
     const closingTime = config.workingHours.max;
@@ -183,11 +197,25 @@ module.exports = {
               userCurrentTime.isBefore(openingTimeToday) ||
               userCurrentTime.isAfter(closingTimeToday)
             ) {
-              const workingHoursEmbed = new EmbedBuilder()
-                .setTitle(config.workingHours.blockTicketEmbed.embed_title)
-                .setColor(config.workingHours.blockTicketEmbed.embed_color)
-                .setDescription(
-                  `${config.workingHours.blockTicketEmbed.embed_description}`
+              const defaultValues = {
+                color: "#FF0000",
+                title: "Working Hours",
+                description:
+                  "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}.",
+                timestamp: true,
+              };
+
+              const workingHoursEmbed = await configEmbed(
+                "workingHoursEmbed",
+                defaultValues,
+              );
+
+              if (
+                workingHoursEmbed.data &&
+                workingHoursEmbed.data.description
+              ) {
+                workingHoursEmbed.setDescription(
+                  workingHoursEmbed.data.description
                     .replace(
                       /\{openingTime\}/g,
                       `<t:${openingTimeToday.unix()}:t>`,
@@ -200,8 +228,8 @@ module.exports = {
                       /\{now\}/g,
                       `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
                     ),
-                )
-                .setTimestamp();
+                );
+              }
               return interaction.reply({
                 embeds: [workingHoursEmbed],
                 ephemeral: true,
@@ -248,7 +276,7 @@ module.exports = {
 
             if ((await userTicketCount) >= maxOpenTickets) {
               return interaction.reply({
-                embeds: [ticketAlreadyOpened],
+                embeds: [maxOpenTicketsEmbed],
                 ephemeral: true,
               });
             }
@@ -387,11 +415,22 @@ module.exports = {
             userCurrentTime.isBefore(openingTimeToday) ||
             userCurrentTime.isAfter(closingTimeToday)
           ) {
-            const workingHoursEmbed = new EmbedBuilder()
-              .setTitle(config.workingHours.blockTicketEmbed.embed_title)
-              .setColor(config.workingHours.blockTicketEmbed.embed_color)
-              .setDescription(
-                `${config.workingHours.blockTicketEmbed.embed_description}`
+            const defaultValues = {
+              color: "#FF0000",
+              title: "Working Hours",
+              description:
+                "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}.",
+              timestamp: true,
+            };
+
+            const workingHoursEmbed = await configEmbed(
+              "workingHoursEmbed",
+              defaultValues,
+            );
+
+            if (workingHoursEmbed.data && workingHoursEmbed.data.description) {
+              workingHoursEmbed.setDescription(
+                workingHoursEmbed.data.description
                   .replace(
                     /\{openingTime\}/g,
                     `<t:${openingTimeToday.unix()}:t>`,
@@ -404,8 +443,8 @@ module.exports = {
                     /\{now\}/g,
                     `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
                   ),
-              )
-              .setTimestamp();
+              );
+            }
             return interaction.reply({
               embeds: [workingHoursEmbed],
               ephemeral: true,
@@ -450,7 +489,7 @@ module.exports = {
 
           if ((await userTicketCount) >= maxOpenTickets) {
             return interaction.reply({
-              embeds: [ticketAlreadyOpened],
+              embeds: [maxOpenTicketsEmbed],
               ephemeral: true,
             });
           }
@@ -516,36 +555,55 @@ module.exports = {
           attachment = await saveTranscriptTxt(interaction);
         }
 
-        const embed = new EmbedBuilder()
-          .setColor(config.default_embed_color)
-          .setTitle("Ticket Transcript")
-          .setDescription(`Saved by <@!${interaction.user.id}>`)
-          .addFields([
-            {
-              name: "Ticket Creator",
-              value: `<@!${ticketUserID.id}>\n${sanitizeInput(ticketUserID.tag)}`,
-              inline: true,
-            },
-            {
-              name: "Ticket Name",
-              value: `<#${interaction.channel.id}>\n${sanitizeInput(interaction.channel.name)}`,
-              inline: true,
-            },
-            {
-              name: "Category",
-              value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-              inline: true,
-            },
-          ])
-          .setFooter({
+        const logDefaultValues = {
+          color: "#2FF200",
+          title: "Ticket Transcript",
+          description: `Saved by {user}`,
+          timestamp: true,
+          footer: {
             text: `${ticketUserID.tag}`,
-            iconURL: `${ticketUserID.displayAvatarURL({ dynamic: true })}`,
-          })
-          .setTimestamp();
+            iconURL: `${ticketUserID.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+          },
+        };
+
+        const transcriptEmbed = await configEmbed(
+          "transcriptEmbed",
+          logDefaultValues,
+        );
+
+        if (transcriptEmbed.data && transcriptEmbed.data.description) {
+          transcriptEmbed.setDescription(
+            transcriptEmbed.data.description.replace(
+              /\{user\}/g,
+              interaction.user,
+            ),
+          );
+        }
+
+        transcriptEmbed.addFields([
+          {
+            name: config.transcriptEmbed.field_creator,
+            value: `<@!${ticketUserID.id}>\n${sanitizeInput(ticketUserID.tag)}`,
+            inline: true,
+          },
+          {
+            name: config.transcriptEmbed.field_ticket,
+            value: `<#${interaction.channel.id}>\n${sanitizeInput(interaction.channel.name)}`,
+            inline: true,
+          },
+          {
+            name: config.transcriptEmbed.field_category,
+            value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+            inline: true,
+          },
+        ]);
 
         let logChannelId = config.logs.transcripts || config.logs.default;
         let logChannel = interaction.guild.channels.cache.get(logChannelId);
-        await logChannel.send({ embeds: [embed], files: [attachment] });
+        await logChannel.send({
+          embeds: [transcriptEmbed],
+          files: [attachment],
+        });
         interaction.followUp({
           content: `Transcript saved to <#${logChannel.id}>`,
           ephemeral: true,
@@ -579,51 +637,62 @@ module.exports = {
           `${interaction.channel.id}.button`,
         );
 
-        const logEmbed = new EmbedBuilder()
-          .setColor(config.default_embed_color)
-          .setTitle("Ticket Logs | Ticket Re-Opened")
-          .addFields([
-            {
-              name: "• Re-Opened By",
-              value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
-            },
-            {
-              name: "• Ticket Creator",
-              value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
-            },
-            {
-              name: "• Ticket",
-              value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-            },
-          ])
-          .setTimestamp()
-          .setThumbnail(
-            interaction.user.displayAvatarURL({
-              format: "png",
-              dynamic: true,
-              size: 1024,
-            }),
-          )
-          .setFooter({
+        const logDefaultValues = {
+          color: "#2FF200",
+          title: "Ticket Logs | Ticket Re-Opened",
+          timestamp: true,
+          thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+          footer: {
             text: `${interaction.user.tag}`,
             iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-          });
+          },
+        };
+
+        const logReopenEmbed = await configEmbed(
+          "logReopenEmbed",
+          logDefaultValues,
+        );
+
+        logReopenEmbed.addFields([
+          {
+            name: config.logReopenEmbed.field_staff,
+            value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+          },
+          {
+            name: config.logReopenEmbed.field_user,
+            value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
+          },
+          {
+            name: config.logReopenEmbed.field_ticket,
+            value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+          },
+        ]);
 
         let logChannelId = config.logs.ticketReopen || config.logs.default;
         let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-        await logsChannel.send({ embeds: [logEmbed] });
+        await logsChannel.send({ embeds: [logReopenEmbed] });
 
-        const embed = new EmbedBuilder()
-          .setColor(config.default_embed_color)
-          .setTitle("Ticket Re-Opened")
-          .setDescription(
-            `This ticket has been re-opened by **<@!${interaction.user.id}> (${sanitizeInput(interaction.user.tag)})**`,
-          )
-          .setFooter({
+        const defaultValues = {
+          color: "#2FF200",
+          title: "Ticket Re-Opened",
+          description:
+            "This ticket has been re-opened by **{user} ({user.tag})**",
+          timestamp: true,
+          footer: {
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
-          })
-          .setTimestamp();
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+          },
+        };
+
+        const reopenEmbed = await configEmbed("reopenEmbed", defaultValues);
+
+        if (reopenEmbed.data && reopenEmbed.data.description) {
+          reopenEmbed.setDescription(
+            reopenEmbed.data.description
+              .replace(/\{user\}/g, `${interaction.user}`)
+              .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag)),
+          );
+        }
 
         Object.keys(ticketCategories).forEach(async (id) => {
           if (ticketButton === id) {
@@ -674,31 +743,50 @@ module.exports = {
           .then((msg) => msg.delete());
         await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
         await mainDB.push("openTickets", interaction.channel.id);
-        await interaction.followUp({ embeds: [embed] });
+        await interaction.followUp({ embeds: [reopenEmbed] });
         if (
-          config.reopenDM.enabled &&
+          config.reopenDMEmbed.enabled &&
           interaction.user.id !== ticketUserID.id
         ) {
-          const reopenDMEmbed = new EmbedBuilder()
-            .setColor(config.reopenDM.embed.color)
-            .setTitle(config.reopenDM.embed.title)
-            .setDescription(
-              `${config.reopenDM.embed.description}`
+          const defaultDMValues = {
+            color: "#2FF200",
+            title: "Ticket Re-Opened",
+            description:
+              "Your ticket **#{ticketName}** has been reopened by {user} in **{server}**.",
+          };
+
+          const reopenDMEmbed = await configEmbed(
+            "reopenDMEmbed",
+            defaultDMValues,
+          );
+
+          if (reopenDMEmbed.data && reopenDMEmbed.data.description) {
+            reopenDMEmbed.setDescription(
+              reopenDMEmbed.data.description
                 .replace(/\{ticketName\}/g, `${interaction.channel.name}`)
                 .replace(/\{user\}/g, `<@!${interaction.user.id}>`)
                 .replace(/\{server\}/g, `${interaction.guild.name}`),
             );
+          }
 
           try {
             await ticketUserID.send({ embeds: [reopenDMEmbed] });
           } catch (error) {
-            const DMErrorEmbed = new EmbedBuilder()
-              .setColor(config.DMErrors.embed.color)
-              .setTitle(config.DMErrors.embed.title)
-              .setDescription(`${config.DMErrors.embed.description}`);
+            const defaultErrorValues = {
+              color: "#FF0000",
+              title: "DMs Disabled",
+              description:
+                "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
+            };
+
+            const dmErrorEmbed = await configEmbed(
+              "dmErrorEmbed",
+              defaultErrorValues,
+            );
+
             let logChannelId = config.logs.DMErrors || config.logs.default;
             let logChannel = client.channels.cache.get(logChannelId);
-            await logChannel.send({ embeds: [DMErrorEmbed] });
+            await logChannel.send({ embeds: [dmErrorEmbed] });
             logMessage(
               `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
             );
@@ -735,44 +823,48 @@ module.exports = {
           await ticketsDB.get(`${interaction.channel.id}.claimUser`),
         );
 
-        const logEmbed = new EmbedBuilder()
-          .setColor("#FF0000")
-          .setTitle("Ticket Logs | Ticket Deleted")
-          .addFields([
-            {
-              name: "• Deleted By",
-              value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
-            },
-            {
-              name: "• Ticket Creator",
-              value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
-            },
-            {
-              name: "• Ticket",
-              value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-            },
-          ])
-          .setTimestamp()
-          .setThumbnail(
-            interaction.user.displayAvatarURL({
-              format: "png",
-              dynamic: true,
-              size: 1024,
-            }),
-          )
-          .setFooter({
+        const logDefaultValues = {
+          color: "#FF0000",
+          title: "Ticket Logs | Ticket Deleted",
+          timestamp: true,
+          thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+          footer: {
             text: `${interaction.user.tag}`,
             iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-          });
+          },
+        };
+
+        const logDeleteEmbed = await configEmbed(
+          "logDeleteEmbed",
+          logDefaultValues,
+        );
+
+        logDeleteEmbed.addFields([
+          {
+            name: config.logDeleteEmbed.field_staff,
+            value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+          },
+          {
+            name: config.logDeleteEmbed.field_user,
+            value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
+          },
+          {
+            name: config.logDeleteEmbed.field_ticket,
+            value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+          },
+        ]);
 
         if (claimUser)
-          logEmbed.addFields({
+          logDeleteEmbed.addFields({
             name: "• Claimed By",
             value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
           });
         let logChannelId = config.logs.ticketDelete || config.logs.default;
         let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-        await logsChannel.send({ embeds: [logEmbed], files: [attachment] });
+        await logsChannel.send({
+          embeds: [logDeleteEmbed],
+          files: [attachment],
+        });
         logMessage(
           `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
         );
@@ -780,22 +872,39 @@ module.exports = {
         const deleteTicketTime = config.deleteTicketTime;
         const deleteTime = deleteTicketTime * 1000;
 
-        const deleteEmbed = new EmbedBuilder()
-          .setColor(config.commands.delete.embed.color)
-          .setDescription(
-            `${config.commands.delete.embed.description}`.replace(
+        const defaultValues = {
+          color: "#FF0000",
+          description: "Deleting ticket in {time} seconds",
+        };
+
+        const deleteEmbed = await configEmbed("deleteEmbed", defaultValues);
+
+        if (deleteEmbed.data && deleteEmbed.data.description) {
+          deleteEmbed.setDescription(
+            deleteEmbed.data.description.replace(
               /\{time\}/g,
               `${deleteTicketTime}`,
             ),
           );
+        }
 
         // DM the user with an embed and the transcript of the ticket if the option is enabled
         if (config.DMUserSettings.enabled) {
-          const dmEmbed = new EmbedBuilder()
-            .setColor(config.DMUserSettings.embed.color)
-            .setTitle(config.DMUserSettings.embed.title)
-            .setThumbnail(interaction.guild.iconURL())
-            .setDescription(config.DMUserSettings.embed.description)
+          const defaultDMValues = {
+            color: "#2FF200",
+            title: "Ticket Deleted",
+            description:
+              "Your support ticket has been deleted. Here is your transcript and other information.",
+            thumbnail: interaction.guild.iconURL(),
+            timestamp: true,
+          };
+
+          const deleteDMEmbed = await configEmbed(
+            "deleteDMEmbed",
+            defaultDMValues,
+          );
+
+          deleteDMEmbed
             .addFields(
               {
                 name: "Server",
@@ -852,42 +961,56 @@ module.exports = {
             selectMenu,
           );
 
-          const ratingEmbed = new EmbedBuilder()
-            .setColor(config.DMUserSettings.ratingSystem.embed.color)
-            .setTitle(config.DMUserSettings.ratingSystem.embed.title)
-            .setDescription(
-              config.DMUserSettings.ratingSystem.embed.description,
-            )
-            .setFooter({
-              text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-            });
+          const defaultRatingValues = {
+            color: "#2FF200",
+            title: "Ticket Feedback & Rating",
+            description:
+              "We value your feedback! Please take a moment to share your thoughts and rate our support system. Your rating can be between 1 and 5 stars by using the select menu below. Thank you for helping us improve.",
+          };
+
+          const ratingDMEmbed = await configEmbed(
+            "ratingDMEmbed",
+            defaultRatingValues,
+          );
+
+          ratingDMEmbed.setFooter({
+            text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+          });
 
           try {
             if (config.DMUserSettings.ratingSystem.enabled === false) {
               await ticketUserID.send({
-                embeds: [dmEmbed],
+                embeds: [deleteDMEmbed],
                 files: [attachment],
               });
             }
             if (config.DMUserSettings.ratingSystem.enabled === true) {
               await mainDB.set(`ratingMenuOptions`, options);
               await ticketUserID.send({
-                embeds: [dmEmbed],
+                embeds: [deleteDMEmbed],
                 files: [attachment],
               });
               await ticketUserID.send({
-                embeds: [ratingEmbed],
+                embeds: [ratingDMEmbed],
                 components: [actionRowMenu],
               });
             }
           } catch (error) {
-            const DMErrorEmbed = new EmbedBuilder()
-              .setColor(config.DMErrors.embed.color)
-              .setTitle(config.DMErrors.embed.title)
-              .setDescription(`${config.DMErrors.embed.description}`);
+            const defaultErrorValues = {
+              color: "#FF0000",
+              title: "DMs Disabled",
+              description:
+                "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
+            };
+
+            const dmErrorEmbed = await configEmbed(
+              "dmErrorEmbed",
+              defaultErrorValues,
+            );
+
             let logChannelId = config.logs.DMErrors || config.logs.default;
             let logChannel = client.channels.cache.get(logChannelId);
-            await logChannel.send({ embeds: [DMErrorEmbed] });
+            await logChannel.send({ embeds: [dmErrorEmbed] });
             logMessage(
               `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
             );
@@ -939,44 +1062,45 @@ module.exports = {
           `${interaction.channel.id}.button`,
         );
 
-        const logEmbed = new EmbedBuilder()
-          .setColor("#FF2400")
-          .setTitle("Ticket Logs | Ticket Closed")
-          .addFields([
-            {
-              name: "• Closed By",
-              value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
-            },
-            {
-              name: "• Ticket Creator",
-              value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
-            },
-            {
-              name: "• Ticket",
-              value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-            },
-          ])
-          .setTimestamp()
-          .setThumbnail(
-            interaction.user.displayAvatarURL({
-              format: "png",
-              dynamic: true,
-              size: 1024,
-            }),
-          )
-          .setFooter({
+        const logDefaultValues = {
+          color: "#FF2400",
+          title: "Ticket Logs | Ticket Closed",
+          timestamp: true,
+          thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+          footer: {
             text: `${interaction.user.tag}`,
             iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-          });
+          },
+        };
+
+        const logCloseEmbed = await configEmbed(
+          "logCloseEmbed",
+          logDefaultValues,
+        );
+
+        logCloseEmbed.addFields([
+          {
+            name: config.logCloseEmbed.field_staff,
+            value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+          },
+          {
+            name: config.logCloseEmbed.field_user,
+            value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
+          },
+          {
+            name: config.logCloseEmbed.field_ticket,
+            value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+          },
+        ]);
 
         if (claimUser)
-          logEmbed.addFields({
+          logCloseEmbed.addFields({
             name: "• Claimed By",
             value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
           });
         let logChannelId = config.logs.ticketClose || config.logs.default;
         let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-        await logsChannel.send({ embeds: [logEmbed] });
+        await logsChannel.send({ embeds: [logCloseEmbed] });
         logMessage(
           `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
         );
@@ -1005,22 +1129,26 @@ module.exports = {
           deleteButton,
         );
 
-        const embed = new EmbedBuilder()
-          .setColor(config.commands.close.embed.color)
-          .setTitle(config.commands.close.embed.title)
-          .setDescription(
-            config.commands.close.embed.description
-              .replace(/\{user\}/g, `${interaction.user}`)
-              .replace(
-                /\{user\.tag\}/g,
-                `${sanitizeInput(interaction.user.tag)}`,
-              ),
-          )
-          .setFooter({
+        const defaultValues = {
+          color: "#FF2400",
+          title: "Ticket Closed",
+          description: "This ticket was closed by **{user} ({user.tag})**",
+          timestamp: true,
+          footer: {
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
-          })
-          .setTimestamp();
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+          },
+        };
+
+        const closeEmbed = await configEmbed("closeEmbed", defaultValues);
+
+        if (closeEmbed.data && closeEmbed.data.description) {
+          closeEmbed.setDescription(
+            closeEmbed.data.description
+              .replace(/\{user\}/g, `${interaction.user}`)
+              .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag)),
+          );
+        }
 
         await interaction.channel.members.forEach((member) => {
           if (member.id !== client.user.id) {
@@ -1035,7 +1163,11 @@ module.exports = {
 
         let messageID;
         await interaction
-          .editReply({ embeds: [embed], components: [row], fetchReply: true })
+          .editReply({
+            embeds: [closeEmbed],
+            components: [row],
+            fetchReply: true,
+          })
           .then(async function (message) {
             messageID = message.id;
           });
@@ -1045,27 +1177,49 @@ module.exports = {
         if (config.closeRemoveUser) {
           interaction.channel.permissionOverwrites.delete(ticketUserID);
         }
-        if (config.closeDM.enabled && interaction.user.id !== ticketUserID.id) {
-          const closeDMEmbed = new EmbedBuilder()
-            .setColor(config.closeDM.embed.color)
-            .setTitle(config.closeDM.embed.title)
-            .setDescription(
-              `${config.closeDM.embed.description}`
+        if (
+          config.closeDMEmbed.enabled &&
+          interaction.user.id !== ticketUserID.id
+        ) {
+          const defaultDMValues = {
+            color: "#FF0000",
+            title: "Ticket Closed",
+            description:
+              "Your ticket **#{ticketName}** has been closed by {user} in **{server}**.",
+          };
+
+          const closeDMEmbed = await configEmbed(
+            "closeDMEmbed",
+            defaultDMValues,
+          );
+
+          if (closeDMEmbed.data && closeDMEmbed.data.description) {
+            closeDMEmbed.setDescription(
+              closeDMEmbed.data.description
                 .replace(/\{ticketName\}/g, `${interaction.channel.name}`)
                 .replace(/\{user\}/g, `<@!${interaction.user.id}>`)
                 .replace(/\{server\}/g, `${interaction.guild.name}`),
             );
+          }
 
           try {
             await ticketUserID.send({ embeds: [closeDMEmbed] });
           } catch (error) {
-            const DMErrorEmbed = new EmbedBuilder()
-              .setColor(config.DMErrors.embed.color)
-              .setTitle(config.DMErrors.embed.title)
-              .setDescription(`${config.DMErrors.embed.description}`);
+            const defaultErrorValues = {
+              color: "#FF0000",
+              title: "DMs Disabled",
+              description:
+                "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
+            };
+
+            const dmErrorEmbed = await configEmbed(
+              "dmErrorEmbed",
+              defaultErrorValues,
+            );
+
             let logChannelId = config.logs.DMErrors || config.logs.default;
             let logChannel = client.channels.cache.get(logChannelId);
-            await logChannel.send({ embeds: [DMErrorEmbed] });
+            await logChannel.send({ embeds: [dmErrorEmbed] });
             logMessage(
               `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
             );
@@ -1397,20 +1551,29 @@ module.exports = {
           const category = ticketCategories[customId];
 
           await interaction.deferReply({ ephemeral: true });
-          const openedEmbed = new EmbedBuilder()
-            .setColor(category.color)
-            .setAuthor({
-              name: `${category.embedTitle}`,
+
+          const defaultValues = {
+            color: category.color || "#2FF200",
+            description: category.description,
+            timestamp: true,
+            thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+            footer: {
+              text: `${interaction.user.tag}`,
               iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-            })
-            .setThumbnail(
-              `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-            )
-            .setDescription(category.description)
-            .setFooter({
-              text: "Sentinel Tickets", // TODO: improve this later
-            })
-            .setTimestamp();
+            },
+          };
+
+          const ticketOpenEmbedEmbed = await configEmbed(
+            "ticketOpenEmbedEmbed",
+            defaultValues,
+          );
+
+          ticketOpenEmbedEmbed.setDescription(category.description);
+          ticketOpenEmbedEmbed.setColor(category.color || "#2FF200");
+          ticketOpenEmbedEmbed.setAuthor({
+            name: `${category.embedTitle}`,
+            iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+          });
 
           for (
             let questionIndex = 0;
@@ -1423,11 +1586,14 @@ module.exports = {
               `question${questionIndex + 1}`,
             );
 
-            openedEmbed.addFields({ name: `${label}`, value: `>>> ${value}` });
+            ticketOpenEmbedEmbed.addFields({
+              name: `${label}`,
+              value: `>>> ${value}`,
+            });
           }
 
           if (config.workingHours.enabled && config.workingHours.addField) {
-            openedEmbed.addFields({
+            ticketOpenEmbedEmbed.addFields({
               name: config.workingHours.fieldTitle,
               value: `${config.workingHours.fieldValue}`
                 .replace(/\{openingTime\}/g, `<t:${openingTimeToday.unix()}:t>`)
@@ -1523,22 +1689,41 @@ module.exports = {
                 await channel
                   .send({
                     content: rolesToMention,
-                    embeds: [openedEmbed],
+                    embeds: [ticketOpenEmbedEmbed],
                     components: [answerRow],
                     fetchReply: true,
                   })
                   .then(async (message) => {
-                    let newTicketOpened = new EmbedBuilder()
-                      .setTitle("Ticket Created!")
-                      .setColor(config.default_embed_color)
-                      .setDescription(
-                        `Your new ticket (<#${channel.id}>) has been created, **${sanitizeInput(interaction.user.username)}!**`,
-                      )
-                      .setFooter({
+                    const defaultValues = {
+                      color: "#2FF200",
+                      title: "Ticket Created!",
+                      description:
+                        "Your new ticket ({channel}) has been created, **{user}**!",
+                      timestamp: true,
+                      footer: {
                         text: `${interaction.user.tag}`,
                         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-                      })
-                      .setTimestamp();
+                      },
+                    };
+
+                    const newTicketEmbed = await configEmbed(
+                      "newTicketEmbed",
+                      defaultValues,
+                    );
+
+                    if (
+                      newTicketEmbed.data &&
+                      newTicketEmbed.data.description
+                    ) {
+                      newTicketEmbed.setDescription(
+                        newTicketEmbed.data.description
+                          .replace(/\{channel\}/g, `<#${channel.id}>`)
+                          .replace(
+                            /\{user\}/g,
+                            `${sanitizeInput(interaction.user.username)}`,
+                          ),
+                      );
+                    }
                     const actionRow4 = new ActionRowBuilder().addComponents(
                       new ButtonBuilder()
                         .setStyle(ButtonStyle.Link)
@@ -1547,7 +1732,7 @@ module.exports = {
                         .setEmoji("🎫"),
                     );
                     await interaction.editReply({
-                      embeds: [newTicketOpened],
+                      embeds: [newTicketEmbed],
                       components: [actionRow4],
                       ephemeral: true,
                     });
@@ -1565,37 +1750,44 @@ module.exports = {
 
                     await mainDB.push("openTickets", `${channel.id}`);
 
-                    const logEmbed = new EmbedBuilder()
-                      .setColor(config.default_embed_color)
-                      .setTitle("Ticket Logs | Ticket Created")
-                      .addFields([
-                        {
-                          name: "• Ticket Creator",
-                          value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
-                        },
-                        {
-                          name: "• Ticket",
-                          value: `> #${sanitizeInput(channel.name)}`,
-                        },
-                      ])
-                      .setTimestamp()
-                      .setThumbnail(
-                        interaction.user.displayAvatarURL({
-                          format: "png",
-                          dynamic: true,
-                          size: 1024,
-                        }),
-                      )
-                      .setFooter({
+                    const logDefaultValues = {
+                      color: "#2FF200",
+                      title: "Ticket Logs | Ticket Created",
+                      timestamp: true,
+                      thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+                      footer: {
                         text: `${interaction.user.tag}`,
                         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-                      });
+                      },
+                    };
+
+                    const logTicketOpenEmbedEmbed = await configEmbed(
+                      "logTicketOpenEmbedEmbed",
+                      logDefaultValues,
+                    );
+
+                    logTicketOpenEmbedEmbed.addFields([
+                      {
+                        name:
+                          config.logTicketOpenEmbedEmbed.field_creator ||
+                          "• Ticket Creator",
+                        value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+                      },
+                      {
+                        name:
+                          config.logTicketOpenEmbedEmbed.field_ticket ||
+                          "• Ticket",
+                        value: `> #${sanitizeInput(channel.name)}`,
+                      },
+                    ]);
 
                     let logChannelId =
                       config.logs.ticketCreate || config.logs.default;
                     let logChannel =
                       interaction.guild.channels.cache.get(logChannelId);
-                    await logChannel.send({ embeds: [logEmbed] });
+                    await logChannel.send({
+                      embeds: [logTicketOpenEmbedEmbed],
+                    });
                     logMessage(
                       `${interaction.user.tag} created the ticket #${channel.name}`,
                     );
@@ -1631,25 +1823,29 @@ module.exports = {
           );
           await message.edit({ components: [] });
           const currentFooter = message.embeds[0].footer.text;
-          const ratingEmbed = new EmbedBuilder()
-            .setColor(config.default_embed_color)
-            .setTitle("Ticket Logs | Ticket Feedback")
-            .setThumbnail(
-              `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-            )
-            .setFooter({
+          const defaultValues = {
+            color: "#2FF200",
+            title: "Ticket Logs | Ticket Feedback",
+            timestamp: true,
+            thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+            footer: {
               text: `${interaction.user.tag}`,
               iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-            })
-            .setTimestamp();
+            },
+          };
+
+          const logRatingEmbed = await configEmbed(
+            "logRatingEmbed",
+            defaultValues,
+          );
           const questions = config.DMUserSettings.ratingSystem.questions;
 
-          ratingEmbed.addFields({
+          logRatingEmbed.addFields({
             name: "• Ticket Creator",
             value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
           });
 
-          ratingEmbed.addFields({
+          logRatingEmbed.addFields({
             name: "• Ticket",
             value: `> ${sanitizeInput(currentFooter)}`,
           });
@@ -1665,18 +1861,18 @@ module.exports = {
               `ratingQuestion${questionIndex + 1}`,
             );
 
-            ratingEmbed.addFields({
+            logRatingEmbed.addFields({
               name: `• ${label}`,
               value: `>>> ${value}`,
             });
           }
-          ratingEmbed.addFields({
+          logRatingEmbed.addFields({
             name: "• Ticket Rating",
             value: `${"⭐".repeat(i)} **(${i}/5)**`,
           });
           let logChannelId = config.logs.ticketFeedback || config.logs.default;
           let logChannel = client.channels.cache.get(logChannelId);
-          await logChannel.send({ embeds: [ratingEmbed] });
+          await logChannel.send({ embeds: [logRatingEmbed] });
           await mainDB.set("totalReviews", totalReviews + 1);
           await mainDB.push("ratings", i);
           await interaction.editReply({

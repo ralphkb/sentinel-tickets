@@ -199,7 +199,8 @@ async function configEmbed(configPath, defaultValues = {}) {
     config[configPath]?.author?.name !== null
   ) {
     const authorValues = {
-      name: config[configPath]?.author?.name || defaultValues.author?.name,
+      name:
+        config[configPath]?.author?.name || defaultValues.author?.name || null,
       url:
         config[configPath]?.author?.url !== "" &&
         config[configPath]?.author?.url !== null
@@ -219,7 +220,8 @@ async function configEmbed(configPath, defaultValues = {}) {
     config[configPath]?.footer?.text !== null
   ) {
     const footerValues = {
-      text: config[configPath]?.footer?.text || defaultValues.footer?.text,
+      text:
+        config[configPath]?.footer?.text || defaultValues.footer?.text || null,
       iconURL:
         config[configPath]?.footer?.iconURL !== "" &&
         config[configPath]?.footer?.iconURL !== null

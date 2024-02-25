@@ -1,8 +1,4 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -15,6 +11,7 @@ const {
   saveTranscript,
   saveTranscriptTxt,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 
 module.exports = {
@@ -54,36 +51,49 @@ module.exports = {
       attachment = await saveTranscriptTxt(interaction);
     }
 
-    const embed = new EmbedBuilder()
-      .setColor(config.default_embed_color)
-      .setTitle("Ticket Transcript")
-      .setDescription(`Saved by <@!${interaction.user.id}>`)
-      .addFields([
-        {
-          name: "Ticket Creator",
-          value: `<@!${ticketUserID.id}>\n${sanitizeInput(ticketUserID.tag)}`,
-          inline: true,
-        },
-        {
-          name: "Ticket Name",
-          value: `<#${interaction.channel.id}>\n${sanitizeInput(interaction.channel.name)}`,
-          inline: true,
-        },
-        {
-          name: "Category",
-          value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-          inline: true,
-        },
-      ])
-      .setFooter({
+    const logDefaultValues = {
+      color: "#2FF200",
+      title: "Ticket Transcript",
+      description: `Saved by {user}`,
+      timestamp: true,
+      footer: {
         text: `${ticketUserID.tag}`,
-        iconURL: `${ticketUserID.displayAvatarURL({ dynamic: true })}`,
-      })
-      .setTimestamp();
+        iconURL: `${ticketUserID.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      },
+    };
+
+    const transcriptEmbed = await configEmbed(
+      "transcriptEmbed",
+      logDefaultValues,
+    );
+
+    if (transcriptEmbed.data && transcriptEmbed.data.description) {
+      transcriptEmbed.setDescription(
+        transcriptEmbed.data.description.replace(/\{user\}/g, interaction.user),
+      );
+    }
+
+    transcriptEmbed.addFields([
+      {
+        name: config.transcriptEmbed.field_creator,
+        value: `<@!${ticketUserID.id}>\n${sanitizeInput(ticketUserID.tag)}`,
+        inline: true,
+      },
+      {
+        name: config.transcriptEmbed.field_ticket,
+        value: `<#${interaction.channel.id}>\n${sanitizeInput(interaction.channel.name)}`,
+        inline: true,
+      },
+      {
+        name: config.transcriptEmbed.field_category,
+        value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+        inline: true,
+      },
+    ]);
 
     let logChannelId = config.logs.transcripts || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
-    await logChannel.send({ embeds: [embed], files: [attachment] });
+    await logChannel.send({ embeds: [transcriptEmbed], files: [attachment] });
     interaction.editReply({
       content: `Transcript saved to <#${logChannel.id}>`,
       ephemeral: true,
