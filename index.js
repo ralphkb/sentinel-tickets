@@ -588,11 +588,11 @@ client.on("ready", async () => {
     const presence = {
       activities: [
         {
-          name: config.status.botActivityText,
-          type: ActivityType[config.status.botActivityType],
+          name: config.status.botActivityText || "Support Tickets",
+          type: ActivityType[config.status.botActivityType || "Watching"],
         },
       ],
-      status: config.status.botStatus,
+      status: config.status.botStatus || "online",
     };
 
     if (config.status.botActivityType === "Streaming") {
