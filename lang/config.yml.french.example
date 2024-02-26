@@ -4,7 +4,6 @@
 
 panelMethod: "Buttons" # La méthode utilisée pour afficher le panneau, cela peut être "Buttons" ou "Menu".
 menuPlaceholder: "Sélectionnez une catégorie pour ouvrir un ticket." # Le message en-dessous du menu
-default_embed_color: "#2FF200" # La couleur par défaut pour l'embed
 rolesThatCanBlacklist: ["111111111111111111"] # Les IDs des membres qui ont accès pour gérer la liste noire, liste qui empêche de créer des tickets. Par exemple : ["000000000000000000", "111111111111111111"]
 transcriptType: "HTML" # Le type de transcription, peut être "HTML" ou "TXT". PS : Le "TXT" est limité à 400 messages.
 reOpenStaffOnly: false # Quand c'est activé, seuls les membres ayant le rôle de support peuvent ré-ouvrir un ticket.
