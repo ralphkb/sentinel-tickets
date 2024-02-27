@@ -1,5 +1,4 @@
 const {
-  EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
   ActionRowBuilder,
@@ -19,6 +18,7 @@ const {
   logMessage,
   saveTranscriptTxt,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 
 module.exports = {
@@ -57,38 +57,39 @@ module.exports = {
       `${interaction.channel.id}.ticketType`,
     );
 
-    const logEmbed = new EmbedBuilder()
-      .setColor(config.commands.delete.LogEmbed.color)
-      .setTitle(config.commands.delete.LogEmbed.title)
-      .addFields([
-        {
-          name: config.commands.delete.LogEmbed.field_staff,
-          value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
-        },
-        {
-          name: config.commands.delete.LogEmbed.field_user,
-          value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
-        },
-        {
-          name: config.commands.delete.LogEmbed.field_ticket,
-          value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
-        },
-      ])
-      .setTimestamp()
-      .setThumbnail(
-        interaction.user.displayAvatarURL({
-          format: "png",
-          dynamic: true,
-          size: 1024,
-        }),
-      )
-      .setFooter({
+    const logDefaultValues = {
+      color: "#FF0000",
+      title: "Ticket Logs | Ticket Deleted",
+      timestamp: true,
+      thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      footer: {
         text: `${interaction.user.tag}`,
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-      });
+      },
+    };
+
+    const logDeleteEmbed = await configEmbed(
+      "logDeleteEmbed",
+      logDefaultValues,
+    );
+
+    logDeleteEmbed.addFields([
+      {
+        name: config.logDeleteEmbed.field_staff,
+        value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+      },
+      {
+        name: config.logDeleteEmbed.field_user,
+        value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
+      },
+      {
+        name: config.logDeleteEmbed.field_ticket,
+        value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
+      },
+    ]);
 
     if (claimUser)
-      logEmbed.addFields({
+      logDeleteEmbed.addFields({
         name: "• Claimed By",
         value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
       });
@@ -102,7 +103,7 @@ module.exports = {
 
     let logChannelId = config.logs.ticketDelete || config.logs.default;
     let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-    await logsChannel.send({ embeds: [logEmbed], files: [attachment] });
+    await logsChannel.send({ embeds: [logDeleteEmbed], files: [attachment] });
     logMessage(
       `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
     );
@@ -110,22 +111,36 @@ module.exports = {
     const deleteTicketTime = config.deleteTicketTime;
     const deleteTime = deleteTicketTime * 1000;
 
-    const deleteEmbed = new EmbedBuilder()
-      .setColor(config.commands.delete.embed.color)
-      .setDescription(
-        `${config.commands.delete.embed.description}`.replace(
+    const defaultValues = {
+      color: "#FF0000",
+      description: "Deleting ticket in {time} seconds",
+    };
+
+    const deleteEmbed = await configEmbed("deleteEmbed", defaultValues);
+
+    if (deleteEmbed.data && deleteEmbed.data.description) {
+      deleteEmbed.setDescription(
+        deleteEmbed.data.description.replace(
           /\{time\}/g,
           `${deleteTicketTime}`,
         ),
       );
+    }
 
     // DM the user with an embed and the transcript of the ticket if the option is enabled
     if (config.DMUserSettings.enabled) {
-      const dmEmbed = new EmbedBuilder()
-        .setColor(config.DMUserSettings.embed.color)
-        .setTitle(config.DMUserSettings.embed.title)
-        .setThumbnail(interaction.guild.iconURL())
-        .setDescription(config.DMUserSettings.embed.description)
+      const defaultDMValues = {
+        color: "#2FF200",
+        title: "Ticket Deleted",
+        description:
+          "Your support ticket has been deleted. Here is your transcript and other information.",
+        thumbnail: interaction.guild.iconURL(),
+        timestamp: true,
+      };
+
+      const deleteDMEmbed = await configEmbed("deleteDMEmbed", defaultDMValues);
+
+      deleteDMEmbed
         .addFields(
           {
             name: "Server",
@@ -180,37 +195,56 @@ module.exports = {
 
       const actionRowMenu = new ActionRowBuilder().addComponents(selectMenu);
 
-      const ratingEmbed = new EmbedBuilder()
-        .setColor(config.DMUserSettings.ratingSystem.embed.color)
-        .setTitle(config.DMUserSettings.ratingSystem.embed.title)
-        .setDescription(config.DMUserSettings.ratingSystem.embed.description)
-        .setFooter({
-          text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-        });
+      const defaultRatingValues = {
+        color: "#2FF200",
+        title: "Ticket Feedback & Rating",
+        description:
+          "We value your feedback! Please take a moment to share your thoughts and rate our support system. Your rating can be between 1 and 5 stars by using the select menu below. Thank you for helping us improve.",
+      };
+
+      const ratingDMEmbed = await configEmbed(
+        "ratingDMEmbed",
+        defaultRatingValues,
+      );
+
+      ratingDMEmbed.setFooter({
+        text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+      });
 
       try {
         if (config.DMUserSettings.ratingSystem.enabled === false) {
-          await ticketUserID.send({ embeds: [dmEmbed], files: [attachment] });
+          await ticketUserID.send({
+            embeds: [deleteDMEmbed],
+            files: [attachment],
+          });
         }
         if (config.DMUserSettings.ratingSystem.enabled === true) {
           await mainDB.set(`ratingMenuOptions`, options);
           await ticketUserID.send({
-            embeds: [dmEmbed],
+            embeds: [deleteDMEmbed],
             files: [attachment],
           });
           await ticketUserID.send({
-            embeds: [ratingEmbed],
+            embeds: [ratingDMEmbed],
             components: [actionRowMenu],
           });
         }
       } catch (error) {
-        const DMErrorEmbed = new EmbedBuilder()
-          .setColor(config.DMErrors.embed.color)
-          .setTitle(config.DMErrors.embed.title)
-          .setDescription(`${config.DMErrors.embed.description}`);
+        const defaultErrorValues = {
+          color: "#FF0000",
+          title: "DMs Disabled",
+          description:
+            "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
+        };
+
+        const dmErrorEmbed = await configEmbed(
+          "dmErrorEmbed",
+          defaultErrorValues,
+        );
+
         let logChannelId = config.logs.DMErrors || config.logs.default;
         let logChannel = client.channels.cache.get(logChannelId);
-        await logChannel.send({ embeds: [DMErrorEmbed] });
+        await logChannel.send({ embeds: [dmErrorEmbed] });
         logMessage(
           `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
         );

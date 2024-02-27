@@ -32,7 +32,7 @@ module.exports = {
           const defaultValues = {
             color: "#2FF200",
             title: "User left the server",
-            description: "Added **{target} ({target.tag})** to the ticket.",
+            description: "The user **{user}** left the server.",
             timestamp: true,
             footer: {
               text: `${member.user.tag}`,

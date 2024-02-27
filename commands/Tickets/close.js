@@ -1,5 +1,4 @@
 const {
-  EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
   ButtonBuilder,
@@ -18,6 +17,7 @@ const {
   sanitizeInput,
   logMessage,
   checkSupportRole,
+  configEmbed,
 } = require("../../index.js");
 
 module.exports = {
@@ -66,45 +66,43 @@ module.exports = {
       `${interaction.channel.id}.ticketType`,
     );
 
-    const logEmbed = new EmbedBuilder()
-      .setColor(config.commands.close.LogEmbed.color)
-      .setTitle(config.commands.close.LogEmbed.title)
-      .addFields([
-        {
-          name: config.commands.close.LogEmbed.field_staff,
-          value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
-        },
-        {
-          name: config.commands.close.LogEmbed.field_user,
-          value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
-        },
-        {
-          name: config.commands.close.LogEmbed.field_ticket,
-          value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
-        },
-      ])
-      .setTimestamp()
-      .setThumbnail(
-        interaction.user.displayAvatarURL({
-          format: "png",
-          dynamic: true,
-          size: 1024,
-        }),
-      )
-      .setFooter({
+    const logDefaultValues = {
+      color: "#FF2400",
+      title: "Ticket Logs | Ticket Closed",
+      timestamp: true,
+      thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      footer: {
         text: `${interaction.user.tag}`,
         iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
-      });
+      },
+    };
+
+    const logCloseEmbed = await configEmbed("logCloseEmbed", logDefaultValues);
+
+    logCloseEmbed.addFields([
+      {
+        name: config.logCloseEmbed.field_staff,
+        value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+      },
+      {
+        name: config.logCloseEmbed.field_user,
+        value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
+      },
+      {
+        name: config.logCloseEmbed.field_ticket,
+        value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
+      },
+    ]);
 
     if (claimUser)
-      logEmbed.addFields({
+      logCloseEmbed.addFields({
         name: "• Claimed By",
         value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
       });
 
     let logChannelId = config.logs.ticketClose || config.logs.default;
     let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-    await logsChannel.send({ embeds: [logEmbed] });
+    await logsChannel.send({ embeds: [logCloseEmbed] });
     logMessage(
       `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
     );
@@ -133,19 +131,26 @@ module.exports = {
       deleteButton,
     );
 
-    const embed = new EmbedBuilder()
-      .setColor(config.commands.close.embed.color)
-      .setTitle(config.commands.close.embed.title)
-      .setDescription(
-        `${config.commands.close.embed.description}`
+    const defaultValues = {
+      color: "#FF2400",
+      title: "Ticket Closed",
+      description: "This ticket was closed by **{user} ({user.tag})**",
+      timestamp: true,
+      footer: {
+        text: `${interaction.user.tag}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      },
+    };
+
+    const closeEmbed = await configEmbed("closeEmbed", defaultValues);
+
+    if (closeEmbed.data && closeEmbed.data.description) {
+      closeEmbed.setDescription(
+        closeEmbed.data.description
           .replace(/\{user\}/g, `${interaction.user}`)
           .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag)),
-      )
-      .setFooter({
-        text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
-      })
-      .setTimestamp();
+      );
+    }
 
     await interaction.channel.members.forEach((member) => {
       if (member.id !== client.user.id) {
@@ -160,7 +165,7 @@ module.exports = {
 
     let messageID;
     await interaction
-      .editReply({ embeds: [embed], components: [row], fetchReply: true })
+      .editReply({ embeds: [closeEmbed], components: [row], fetchReply: true })
       .then(async function (message) {
         messageID = message.id;
       });
@@ -170,27 +175,46 @@ module.exports = {
     if (config.closeRemoveUser) {
       interaction.channel.permissionOverwrites.delete(ticketUserID);
     }
-    if (config.closeDM.enabled && interaction.user.id !== ticketUserID.id) {
-      const closeDMEmbed = new EmbedBuilder()
-        .setColor(config.closeDM.embed.color)
-        .setTitle(config.closeDM.embed.title)
-        .setDescription(
-          `${config.closeDM.embed.description}`
+    if (
+      config.closeDMEmbed.enabled &&
+      interaction.user.id !== ticketUserID.id
+    ) {
+      const defaultDMValues = {
+        color: "#FF0000",
+        title: "Ticket Closed",
+        description:
+          "Your ticket **#{ticketName}** has been closed by {user} in **{server}**.",
+      };
+
+      const closeDMEmbed = await configEmbed("closeDMEmbed", defaultDMValues);
+
+      if (closeDMEmbed.data && closeDMEmbed.data.description) {
+        closeDMEmbed.setDescription(
+          closeDMEmbed.data.description
             .replace(/\{ticketName\}/g, `${interaction.channel.name}`)
             .replace(/\{user\}/g, `<@!${interaction.user.id}>`)
             .replace(/\{server\}/g, `${interaction.guild.name}`),
         );
+      }
 
       try {
         await ticketUserID.send({ embeds: [closeDMEmbed] });
       } catch (error) {
-        const DMErrorEmbed = new EmbedBuilder()
-          .setColor(config.DMErrors.embed.color)
-          .setTitle(config.DMErrors.embed.title)
-          .setDescription(`${config.DMErrors.embed.description}`);
+        const defaultErrorValues = {
+          color: "#FF0000",
+          title: "DMs Disabled",
+          description:
+            "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
+        };
+
+        const dmErrorEmbed = await configEmbed(
+          "dmErrorEmbed",
+          defaultErrorValues,
+        );
+
         let logChannelId = config.logs.DMErrors || config.logs.default;
         let logChannel = client.channels.cache.get(logChannelId);
-        await logChannel.send({ embeds: [DMErrorEmbed] });
+        await logChannel.send({ embeds: [dmErrorEmbed] });
         logMessage(
           `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
         );

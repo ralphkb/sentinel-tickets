@@ -1,5 +1,4 @@
 const {
-  EmbedBuilder,
   SlashCommandBuilder,
   PermissionFlagsBits,
   ButtonBuilder,
@@ -71,26 +70,42 @@ module.exports = {
       embeds: [alertEmbed],
       components: [ticketAlertRow],
     });
-    if (config.alertDM.enabled) {
-      const alertDMEmbed = new EmbedBuilder()
-        .setColor(config.alertDM.embed.color)
-        .setTitle(config.alertDM.embed.title)
-        .setDescription(
-          `${config.alertDM.embed.description}`
+    if (config.alertDMEmbed.enabled) {
+      const defaultDMValues = {
+        color: "#FF0000",
+        title: "Ticket Close Notification",
+        description:
+          "Your ticket **#{ticketName}** in **{server}** will be closed soon if no response has been received.",
+      };
+
+      const alertDMEmbed = await configEmbed("alertDMEmbed", defaultDMValues);
+
+      if (alertDMEmbed.data && alertDMEmbed.data.description) {
+        alertDMEmbed.setDescription(
+          alertDMEmbed.data.description
             .replace(/\{ticketName\}/g, `${interaction.channel.name}`)
             .replace(/\{server\}/g, `${interaction.guild.name}`),
         );
+      }
 
       try {
         await user.send({ embeds: [alertDMEmbed] });
       } catch (error) {
-        const DMErrorEmbed = new EmbedBuilder()
-          .setColor(config.DMErrors.embed.color)
-          .setTitle(config.DMErrors.embed.title)
-          .setDescription(`${config.DMErrors.embed.description}`);
+        const defaultErrorValues = {
+          color: "#FF0000",
+          title: "DMs Disabled",
+          description:
+            "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
+        };
+
+        const dmErrorEmbed = await configEmbed(
+          "dmErrorEmbed",
+          defaultErrorValues,
+        );
+
         let logChannelId = config.logs.DMErrors || config.logs.default;
         let logChannel = client.channels.cache.get(logChannelId);
-        await logChannel.send({ embeds: [DMErrorEmbed] });
+        await logChannel.send({ embeds: [dmErrorEmbed] });
         logMessage(
           `The bot could not DM ${user.tag} because their DMs were closed`,
         );

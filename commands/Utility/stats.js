@@ -1,14 +1,11 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const { mainDB } = require("../../index.js");
 const packageJson = require("../../package.json");
+const { configEmbed } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.stats.enabled,
@@ -33,29 +30,34 @@ module.exports = {
     const ramUsage = process.memoryUsage().heapUsed;
     const ramUsageMB = (ramUsage / 1024 / 1024).toFixed(2);
 
-    const stats = new EmbedBuilder()
-      .setTitle("📊 Statistics")
-      .setThumbnail(interaction.guild.iconURL())
-      .setColor(config.default_embed_color)
-      .addFields([
-        {
-          name: "🎫 Tickets",
-          value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${totalOpenTickets}\n> Total Claimed Tickets: ${totalClaims}`,
-        },
-        {
-          name: "⭐ Reviews",
-          value: `> Total Reviews: ${totalReviews}\n> Average Rating: ${ratingsArray.length ? averageRating.toFixed(1) : 0}/5.0`,
-        },
-        {
-          name: "🤖 Bot",
-          value: `> Version: v${packageJson.version}\n> RAM Usage: ${ramUsageMB} MB`,
-        },
-      ])
-      .setTimestamp()
-      .setFooter({
-        text: `Requested by: ${interaction.user.username}`,
-        iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`,
-      });
-    interaction.editReply({ embeds: [stats] });
+    const defaultDMValues = {
+      color: "#2FF200",
+      title: "📊 Statistics",
+      thumbnail: interaction.guild.iconURL(),
+      timestamp: true,
+      footer: {
+        text: `Requested by ${interaction.user.username}`,
+        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      },
+    };
+
+    const statsEmbed = await configEmbed("statsEmbed", defaultDMValues);
+
+    statsEmbed.addFields([
+      {
+        name: "🎫 Tickets",
+        value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${totalOpenTickets}\n> Total Claimed Tickets: ${totalClaims}`,
+      },
+      {
+        name: "⭐ Reviews",
+        value: `> Total Reviews: ${totalReviews}\n> Average Rating: ${ratingsArray.length ? averageRating.toFixed(1) : 0}/5.0`,
+      },
+      {
+        name: "🤖 Bot",
+        value: `> Version: v${packageJson.version}\n> RAM Usage: ${ramUsageMB} MB`,
+      },
+    ]);
+
+    await interaction.editReply({ embeds: [statsEmbed] });
   },
 };

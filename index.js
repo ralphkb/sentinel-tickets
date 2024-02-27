@@ -199,7 +199,8 @@ async function configEmbed(configPath, defaultValues = {}) {
     config[configPath]?.author?.name !== null
   ) {
     const authorValues = {
-      name: config[configPath]?.author?.name || defaultValues.author?.name,
+      name:
+        config[configPath]?.author?.name || defaultValues.author?.name || null,
       url:
         config[configPath]?.author?.url !== "" &&
         config[configPath]?.author?.url !== null
@@ -219,7 +220,8 @@ async function configEmbed(configPath, defaultValues = {}) {
     config[configPath]?.footer?.text !== null
   ) {
     const footerValues = {
-      text: config[configPath]?.footer?.text || defaultValues.footer?.text,
+      text:
+        config[configPath]?.footer?.text || defaultValues.footer?.text || null,
       iconURL:
         config[configPath]?.footer?.iconURL !== "" &&
         config[configPath]?.footer?.iconURL !== null
@@ -569,8 +571,12 @@ client.on("ready", async () => {
         }
       } catch (error) {
         if (error) {
+          console.error(
+            "An error occurred during slash command registration:",
+            error,
+          );
           console.log(
-            `The bot was invited with some missing options. Please use the link below to re-invite your bot.`,
+            `The bot may have been invited with some missing options. Please use the link below to re-invite your bot if that is the case.`,
           );
           console.log(
             `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=268823632&scope=bot%20applications.commands`,
@@ -582,11 +588,11 @@ client.on("ready", async () => {
     const presence = {
       activities: [
         {
-          name: config.status.botActivityText,
-          type: ActivityType[config.status.botActivityType],
+          name: config.status.botActivityText || "Support Tickets",
+          type: ActivityType[config.status.botActivityType || "Watching"],
         },
       ],
-      status: config.status.botStatus,
+      status: config.status.botStatus || "online",
     };
 
     if (config.status.botActivityType === "Streaming") {

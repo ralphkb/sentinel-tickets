@@ -54,8 +54,9 @@ module.exports = {
     };
 
     const panelEmbed = await configEmbed("panelEmbed", defaultValues);
+    const panelMethod = config.panelMethod || "Buttons";
 
-    if (config.panelMethod === "Buttons") {
+    if (panelMethod === "Buttons") {
       // Creating the buttons, action rows and more
       const buttons = [];
 
@@ -99,7 +100,7 @@ module.exports = {
       logMessage(
         `${interaction.user.tag} sent the ticket panel in the channel #${interaction.channel.name}`,
       );
-    } else if (config.panelMethod === "Menu") {
+    } else if (panelMethod === "Menu") {
       // Create an array to hold select menu options
       const options = [];
 
@@ -123,7 +124,9 @@ module.exports = {
       // Creating the select menu with the options
       const selectMenu = new StringSelectMenuBuilder()
         .setCustomId("categoryMenu")
-        .setPlaceholder(config.menuPlaceholder)
+        .setPlaceholder(
+          config.menuPlaceholder || "Select a category to open a ticket.",
+        )
         .setMinValues(1)
         .setMaxValues(1)
         .addOptions(options);

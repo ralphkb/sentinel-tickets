@@ -4,7 +4,6 @@
 
 panelMethod: "Buttons" # The method of the panel, can be either Buttons or Menu
 menuPlaceholder: "Select a category to open a ticket." # The placeholder of the select menu
-default_embed_color: "#2FF200" # The default embed color
 rolesThatCanBlacklist: ["111111111111111111"] # The IDs of the staff roles on your server which should have access to blacklisting and unblacklisting users from creating tickets, for example ["000000000000000000", "111111111111111111"]
 transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT", note that the TXT option is limited to 400 messages
 reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
@@ -94,16 +93,8 @@ TicketCategories:
 # ==============================================
 DMUserSettings:
   enabled: true # Enable or disable sending a direct message to a user once their ticket has been deleted. It would contain the transcript and an embed.
-  embed:
-    color: "2FF200"
-    title: "Ticket Deleted"
-    description: "Your support ticket has been deleted. Here is your transcript and other information." # This description will show up on top of the other information in the DM embed.
   ratingSystem:
     enabled: false
-    embed:
-      color: "2FF200"
-      title: "Ticket Feedback & Rating"
-      description: "We value your feedback! Please take a moment to share your thoughts and rate our support system. Your rating can be between 1 and 5 stars by using the select menu below. Thank you for helping us improve."
     menu:
       emoji: "⭐"
       placeholder: "Select a Rating"
@@ -165,41 +156,12 @@ commands:
   close:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "#FF2400"
-      title: "Ticket Closed"
-      description: "This ticket was closed by **{user} ({user.tag})**" # Use {user} for the username of the staff and {user.tag} to have the staff tagged
-    LogEmbed:
-      color: "#FF2400"
-      title: "Ticket Logs | Ticket Closed"
-      field_staff: "• Closed By"
-      field_user: "• Ticket Creator"
-      field_ticket: "• Ticket"
   reopen:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "#2FF200"
-      title: "Ticket Re-Opened"
-      description: "This ticket has been re-opened by **{user} ({user.tag})**" # Use {user} for the username of the staff and {user.tag} to have the staff tagged
-    LogEmbed:
-      color: "#2FF200"
-      title: "Ticket Logs | Ticket Re-Opened"
-      field_staff: "• Re-Opened By"
-      field_user: "• Ticket Creator"
-      field_ticket: "• Ticket"
   delete:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "#FF0000"
-      description: "Deleting ticket in {time} seconds" # Use {time} for the time in seconds
-    LogEmbed:
-      color: "#FF0000"
-      title: "Ticket Logs | Ticket Force Deleted"
-      field_staff: "• Deleted By"
-      field_user: "• Ticket Creator"
-      field_ticket: "• Ticket"
   panel:
     enabled: true
     permission: "ManageChannels"
@@ -258,42 +220,6 @@ unclaimButton:
   style: "Danger" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
 
 # ==============================================
-# Re-Open DM embed
-# ==============================================
-
-# In this section you can adjust settings related to the embed that gets sent in a user's DMs if their ticket has been re-opened
-reopenDM:
-  enabled: false # Enable or disable the DM embed
-  embed:
-    color: "#2FF200" # The color of the embed
-    title: "Ticket Re-Opened" # The title of the embed
-    description: "Your ticket **#{ticketName}** has been reopened by {user} in **{server}**." # You can use {ticketName} for the name of the ticket, {user} for the name of the user who reopened the ticket, {server} for your server name & \n for a new line
-
-# ==============================================
-# Close DM embed
-# ==============================================
-
-# In this section you can adjust settings related to the embed that gets sent in a user's DMs if their ticket has been closed
-closeDM:
-  enabled: false # Enable or disable the DM embed
-  embed:
-    color: "#FF0000" # The color of the embed
-    title: "Ticket Closed" # The title of the embed
-    description: "Your ticket **#{ticketName}** has been closed by {user} in **{server}**." # You can use {ticketName} for the name of the ticket, {user} for the name of the user who reopened the ticket, {server} for your server name & \n for a new line
-
-# ==============================================
-# Alert DM embed
-# ==============================================
-
-# In this section you can adjust settings related to the embed that gets sent in a user's DMs when a staff uses the alert command in their ticket
-alertDM:
-  enabled: false # Enable or disable the DM embed
-  embed:
-    color: "#FF0000" # The color of the embed
-    title: "Ticket Close Notification" # The title of the embed
-    description: "Your ticket **#{ticketName}** in **{server}** will be closed soon if no response has been received." # You can use {ticketName} for the name of the ticket, {server} for your server name & \n for a new line
-
-# ==============================================
 # Working Hours Settings
 # ==============================================
 
@@ -302,15 +228,28 @@ workingHours:
   enabled: false # Enable or disable the working hours feature
   timezone: "Europe/Paris" # The timezone of the working hours, options on this link should work: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   min: "09:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
-  max: "17:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
+  max: "17:00" # The maximum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
   blockTicketCreation: true # Enable or disable the blocking of ticket creation outside the working hours
-  blockTicketEmbed:
-    embed_color: "#FF0000" # The color of the embed
-    embed_title: "Working Hours" # The title of the embed
-    embed_description: "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}." # The message displayed when the ticket creation is blocked, use {openingTime} for the opening time, {closingTime} for the closing time and {now} for the current time
   addField: true # If working hours is enabled, this option will enable or disable the addition of the working hours field to the ticket creation embed
   fieldTitle: "Working Hours" # The title of the working hours field
   fieldValue: "> {openingTime} to {closingTime}" # The value of the working hours field, use {openingTime} for the opening time and {closingTime} for the closing time
+
+# The embed that is sent when the ticket creation is blocked due to being outside the working hours
+workingHoursEmbed:
+  color: "#FF0000"
+  title: "Working Hours"
+  description: "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}." # The message displayed when the ticket creation is blocked, use {openingTime} for the opening time, {closingTime} for the closing time and {now} for the current time
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
 
 # ==============================================
 # Log channels
@@ -342,6 +281,54 @@ logs:
 # NOTE: While configuring embed options, you can leave it as an empty string to not use the option or set it to anything you want.
 # By deleting an option entirely from this part of the config, the bot will try to fallback to a default value otherwise it will skip the option.
 # For example, if you remove the thumbnail option, the bot will use the default thumbnail if available, otherwise no thumbnail will be added.
+
+# The embed that is sent when a new ticket is created, with the questions included
+# For this embed, the options that you do not find here are most likely unique to each category and configured in the category settings above
+ticketOpenEmbedEmbed:
+  title: "" # Keep it empty to use the author field as the title based on your configured title in the category settings
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+
+# Log embed for newly created tickets
+logTicketOpenEmbedEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Created"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_creator: "• Ticket Creator"
+  field_ticket: "• Ticket"
+
+# New ticket embed that is sent to the user when they open a new ticket, directing them to it
+newTicketEmbed:
+  color: "#2FF200"
+  title: "Ticket Created!"
+  description: "Your new ticket ({channel}) has been created, **{user}**!" # Use {channel} for the name of the new created ticket and {user} for the name of the user who created the ticket
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
 
 # Panel command embed
 panelEmbed:
@@ -787,6 +774,298 @@ logUnclaimedEmbed:
   field_staff: "• Staff"
   field_ticket: "• Ticket"
 
+# Close ticket embed
+closeEmbed:
+  color: "#FF2400"
+  title: "Ticket Closed"
+  description: "This ticket was closed by **{user} ({user.tag})**" # Use {user} for the username of the staff and {user.tag} to have the staff tagged
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for closing tickets
+logCloseEmbed:
+  color: "#FF2400"
+  title: "Ticket Logs | Ticket Closed"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Closed By"
+  field_user: "• Ticket Creator"
+  field_ticket: "• Ticket"
+
+# Reopen ticket embed
+reopenEmbed:
+  color: "#2FF200"
+  title: "Ticket Re-Opened"
+  description: "This ticket has been re-opened by **{user} ({user.tag})**" # Use {user} for the username of the staff and {user.tag} to have the staff tagged
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for reopening tickets
+logReopenEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Re-Opened"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Re-Opened By"
+  field_user: "• Ticket Creator"
+  field_ticket: "• Ticket"
+
+# Delete ticket embed
+deleteEmbed:
+  color: "#FF0000"
+  title: ""
+  description: "Deleting ticket in {time} seconds" # Use {time} for the time in seconds
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for deleting tickets
+logDeleteEmbed:
+  color: "#FF0000"
+  title: "Ticket Logs | Ticket Deleted"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Deleted By"
+  field_user: "• Ticket Creator"
+  field_ticket: "• Ticket"
+
+# Embed for manual transcripts via the button or command
+transcriptEmbed:
+  color: "#2FF200"
+  title: "Ticket Transcript"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_creator: "Ticket Creator"
+  field_ticket: "Ticket Name"
+  field_category: "Category"
+
+# Stats command embed
+statsEmbed:
+  color: "#2FF200"
+  title: "📊 Statistics"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Ping command embed
+pingEmbed:
+  color: "#2FF200"
+  title: "Ping & Latency"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# ==============================================
+# DM Embeds Locale
+# ==============================================
+
+# The embed that gets sent in a user's DMs if their ticket has been deleted and if the feature is enabled in the DM user settings section above
+deleteDMEmbed:
+  color: "#2FF200"
+  title: "Ticket Deleted"
+  description: "Your support ticket has been deleted. Here is your transcript and other information." # This description will show up on top of the other information in the DM embed.
+  timestamp: false
+  URL: ""
+  image: ""
+#  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# The embed that gets sent in a user's DMs with the delete DM Embed if the rating system is enabled in the DM user settings
+ratingDMEmbed:
+  color: "#2FF200"
+  title: "Ticket Feedback & Rating"
+  description: "We value your feedback! Please take a moment to share your thoughts and rate our support system. Your rating can be between 1 and 5 stars by using the select menu below. Thank you for helping us improve."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+# The footer option is not available for this specific embed only. Keep it commented.  
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for rating and feedback system
+logRatingEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Feedback"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# The embed that gets sent in a user's DMs when a staff uses the alert command in their ticket
+alertDMEmbed:
+  enabled: false
+  color: "#FF0000"
+  title: "Ticket Close Notification"
+  description: "Your ticket **#{ticketName}** in **{server}** will be closed soon if no response has been received." # You can use {ticketName} for the name of the ticket, {server} for your server name & \n for a new line
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# The embed that gets sent in a user's DMs if their ticket has been closed
+closeDMEmbed:
+  enabled: false
+  color: "#FF0000"
+  title: "Ticket Closed"
+  description: "Your ticket **#{ticketName}** has been closed by {user} in **{server}**." # You can use {ticketName} for the name of the ticket, {user} for the name of the user who reopened the ticket, {server} for your server name & \n for a new line
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# The embed that gets sent in a user's DMs if their ticket has been re-opened
+reopenDMEmbed:
+  enabled: false
+  color: "#2FF200"
+  title: "Ticket Re-Opened"
+  description: "Your ticket **#{ticketName}** has been reopened by {user} in **{server}**." # You can use {ticketName} for the name of the ticket, {user} for the name of the user who reopened the ticket, {server} for your server name & \n for a new line
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# The embed that gets sent in a channel when the bot fails to DM a user
+dmErrorEmbed:
+  color: "#FF0000"
+  title: "DMs Disabled"
+  description: "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings)."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
 # ==============================================
 # Misc Locale
 # ==============================================
@@ -796,18 +1075,34 @@ errors:
   not_allowed: "You are not allowed to use this command!" # Error displayed when a user tries to use a staff-only command
   blacklisted: "You are blacklisted from creating tickets at this time." # Error displayed when a user tries to create a ticket but is blacklisted
 
-cooldownEmbed:
+cooldownEmbed:            
+  color: "#FF0000"
   title: "Cooldown"
-  color: "#FF0000"
   description: "You have to wait **{time}** seconds before clicking this button!" # Use {time} for the remaining cooldown time in seconds
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
 
-maxOpenTicketsEmbed:
-  title: "Maximum Tickets Open"
+maxOpenTicketsEmbed:                            
   color: "#FF0000"
+  title: "Maximum Tickets Open"
   description: "You may only have **{max} ticket(s)** open at a time." # Use {max} for the maximum number of tickets that can be opened at once
-
-DMErrors:
-  embed:
-    color: "#FF0000"
-    title: "DMs Disabled"
-    description: "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings)."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""   
