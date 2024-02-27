@@ -273,12 +273,15 @@ logs:
   ticketTransfer: ""
   ticketFeedback: ""
   DMErrors: ""
+  blacklistAdd: ""
+  blacklistRemove: ""
 
 # ==============================================
 # Embeds Locale
 # ==============================================
 
 # NOTE: While configuring embed options, you can leave it as an empty string to not use the option or set it to anything you want.
+# Options such as color and description may fallback to a default value since otherwise an error would be generated in some cases.
 # By deleting an option entirely from this part of the config, the bot will try to fallback to a default value otherwise it will skip the option.
 # For example, if you remove the thumbnail option, the bot will use the default thumbnail if available, otherwise no thumbnail will be added.
 
@@ -368,7 +371,7 @@ blacklistFailedEmbed:
 blacklistSuccessEmbed:
   color: "#2FF200"
   title: ""
-  description: "**{target} ({target.tag})** has been added to the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  description: "**{target} ({target.tag})** has been added to the blacklist.\nReason: **{reason}**" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role and {reason} for the reason
   timestamp: false
   URL: ""
   image: ""
@@ -381,11 +384,31 @@ blacklistSuccessEmbed:
     iconURL: ""
     url: ""
 
+# Log embed for User and role blacklist command
+logBlacklistEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Target Blacklisted"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_target: "• Target"
+  field_reason: "• Reason"
+
 # Unblacklist command embed when it fails to unblacklist a user or role
 unblacklistFailedEmbed:
   color: "#2FF200"
   title: ""
-  description: "" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  description: "**{target} ({target.tag})** is not currently in the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
   timestamp: false
   URL: ""
   image: ""
@@ -402,7 +425,45 @@ unblacklistFailedEmbed:
 unblacklistSuccessEmbed:
   color: "#2FF200"
   title: ""
-  description: "**{target} ({target.tag})** has been removed from the blacklist." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  description: "**{target} ({target.tag})** has been removed from the blacklist.\nReason: **{reason}**" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role and {reason} for the reason
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for User and role unblacklist command
+logUnblacklistEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Target Unblacklisted"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_target: "• Target"
+  field_reason: "• Reason"
+
+# Blacklist list command embed
+blacklistListEmbed:
+  color: "#2FF200"
+  title: "Blacklisted {type} - Page {page}"
+# Description is the content of the blacklist list command, so this option will not work for this embed.  
+#  description: ""
   timestamp: false
   URL: ""
   image: ""
@@ -1075,7 +1136,7 @@ errors:
   not_allowed: "You are not allowed to use this command!" # Error displayed when a user tries to use a staff-only command
   blacklisted: "You are blacklisted from creating tickets at this time." # Error displayed when a user tries to create a ticket but is blacklisted
 
-cooldownEmbed:            
+cooldownEmbed:
   color: "#FF0000"
   title: "Cooldown"
   description: "You have to wait **{time}** seconds before clicking this button!" # Use {time} for the remaining cooldown time in seconds
@@ -1091,7 +1152,7 @@ cooldownEmbed:
     iconURL: ""
     url: ""
 
-maxOpenTicketsEmbed:                            
+maxOpenTicketsEmbed:
   color: "#FF0000"
   title: "Maximum Tickets Open"
   description: "You may only have **{max} ticket(s)** open at a time." # Use {max} for the maximum number of tickets that can be opened at once
@@ -1105,4 +1166,4 @@ maxOpenTicketsEmbed:
   author:
     name: ""
     iconURL: ""
-    url: ""   
+    url: ""

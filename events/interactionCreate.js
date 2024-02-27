@@ -23,6 +23,7 @@ const {
   saveTranscriptTxt,
   checkSupportRole,
   configEmbed,
+  blacklistDB,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -37,7 +38,6 @@ const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction) {
-    const blacklistedUsers = await mainDB.get("blacklistedUsers");
     const cooldown = config.buttons_cooldown * 1000;
     const cooldownEnd =
       cooldown - (Date.now() - buttonCooldown.get(interaction.user.id));
@@ -169,10 +169,18 @@ module.exports = {
           });
 
         const userRoles = interaction.member.roles.cache.map((role) => role.id);
-        if (
-          blacklistedUsers.includes(interaction.user.id) ||
-          userRoles.some((roleId) => blacklistedUsers.includes(roleId))
-        ) {
+        const isUserBlacklisted = await blacklistDB.get(
+          `user-${interaction.user.id}`,
+        );
+        let isRoleBlacklisted = false;
+        for (const roleId of userRoles) {
+          if (await blacklistDB.get(`role-${roleId}`)) {
+            isRoleBlacklisted = true;
+            break;
+          }
+        }
+
+        if (isUserBlacklisted || isRoleBlacklisted) {
           return interaction.reply({
             content: config.errors.blacklisted,
             ephemeral: true,
@@ -390,10 +398,18 @@ module.exports = {
       }
     } else if (interaction.isButton()) {
       const userRoles = interaction.member.roles.cache.map((role) => role.id);
-      if (
-        blacklistedUsers.includes(interaction.user.id) ||
-        userRoles.some((roleId) => blacklistedUsers.includes(roleId))
-      ) {
+      const isUserBlacklisted = await blacklistDB.get(
+        `user-${interaction.user.id}`,
+      );
+      let isRoleBlacklisted = false;
+      for (const roleId of userRoles) {
+        if (await blacklistDB.get(`role-${roleId}`)) {
+          isRoleBlacklisted = true;
+          break;
+        }
+      }
+
+      if (isUserBlacklisted || isRoleBlacklisted) {
         return interaction.reply({
           content: config.errors.blacklisted,
           ephemeral: true,

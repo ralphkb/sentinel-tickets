@@ -27,6 +27,7 @@ if (!fs.existsSync(dataDir)) {
 
 const mainDB = new QuickDB({ filePath: "data/main.sqlite" });
 const ticketsDB = new QuickDB({ filePath: "data/tickets.sqlite" });
+const blacklistDB = new QuickDB({ filePath: "data/blacklist.sqlite" });
 const date = new Date();
 const options = {
   timeZoneName: "short",
@@ -61,11 +62,6 @@ const timeString = date.toLocaleString("en-US", options);
   // Initialize ratings to an empty array if it doesn't exist
   if (!(await mainDB.has("ratings"))) {
     await mainDB.set("ratings", []);
-  }
-
-  // Initialize blacklistedUsers to an empty array if it doesn't exist
-  if (!(await mainDB.has("blacklistedUsers"))) {
-    await mainDB.set("blacklistedUsers", []);
   }
 })();
 
@@ -152,18 +148,11 @@ async function checkSupportRole(interaction) {
 async function configEmbed(configPath, defaultValues = {}) {
   const embed = new EmbedBuilder();
 
-  if (
-    config[configPath].description !== "" &&
-    config[configPath].description !== null
-  ) {
-    embed.setDescription(
-      config[configPath].description || defaultValues.description,
-    );
-  }
+  embed.setDescription(
+    config[configPath].description || defaultValues.description || null,
+  );
 
-  if (config[configPath].color !== "" && config[configPath].color !== null) {
-    embed.setColor(config[configPath].color || defaultValues.color);
-  }
+  embed.setColor(config[configPath].color || defaultValues.color || "#2FF200");
 
   if (config[configPath].title !== "" && config[configPath].title !== null) {
     embed.setTitle(config[configPath].title || defaultValues.title);
@@ -429,6 +418,7 @@ module.exports = {
   formatTime,
   checkSupportRole,
   configEmbed,
+  blacklistDB,
 };
 
 // Holding commands cooldown data
