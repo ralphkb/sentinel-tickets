@@ -70,6 +70,25 @@ module.exports = {
       embeds: [alertEmbed],
       components: [ticketAlertRow],
     });
+
+    if (config.alertReply.enabled) {
+      const filter = (m) => m.author.id === user.id;
+      const collector = interaction.channel.createMessageCollector({
+        filter,
+        max: 1,
+        time: 120000,
+      });
+
+      collector.on("collect", () => {
+        interaction.deleteReply();
+        interaction.channel.send(
+          config.alertReply.reply ||
+            "The user replied to the alert and seems to be available.",
+        );
+        collector.stop();
+      });
+    }
+
     if (config.alertDMEmbed.enabled) {
       const defaultDMValues = {
         color: "#FF0000",

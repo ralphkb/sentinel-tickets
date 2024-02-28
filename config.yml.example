@@ -20,6 +20,9 @@ status:
   botActivityType: "Watching" # The activity type of the bot, can be "Playing", "Streaming", "Listening", "Watching", "Competing"
   streamingOptionURL: "" # The URL in case you use the streaming option
   botStatus: "online" # The status of the bot, can be "online", "idle", "dnd", "invisible", note that the streaming type requires the "online" status
+alertReply:
+  enabled: false # Enable or disable listening to the ticket creator reply for 2 minutes after the alert is sent.
+  reply: "The user replied to the alert and seems to be available." # The reply that will be sent in the ticket if the ticket creator is active and answered
 
 # ==============================================
 # Ticket Category settings
