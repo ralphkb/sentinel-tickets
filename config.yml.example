@@ -21,7 +21,8 @@ status:
   streamingOptionURL: "" # The URL in case you use the streaming option
   botStatus: "online" # The status of the bot, can be "online", "idle", "dnd", "invisible", note that the streaming type requires the "online" status
 alertReply:
-  enabled: false # Enable or disable listening to the ticket creator reply for 2 minutes after the alert is sent.
+  enabled: false # Enable or disable listening to the ticket creator reply for the amount of time specified in the config below, after the alert is sent.
+  time: "120" # The amount of time in seconds, avoid using values which are too high
   reply: "The user replied to the alert and seems to be available." # The reply that will be sent in the ticket if the ticket creator is active and answered
 
 # ==============================================

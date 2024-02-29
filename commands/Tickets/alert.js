@@ -73,10 +73,11 @@ module.exports = {
 
     if (config.alertReply.enabled) {
       const filter = (m) => m.author.id === user.id;
+      const collectorTimeInSeconds = config.alertReply.time || 120;
       const collector = interaction.channel.createMessageCollector({
         filter,
         max: 1,
-        time: 120000,
+        time: collectorTimeInSeconds * 1000,
       });
 
       collector.on("collect", () => {
