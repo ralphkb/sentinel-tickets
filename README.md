@@ -54,6 +54,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Option to select a channel for each log event to be sent to.
 - Precise and organized logs of errors and all ticket events in a logs.txt file.
 - Option to edit the activity of the bot.
+- Blacklist system with the ability to add users or roles with an optional reason and view them in a list.
 - Multiple Commands: Efficiently manage tickets with various commands.
     - Send the tickets panel in any channel
     - Add Users or Roles to a ticket
@@ -63,7 +64,6 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Close Ticket to archive them until deleting them
     - Delete Tickets
     - Re-Open Tickets
-    - Blacklist Users or Roles
     - Save Transcripts
     - Claim/Unclaim Tickets
     - Move tickets to another category
