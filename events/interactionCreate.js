@@ -87,10 +87,27 @@ module.exports = {
     }
 
     const userTimezone = config.workingHours.timezone;
-    const openingTime = config.workingHours.min;
-    const closingTime = config.workingHours.max;
-
+    const workingHours = {};
+    config.workingHours.days.forEach((dayConfig) => {
+      workingHours[dayConfig.day] = {
+        min: dayConfig.min,
+        max: dayConfig.max,
+        blockTicketCreation: dayConfig.blockTicketCreation,
+      };
+    });
     const userCurrentTime = moment.tz(userTimezone);
+    const dayToday = userCurrentTime.format("dddd").toLowerCase();
+    const openingTime =
+      workingHours[dayToday]?.min || config.workingHours.default.min;
+    const closingTime =
+      workingHours[dayToday]?.max || config.workingHours.default.max;
+    let blockTicketCreation;
+    if (workingHours[dayToday]?.blockTicketCreation !== undefined) {
+      blockTicketCreation = workingHours[dayToday].blockTicketCreation;
+    } else {
+      blockTicketCreation = config.workingHours.default.blockTicketCreation;
+    }
+
     const openingTimeToday = userCurrentTime
       .clone()
       .startOf("day")
@@ -193,14 +210,8 @@ module.exports = {
             ephemeral: true,
           });
 
-        if (
-          timeRegex.test(config.workingHours.min) &&
-          timeRegex.test(config.workingHours.max)
-        ) {
-          if (
-            config.workingHours.enabled &&
-            config.workingHours.blockTicketCreation
-          ) {
+        if (timeRegex.test(openingTime) && timeRegex.test(closingTime)) {
+          if (config.workingHours.enabled && blockTicketCreation) {
             if (
               userCurrentTime.isBefore(openingTimeToday) ||
               userCurrentTime.isAfter(closingTimeToday)
@@ -419,14 +430,8 @@ module.exports = {
       if (buttonCooldown.has(interaction.user.id))
         return interaction.reply({ embeds: [cooldownEmbed], ephemeral: true });
 
-      if (
-        timeRegex.test(config.workingHours.min) &&
-        timeRegex.test(config.workingHours.max)
-      ) {
-        if (
-          config.workingHours.enabled &&
-          config.workingHours.blockTicketCreation
-        ) {
+      if (timeRegex.test(openingTime) && timeRegex.test(closingTime)) {
+        if (config.workingHours.enabled && blockTicketCreation) {
           if (
             userCurrentTime.isBefore(openingTimeToday) ||
             userCurrentTime.isAfter(closingTimeToday)

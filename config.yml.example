@@ -231,9 +231,39 @@ unclaimButton:
 workingHours:
   enabled: false # Enable or disable the working hours feature
   timezone: "Europe/Paris" # The timezone of the working hours, options on this link should work: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-  min: "09:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
-  max: "17:00" # The maximum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
-  blockTicketCreation: true # Enable or disable the blocking of ticket creation outside the working hours
+  default: # The default working hours for any day that is not specified below
+    min: "09:00"
+    max: "17:00"
+    blockTicketCreation: true
+  days:
+    - day: "monday" # The day of the week, the options are "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
+      min: "09:00" # The minimum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
+      max: "17:00" # The maximum hour, make sure to use the 24 hour format HH:MM, examples: 00:59, 05:00, 17:00, 23:59 don't forget to include the first 0.
+      blockTicketCreation: true # Enable or disable the blocking of ticket creation outside the working hours
+    - day: "tuesday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "wednesday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "thursday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "friday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "saturday"
+      min: "09:00"
+      max: "12:00"
+      blockTicketCreation: true
+    - day: "sunday"
+      min: "09:00"
+      max: "12:00"
+      blockTicketCreation: true						   
   addField: true # If working hours is enabled, this option will enable or disable the addition of the working hours field to the ticket creation embed
   fieldTitle: "Working Hours" # The title of the working hours field
   fieldValue: "> {openingTime} to {closingTime}" # The value of the working hours field, use {openingTime} for the opening time and {closingTime} for the closing time
