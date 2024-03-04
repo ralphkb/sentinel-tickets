@@ -89,7 +89,7 @@ module.exports = {
     const userTimezone = config.workingHours.timezone;
     const workingHours = {};
     config.workingHours.days.forEach((dayConfig) => {
-      workingHours[dayConfig.day] = {
+      workingHours[dayConfig.day.toLowerCase()] = {
         min: dayConfig.min,
         max: dayConfig.max,
         blockTicketCreation: dayConfig.blockTicketCreation,
