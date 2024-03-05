@@ -88,6 +88,7 @@ config.TicketCategories.forEach((category) => {
     color,
     description,
     ticketName,
+    ticketTopic,
     modalTitle,
     questions,
   } = category;
@@ -122,6 +123,7 @@ config.TicketCategories.forEach((category) => {
     color,
     description,
     ticketName,
+    ticketTopic,
     modalTitle,
     questions: extractedQuestions,
   };

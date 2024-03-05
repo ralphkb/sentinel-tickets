@@ -1659,7 +1659,9 @@ module.exports = {
                 name: channelName,
                 type: ChannelType.GuildText,
                 parent: category.categoryID,
-                topic: `Ticket Creator: ${sanitizeInput(interaction.user.tag)} | Ticket Type: ${category.name}`,
+                topic: category.ticketTopic
+                  .replace(/\{user\}/g, interaction.user.tag)
+                  .replace(/\{type\}/g, category.name),
                 permissionOverwrites: [
                   {
                     id: interaction.guild.id,
