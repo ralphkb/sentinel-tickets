@@ -225,6 +225,10 @@ unclaimButton:
   emoji: "👋" # The emoji of the button
   style: "Danger" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
 
+newTicketButton:
+  label: "Click Here" # The label of the button
+  emoji: "🎫" # The emoji of the button
+
 # ==============================================
 # Working Hours Settings
 # ==============================================

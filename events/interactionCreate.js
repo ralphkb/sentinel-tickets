@@ -1751,8 +1751,8 @@ module.exports = {
                       new ButtonBuilder()
                         .setStyle(ButtonStyle.Link)
                         .setURL(`${channel.url}`)
-                        .setLabel("Click Here")
-                        .setEmoji("🎫"),
+                        .setLabel(config.newTicketButton.label)
+                        .setEmoji(config.newTicketButton.emoji),
                     );
                     await interaction.editReply({
                       embeds: [newTicketEmbed],
