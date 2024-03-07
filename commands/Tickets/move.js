@@ -35,7 +35,8 @@ module.exports = {
   async execute(interaction) {
     if (!(await ticketsDB.has(interaction.channel.id))) {
       return interaction.reply({
-        content: config.errors.not_in_a_ticket,
+        content:
+          config.errors.not_in_a_ticket || "You are not in a ticket channel!",
         ephemeral: true,
       });
     }
@@ -43,7 +44,8 @@ module.exports = {
     const hasSupportRole = await checkSupportRole(interaction);
     if (!hasSupportRole) {
       return interaction.reply({
-        content: config.errors.not_allowed,
+        content:
+          config.errors.not_allowed || "You are not allowed to use this!",
         ephemeral: true,
       });
     }

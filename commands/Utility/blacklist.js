@@ -93,7 +93,8 @@ module.exports = {
       )
     ) {
       return interaction.reply({
-        content: config.errors.not_allowed,
+        content:
+          config.errors.not_allowed || "You are not allowed to use this!",
         ephemeral: true,
       });
     }

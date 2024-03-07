@@ -199,7 +199,9 @@ module.exports = {
 
         if (isUserBlacklisted || isRoleBlacklisted) {
           return interaction.reply({
-            content: config.errors.blacklisted,
+            content:
+              config.errors.blacklisted ||
+              "You are blacklisted from creating tickets at this time.",
             ephemeral: true,
           });
         }
@@ -422,7 +424,9 @@ module.exports = {
 
       if (isUserBlacklisted || isRoleBlacklisted) {
         return interaction.reply({
-          content: config.errors.blacklisted,
+          content:
+            config.errors.blacklisted ||
+            "You are blacklisted from creating tickets at this time.",
           ephemeral: true,
         });
       }
@@ -560,7 +564,8 @@ module.exports = {
         const hasSupportRole = await checkSupportRole(interaction);
         if (!hasSupportRole) {
           return interaction.reply({
-            content: config.errors.not_allowed,
+            content:
+              config.errors.not_allowed || "You are not allowed to use this!",
             ephemeral: true,
           });
         }
@@ -640,7 +645,8 @@ module.exports = {
           const hasSupportRole = await checkSupportRole(interaction);
           if (!hasSupportRole) {
             return interaction.reply({
-              content: config.errors.not_allowed,
+              content:
+                config.errors.not_allowed || "You are not allowed to use this!",
               ephemeral: true,
             });
           }
@@ -822,7 +828,8 @@ module.exports = {
         const hasSupportRole = await checkSupportRole(interaction);
         if (!hasSupportRole) {
           return interaction.reply({
-            content: config.errors.not_allowed,
+            content:
+              config.errors.not_allowed || "You are not allowed to use this!",
             ephemeral: true,
           });
         }
@@ -1062,7 +1069,8 @@ module.exports = {
           const hasSupportRole = await checkSupportRole(interaction);
           if (!hasSupportRole) {
             return interaction.reply({
-              content: config.errors.not_allowed,
+              content:
+                config.errors.not_allowed || "You are not allowed to use this!",
               ephemeral: true,
             });
           }
@@ -1276,7 +1284,8 @@ module.exports = {
         const hasSupportRole = await checkSupportRole(interaction);
         if (!hasSupportRole) {
           return interaction.reply({
-            content: config.errors.not_allowed,
+            content:
+              config.errors.not_allowed || "You are not allowed to use this!",
             ephemeral: true,
           });
         }
@@ -1615,13 +1624,17 @@ module.exports = {
 
           if (config.workingHours.enabled && config.workingHours.addField) {
             ticketOpenEmbedEmbed.addFields({
-              name: config.workingHours.fieldTitle,
-              value: `${config.workingHours.fieldValue}`
-                .replace(/\{openingTime\}/g, `<t:${openingTimeToday.unix()}:t>`)
-                .replace(
-                  /\{closingTime\}/g,
-                  `<t:${closingTimeToday.unix()}:t>`,
-                ),
+              name: config.workingHours.fieldTitle || "Working Hours",
+              value:
+                `${config.workingHours.fieldValue || "> {openingTime} to {closingTime}"}`
+                  .replace(
+                    /\{openingTime\}/g,
+                    `<t:${openingTimeToday.unix()}:t>`,
+                  )
+                  .replace(
+                    /\{closingTime\}/g,
+                    `<t:${closingTimeToday.unix()}:t>`,
+                  ),
             });
           }
           const closeButton = new ButtonBuilder()

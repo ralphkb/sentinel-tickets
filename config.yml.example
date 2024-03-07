@@ -1173,7 +1173,7 @@ dmErrorEmbed:
 
 errors:
   not_in_a_ticket: "You are not in a ticket channel!" # Error displayed when a user tries to use a command in a non-ticket channel
-  not_allowed: "You are not allowed to use this command!" # Error displayed when a user tries to use a staff-only command
+  not_allowed: "You are not allowed to use this!" # Error displayed when a user tries to use a staff-only command
   blacklisted: "You are blacklisted from creating tickets at this time." # Error displayed when a user tries to create a ticket but is blacklisted
 
 cooldownEmbed:
