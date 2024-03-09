@@ -50,6 +50,7 @@ TicketCategories:
     description: "Welcome to your report ticket! Please be patient while a staff member responds to your report." # The description of the embed in the created ticket, right above the questions fields
     ticketName: "TICKETCOUNT" # Can be USERNAME or TICKETCOUNT, will be called name-ticketName such as "report-12348"
     ticketTopic: "Ticket Creator: {user} | Ticket Type: {type}" # The topic of the ticket channel
+    slowmode: "0" # The slowmode of the ticket channel in seconds, keep it 0 if you don't want a slowmode and do not use negative values
     modalTitle: "User Report Format" # The title of the modal
     questions: # Maximum number of questions is 5, you should at least keep 1 question since that information will always help you in any ticket
       - label: "What is your username?"
@@ -86,6 +87,7 @@ TicketCategories:
     description: "Welcome to your other ticket! Please be patient while a staff member responds to your questions." # The description of the embed in the created ticket, right above the questions fields
     ticketName: "USERNAME" # Can be USERNAME or TICKETCOUNT
     ticketTopic: "Ticket Creator: {user} | Ticket Type: {type}" # The topic of the ticket channel
+    slowmode: "0" # The slowmode of the ticket channel in seconds, keep it 0 if you don't want a slowmode and do not use negative values
     modalTitle: "Other Ticket Format" # The title of the modal
     questions: # Maximum number of questions is 5, you should at least keep 1 question since that information will always help you in any ticket
       - label: "What is your question?"

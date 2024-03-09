@@ -1672,6 +1672,7 @@ module.exports = {
                 name: channelName,
                 type: ChannelType.GuildText,
                 parent: category.categoryID,
+                rateLimitPerUser: category.slowmode || 0,
                 topic: category.ticketTopic
                   .replace(/\{user\}/g, interaction.user.tag)
                   .replace(/\{type\}/g, category.name),

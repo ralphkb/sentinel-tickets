@@ -89,6 +89,7 @@ config.TicketCategories.forEach((category) => {
     description,
     ticketName,
     ticketTopic,
+    slowmode,
     modalTitle,
     questions,
   } = category;
@@ -124,6 +125,7 @@ config.TicketCategories.forEach((category) => {
     description,
     ticketName,
     ticketTopic,
+    slowmode,
     modalTitle,
     questions: extractedQuestions,
   };
