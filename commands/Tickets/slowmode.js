@@ -46,6 +46,12 @@ module.exports = {
     }
 
     const time = interaction.options.getInteger("time");
+    if (time < 0) {
+      return interaction.reply({
+        content: "The specified time must be a positive number.",
+        ephemeral: true,
+      });
+    }
     const currentSlowmode = interaction.channel.rateLimitPerUser;
 
     if (currentSlowmode === time) {
