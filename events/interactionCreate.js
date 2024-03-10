@@ -38,7 +38,10 @@ const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction) {
-    const cooldown = config.buttons_cooldown * 1000;
+    const cooldown =
+      config.buttons_cooldown !== undefined
+        ? config.buttons_cooldown * 1000
+        : 5000;
     const cooldownEnd =
       cooldown - (Date.now() - buttonCooldown.get(interaction.user.id));
     const timeReadable = Math.floor(cooldownEnd / 1000);
@@ -62,7 +65,7 @@ module.exports = {
         cooldownEmbed.data.description.replace(/\{time\}/g, `${timeReadable}`),
       );
     }
-    const maxOpenTickets = config.maxOpenTickets;
+    const maxOpenTickets = config.maxOpenTickets || 1;
     const defaultValues = {
       color: "#FF0000",
       title: "Maximum Tickets Open",
@@ -136,7 +139,7 @@ module.exports = {
 
       const now = Date.now();
       const timestamps = cooldowns.get(command.data.name);
-      const defaultCooldownDuration = config.commands_cooldown;
+      const defaultCooldownDuration = config.commands_cooldown || 5;
       const cooldownAmount =
         (command.cooldown ?? defaultCooldownDuration) * 1000;
 
@@ -575,9 +578,10 @@ module.exports = {
           await ticketsDB.get(`${interaction.channel.id}.userID`),
         );
         let attachment;
-        if (config.transcriptType === "HTML") {
+        const transcriptType = config.transcriptType || "HTML";
+        if (transcriptType === "HTML") {
           attachment = await saveTranscript(interaction, null, true);
-        } else if (config.transcriptType === "TXT") {
+        } else if (transcriptType === "TXT") {
           attachment = await saveTranscriptTxt(interaction);
         }
 
@@ -897,7 +901,7 @@ module.exports = {
           `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
         );
 
-        const deleteTicketTime = config.deleteTicketTime;
+        const deleteTicketTime = config.deleteTicketTime || 5;
         const deleteTime = deleteTicketTime * 1000;
 
         const defaultValues = {

@@ -97,9 +97,10 @@ module.exports = {
       });
 
     let attachment;
-    if (config.transcriptType === "HTML") {
+    const transcriptType = config.transcriptType || "HTML";
+    if (transcriptType === "HTML") {
       attachment = await saveTranscript(interaction);
-    } else if (config.transcriptType === "TXT") {
+    } else if (transcriptType === "TXT") {
       attachment = await saveTranscriptTxt(interaction);
     }
 
@@ -110,7 +111,7 @@ module.exports = {
       `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
     );
 
-    const deleteTicketTime = config.deleteTicketTime;
+    const deleteTicketTime = config.deleteTicketTime || 5;
     const deleteTime = deleteTicketTime * 1000;
 
     const defaultValues = {
