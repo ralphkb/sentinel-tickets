@@ -126,7 +126,10 @@ module.exports = {
         minute: closingTime.split(":")[1],
       });
 
-    if (interaction.isChatInputCommand()) {
+    if (
+      interaction.isChatInputCommand() ||
+      interaction.isContextMenuCommand()
+    ) {
       const command = client.commands.get(interaction.commandName);
 
       if (!command) return;

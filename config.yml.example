@@ -193,6 +193,11 @@ commands:
     enabled: true
     permission: "KickMembers"
 
+contextMenuCommands:
+  userInfo:
+    enabled: true
+    permission: "KickMembers"
+
 # ==============================================
 # General button settings
 # ==============================================
@@ -1034,6 +1039,23 @@ pingEmbed:
   URL: ""
   image: ""
   thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# User Info command embed
+userInfoEmbed:
+  color: "#2FF200"
+  title: "User Information"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
 #  footer:
 #    text: ""
 #    iconURL: ""
