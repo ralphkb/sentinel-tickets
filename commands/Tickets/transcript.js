@@ -61,7 +61,7 @@ module.exports = {
       timestamp: true,
       footer: {
         text: `${ticketUserID.tag}`,
-        iconURL: `${ticketUserID.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+        iconURL: `${ticketUserID.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
       },
     };
 

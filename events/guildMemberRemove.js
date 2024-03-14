@@ -36,7 +36,7 @@ module.exports = {
             timestamp: true,
             footer: {
               text: `${member.user.tag}`,
-              iconURL: `${member.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+              iconURL: `${member.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
             },
           };
 

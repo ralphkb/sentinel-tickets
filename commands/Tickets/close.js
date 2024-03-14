@@ -72,10 +72,10 @@ module.exports = {
       color: "#FF2400",
       title: "Ticket Logs | Ticket Closed",
       timestamp: true,
-      thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
       footer: {
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
       },
     };
 
@@ -140,7 +140,7 @@ module.exports = {
       timestamp: true,
       footer: {
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
       },
     };
 

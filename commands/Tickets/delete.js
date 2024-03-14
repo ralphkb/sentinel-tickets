@@ -63,10 +63,10 @@ module.exports = {
       color: "#FF0000",
       title: "Ticket Logs | Ticket Deleted",
       timestamp: true,
-      thumbnail: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+      thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
       footer: {
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
       },
     };
 

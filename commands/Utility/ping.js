@@ -23,7 +23,7 @@ module.exports = {
       timestamp: true,
       footer: {
         text: `Requested by ${interaction.user.username}`,
-        iconURL: `${interaction.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
       },
     };
 
