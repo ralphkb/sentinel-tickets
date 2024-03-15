@@ -197,6 +197,12 @@ contextMenuCommands:
   userInfo:
     enabled: true
     permission: "KickMembers"
+  blacklistAdd:
+    enabled: true
+    permission: "KickMembers"
+  blacklistRemove:
+    enabled: true
+    permission: "KickMembers"
 
 # ==============================================
 # General button settings
