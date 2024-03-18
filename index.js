@@ -63,6 +63,11 @@ const timeString = date.toLocaleString("en-US", options);
   if (!(await mainDB.has("ratings"))) {
     await mainDB.set("ratings", []);
   }
+
+  // Initialize totalMessages to 0 if it doesn't exist
+  if (!(await mainDB.has("totalMessages"))) {
+    await mainDB.set("totalMessages", 0);
+  }
 })();
 
 // Extract information from the config.yml to properly setup the ticket categories
@@ -360,6 +365,26 @@ async function saveTranscriptTxt(interaction) {
   });
 }
 
+async function countMessagesInTicket(channel, lastId = null) {
+  let messageCount = 0;
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const options = { limit: 100 };
+    if (lastId) {
+      options.before = lastId;
+    }
+
+    const messages = await channel.messages.fetch(options);
+    messageCount += messages.size;
+    lastId = messages.lastKey();
+
+    // break when there are no more messages
+    if (messages.size < 100) break;
+  }
+  return messageCount;
+}
+
 // Time formatting function
 function formatTime(seconds) {
   const d = Math.floor(seconds / 86400);
@@ -423,6 +448,7 @@ module.exports = {
   checkSupportRole,
   configEmbed,
   blacklistDB,
+  countMessagesInTicket,
 };
 
 // Holding commands cooldown data

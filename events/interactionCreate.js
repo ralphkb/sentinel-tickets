@@ -24,6 +24,7 @@ const {
   checkSupportRole,
   configEmbed,
   blacklistDB,
+  countMessagesInTicket,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -842,6 +843,7 @@ module.exports = {
         }
 
         await interaction.deferReply();
+        const totalMessages = await mainDB.get("totalMessages");
         await interaction.channel.messages
           .fetch(await ticketsDB.get(`${interaction.channel.id}.closeMsgID`))
           .then((msg) => msg.delete());
@@ -1052,6 +1054,8 @@ module.exports = {
           }
         }
 
+        const ticketMessages = await countMessagesInTicket(interaction.channel);
+        await mainDB.set("totalMessages", totalMessages + ticketMessages);
         await interaction.editReply({ embeds: [deleteEmbed] });
 
         setTimeout(async () => {

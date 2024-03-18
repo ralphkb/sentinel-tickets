@@ -23,6 +23,7 @@ module.exports = {
     const totalClaims = (await mainDB.get("totalClaims")) ?? 0;
     const totalReviews = (await mainDB.get("totalReviews")) ?? 0;
     const ratingsArray = (await mainDB.get("ratings")) ?? [];
+    const totalMessages = (await mainDB.get("totalMessages")) ?? 0;
     const averageRating =
       ratingsArray.reduce((total, current) => total + current, 0) /
       ratingsArray.length;
@@ -50,7 +51,7 @@ module.exports = {
     statsEmbed.addFields([
       {
         name: "🎫 Tickets",
-        value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${totalOpenTickets}\n> Total Claimed Tickets: ${totalClaims}`,
+        value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${totalOpenTickets}\n> Total Claimed Tickets: ${totalClaims}\n> Total Messages: ${totalMessages}`,
       },
       {
         name: "⭐ Reviews",

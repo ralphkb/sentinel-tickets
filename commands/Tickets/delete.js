@@ -19,6 +19,7 @@ const {
   saveTranscriptTxt,
   checkSupportRole,
   configEmbed,
+  countMessagesInTicket,
 } = require("../../index.js");
 
 module.exports = {
@@ -49,6 +50,7 @@ module.exports = {
     }
 
     await interaction.deferReply();
+    const totalMessages = await mainDB.get("totalMessages");
     let ticketUserID = client.users.cache.get(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
@@ -254,6 +256,8 @@ module.exports = {
       }
     }
 
+    const ticketMessages = await countMessagesInTicket(interaction.channel);
+    await mainDB.set("totalMessages", totalMessages + ticketMessages);
     await interaction.editReply({ embeds: [deleteEmbed] });
 
     setTimeout(async () => {
