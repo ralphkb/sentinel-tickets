@@ -267,9 +267,8 @@ async function saveTranscript(interaction, message, saveImages = false) {
 async function saveTranscriptTxt(interaction) {
   const channel = interaction.channel;
   let lastId;
-  let transcript = "";
-
-  // Add some useful information to the top of the transcript
+  let transcript = [];
+  let totalFetched = 0;
   let ticketUserID = client.users.cache.get(
     await ticketsDB.get(`${interaction.channel.id}.userID`),
   );
@@ -277,90 +276,78 @@ async function saveTranscriptTxt(interaction) {
     await ticketsDB.get(`${interaction.channel.id}.claimUser`),
   );
 
-  transcript += `Server: ${interaction.guild.name}\nTicket: #${interaction.channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${interaction.user.tag}\nClaimed By: ${claimUser ? claimUser.tag : "None"}\n\n`;
-  let totalFetched = 0;
-  let checkpointLine = 7; // The line number where the writing begins on every iteration
-
-  while (totalFetched < 400) {
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
     const options = { limit: 100 };
     if (lastId) {
       options.before = lastId;
     }
 
     const fetched = await channel.messages.fetch(options);
-    if (fetched.size === 0) {
-      break;
-    }
-
     totalFetched += fetched.size;
-    lastId = fetched.last().id;
+    lastId = fetched.lastKey();
 
-    const newLines = fetched
-      .map((m) => {
-        let messageText = `[${new Date(m.createdTimestamp).toLocaleString()}] ${m.author.username}: `;
+    const newLines = fetched.map((m) => {
+      let messageText = `[${new Date(m.createdTimestamp).toLocaleString()}] ${m.author.username}: `;
 
-        if (m.content) {
-          messageText += m.content;
-          if (m.attachments.size > 0) {
-            messageText += " ";
-          }
-        }
-
+      if (m.content) {
+        messageText += m.content;
         if (m.attachments.size > 0) {
-          const attachmentText = m.attachments
-            .map((attachment) => attachment.proxyURL)
-            .join("\n");
-          messageText += attachmentText;
+          messageText += " ";
         }
+      }
 
-        if (m.embeds.length > 0) {
-          const embedText = m.embeds
-            .map((embed) => {
-              let embedFields = "";
+      if (m.attachments.size > 0) {
+        const attachmentText = m.attachments
+          .map((attachment) => attachment.proxyURL)
+          .join("\n");
+        messageText += attachmentText;
+      }
 
-              if (embed.fields && embed.fields.length > 0) {
-                embedFields = embed.fields
-                  .map((field) => `${field.name} : ${field.value}`)
-                  .join("\n");
-              }
+      if (m.embeds.length > 0) {
+        const embedText = m.embeds
+          .map((embed) => {
+            let embedFields = "";
 
-              let embedContent = "";
-              if (embed.title) {
-                embedContent += `Embed Title: ${embed.title}\n`;
-              }
-              if (embed.description) {
-                embedContent += `Embed Description: ${embed.description}\n`;
-              }
-              if (embedFields) {
-                embedContent += `${embedFields}\n`;
-              }
+            if (embed.fields && embed.fields.length > 0) {
+              embedFields = embed.fields
+                .map((field) => `${field.name} : ${field.value}`)
+                .join("\n");
+            }
 
-              return embedContent.trim();
-            })
-            .filter((embedText) => embedText !== "")
-            .join("\n");
+            let embedContent = "";
+            if (embed.title) {
+              embedContent += `Embed Title: ${embed.title}\n`;
+            }
+            if (embed.description) {
+              embedContent += `Embed Description: ${embed.description}\n`;
+            }
+            if (embedFields) {
+              embedContent += `${embedFields}\n`;
+            }
 
-          messageText += embedText;
-        }
+            return embedContent.trim();
+          })
+          .filter((embedText) => embedText !== "")
+          .join("\n");
 
-        return messageText;
-      })
-      .reverse()
-      .join("\n");
+        messageText += embedText;
+      }
 
-    // Insert the new lines at the specified checkpoint line
-    const transcriptLines = transcript.split("\n");
-    transcriptLines.splice(checkpointLine, 0, newLines);
-    transcript = transcriptLines.join("\n");
+      return messageText;
+    });
+
+    transcript.push(...newLines);
+
+    // break when there are no more messages
+    if (fetched.size < 100) break;
   }
 
-  transcript += `\n\nTotal messages: ${totalFetched}`;
+  const additionalInfo = `Server: ${interaction.guild.name}\nTicket: #${interaction.channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${interaction.user.tag}\nClaimed By: ${claimUser ? claimUser.tag : "None"}\n`;
+  const finalTranscript = [additionalInfo, ...transcript.reverse()];
+  finalTranscript.push(`\nTotal messages: ${totalFetched}`);
 
-  if (transcript.length < 1) {
-    transcript = "The Transcript of this ticket is empty";
-  }
-
-  return new AttachmentBuilder(Buffer.from(transcript), {
+  return new AttachmentBuilder(Buffer.from(finalTranscript.join("\n")), {
     name: `${channel.name}-transcript.txt`,
   });
 }

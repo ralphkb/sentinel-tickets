@@ -5,7 +5,7 @@
 panelMethod: "Buttons" # The method of the panel, can be either Buttons or Menu
 menuPlaceholder: "Select a category to open a ticket." # The placeholder of the select menu
 rolesThatCanBlacklist: ["111111111111111111"] # The IDs of the staff roles on your server which should have access to blacklisting and unblacklisting users from creating tickets, for example ["000000000000000000", "111111111111111111"]
-transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT", note that the TXT option is limited to 400 messages
+transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT"
 reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
 closeStaffOnly: true # When enabled, only staff members with support roles can use the close ticket button
 closeRemoveUser: false # When enabled, the ticket creator will be removed from the ticket when it is closed and added back if the ticket is re-opened
