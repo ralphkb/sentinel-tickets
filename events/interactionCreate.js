@@ -153,8 +153,13 @@ module.exports = {
 
         if (now < expirationTime) {
           const expiredTimestamp = Math.round(expirationTime / 1000);
+          const cooldownReply = config.errors.on_cooldown
+            .replace(/\{command\}/g, `${command.data.name}`)
+            .replace(/\{time\}/g, `<t:${expiredTimestamp}:R>`);
           return interaction.reply({
-            content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
+            content:
+              cooldownReply ||
+              `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again in <t:${expiredTimestamp}:R>.`,
             ephemeral: true,
           });
         }
@@ -284,6 +289,7 @@ module.exports = {
             ) {
               return interaction.reply({
                 content:
+                  config.errors.category_not_allowed ||
                   "You are not allowed to create tickets in this category.",
                 ephemeral: true,
               });
@@ -501,6 +507,7 @@ module.exports = {
           ) {
             return interaction.reply({
               content:
+                config.errors.category_not_allowed ||
                 "You are not allowed to create tickets in this category.",
               ephemeral: true,
             });

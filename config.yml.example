@@ -1203,8 +1203,10 @@ dmErrorEmbed:
 
 errors:
   not_in_a_ticket: "You are not in a ticket channel!" # Error displayed when a user tries to use a command in a non-ticket channel
-  not_allowed: "You are not allowed to use this!" # Error displayed when a user tries to use a staff-only command
+  not_allowed: "You are not allowed to use this!" # Error displayed when a user tries to use a staff-only command, button etc
   blacklisted: "You are blacklisted from creating tickets at this time." # Error displayed when a user tries to create a ticket but is blacklisted
+  category_not_allowed: "You are not allowed to create tickets in this category." # Error displayed when a user tries to create a ticket in a category without the required role(s)
+  on_cooldown: "Please wait, you are on a cooldown for `{command}`. You can use it again in {time}." # Error displayed when a user tries to use a command while on cooldown, use {command} for the name of the command and {time} for the remaining cooldown time
 
 cooldownEmbed:
   color: "#FF0000"
