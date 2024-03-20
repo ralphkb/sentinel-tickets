@@ -54,7 +54,7 @@ module.exports = {
       timestamp: true,
       footer: {
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
       },
     };
     const cooldownEmbed = await configEmbed(
@@ -74,7 +74,7 @@ module.exports = {
       timestamp: true,
       footer: {
         text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
       },
     };
     const maxOpenTicketsEmbed = await configEmbed(
@@ -603,7 +603,7 @@ module.exports = {
           timestamp: true,
           footer: {
             text: `${ticketUserID.tag}`,
-            iconURL: `${ticketUserID.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            iconURL: `${ticketUserID.displayAvatarURL({ extension: "png", size: 1024 })}`,
           },
         };
 
@@ -683,10 +683,10 @@ module.exports = {
           color: "#2FF200",
           title: "Ticket Logs | Ticket Re-Opened",
           timestamp: true,
-          thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+          thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           footer: {
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           },
         };
 
@@ -722,7 +722,7 @@ module.exports = {
           timestamp: true,
           footer: {
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           },
         };
 
@@ -871,10 +871,10 @@ module.exports = {
           color: "#FF0000",
           title: "Ticket Logs | Ticket Deleted",
           timestamp: true,
-          thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+          thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           footer: {
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           },
         };
 
@@ -1113,10 +1113,10 @@ module.exports = {
           color: "#FF2400",
           title: "Ticket Logs | Ticket Closed",
           timestamp: true,
-          thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+          thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           footer: {
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           },
         };
 
@@ -1183,7 +1183,7 @@ module.exports = {
           timestamp: true,
           footer: {
             text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           },
         };
 
@@ -1318,7 +1318,7 @@ module.exports = {
           timestamp: true,
           footer: {
             text: `Claimed by ${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           },
         };
 
@@ -1423,10 +1423,10 @@ module.exports = {
               color: "#2FF200",
               title: "Ticket Logs | Ticket Claimed",
               timestamp: true,
-              thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+              thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
               footer: {
                 text: `${interaction.user.tag}`,
-                iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+                iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
               },
             };
 
@@ -1500,7 +1500,7 @@ module.exports = {
           timestamp: true,
           footer: {
             text: `Unclaimed by ${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           },
         };
 
@@ -1561,10 +1561,10 @@ module.exports = {
               color: "#FF2400",
               title: "Ticket Logs | Ticket Unclaimed",
               timestamp: true,
-              thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+              thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
               footer: {
                 text: `${interaction.user.tag}`,
-                iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+                iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
               },
             };
 
@@ -1604,10 +1604,10 @@ module.exports = {
             color: category.color || "#2FF200",
             description: category.description,
             timestamp: true,
-            thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
             footer: {
               text: `${interaction.user.tag}`,
-              iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+              iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
             },
           };
 
@@ -1620,7 +1620,7 @@ module.exports = {
           ticketOpenEmbedEmbed.setColor(category.color || "#2FF200");
           ticketOpenEmbedEmbed.setAuthor({
             name: `${category.embedTitle}`,
-            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           });
 
           for (
@@ -1757,7 +1757,7 @@ module.exports = {
                       timestamp: true,
                       footer: {
                         text: `${interaction.user.tag}`,
-                        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+                        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
                       },
                     };
 
@@ -1809,10 +1809,10 @@ module.exports = {
                       color: "#2FF200",
                       title: "Ticket Logs | Ticket Created",
                       timestamp: true,
-                      thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+                      thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
                       footer: {
                         text: `${interaction.user.tag}`,
-                        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+                        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
                       },
                     };
 
@@ -1882,10 +1882,10 @@ module.exports = {
             color: "#2FF200",
             title: "Ticket Logs | Ticket Feedback",
             timestamp: true,
-            thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+            thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
             footer: {
               text: `${interaction.user.tag}`,
-              iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+              iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
             },
           };
 

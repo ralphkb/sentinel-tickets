@@ -78,10 +78,10 @@ module.exports = {
         color: "#2FF200",
         title: "Ticket Logs | Target Added",
         timestamp: true,
-        thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+        thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
         footer: {
           text: `${interaction.user.tag}`,
-          iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+          iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
         },
       };
 
@@ -149,10 +149,10 @@ module.exports = {
         color: "#2FF200",
         title: "Ticket Logs | Target Added",
         timestamp: true,
-        thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+        thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
         footer: {
           text: `${interaction.user.tag}`,
-          iconURL: `${interaction.user.displayAvatarURL({ extension: "png", dynamic: true, size: 1024 })}`,
+          iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
         },
       };
 
