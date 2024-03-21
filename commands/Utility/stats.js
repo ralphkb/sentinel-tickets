@@ -24,12 +24,19 @@ module.exports = {
     const totalReviews = (await mainDB.get("totalReviews")) ?? 0;
     const ratingsArray = (await mainDB.get("ratings")) ?? [];
     const totalMessages = (await mainDB.get("totalMessages")) ?? 0;
+    const ticketCreators = (await mainDB.get("ticketCreators")) ?? [];
     const averageRating =
       ratingsArray.reduce((total, current) => total + current, 0) /
       ratingsArray.length;
     const totalOpenTickets = openTickets.length;
     const ramUsage = process.memoryUsage().heapUsed;
     const ramUsageMB = (ramUsage / 1024 / 1024).toFixed(2);
+    const totalTicketCreators = ticketCreators.length;
+    const averageTicketsCreated =
+      ticketCreators.reduce(
+        (total, creator) => total + creator.ticketsCreated,
+        0,
+      ) / totalTicketCreators;
 
     const defaultDMValues = {
       color: "#2FF200",
@@ -51,7 +58,7 @@ module.exports = {
     statsEmbed.addFields([
       {
         name: "🎫 Tickets",
-        value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${totalOpenTickets}\n> Total Claimed Tickets: ${totalClaims}\n> Total Messages: ${totalMessages}`,
+        value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${totalOpenTickets}\n> Total Claimed Tickets: ${totalClaims}\n> Total Messages: ${totalMessages}\n> Total Ticket Creators: ${totalTicketCreators}\n> Average Tickets Created Per User: ${ticketCreators.length ? averageTicketsCreated.toFixed(0) : 0}`,
       },
       {
         name: "⭐ Reviews",

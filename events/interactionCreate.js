@@ -25,6 +25,7 @@ const {
   configEmbed,
   blacklistDB,
   countMessagesInTicket,
+  addTicketCreator,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -1804,6 +1805,7 @@ module.exports = {
                     });
 
                     await mainDB.push("openTickets", `${channel.id}`);
+                    await addTicketCreator(interaction.user.id);
 
                     const logDefaultValues = {
                       color: "#2FF200",

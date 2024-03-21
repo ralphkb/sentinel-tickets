@@ -68,6 +68,11 @@ const timeString = date.toLocaleString("en-US", options);
   if (!(await mainDB.has("totalMessages"))) {
     await mainDB.set("totalMessages", 0);
   }
+
+  // Initialize ticketCreators to an empty array if it doesn't exist
+  if (!(await mainDB.has("ticketCreators"))) {
+    await mainDB.set("ticketCreators", []);
+  }
 })();
 
 // Extract information from the config.yml to properly setup the ticket categories
@@ -152,6 +157,21 @@ async function checkSupportRole(interaction) {
   return interaction.member.roles.cache.some((role) =>
     allowedRoles.includes(role.id),
   );
+}
+
+async function addTicketCreator(userID) {
+  let ticketCreators = (await mainDB.get("ticketCreators")) || [];
+  let existingCreator = ticketCreators.find(
+    (creator) => creator.userID === userID,
+  );
+
+  if (existingCreator) {
+    existingCreator.ticketsCreated++;
+  } else {
+    ticketCreators.push({ userID: userID, ticketsCreated: 1 });
+  }
+
+  await mainDB.set("ticketCreators", ticketCreators);
 }
 
 async function configEmbed(configPath, defaultValues = {}) {
@@ -436,6 +456,7 @@ module.exports = {
   configEmbed,
   blacklistDB,
   countMessagesInTicket,
+  addTicketCreator,
 };
 
 // Holding commands cooldown data
