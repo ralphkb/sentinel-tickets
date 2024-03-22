@@ -41,7 +41,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Option to configure support roles per ticket category.
 - Option to require one or more roles to create a ticket per ticket category.
 - Option to ping support roles on ticket creation per ticket category.
-- Working Hours feature with an option to specify the timezone and block ticket creation outside the working hours.
+- Per Day Working Hours feature with an option to specify the timezone and block ticket creation outside the working hours.
 - Option to configure the amount of max opened tickets at one time.
 - Ticket claiming feature that can be turned on/off.
 - Automatic saving of transcripts upon ticket deletion and force deletion.
@@ -71,10 +71,17 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Add a custom slowmode to a ticket
     - Transfer ticket ownership to another user
     - Add a priority to a ticket
+- Context Menu Commands: Right click commands that are easy to use.
+    - Get User Info
+    - Blacklist Add
+    - Blacklist Remove
 - Useful statistics such as:
     - Total Tickets
     - Total Open Tickets
     - Total Claimed Tickets
+    - Total Messages
+    - Total Ticket Creators
+    - Average Tickets Created Per User
     - Total Reviews
     - Average Rating
 
