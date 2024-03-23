@@ -8,6 +8,7 @@ const {
   logMessage,
   checkSupportRole,
   configEmbed,
+  sanitizeInput,
 } = require("../../index.js");
 
 module.exports = {
@@ -45,6 +46,33 @@ module.exports = {
     }
     await interaction.deferReply();
 
+    let logChannelId = config.logs.ticketPin || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+
+    const logDefaultValues = {
+      color: "#2FF200",
+      title: "Ticket Logs | Ticket Pinned",
+      timestamp: true,
+      thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+      footer: {
+        text: `${interaction.user.tag}`,
+        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+      },
+    };
+
+    const logPinEmbed = await configEmbed("logPinEmbed", logDefaultValues);
+
+    logPinEmbed.addFields([
+      {
+        name: config.logPinEmbed.field_staff,
+        value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+      },
+      {
+        name: config.logPinEmbed.field_ticket,
+        value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
+      },
+    ]);
+
     interaction.channel
       .setPosition(0)
       .then(() => {
@@ -63,6 +91,7 @@ module.exports = {
 
     const pinEmbed = await configEmbed("pinEmbed", defaultValues);
     await interaction.editReply({ embeds: [pinEmbed] });
+    await logChannel.send({ embeds: [logPinEmbed] });
     logMessage(
       `${interaction.user.tag} pinned the ticket #${interaction.channel.name}`,
     );

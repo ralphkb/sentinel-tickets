@@ -9,6 +9,7 @@ const {
   formatTime,
   checkSupportRole,
   configEmbed,
+  sanitizeInput,
 } = require("../../index.js");
 
 module.exports = {
@@ -73,6 +74,40 @@ module.exports = {
     await interaction.channel.setRateLimitPerUser(time);
     const formattedTime = formatTime(time);
 
+    let logChannelId = config.logs.ticketSlowmode || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+
+    const logDefaultValues = {
+      color: "#2FF200",
+      title: "Ticket Logs | Ticket Slowmode",
+      timestamp: true,
+      thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+      footer: {
+        text: `${interaction.user.tag}`,
+        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+      },
+    };
+
+    const logSlowmodeEmbed = await configEmbed(
+      "logSlowmodeEmbed",
+      logDefaultValues,
+    );
+
+    logSlowmodeEmbed.addFields([
+      {
+        name: config.logSlowmodeEmbed.field_staff,
+        value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+      },
+      {
+        name: config.logSlowmodeEmbed.field_ticket,
+        value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
+      },
+      {
+        name: config.logSlowmodeEmbed.field_slowmode,
+        value: `> **${formatTime(currentSlowmode)}** -> **${formattedTime}**`,
+      },
+    ]);
+
     const defaultValues = {
       color: "#2FF200",
       description: "A slowmode of **{time}** has been added to this ticket.",
@@ -86,6 +121,7 @@ module.exports = {
       );
     }
     await interaction.editReply({ embeds: [slowmodeEmbed] });
+    await logChannel.send({ embeds: [logSlowmodeEmbed] });
     logMessage(
       `${interaction.user.tag} added a slow mode of ${formattedTime} to the ticket #${interaction.channel.name}`,
     );

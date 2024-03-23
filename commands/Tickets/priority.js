@@ -8,6 +8,7 @@ const {
   logMessage,
   checkSupportRole,
   configEmbed,
+  sanitizeInput,
 } = require("../../index.js");
 
 module.exports = {
@@ -67,6 +68,9 @@ module.exports = {
       interaction.channel.name.includes(emoji),
     );
 
+    let logChannelId = config.logs.ticketPriority || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+
     const subcommand = interaction.options.getSubcommand();
     if (subcommand === "add") {
       if (hasPriorityEmoji) {
@@ -96,6 +100,37 @@ module.exports = {
           });
       }
 
+      const logDefaultValues = {
+        color: "#2FF200",
+        title: "Ticket Logs | Ticket Priority Added",
+        timestamp: true,
+        thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+        footer: {
+          text: `${interaction.user.tag}`,
+          iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+        },
+      };
+
+      const logPriorityAddEmbed = await configEmbed(
+        "logPriorityAddEmbed",
+        logDefaultValues,
+      );
+
+      logPriorityAddEmbed.addFields([
+        {
+          name: config.logPriorityAddEmbed.field_staff,
+          value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+        },
+        {
+          name: config.logPriorityAddEmbed.field_ticket,
+          value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
+        },
+        {
+          name: config.logPriorityAddEmbed.field_priority,
+          value: `> ${priorityEmoji} ${option}`,
+        },
+      ]);
+
       interaction.channel.setName(
         `${priorityEmoji}${interaction.channel.name}`,
       );
@@ -118,6 +153,7 @@ module.exports = {
       }
 
       await interaction.editReply({ embeds: [priorityAddEmbed] });
+      await logChannel.send({ embeds: [logPriorityAddEmbed] });
       logMessage(
         `${interaction.user.tag} updated the priority of the ticket #${interaction.channel.name} to ${option}.`,
       );
@@ -139,6 +175,33 @@ module.exports = {
 
       interaction.channel.setName(updatedChannelName);
 
+      const logDefaultValues = {
+        color: "#2FF200",
+        title: "Ticket Logs | Ticket Priority Removed",
+        timestamp: true,
+        thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+        footer: {
+          text: `${interaction.user.tag}`,
+          iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+        },
+      };
+
+      const logPriorityRemoveEmbed = await configEmbed(
+        "logPriorityRemoveEmbed",
+        logDefaultValues,
+      );
+
+      logPriorityRemoveEmbed.addFields([
+        {
+          name: config.logPriorityRemoveEmbed.field_staff,
+          value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
+        },
+        {
+          name: config.logPriorityRemoveEmbed.field_ticket,
+          value: `> #${sanitizeInput(channelName)} -> #${sanitizeInput(updatedChannelName)}`,
+        },
+      ]);
+
       const defaultValues = {
         color: "FF2400",
         description: "The priority of this ticket has been removed.",
@@ -150,6 +213,7 @@ module.exports = {
       );
 
       await interaction.editReply({ embeds: [priorityRemoveEmbed] });
+      await logChannel.send({ embeds: [logPriorityRemoveEmbed] });
       logMessage(
         `${interaction.user.tag} removed the priority from the ticket #${interaction.channel.name}.`,
       );

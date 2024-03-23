@@ -324,6 +324,9 @@ logs:
   ticketMove: ""
   ticketRename: ""
   ticketTransfer: ""
+  ticketPin: ""
+  ticketSlowmode: ""
+  ticketPriority: ""
   ticketFeedback: ""
   DMErrors: ""
   blacklistAdd: ""
@@ -691,6 +694,25 @@ pinEmbed:
     iconURL: ""
     url: ""
 
+# Log embed for pin command
+logPinEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Pinned"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+
 # Priority add command embed
 priorityAddEmbed:
   color: "2FF200"
@@ -708,6 +730,26 @@ priorityAddEmbed:
     iconURL: ""
     url: ""
 
+# Log embed for priority add command
+logPriorityAddEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Priority Added"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_priority: "• Priority"
+
 # Priority remove command embed
 priorityRemoveEmbed:
   color: "FF2400"
@@ -724,6 +766,25 @@ priorityRemoveEmbed:
     name: ""
     iconURL: ""
     url: ""
+
+# Log embed for priority remove command
+logPriorityRemoveEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Priority Removed"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
 
 # Rename command embed
 renameEmbed:
@@ -778,6 +839,26 @@ slowmodeEmbed:
     name: ""
     iconURL: ""
     url: ""
+
+# Log embed for slowmode command
+logSlowmodeEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Slowmode"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_slowmode: "• Slowmode"
 
 # Transfer command embed
 transferEmbed:
