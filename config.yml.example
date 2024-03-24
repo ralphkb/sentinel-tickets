@@ -203,6 +203,9 @@ contextMenuCommands:
   blacklistRemove:
     enabled: true
     permission: "KickMembers"
+  ticketAlert:
+    enabled: true
+    permission: "KickMembers"
 
 # ==============================================
 # General button settings
