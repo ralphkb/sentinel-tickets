@@ -24,6 +24,17 @@ module.exports = {
     )
     .setDMPermission(false),
   async execute(interaction) {
+    if (
+      !interaction.member.roles.cache.some((role) =>
+        config.rolesThatCanBlacklist.includes(role.id),
+      )
+    ) {
+      return interaction.reply({
+        content:
+          config.errors.not_allowed || "You are not allowed to use this!",
+        ephemeral: true,
+      });
+    }
     await interaction.deferReply({ ephemeral: true });
     const user = interaction.targetUser;
     const reason = "Blacklisted using the Context Menu command";
