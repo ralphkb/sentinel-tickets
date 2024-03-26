@@ -206,6 +206,9 @@ contextMenuCommands:
   ticketAlert:
     enabled: true
     permission: "KickMembers"
+  ticketPin:
+    enabled: true
+    permission: "KickMembers"
 
 # ==============================================
 # General button settings
