@@ -139,6 +139,7 @@ commands:
   move:
     enabled: true
     permission: "KickMembers"
+    updateTopic: true
   transfer:
     enabled: true
     permission: "KickMembers"

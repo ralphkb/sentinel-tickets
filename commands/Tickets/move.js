@@ -10,12 +10,8 @@ const {
   ticketCategories,
   checkSupportRole,
   configEmbed,
+  client,
 } = require("../../index.js");
-const customIds = Object.keys(ticketCategories);
-const choices = customIds.map((customId) => {
-  const category = ticketCategories[customId];
-  return category.name;
-});
 
 module.exports = {
   enabled: config.commands.move.enabled,
@@ -54,6 +50,11 @@ module.exports = {
     let ticketType = await ticketsDB.get(
       `${interaction.channel.id}.ticketType`,
     );
+    const customIds = Object.keys(ticketCategories);
+    const choices = customIds.map((customId) => {
+      const category = ticketCategories[customId];
+      return category.name;
+    });
 
     if (!choices.includes(option)) {
       return interaction.reply({
@@ -76,7 +77,17 @@ module.exports = {
       (category) => category.name === option,
     );
     const categoryID = category.categoryID;
-
+    if (config.commands.move.updateTopic) {
+      const ticketTopic = category.ticketTopic;
+      const ticketCreator = client.users.cache.get(
+        await ticketsDB.get(`${interaction.channel.id}.userID`),
+      );
+      await interaction.channel.setTopic(
+        ticketTopic
+          .replace(/\{user\}/g, ticketCreator.tag)
+          .replace(/\{type\}/g, category.name),
+      );
+    }
     await ticketsDB.set(`${interaction.channel.id}.ticketType`, option);
     await interaction.channel.setParent(categoryID, { lockPermissions: false });
 
