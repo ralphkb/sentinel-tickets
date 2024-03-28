@@ -210,6 +210,9 @@ contextMenuCommands:
   ticketPin:
     enabled: true
     permission: "KickMembers"
+  ticketTranscript:
+    enabled: true
+    permission: "KickMembers"
 
 # ==============================================
 # General button settings

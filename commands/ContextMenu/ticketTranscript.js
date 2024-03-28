@@ -1,0 +1,114 @@
+const {
+  ContextMenuCommandBuilder,
+  ApplicationCommandType,
+  PermissionFlagsBits,
+} = require("discord.js");
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
+const config = yaml.parse(configFile);
+const {
+  ticketsDB,
+  logMessage,
+  sanitizeInput,
+  checkSupportRole,
+  configEmbed,
+  saveTranscript,
+  saveTranscriptTxt,
+  client,
+} = require("../../index.js");
+
+module.exports = {
+  enabled: config.contextMenuCommands.ticketTranscript.enabled,
+  data: new ContextMenuCommandBuilder()
+    .setName("Ticket Transcript")
+    .setType(ApplicationCommandType.Message)
+    .setDefaultMemberPermissions(
+      PermissionFlagsBits[
+        config.contextMenuCommands.ticketTranscript.permission
+      ],
+    )
+    .setDMPermission(false),
+  async execute(interaction) {
+    if (!(await ticketsDB.has(interaction.channel.id))) {
+      return interaction.reply({
+        content:
+          config.errors.not_in_a_ticket || "You are not in a ticket channel!",
+        ephemeral: true,
+      });
+    }
+
+    const hasSupportRole = await checkSupportRole(interaction);
+    if (!hasSupportRole) {
+      return interaction.reply({
+        content:
+          config.errors.not_allowed || "You are not allowed to use this!",
+        ephemeral: true,
+      });
+    }
+    await interaction.deferReply({ ephemeral: true });
+
+    let ticketUserID = client.users.cache.get(
+      await ticketsDB.get(`${interaction.channel.id}.userID`),
+    );
+
+    let attachment;
+    const transcriptType = config.transcriptType || "HTML";
+    if (transcriptType === "HTML") {
+      attachment = await saveTranscript(interaction, null, true);
+    } else if (transcriptType === "TXT") {
+      attachment = await saveTranscriptTxt(interaction);
+    }
+
+    const logDefaultValues = {
+      color: "#2FF200",
+      title: "Ticket Transcript",
+      description: `Saved by {user}`,
+      timestamp: true,
+      footer: {
+        text: `${ticketUserID.tag}`,
+        iconURL: `${ticketUserID.displayAvatarURL({ extension: "png", size: 1024 })}`,
+      },
+    };
+
+    const transcriptEmbed = await configEmbed(
+      "transcriptEmbed",
+      logDefaultValues,
+    );
+
+    if (transcriptEmbed.data && transcriptEmbed.data.description) {
+      transcriptEmbed.setDescription(
+        transcriptEmbed.data.description.replace(/\{user\}/g, interaction.user),
+      );
+    }
+
+    transcriptEmbed.addFields([
+      {
+        name: config.transcriptEmbed.field_creator,
+        value: `<@!${ticketUserID.id}>\n${sanitizeInput(ticketUserID.tag)}`,
+        inline: true,
+      },
+      {
+        name: config.transcriptEmbed.field_ticket,
+        value: `<#${interaction.channel.id}>\n${sanitizeInput(interaction.channel.name)}`,
+        inline: true,
+      },
+      {
+        name: config.transcriptEmbed.field_category,
+        value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+        inline: true,
+      },
+    ]);
+
+    let logChannelId = config.logs.transcripts || config.logs.default;
+    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    await logChannel.send({ embeds: [transcriptEmbed], files: [attachment] });
+    interaction.editReply({
+      content: `Transcript saved to <#${logChannel.id}>`,
+      ephemeral: true,
+    });
+    logMessage(
+      `${interaction.user.tag} manually saved the transcript of ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
+    );
+  },
+};
