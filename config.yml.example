@@ -143,6 +143,7 @@ commands:
   transfer:
     enabled: true
     permission: "KickMembers"
+    newTopic: "Ticket Creator: {user} | Ticket Type: {type}" # Use {user} for the new ticket creator the ticket is transferred to and {type} for the ticket type
   pin:
     enabled: true
     permission: "KickMembers"

@@ -67,7 +67,12 @@ module.exports = {
       AttachFiles: true,
       EmbedLinks: true,
     });
-    const newTopic = `Ticket Creator: ${sanitizeInput(optionUser.tag)} | Ticket Type: ${ticketType}`;
+    let newTopic =
+      config.commands.transfer.newTopic ||
+      "Ticket Creator: {user} | Ticket Type: {type}";
+    newTopic = newTopic
+      .replace(/\{user\}/g, `${sanitizeInput(optionUser.tag)}`)
+      .replace(/\{type\}/g, `${ticketType}`);
     await interaction.channel.setTopic(newTopic);
     if (interaction.channel.name.includes(currentUser.username)) {
       await interaction.channel.setName(`${ticketType}-${optionUser.username}`);
