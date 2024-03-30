@@ -57,6 +57,13 @@ module.exports = {
       });
     }
 
+    if (optionUser.bot) {
+      return interaction.reply({
+        content: "You cannot transfer a ticket to a bot.",
+        ephemeral: true,
+      });
+    }
+
     await interaction.deferReply();
     interaction.channel.permissionOverwrites.delete(currentUser);
     await ticketsDB.set(`${interaction.channel.id}.userID`, optionUser.id);
