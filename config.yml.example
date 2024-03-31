@@ -143,6 +143,7 @@ commands:
   transfer:
     enabled: true
     permission: "KickMembers"
+    updateTopic: true # Update the channel topic
     newTopic: "Ticket Creator: {user} | Ticket Type: {type}" # Use {user} for the new ticket creator the ticket is transferred to and {type} for the ticket type
   pin:
     enabled: true
