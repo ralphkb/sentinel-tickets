@@ -75,6 +75,10 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Get User Info
     - Blacklist Add
     - Blacklist Remove
+    - Ticket Alert
+    - Ticket Pin
+    - Ticket Transcript
+    - Ticket Panel
 - Useful statistics such as:
     - Total Tickets
     - Total Open Tickets
