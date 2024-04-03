@@ -442,7 +442,7 @@ blacklistFailedEmbed:
 blacklistSuccessEmbed:
   color: "#2FF200"
   title: ""
-  description: "**{target} ({target.tag})** has been added to the blacklist.\nReason: **{reason}**" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role and {reason} for the reason
+  description: "**{target} ({target.tag})** has been added to the blacklist.\nReason: **{reason}**\nDuration: **{duration}**" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role and {reason} for the reason, {duration} for the duration
   timestamp: false
   URL: ""
   image: ""
@@ -474,6 +474,7 @@ logBlacklistEmbed:
   field_staff: "• Staff"
   field_target: "• Target"
   field_reason: "• Reason"
+  field_duration: "• Duration"
 
 # Unblacklist command embed when it fails to unblacklist a user or role
 unblacklistFailedEmbed:

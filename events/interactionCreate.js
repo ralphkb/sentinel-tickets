@@ -26,6 +26,7 @@ const {
   blacklistDB,
   countMessagesInTicket,
   addTicketCreator,
+  isBlacklistExpired,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -199,15 +200,37 @@ module.exports = {
           });
 
         const userRoles = interaction.member.roles.cache.map((role) => role.id);
-        const isUserBlacklisted = await blacklistDB.get(
+        let isUserBlacklisted = await blacklistDB.get(
           `user-${interaction.user.id}`,
         );
         let isRoleBlacklisted = false;
+
         for (const roleId of userRoles) {
-          if (await blacklistDB.get(`role-${roleId}`)) {
-            isRoleBlacklisted = true;
-            break;
+          const roleBlacklist = await blacklistDB.get(`role-${roleId}`);
+          if (roleBlacklist) {
+            if (
+              isBlacklistExpired(
+                roleBlacklist.timestamp,
+                roleBlacklist.duration,
+              )
+            ) {
+              await blacklistDB.delete(`role-${roleId}`);
+            } else {
+              isRoleBlacklisted = true;
+              break;
+            }
           }
+        }
+
+        if (
+          isUserBlacklisted &&
+          isBlacklistExpired(
+            isUserBlacklisted.timestamp,
+            isUserBlacklisted.duration,
+          )
+        ) {
+          await blacklistDB.delete(`user-${interaction.user.id}`);
+          isUserBlacklisted = null;
         }
 
         if (isUserBlacklisted || isRoleBlacklisted) {
@@ -425,15 +448,34 @@ module.exports = {
       }
     } else if (interaction.isButton()) {
       const userRoles = interaction.member.roles.cache.map((role) => role.id);
-      const isUserBlacklisted = await blacklistDB.get(
+      let isUserBlacklisted = await blacklistDB.get(
         `user-${interaction.user.id}`,
       );
       let isRoleBlacklisted = false;
+
       for (const roleId of userRoles) {
-        if (await blacklistDB.get(`role-${roleId}`)) {
-          isRoleBlacklisted = true;
-          break;
+        const roleBlacklist = await blacklistDB.get(`role-${roleId}`);
+        if (roleBlacklist) {
+          if (
+            isBlacklistExpired(roleBlacklist.timestamp, roleBlacklist.duration)
+          ) {
+            await blacklistDB.delete(`role-${roleId}`);
+          } else {
+            isRoleBlacklisted = true;
+            break;
+          }
         }
+      }
+
+      if (
+        isUserBlacklisted &&
+        isBlacklistExpired(
+          isUserBlacklisted.timestamp,
+          isUserBlacklisted.duration,
+        )
+      ) {
+        await blacklistDB.delete(`user-${interaction.user.id}`);
+        isUserBlacklisted = null;
       }
 
       if (isUserBlacklisted || isRoleBlacklisted) {

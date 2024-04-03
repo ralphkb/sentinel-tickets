@@ -392,6 +392,32 @@ async function countMessagesInTicket(channel, lastId = null) {
   return messageCount;
 }
 
+// Function to check if the blacklisted user or role duration has expired
+function isBlacklistExpired(timestamp, duration) {
+  if (duration === "permanent" || duration === undefined) {
+    return false; // Treat undefined or 'permanent' as permanent blacklist
+  }
+  const durationInMilliseconds = parseDurationToMilliseconds(duration);
+  const expirationTime = timestamp + durationInMilliseconds;
+  return Date.now() >= expirationTime;
+}
+
+// Function to parse duration string to milliseconds
+function parseDurationToMilliseconds(duration) {
+  const unitMap = {
+    s: 1000,
+    m: 60000,
+    h: 3600000,
+    d: 86400000,
+    w: 604800000,
+  };
+
+  const numericValue = parseInt(duration, 10);
+  const unit = duration.slice(-1);
+
+  return numericValue * unitMap[unit] || 0;
+}
+
 // Time formatting function
 function formatTime(seconds) {
   const d = Math.floor(seconds / 86400);
@@ -457,6 +483,7 @@ module.exports = {
   blacklistDB,
   countMessagesInTicket,
   addTicketCreator,
+  isBlacklistExpired,
 };
 
 // Holding commands cooldown data

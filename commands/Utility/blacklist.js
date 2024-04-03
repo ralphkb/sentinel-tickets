@@ -36,6 +36,12 @@ module.exports = {
             .setName("reason")
             .setDescription("The reason for adding to the blacklist")
             .setRequired(false),
+        )
+        .addStringOption((option) =>
+          option
+            .setName("duration")
+            .setDescription("The duration of the blacklist")
+            .setRequired(false),
         ),
     )
     .addSubcommand((subcommand) =>
@@ -104,6 +110,7 @@ module.exports = {
     if (subcommand === "add") {
       let user = interaction.options.getUser("user");
       let role = interaction.options.getRole("role");
+      let duration = interaction.options.getString("duration") || "permanent";
       let reason =
         interaction.options.getString("reason") || "No reason provided.";
       await interaction.deferReply({ ephemeral: true });
@@ -112,6 +119,15 @@ module.exports = {
         return interaction.editReply({
           content:
             "Please provide either a user or a role, but not both or none.",
+          ephemeral: true,
+        });
+      }
+
+      const durationRegex = /^[0-9]+[smhdw]$/;
+      if (!durationRegex.test(duration)) {
+        return interaction.editReply({
+          content:
+            "Invalid duration format, please use one of the following formats: 1s 1m 1h 1d 1w (e.g. 5s, 10m, 2h, 3d, 4w)",
           ephemeral: true,
         });
       }
@@ -141,7 +157,7 @@ module.exports = {
         const successDefault = {
           color: "#2FF200",
           description:
-            "**{target} ({target.tag})** has been added to the blacklist.\nReason: **{reason}**",
+            "**{target} ({target.tag})** has been added to the blacklist.\nReason: **{reason}**\nDuration: **{duration}**",
         };
         const blacklistedEmbedUser = await configEmbed(
           "blacklistSuccessEmbed",
@@ -156,7 +172,8 @@ module.exports = {
             blacklistedEmbedUser.data.description
               .replace(/\{target\}/g, user)
               .replace(/\{target\.tag\}/g, sanitizeInput(user.tag))
-              .replace(/\{reason\}/g, reason),
+              .replace(/\{reason\}/g, reason)
+              .replace(/\{duration\}/g, duration),
           );
         }
 
@@ -173,9 +190,10 @@ module.exports = {
             reason: reason,
             timestamp: Date.now(),
             staff: interaction.user.id,
+            duration: duration,
           });
           logMessage(
-            `${interaction.user.tag} added ${user.tag} to the blacklist with reason ${reason}.`,
+            `${interaction.user.tag} added ${user.tag} to the blacklist with reason ${reason} and duration ${duration}.`,
           );
           let logChannelId = config.logs.blacklistAdd || config.logs.default;
           let logChannel = interaction.guild.channels.cache.get(logChannelId);
@@ -208,6 +226,10 @@ module.exports = {
             {
               name: config.logBlacklistEmbed.field_reason,
               value: `> ${reason}`,
+            },
+            {
+              name: config.logBlacklistEmbed.field_duration,
+              value: `> ${duration}`,
             },
           ]);
           await logChannel.send({ embeds: [logBlacklistEmbed] });
@@ -244,7 +266,7 @@ module.exports = {
         const successDefault = {
           color: "#2FF200",
           description:
-            "**{target} ({target.tag})** has been added to the blacklist.\nReason: **{reason}**",
+            "**{target} ({target.tag})** has been added to the blacklist.\nReason: **{reason}**\nDuration: **{duration}**",
         };
         const blacklistedEmbedRole = await configEmbed(
           "blacklistSuccessEmbed",
@@ -259,7 +281,8 @@ module.exports = {
             blacklistedEmbedRole.data.description
               .replace(/\{target\}/g, role)
               .replace(/\{target\.tag\}/g, sanitizeInput(role.name))
-              .replace(/\{reason\}/g, reason),
+              .replace(/\{reason\}/g, reason)
+              .replace(/\{duration\}/g, duration),
           );
         }
 
@@ -276,9 +299,10 @@ module.exports = {
             reason: reason,
             timestamp: Date.now(),
             staff: interaction.user.id,
+            duration: duration,
           });
           logMessage(
-            `${interaction.user.tag} added ${role.name} to the blacklist with reason ${reason}.`,
+            `${interaction.user.tag} added ${role.name} to the blacklist with reason ${reason} and duration ${duration}.`,
           );
           let logChannelId = config.logs.blacklistAdd || config.logs.default;
           let logChannel = interaction.guild.channels.cache.get(logChannelId);
@@ -311,6 +335,10 @@ module.exports = {
             {
               name: config.logBlacklistEmbed.field_reason,
               value: `> ${reason}`,
+            },
+            {
+              name: config.logBlacklistEmbed.field_duration,
+              value: `> ${duration}`,
             },
           ]);
           await logChannel.send({ embeds: [logBlacklistEmbed] });
@@ -606,9 +634,10 @@ module.exports = {
         const userOrRole = type === "users" ? `<@${id}>` : `<@&${id}>`;
         const reason = entry.value.reason;
         const timestamp = entry.value.timestamp;
+        const duration = entry.value.duration || "permanent";
         const staffID = entry.value.staff;
         const timeAgo = `<t:${Math.floor(timestamp / 1000)}:R>`;
-        description += `${startIndex + index + 1}. ${userOrRole}\nStaff: <@${staffID}>\nReason: ${reason}\nTime: ${timeAgo}\n`;
+        description += `${startIndex + index + 1}. ${userOrRole}\nStaff: <@${staffID}>\nReason: ${reason}\nTime: ${timeAgo}\nDuration: ${duration}\n`;
       });
 
       blacklistListEmbed.setDescription(description);
