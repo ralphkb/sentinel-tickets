@@ -484,6 +484,7 @@ module.exports = {
   countMessagesInTicket,
   addTicketCreator,
   isBlacklistExpired,
+  parseDurationToMilliseconds,
 };
 
 // Holding commands cooldown data

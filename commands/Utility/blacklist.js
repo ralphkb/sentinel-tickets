@@ -8,6 +8,7 @@ const {
   sanitizeInput,
   logMessage,
   configEmbed,
+  parseDurationToMilliseconds,
 } = require("../../index.js");
 
 module.exports = {
@@ -636,8 +637,14 @@ module.exports = {
         const timestamp = entry.value.timestamp;
         const duration = entry.value.duration || "permanent";
         const staffID = entry.value.staff;
+        const expirationTime =
+          timestamp + parseDurationToMilliseconds(duration);
+        const expires =
+          duration === "permanent"
+            ? "never"
+            : `<t:${Math.floor(expirationTime / 1000)}:R>`;
         const timeAgo = `<t:${Math.floor(timestamp / 1000)}:R>`;
-        description += `${startIndex + index + 1}. ${userOrRole}\nStaff: <@${staffID}>\nReason: ${reason}\nTime: ${timeAgo}\nDuration: ${duration}\n`;
+        description += `${startIndex + index + 1}. ${userOrRole}\nStaff: <@${staffID}>\nReason: ${reason}\nTime: ${timeAgo}\nDuration: ${duration}\nExpires: ${expires}\n`;
       });
 
       blacklistListEmbed.setDescription(description);
