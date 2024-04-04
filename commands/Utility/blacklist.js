@@ -124,13 +124,15 @@ module.exports = {
         });
       }
 
-      const durationRegex = /^[0-9]+[smhdw]$/;
-      if (!durationRegex.test(duration)) {
-        return interaction.editReply({
-          content:
-            "Invalid duration format, please use one of the following formats: 1s 1m 1h 1d 1w (e.g. 5s, 10m, 2h, 3d, 4w)",
-          ephemeral: true,
-        });
+      if (duration !== "permanent") {
+        const durationRegex = /^[0-9]+[smhdw]$/;
+        if (!durationRegex.test(duration)) {
+          return interaction.editReply({
+            content:
+              "Invalid duration format, please use one of the following formats: 1s 1m 1h 1d 1w (e.g. 5s, 10m, 2h, 3d, 4w)",
+            ephemeral: true,
+          });
+        }
       }
 
       if (user) {
