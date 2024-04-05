@@ -234,10 +234,24 @@ module.exports = {
         }
 
         if (isUserBlacklisted || isRoleBlacklisted) {
-          return interaction.reply({
-            content:
-              config.errors.blacklisted ||
+          const defaultblacklistedValues = {
+            color: "#FF0000",
+            title: "Blacklisted",
+            description:
               "You are blacklisted from creating tickets at this time.",
+            timestamp: true,
+            footer: {
+              text: `${interaction.user.tag}`,
+              iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+            },
+          };
+
+          const blacklistedEmbed = await configEmbed(
+            "blacklistedEmbed",
+            defaultblacklistedValues,
+          );
+          return interaction.reply({
+            embeds: [blacklistedEmbed],
             ephemeral: true,
           });
         }
@@ -479,10 +493,24 @@ module.exports = {
       }
 
       if (isUserBlacklisted || isRoleBlacklisted) {
-        return interaction.reply({
-          content:
-            config.errors.blacklisted ||
+        const defaultblacklistedValues = {
+          color: "#FF0000",
+          title: "Blacklisted",
+          description:
             "You are blacklisted from creating tickets at this time.",
+          timestamp: true,
+          footer: {
+            text: `${interaction.user.tag}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+          },
+        };
+
+        const blacklistedEmbed = await configEmbed(
+          "blacklistedEmbed",
+          defaultblacklistedValues,
+        );
+        return interaction.reply({
+          embeds: [blacklistedEmbed],
           ephemeral: true,
         });
       }
