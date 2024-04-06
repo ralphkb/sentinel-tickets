@@ -1003,8 +1003,10 @@ module.exports = {
           );
         }
 
-        // DM the user with an embed and the transcript of the ticket if the option is enabled
-        if (config.DMUserSettings.enabled) {
+        // DM the user with an embed and the transcript of the ticket depending on the enabled settings
+        const sendEmbed = config.DMUserSettings.embed;
+        const sendTranscript = config.DMUserSettings.transcript;
+        if (sendEmbed || sendTranscript) {
           const defaultDMValues = {
             color: "#2FF200",
             title: "Ticket Deleted",
@@ -1092,19 +1094,23 @@ module.exports = {
             text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
           });
 
+          const messageDM = {};
+
+          if (sendEmbed) {
+            messageDM.embeds = [deleteDMEmbed];
+          }
+
+          if (sendTranscript) {
+            messageDM.files = [attachment];
+          }
+
           try {
             if (config.DMUserSettings.ratingSystem.enabled === false) {
-              await ticketUserID.send({
-                embeds: [deleteDMEmbed],
-                files: [attachment],
-              });
+              await ticketUserID.send(messageDM);
             }
             if (config.DMUserSettings.ratingSystem.enabled === true) {
               await mainDB.set(`ratingMenuOptions`, options);
-              await ticketUserID.send({
-                embeds: [deleteDMEmbed],
-                files: [attachment],
-              });
+              await ticketUserID.send(messageDM);
               await ticketUserID.send({
                 embeds: [ratingDMEmbed],
                 components: [actionRowMenu],
