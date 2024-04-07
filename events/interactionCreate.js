@@ -325,10 +325,24 @@ module.exports = {
                 category.creatorRoles.includes(roleId),
               )
             ) {
-              return interaction.reply({
-                content:
-                  config.errors.category_not_allowed ||
+              const defaultcreatorValues = {
+                color: "#FF0000",
+                title: "Not Allowed",
+                description:
                   "You are not allowed to create tickets in this category.",
+                timestamp: true,
+                footer: {
+                  text: `${interaction.user.tag}`,
+                  iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+                },
+              };
+
+              const categoryNotAllowedEmbed = await configEmbed(
+                "categoryNotAllowedEmbed",
+                defaultcreatorValues,
+              );
+              return interaction.reply({
+                embeds: [categoryNotAllowedEmbed],
                 ephemeral: true,
               });
             }
@@ -576,10 +590,24 @@ module.exports = {
             category.creatorRoles.length > 0 &&
             !userRoles.some((roleId) => category.creatorRoles.includes(roleId))
           ) {
-            return interaction.reply({
-              content:
-                config.errors.category_not_allowed ||
+            const defaultcreatorValues = {
+              color: "#FF0000",
+              title: "Not Allowed",
+              description:
                 "You are not allowed to create tickets in this category.",
+              timestamp: true,
+              footer: {
+                text: `${interaction.user.tag}`,
+                iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+              },
+            };
+
+            const categoryNotAllowedEmbed = await configEmbed(
+              "categoryNotAllowedEmbed",
+              defaultcreatorValues,
+            );
+            return interaction.reply({
+              embeds: [categoryNotAllowedEmbed],
               ephemeral: true,
             });
           }
