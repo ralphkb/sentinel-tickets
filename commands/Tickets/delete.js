@@ -90,6 +90,10 @@ module.exports = {
         name: config.logDeleteEmbed.field_ticket,
         value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
       },
+      {
+        name: config.logDeleteEmbed.field_creation,
+        value: `> <t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
+      },
     ]);
 
     if (claimUser)

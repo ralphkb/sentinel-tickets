@@ -995,6 +995,10 @@ module.exports = {
             name: config.logDeleteEmbed.field_ticket,
             value: `> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
           },
+          {
+            name: config.logDeleteEmbed.field_creation,
+            value: `> <t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
+          },
         ]);
 
         if (claimUser)
@@ -1897,6 +1901,10 @@ module.exports = {
                       ephemeral: true,
                     });
 
+                    const creationTime = Math.floor(
+                      new Date().getTime() / 1000,
+                    );
+
                     await ticketsDB.set(`${channel.id}`, {
                       userID: interaction.user.id,
                       ticketType: category.name,
@@ -1906,6 +1914,7 @@ module.exports = {
                       claimUser: "",
                       status: "Open",
                       closeUserID: "",
+                      creationTime: creationTime,
                     });
 
                     await mainDB.push("openTickets", `${channel.id}`);
@@ -1939,6 +1948,12 @@ module.exports = {
                           config.logTicketOpenEmbedEmbed.field_ticket ||
                           "• Ticket",
                         value: `> #${sanitizeInput(channel.name)}`,
+                      },
+                      {
+                        name:
+                          config.logTicketOpenEmbedEmbed.field_creation ||
+                          "• Creation Time",
+                        value: `> <t:${creationTime}:F>`,
                       },
                     ]);
 

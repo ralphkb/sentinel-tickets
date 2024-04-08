@@ -389,6 +389,7 @@ logTicketOpenEmbedEmbed:
     url: ""
   field_creator: "• Ticket Creator"
   field_ticket: "• Ticket"
+  field_creation: "• Creation Time"
 
 # New ticket embed that is sent to the user when they open a new ticket, directing them to it
 newTicketEmbed:
@@ -1098,6 +1099,7 @@ logDeleteEmbed:
   field_staff: "• Deleted By"
   field_user: "• Ticket Creator"
   field_ticket: "• Ticket"
+  field_creation: "• Creation Time"
 
 # Embed for manual transcripts via the button or command
 transcriptEmbed:
