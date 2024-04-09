@@ -116,6 +116,10 @@ module.exports = {
         name: config.logMoveEmbed.field_ticket,
         value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
       },
+      {
+        name: config.logMoveEmbed.field_category,
+        value: `> ${ticketType} -> ${option}`,
+      },
     ]);
 
     await logChannel.send({ embeds: [logMoveEmbed] });

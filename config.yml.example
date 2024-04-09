@@ -696,6 +696,7 @@ logMoveEmbed:
     url: ""
   field_staff: "• Staff"
   field_ticket: "• Ticket"
+  field_category: "• Category"
 
 # Pin command embed
 pinEmbed:
