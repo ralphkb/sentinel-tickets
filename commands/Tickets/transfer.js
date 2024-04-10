@@ -65,9 +65,9 @@ module.exports = {
     }
 
     await interaction.deferReply();
-    interaction.channel.permissionOverwrites.delete(currentUser);
+    await interaction.channel.permissionOverwrites.delete(currentUser);
     await ticketsDB.set(`${interaction.channel.id}.userID`, optionUser.id);
-    interaction.channel.permissionOverwrites.create(optionUser, {
+    await interaction.channel.permissionOverwrites.create(optionUser, {
       ViewChannel: true,
       SendMessages: true,
       ReadMessageHistory: true,
@@ -139,7 +139,15 @@ module.exports = {
       );
     }
 
-    await interaction.editReply({ embeds: [transferEmbed] });
+    let transferReply = {
+      embeds: [transferEmbed],
+    };
+
+    if (config.commands.transfer.pingUser) {
+      transferReply.content = `<@${optionUser.id}>`;
+    }
+
+    await interaction.editReply(transferReply);
     logMessage(
       `${interaction.user.tag} transferred the ownership of the ticket #${interaction.channel.name} to the user ${optionUser.tag}.`,
     );
