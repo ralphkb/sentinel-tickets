@@ -127,6 +127,7 @@ commands:
   add:
     enabled: true
     permission: "KickMembers"
+    pingUser: false # Ping the newly added user
   alert:
     enabled: true
     permission: "KickMembers"

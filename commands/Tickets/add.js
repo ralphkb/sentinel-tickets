@@ -120,7 +120,15 @@ module.exports = {
         );
       }
 
-      await interaction.editReply({ embeds: [userAddEmbed] });
+      let userAddReply = {
+        embeds: [userAddEmbed],
+      };
+
+      if (config.commands.add.pingUser) {
+        userAddReply.content = `<@${user.id}>`;
+      }
+
+      await interaction.editReply(userAddReply);
       await logChannel.send({ embeds: [logUserAddEmbed] });
       logMessage(
         `${interaction.user.tag} added ${user.tag} to the ticket #${interaction.channel.name}`,
