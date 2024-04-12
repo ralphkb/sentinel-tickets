@@ -15,6 +15,7 @@ const {
   client,
   checkSupportRole,
   configEmbed,
+  sanitizeInput,
 } = require("../../index.js");
 
 module.exports = {
@@ -117,13 +118,27 @@ module.exports = {
           color: "#FF0000",
           title: "DMs Disabled",
           description:
-            "Please enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
+            "The bot could not DM **{user} ({user.tag})** because their DMs were closed.\nPlease enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
+          timestamp: true,
+          thumbnail: `${user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+          footer: {
+            text: `${user.tag}`,
+            iconURL: `${user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+          },
         };
 
         const dmErrorEmbed = await configEmbed(
           "dmErrorEmbed",
           defaultErrorValues,
         );
+
+        if (dmErrorEmbed.data && dmErrorEmbed.data.description) {
+          dmErrorEmbed.setDescription(
+            dmErrorEmbed.data.description
+              .replace(/\{user\}/g, user)
+              .replace(/\{user\.tag\}/g, sanitizeInput(user.tag)),
+          );
+        }
 
         let logChannelId = config.logs.DMErrors || config.logs.default;
         let logChannel = client.channels.cache.get(logChannelId);
