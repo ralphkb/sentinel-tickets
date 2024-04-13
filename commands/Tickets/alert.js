@@ -142,7 +142,16 @@ module.exports = {
 
         let logChannelId = config.logs.DMErrors || config.logs.default;
         let logChannel = client.channels.cache.get(logChannelId);
-        await logChannel.send({ embeds: [dmErrorEmbed] });
+
+        let dmErrorReply = {
+          embeds: [dmErrorEmbed],
+        };
+
+        if (config.dmErrorEmbed.pingUser) {
+          dmErrorReply.content = `<@${user.id}>`;
+        }
+
+        await logChannel.send(dmErrorReply);
         logMessage(
           `The bot could not DM ${user.tag} because their DMs were closed`,
         );

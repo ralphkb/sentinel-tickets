@@ -1287,6 +1287,7 @@ reopenDMEmbed:
 
 # The embed that gets sent in a channel when the bot fails to DM a user
 dmErrorEmbed:
+  pingUser: false # Ping the user the bot failed to DM
   color: "#FF0000"
   title: "DMs Disabled"
   description: "The bot could not DM **{user} ({user.tag})** because their DMs were closed.\nPlease enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings)." # You can use {user} for the user the bot failed to DM and {user.tag} for the user's tag
