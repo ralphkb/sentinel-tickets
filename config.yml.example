@@ -1123,6 +1123,7 @@ transcriptEmbed:
   field_creator: "Ticket Creator"
   field_ticket: "Ticket Name"
   field_category: "Category"
+  field_creation: "Creation Time"
 
 # Stats command embed
 statsEmbed:

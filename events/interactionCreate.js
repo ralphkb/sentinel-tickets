@@ -736,6 +736,10 @@ module.exports = {
             value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
             inline: true,
           },
+          {
+            name: config.transcriptEmbed.field_creation,
+            value: `<t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
+          },
         ]);
 
         let logChannelId = config.logs.transcripts || config.logs.default;
