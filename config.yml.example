@@ -363,7 +363,7 @@ logs:
 
 # The embed that is sent when a new ticket is created, with the questions included
 # For this embed, the options that you do not find here are most likely unique to each category and configured in the category settings above
-ticketOpenEmbedEmbed:
+ticketOpenEmbed:
   title: "" # Keep it empty to use the author field as the title based on your configured title in the category settings
   timestamp: true
   URL: ""
@@ -374,7 +374,7 @@ ticketOpenEmbedEmbed:
 #    iconURL: ""
 
 # Log embed for newly created tickets
-logTicketOpenEmbedEmbed:
+logTicketOpenEmbed:
   color: "#2FF200"
   title: "Ticket Logs | Ticket Created"
   description: ""

@@ -1793,14 +1793,14 @@ module.exports = {
             },
           };
 
-          const ticketOpenEmbedEmbed = await configEmbed(
-            "ticketOpenEmbedEmbed",
+          const ticketOpenEmbed = await configEmbed(
+            "ticketOpenEmbed",
             defaultValues,
           );
 
-          ticketOpenEmbedEmbed.setDescription(category.description);
-          ticketOpenEmbedEmbed.setColor(category.color || "#2FF200");
-          ticketOpenEmbedEmbed.setAuthor({
+          ticketOpenEmbed.setDescription(category.description);
+          ticketOpenEmbed.setColor(category.color || "#2FF200");
+          ticketOpenEmbed.setAuthor({
             name: `${category.embedTitle}`,
             iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
           });
@@ -1816,14 +1816,14 @@ module.exports = {
               `question${questionIndex + 1}`,
             );
 
-            ticketOpenEmbedEmbed.addFields({
+            ticketOpenEmbed.addFields({
               name: `${label}`,
               value: `>>> ${value}`,
             });
           }
 
           if (config.workingHours.enabled && config.workingHours.addField) {
-            ticketOpenEmbedEmbed.addFields({
+            ticketOpenEmbed.addFields({
               name: config.workingHours.fieldTitle || "Working Hours",
               value:
                 `${config.workingHours.fieldValue || "> {openingTime} to {closingTime}"}`
@@ -1926,7 +1926,7 @@ module.exports = {
                 await channel
                   .send({
                     content: rolesToMention,
-                    embeds: [ticketOpenEmbedEmbed],
+                    embeds: [ticketOpenEmbed],
                     components: [answerRow],
                     fetchReply: true,
                   })
@@ -2004,27 +2004,26 @@ module.exports = {
                       },
                     };
 
-                    const logTicketOpenEmbedEmbed = await configEmbed(
-                      "logTicketOpenEmbedEmbed",
+                    const logTicketOpenEmbed = await configEmbed(
+                      "logTicketOpenEmbed",
                       logDefaultValues,
                     );
 
-                    logTicketOpenEmbedEmbed.addFields([
+                    logTicketOpenEmbed.addFields([
                       {
                         name:
-                          config.logTicketOpenEmbedEmbed.field_creator ||
+                          config.logTicketOpenEmbed.field_creator ||
                           "• Ticket Creator",
                         value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
                       },
                       {
                         name:
-                          config.logTicketOpenEmbedEmbed.field_ticket ||
-                          "• Ticket",
+                          config.logTicketOpenEmbed.field_ticket || "• Ticket",
                         value: `> #${sanitizeInput(channel.name)}`,
                       },
                       {
                         name:
-                          config.logTicketOpenEmbedEmbed.field_creation ||
+                          config.logTicketOpenEmbed.field_creation ||
                           "• Creation Time",
                         value: `> <t:${creationTime}:F>`,
                       },
@@ -2035,7 +2034,7 @@ module.exports = {
                     let logChannel =
                       interaction.guild.channels.cache.get(logChannelId);
                     await logChannel.send({
-                      embeds: [logTicketOpenEmbedEmbed],
+                      embeds: [logTicketOpenEmbed],
                     });
                     logMessage(
                       `${interaction.user.tag} created the ticket #${channel.name}`,
