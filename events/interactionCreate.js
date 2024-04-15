@@ -27,6 +27,7 @@ const {
   countMessagesInTicket,
   addTicketCreator,
   isBlacklistExpired,
+  parseDurationToMilliseconds,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -234,11 +235,18 @@ module.exports = {
         }
 
         if (isUserBlacklisted || isRoleBlacklisted) {
+          const expirationTime =
+            isUserBlacklisted?.timestamp +
+            parseDurationToMilliseconds(isUserBlacklisted?.duration);
+          const expiryDate =
+            isUserBlacklisted?.duration === "permanent"
+              ? "Never"
+              : `<t:${Math.floor(expirationTime / 1000)}:R>`;
           const defaultblacklistedValues = {
             color: "#FF0000",
             title: "Blacklisted",
             description:
-              "You are blacklisted from creating tickets at this time.",
+              "You are currently blacklisted from creating tickets.\nExpires: {time}",
             timestamp: true,
             footer: {
               text: `${interaction.user.tag}`,
@@ -250,6 +258,16 @@ module.exports = {
             "blacklistedEmbed",
             defaultblacklistedValues,
           );
+
+          if (blacklistedEmbed.data && blacklistedEmbed.data.description) {
+            blacklistedEmbed.setDescription(
+              blacklistedEmbed.data.description.replace(
+                /\{time\}/g,
+                expiryDate,
+              ),
+            );
+          }
+
           return interaction.reply({
             embeds: [blacklistedEmbed],
             ephemeral: true,
@@ -507,11 +525,18 @@ module.exports = {
       }
 
       if (isUserBlacklisted || isRoleBlacklisted) {
+        const expirationTime =
+          isUserBlacklisted?.timestamp +
+          parseDurationToMilliseconds(isUserBlacklisted?.duration);
+        const expiryDate =
+          isUserBlacklisted?.duration === "permanent"
+            ? "Never"
+            : `<t:${Math.floor(expirationTime / 1000)}:R>`;
         const defaultblacklistedValues = {
           color: "#FF0000",
           title: "Blacklisted",
           description:
-            "You are blacklisted from creating tickets at this time.",
+            "You are currently blacklisted from creating tickets.\nExpires: {time}",
           timestamp: true,
           footer: {
             text: `${interaction.user.tag}`,
@@ -523,6 +548,13 @@ module.exports = {
           "blacklistedEmbed",
           defaultblacklistedValues,
         );
+
+        if (blacklistedEmbed.data && blacklistedEmbed.data.description) {
+          blacklistedEmbed.setDescription(
+            blacklistedEmbed.data.description.replace(/\{time\}/g, expiryDate),
+          );
+        }
+
         return interaction.reply({
           embeds: [blacklistedEmbed],
           ephemeral: true,
