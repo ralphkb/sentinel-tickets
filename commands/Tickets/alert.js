@@ -23,6 +23,9 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("alert")
     .setDescription("Alert the ticket creator.")
+    .addUserOption((option) =>
+      option.setName("user").setDescription("Select a user").setRequired(false),
+    )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.alert.permission],
     )
@@ -45,10 +48,19 @@ module.exports = {
       });
     }
 
+    let user =
+      interaction.options.getUser("user") ||
+      client.users.cache.get(
+        await ticketsDB.get(`${interaction.channel.id}.userID`),
+      );
+
+    if (!interaction.channel.members.has(user.id)) {
+      return interaction.reply({
+        content: "The selected user is not added to this ticket!",
+        ephemeral: true,
+      });
+    }
     await interaction.deferReply();
-    const user = client.users.cache.get(
-      await ticketsDB.get(`${interaction.channel.id}.userID`),
-    );
 
     const closeButton = new ButtonBuilder()
       .setCustomId("closeTicket")
