@@ -22,6 +22,12 @@ module.exports = {
     .addRoleOption((option) =>
       option.setName("role").setDescription("Select a role").setRequired(false),
     )
+    .addStringOption((option) =>
+      option
+        .setName("reason")
+        .setDescription("The reason for removing the user or role")
+        .setRequired(false),
+    )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.remove.permission],
     )
@@ -46,6 +52,8 @@ module.exports = {
 
     let user = interaction.options.getUser("user");
     let role = interaction.options.getRole("role");
+    let reason =
+      interaction.options.getString("reason") || "No reason provided.";
     let logChannelId = config.logs.userRemove || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
@@ -97,11 +105,16 @@ module.exports = {
           name: config.logRemoveEmbed.field_ticket,
           value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
         },
+        {
+          name: config.logRemoveEmbed.field_reason,
+          value: `> ${reason}`,
+        },
       ]);
 
       const defaultValues = {
         color: "#FF0000",
-        description: "Removed **{target} ({target.tag})** from the ticket.",
+        description:
+          "Removed **{target} ({target.tag})** from the ticket.\nReason: **{reason}**",
       };
 
       const userRemoveEmbed = await configEmbed("removeEmbed", defaultValues);
@@ -110,7 +123,8 @@ module.exports = {
         userRemoveEmbed.setDescription(
           userRemoveEmbed.data.description
             .replace(/\{target\}/g, user)
-            .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
+            .replace(/\{target\.tag\}/g, sanitizeInput(user.tag))
+            .replace(/\{reason\}/g, reason),
         );
       }
 
@@ -162,11 +176,16 @@ module.exports = {
           name: config.logRemoveEmbed.field_ticket,
           value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
         },
+        {
+          name: config.logRemoveEmbed.field_reason,
+          value: `> ${reason}`,
+        },
       ]);
 
       const defaultValues = {
         color: "#FF0000",
-        description: "Removed **{target} ({target.tag})** from the ticket.",
+        description:
+          "Removed **{target} ({target.tag})** from the ticket.\nReason: **{reason}**",
       };
 
       const roleRemoveEmbed = await configEmbed("removeEmbed", defaultValues);
@@ -175,7 +194,8 @@ module.exports = {
         roleRemoveEmbed.setDescription(
           roleRemoveEmbed.data.description
             .replace(/\{target\}/g, role)
-            .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
+            .replace(/\{target\.tag\}/g, sanitizeInput(role.name))
+            .replace(/\{reason\}/g, reason),
         );
       }
 

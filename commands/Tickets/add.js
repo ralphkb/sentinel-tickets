@@ -22,6 +22,12 @@ module.exports = {
     .addRoleOption((option) =>
       option.setName("role").setDescription("Select a role").setRequired(false),
     )
+    .addStringOption((option) =>
+      option
+        .setName("reason")
+        .setDescription("The reason for adding the user or role")
+        .setRequired(false),
+    )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.add.permission],
     )
@@ -46,6 +52,8 @@ module.exports = {
 
     let user = interaction.options.getUser("user");
     let role = interaction.options.getRole("role");
+    let reason =
+      interaction.options.getString("reason") || "No reason provided.";
     let logChannelId = config.logs.userAdd || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
 
@@ -103,11 +111,16 @@ module.exports = {
           name: config.logAddEmbed.field_ticket,
           value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
         },
+        {
+          name: config.logAddEmbed.field_reason,
+          value: `> ${reason}`,
+        },
       ]);
 
       const defaultValues = {
         color: "#2FF200",
-        description: "Added **{target} ({target.tag})** to the ticket.",
+        description:
+          "Added **{target} ({target.tag})** to the ticket.\nReason: **{reason}**",
       };
 
       const userAddEmbed = await configEmbed("addEmbed", defaultValues);
@@ -116,7 +129,8 @@ module.exports = {
         userAddEmbed.setDescription(
           userAddEmbed.data.description
             .replace(/\{target\}/g, user)
-            .replace(/\{target\.tag\}/g, sanitizeInput(user.tag)),
+            .replace(/\{target\.tag\}/g, sanitizeInput(user.tag))
+            .replace(/\{reason\}/g, reason),
         );
       }
 
@@ -182,11 +196,16 @@ module.exports = {
           name: config.logAddEmbed.field_ticket,
           value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
         },
+        {
+          name: config.logAddEmbed.field_reason,
+          value: `> ${reason}`,
+        },
       ]);
 
       const defaultValues = {
         color: "#2FF200",
-        description: "Added **{target} ({target.tag})** to the ticket.",
+        description:
+          "Added **{target} ({target.tag})** to the ticket.\nReason: **{reason}**",
       };
 
       const roleAddEmbed = await configEmbed("addEmbed", defaultValues);
@@ -195,7 +214,8 @@ module.exports = {
         roleAddEmbed.setDescription(
           roleAddEmbed.data.description
             .replace(/\{target\}/g, role)
-            .replace(/\{target\.tag\}/g, sanitizeInput(role.name)),
+            .replace(/\{target\.tag\}/g, sanitizeInput(role.name))
+            .replace(/\{reason\}/g, reason),
         );
       }
       await interaction.editReply({ embeds: [roleAddEmbed] });

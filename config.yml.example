@@ -558,7 +558,7 @@ blacklistListEmbed:
 addEmbed:
   color: "#2FF200"
   title: ""
-  description: "Added **{target} ({target.tag})** to the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  description: "Added **{target} ({target.tag})** to the ticket.\nReason: **{reason}**" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role & {reason} for the reason.
   timestamp: false
   URL: ""
   image: ""
@@ -590,6 +590,7 @@ logAddEmbed:
   field_staff: "• Staff"
   field_target: "• Target"
   field_ticket: "• Ticket"
+  field_reason: "• Reason"
 
 # Alert command embed
 alertEmbed:
@@ -612,7 +613,7 @@ alertEmbed:
 removeEmbed:
   color: "#FF0000"
   title: ""
-  description: "Removed **{target} ({target.tag})** from the ticket." # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role.
+  description: "Removed **{target} ({target.tag})** from the ticket.\nReason: **{reason}**" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role & {reason} for the reason.
   timestamp: false
   URL: ""
   image: ""
@@ -644,6 +645,7 @@ logRemoveEmbed:
   field_staff: "• Staff"
   field_target: "• Target"
   field_ticket: "• Ticket"
+  field_reason: "• Reason"
 
 # Embed that gets sent in a ticket if the ticket creator left the discord server
 userLeftEmbed:
