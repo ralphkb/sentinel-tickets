@@ -54,6 +54,13 @@ module.exports = {
         await ticketsDB.get(`${interaction.channel.id}.userID`),
       );
 
+    if (user.bot) {
+      return interaction.reply({
+        content: "You cannot send a ticket alert to a bot.",
+        ephemeral: true,
+      });
+    }
+
     if (!interaction.channel.members.has(user.id)) {
       return interaction.reply({
         content: "The selected user is not added to this ticket!",
