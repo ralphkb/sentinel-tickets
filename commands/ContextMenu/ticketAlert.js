@@ -23,7 +23,7 @@ module.exports = {
   enabled: config.contextMenuCommands.ticketAlert.enabled,
   data: new ContextMenuCommandBuilder()
     .setName("Ticket Alert")
-    .setType(ApplicationCommandType.Message)
+    .setType(ApplicationCommandType.User)
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.contextMenuCommands.ticketAlert.permission],
     )
@@ -46,10 +46,28 @@ module.exports = {
       });
     }
 
+    const member = interaction.targetMember;
+    const user =
+      member.user ||
+      client.users.cache.get(
+        await ticketsDB.get(`${interaction.channel.id}.userID`),
+      );
+
+    if (user.bot) {
+      return interaction.reply({
+        content: "You cannot send a ticket alert to a bot.",
+        ephemeral: true,
+      });
+    }
+
+    if (!interaction.channel.members.has(user.id)) {
+      return interaction.reply({
+        content: "The selected user is not added to this ticket!",
+        ephemeral: true,
+      });
+    }
+
     await interaction.deferReply();
-    const user = client.users.cache.get(
-      await ticketsDB.get(`${interaction.channel.id}.userID`),
-    );
 
     const closeButton = new ButtonBuilder()
       .setCustomId("closeTicket")
