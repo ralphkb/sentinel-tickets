@@ -30,6 +30,12 @@ module.exports = {
               { name: "Medium", value: "medium" },
               { name: "High", value: "high" },
             ),
+        )
+        .addStringOption((option) =>
+          option
+            .setName("reason")
+            .setDescription("The reason for adding the priority")
+            .setRequired(false),
         ),
     )
     .addSubcommand((subcommand) =>
@@ -82,6 +88,8 @@ module.exports = {
 
       await interaction.deferReply();
       const option = interaction.options.getString("priority");
+      let reason =
+        interaction.options.getString("reason") || "No reason provided.";
       let priorityEmoji;
       switch (option) {
         case "low":
@@ -129,6 +137,10 @@ module.exports = {
           name: config.logPriorityAddEmbed.field_priority,
           value: `> ${priorityEmoji} ${option}`,
         },
+        {
+          name: config.logPriorityAddEmbed.field_reason,
+          value: `> ${reason}`,
+        },
       ]);
 
       interaction.channel.setName(
@@ -138,7 +150,7 @@ module.exports = {
       const defaultValues = {
         color: "#2FF200",
         description:
-          "The priority of this ticket has been set to **{priority}**.",
+          "The priority of this ticket has been set to **{priority}**.\nReason: **{reason}**",
       };
 
       const priorityAddEmbed = await configEmbed(
@@ -148,7 +160,9 @@ module.exports = {
 
       if (priorityAddEmbed.data && priorityAddEmbed.data.description) {
         priorityAddEmbed.setDescription(
-          priorityAddEmbed.data.description.replace(/\{priority\}/g, option),
+          priorityAddEmbed.data.description
+            .replace(/\{priority\}/g, option)
+            .replace(/\{reason\}/g, reason),
         );
       }
 

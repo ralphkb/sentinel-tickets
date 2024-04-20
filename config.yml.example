@@ -742,7 +742,7 @@ logPinEmbed:
 priorityAddEmbed:
   color: "2FF200"
   title: ""
-  description: "The priority of this ticket has been set to **{priority}**." # Use {priority} for the name of the priority
+  description: "The priority of this ticket has been set to **{priority}**.\nReason: **{reason}**" # Use {priority} for the name of the priority, {reason} for the reason
   timestamp: false
   URL: ""
   image: ""
@@ -774,6 +774,7 @@ logPriorityAddEmbed:
   field_staff: "• Staff"
   field_ticket: "• Ticket"
   field_priority: "• Priority"
+  field_reason: "• Reason"
 
 # Priority remove command embed
 priorityRemoveEmbed:
