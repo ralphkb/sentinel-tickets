@@ -156,13 +156,33 @@ module.exports = {
 
         if (now < expirationTime) {
           const expiredTimestamp = Math.round(expirationTime / 1000);
-          const cooldownReply = config.errors.on_cooldown
-            .replace(/\{command\}/g, `${command.data.name}`)
-            .replace(/\{time\}/g, `<t:${expiredTimestamp}:R>`);
+          const defaultCmdValues = {
+            color: "#FF0000",
+            title: "Command Cooldown",
+            description:
+              "Please wait, you are on a cooldown for `{command}`.\nYou can use it again in {time}.",
+            timestamp: true,
+            footer: {
+              text: `${interaction.user.tag}`,
+              iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+            },
+          };
+          const commandCooldownEmbed = await configEmbed(
+            "commandCooldownEmbed",
+            defaultCmdValues,
+          );
+          if (
+            commandCooldownEmbed.data &&
+            commandCooldownEmbed.data.description
+          ) {
+            commandCooldownEmbed.setDescription(
+              commandCooldownEmbed.data.description
+                .replace(/\{command\}/g, `${command.data.name}`)
+                .replace(/\{time\}/g, `<t:${expiredTimestamp}:R>`),
+            );
+          }
           return interaction.reply({
-            content:
-              cooldownReply ||
-              `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again in <t:${expiredTimestamp}:R>.`,
+            embeds: [commandCooldownEmbed],
             ephemeral: true,
           });
         }
