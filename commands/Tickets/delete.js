@@ -185,7 +185,12 @@ module.exports = {
             value: `> ${claimUser ? sanitizeInput(claimUser.tag) : "None"}`,
             inline: true,
           },
-        );
+        )
+        .addFields({
+          name: "Ticket Creation Time",
+          value: `> <t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
+          inline: true,
+        });
 
       const options = [];
       for (let i = 1; i <= 5; i++) {
