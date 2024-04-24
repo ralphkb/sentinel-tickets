@@ -5,7 +5,7 @@ const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const { mainDB } = require("../../index.js");
 const packageJson = require("../../package.json");
-const { configEmbed } = require("../../index.js");
+const { configEmbed, formatTime } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.stats.enabled,
@@ -37,6 +37,7 @@ module.exports = {
         (total, creator) => total + creator.ticketsCreated,
         0,
       ) / totalTicketCreators;
+    const totalUptime = Math.floor(process.uptime());
 
     const defaultDMValues = {
       color: "#2FF200",
@@ -66,7 +67,7 @@ module.exports = {
       },
       {
         name: "🤖 Bot",
-        value: `> Version: v${packageJson.version}\n> RAM Usage: ${ramUsageMB} MB`,
+        value: `> Version: v${packageJson.version}\n> RAM Usage: ${ramUsageMB} MB\n> Uptime: ${formatTime(totalUptime)}`,
       },
     ]);
 
