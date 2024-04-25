@@ -71,8 +71,11 @@ module.exports = {
         const button = new ButtonBuilder()
           .setCustomId(customId)
           .setLabel(category.buttonLabel)
-          .setStyle(ButtonStyle[category.buttonStyle])
-          .setEmoji(category.buttonEmoji);
+          .setStyle(ButtonStyle[category.buttonStyle]);
+
+        if (category.buttonEmoji !== "") {
+          button.setEmoji(category.buttonEmoji);
+        }
 
         // Add the button to the array
         buttons.push(button);
@@ -115,8 +118,11 @@ module.exports = {
         const option = new StringSelectMenuOptionBuilder()
           .setLabel(category.menuLabel)
           .setDescription(category.menuDescription)
-          .setEmoji(category.menuEmoji)
           .setValue(customId);
+
+        if (category.menuEmoji !== "") {
+          option.setEmoji(category.menuEmoji);
+        }
 
         // Add the option to the array
         options.push(option);
