@@ -584,49 +584,6 @@ module.exports = {
       if (buttonCooldown.has(interaction.user.id))
         return interaction.reply({ embeds: [cooldownEmbed], ephemeral: true });
 
-      if (timeRegex.test(openingTime) && timeRegex.test(closingTime)) {
-        if (config.workingHours.enabled && blockTicketCreation) {
-          if (
-            userCurrentTime.isBefore(openingTimeToday) ||
-            userCurrentTime.isAfter(closingTimeToday)
-          ) {
-            const defaultValues = {
-              color: "#FF0000",
-              title: "Working Hours",
-              description:
-                "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}.",
-              timestamp: true,
-            };
-
-            const workingHoursEmbed = await configEmbed(
-              "workingHoursEmbed",
-              defaultValues,
-            );
-
-            if (workingHoursEmbed.data && workingHoursEmbed.data.description) {
-              workingHoursEmbed.setDescription(
-                workingHoursEmbed.data.description
-                  .replace(
-                    /\{openingTime\}/g,
-                    `<t:${openingTimeToday.unix()}:t>`,
-                  )
-                  .replace(
-                    /\{closingTime\}/g,
-                    `<t:${closingTimeToday.unix()}:t>`,
-                  )
-                  .replace(
-                    /\{now\}/g,
-                    `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
-                  ),
-              );
-            }
-            return interaction.reply({
-              embeds: [workingHoursEmbed],
-              ephemeral: true,
-            });
-          }
-        }
-      }
       const customIds = Object.keys(ticketCategories);
 
       customIds.forEach(async (customId) => {
@@ -637,6 +594,53 @@ module.exports = {
             cooldown,
           );
           const category = ticketCategories[customId];
+
+          if (timeRegex.test(openingTime) && timeRegex.test(closingTime)) {
+            if (config.workingHours.enabled && blockTicketCreation) {
+              if (
+                userCurrentTime.isBefore(openingTimeToday) ||
+                userCurrentTime.isAfter(closingTimeToday)
+              ) {
+                const defaultValues = {
+                  color: "#FF0000",
+                  title: "Working Hours",
+                  description:
+                    "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}.",
+                  timestamp: true,
+                };
+
+                const workingHoursEmbed = await configEmbed(
+                  "workingHoursEmbed",
+                  defaultValues,
+                );
+
+                if (
+                  workingHoursEmbed.data &&
+                  workingHoursEmbed.data.description
+                ) {
+                  workingHoursEmbed.setDescription(
+                    workingHoursEmbed.data.description
+                      .replace(
+                        /\{openingTime\}/g,
+                        `<t:${openingTimeToday.unix()}:t>`,
+                      )
+                      .replace(
+                        /\{closingTime\}/g,
+                        `<t:${closingTimeToday.unix()}:t>`,
+                      )
+                      .replace(
+                        /\{now\}/g,
+                        `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
+                      ),
+                  );
+                }
+                return interaction.reply({
+                  embeds: [workingHoursEmbed],
+                  ephemeral: true,
+                });
+              }
+            }
+          }
 
           if (
             category.creatorRoles.length > 0 &&
