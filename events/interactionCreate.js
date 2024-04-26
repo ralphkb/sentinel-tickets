@@ -1922,10 +1922,20 @@ module.exports = {
             const configValue = category.ticketName;
 
             let channelName;
-            if (configValue === "USERNAME") {
-              channelName = `${category.name}-${USERNAME}`;
-            } else if (configValue === "TICKETCOUNT") {
-              channelName = `${category.name}-${TICKETCOUNT}`;
+            switch (configValue) {
+              case "USERNAME":
+                channelName = `${category.name}-${USERNAME}`;
+                break;
+              case "TICKETCOUNT":
+                channelName = `${category.name}-${TICKETCOUNT}`;
+                break;
+              case "BOTH":
+                channelName = `${USERNAME}-${TICKETCOUNT}`;
+                break;
+              default:
+                throw new Error(
+                  `Invalid category ticketName configuration value: ${configValue}`,
+                );
             }
 
             await interaction.guild.channels
