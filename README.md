@@ -10,6 +10,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - [🛠️ Installation](#installation)
 - [🔄 Updating](#updating)
 - [✨ Features](#features)
+- [💖 Sponsor](#sponsor)
 - [📚 Documentation](#documentation)
 - [🐛 Bug Reporting](#bug-reporting)
 - [📃 License](#license)
@@ -89,13 +90,17 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Total Reviews
     - Average Rating
 
+## Sponsor
+If you find value in this project, you can support the continued development by joining my Patreon! https://www.patreon.com/Ralphkb  
+You may also consider leaving a star, all support is welcome and really appreciated, thank you! ❤️ 
+
 ## Documentation
 The Wiki will be improved over time and can be found here: https://github.com/ralphkb/sentinel-tickets/wiki
 
 ## Bug Reporting
 - For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
-This is a free project that I enjoy working on in my free time, I cannot guarantee support however I will try my best to fix bugs, sort issues and add new features! I am still learning and improving, thank you for your understanding.  
-If you find value in this project, consider leaving a star! 😄
+This is a free project that I enjoy working on in my free time, I cannot guarantee support however I will try my best to fix bugs, sort issues and add new features! I am still learning and improving, thank you for your understanding. 😄  
+Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support. Patreon members receive unique roles and perks on the discord.
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
