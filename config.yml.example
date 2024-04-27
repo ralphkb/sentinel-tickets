@@ -302,10 +302,11 @@ workingHours:
     - day: "sunday"
       min: "09:00"
       max: "12:00"
-      blockTicketCreation: true						   
+      blockTicketCreation: true
   addField: true # If working hours is enabled, this option will enable or disable the addition of the working hours field to the ticket creation embed
   fieldTitle: "Working Hours" # The title of the working hours field
-  fieldValue: "> {day}: {openingTime} to {closingTime}" # The value of "each" working hours field (depending on how many days you configured above), use {day} for today's day of the week, {openingTime} for the opening time and {closingTime} for the closing time
+  valueDays: "TODAY" # Options are: "TODAY" which will only show today's working hours or "ALL" which will show the configured working hours for each day
+  fieldValue: "> {day}: {openingTime} to {closingTime}" # The value of each working hours field, use {day} for today's day of the week, {openingTime} for the opening time and {closingTime} for the closing time
 
 # The embed that is sent when the ticket creation is blocked due to being outside the working hours
 workingHoursEmbed:

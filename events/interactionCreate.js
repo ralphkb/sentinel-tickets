@@ -1885,42 +1885,59 @@ module.exports = {
 
           if (config.workingHours.enabled && config.workingHours.addField) {
             let workingHoursText = "";
-            const currentDay = userCurrentTime.format("dddd").toLowerCase();
-            for (const day in workingHours) {
-              const { min, max } = workingHours[day];
-              const isCurrentDay = day === currentDay;
-              const dayText = isCurrentDay
-                ? `**${day.charAt(0).toUpperCase() + day.slice(1)}**`
-                : day.charAt(0).toUpperCase() + day.slice(1);
-              let openTime = min || config.workingHours.default.min;
-              let closeTime = max || config.workingHours.default.max;
+            if (config.workingHours.valueDays === "ALL") {
+              const currentDay = userCurrentTime.format("dddd").toLowerCase();
+              for (const day in workingHours) {
+                const { min, max } = workingHours[day];
+                const isCurrentDay = day === currentDay;
+                const dayText = isCurrentDay
+                  ? `**${day.charAt(0).toUpperCase() + day.slice(1)}**`
+                  : day.charAt(0).toUpperCase() + day.slice(1);
+                let openTime = min || config.workingHours.default.min;
+                let closeTime = max || config.workingHours.default.max;
 
-              const openTimeToday = userCurrentTime
-                .clone()
-                .startOf("day")
-                .set({
-                  hour: openTime.split(":")[0],
-                  minute: openTime.split(":")[1],
-                });
+                const openTimeToday = userCurrentTime
+                  .clone()
+                  .startOf("day")
+                  .set({
+                    hour: openTime.split(":")[0],
+                    minute: openTime.split(":")[1],
+                  });
 
-              const closeTimeToday = userCurrentTime
-                .clone()
-                .startOf("day")
-                .set({
-                  hour: closeTime.split(":")[0],
-                  minute: closeTime.split(":")[1],
-                });
+                const closeTimeToday = userCurrentTime
+                  .clone()
+                  .startOf("day")
+                  .set({
+                    hour: closeTime.split(":")[0],
+                    minute: closeTime.split(":")[1],
+                  });
 
-              const openingTimestamp = `<t:${openTimeToday.unix()}:t>`;
-              const closingTimestamp = `<t:${closeTimeToday.unix()}:t>`;
+                const openingTimestamp = `<t:${openTimeToday.unix()}:t>`;
+                const closingTimestamp = `<t:${closeTimeToday.unix()}:t>`;
 
-              const workingHoursField = config.workingHours.fieldValue
-                ? `${config.workingHours.fieldValue}\n`
-                : `> {day}: {openingTime} to {closingTime}\n`;
-              workingHoursText += workingHoursField
-                .replace(/\{day\}/g, dayText)
-                .replace(/\{openingTime\}/g, openingTimestamp)
-                .replace(/\{closingTime\}/g, closingTimestamp);
+                const workingHoursField = config.workingHours.fieldValue
+                  ? `${config.workingHours.fieldValue}\n`
+                  : `> {day}: {openingTime} to {closingTime}\n`;
+                workingHoursText += workingHoursField
+                  .replace(/\{day\}/g, dayText)
+                  .replace(/\{openingTime\}/g, openingTimestamp)
+                  .replace(/\{closingTime\}/g, closingTimestamp);
+              }
+            } else if (config.workingHours.valueDays === "TODAY") {
+              workingHoursText +=
+                `${config.workingHours.fieldValue || "> {day}: {openingTime} to {closingTime}"}`
+                  .replace(
+                    /\{day\}/g,
+                    dayToday.charAt(0).toUpperCase() + dayToday.slice(1),
+                  )
+                  .replace(
+                    /\{openingTime\}/g,
+                    `<t:${openingTimeToday.unix()}:t>`,
+                  )
+                  .replace(
+                    /\{closingTime\}/g,
+                    `<t:${closingTimeToday.unix()}:t>`,
+                  );
             }
             ticketOpenEmbed.addFields({
               name: config.workingHours.fieldTitle || "Working Hours",
