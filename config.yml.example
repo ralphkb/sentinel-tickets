@@ -303,6 +303,7 @@ workingHours:
       min: "09:00"
       max: "12:00"
       blockTicketCreation: true
+  outsideWarning: true # If working hours is enabled, this option will enable or disable the warning embed when a ticket is created outside the working hours     
   addField: true # If working hours is enabled, this option will enable or disable the addition of the working hours field to the ticket creation embed
   fieldTitle: "Working Hours" # The title of the working hours field
   valueDays: "TODAY" # Options are: "TODAY" which will only show today's working hours or "ALL" which will show the configured working hours for each day
@@ -313,6 +314,23 @@ workingHoursEmbed:
   color: "#FF0000"
   title: "Working Hours"
   description: "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}." # The message displayed when the ticket creation is blocked, use {openingTime} for the opening time, {closingTime} for the closing time and {now} for the current time
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# The embed that is sent when a ticket is created outside the working hours
+outsideWorkingHoursEmbed:
+  color: "#FF0000"
+  title: "Outside Working Hours"
+  description: "You created a ticket outside of our working hours. Please be aware that our response time may be delayed.\nOur working hours for today are from {openingTime} to {closingTime}." # Use {openingTime} for the opening time, {closingTime} for the closing time
   timestamp: true
   URL: ""
   image: ""

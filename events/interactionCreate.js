@@ -2169,6 +2169,57 @@ module.exports = {
                   .then((message) => {
                     message.delete();
                   });
+
+                if (
+                  timeRegex.test(openingTime) &&
+                  timeRegex.test(closingTime)
+                ) {
+                  if (
+                    config.workingHours.enabled &&
+                    !blockTicketCreation &&
+                    config.workingHours.outsideWarning
+                  ) {
+                    if (
+                      userCurrentTime.isBefore(openingTimeToday) ||
+                      userCurrentTime.isAfter(closingTimeToday)
+                    ) {
+                      const defaultValues = {
+                        color: "#FF0000",
+                        title: "Outside Working Hours",
+                        description:
+                          "You created a ticket outside of our working hours. Please be aware that our response time may be delayed.\nOur working hours for today are from {openingTime} to {closingTime}.",
+                        timestamp: true,
+                      };
+
+                      const outsideWorkingHoursEmbed = await configEmbed(
+                        "outsideWorkingHoursEmbed",
+                        defaultValues,
+                      );
+
+                      if (
+                        outsideWorkingHoursEmbed.data &&
+                        outsideWorkingHoursEmbed.data.description
+                      ) {
+                        outsideWorkingHoursEmbed.setDescription(
+                          outsideWorkingHoursEmbed.data.description
+                            .replace(
+                              /\{openingTime\}/g,
+                              `<t:${openingTimeToday.unix()}:t>`,
+                            )
+                            .replace(
+                              /\{closingTime\}/g,
+                              `<t:${closingTimeToday.unix()}:t>`,
+                            ),
+                        );
+                      }
+                      setTimeout(async () => {
+                        await channel.send({
+                          embeds: [outsideWorkingHoursEmbed],
+                        });
+                      }, 3000);
+                    }
+                  }
+                }
               });
 
             await mainDB.set("totalTickets", TICKETCOUNT + 1);
