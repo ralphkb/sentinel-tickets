@@ -21,13 +21,13 @@
   },
   "dependencies": {
     "@discordjs/rest": "^2.2.0",
-    "better-sqlite3": "^9.5.0",
+    "better-sqlite3": "^9.6.0",
     "discord-html-transcripts": "^3.2.0",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "moment-timezone": "^0.5.45",
     "quick.db": "^9.1.7",
-    "yaml": "^2.4.1"
+    "yaml": "^2.4.2"
   },
   "devDependencies": {
     "eslint": "^9.1.1",
