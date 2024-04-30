@@ -7,7 +7,7 @@ const {
   ticketsDB,
   sanitizeInput,
   logMessage,
-  client,
+  getUser,
   checkSupportRole,
   configEmbed,
 } = require("../../index.js");
@@ -46,7 +46,7 @@ module.exports = {
     let ticketType = await ticketsDB.get(
       `${interaction.channel.id}.ticketType`,
     );
-    let currentUser = client.users.cache.get(
+    let currentUser = await getUser(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
 

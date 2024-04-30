@@ -4,7 +4,6 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
-  client,
   ticketsDB,
   sanitizeInput,
   logMessage,
@@ -12,6 +11,7 @@ const {
   saveTranscriptTxt,
   checkSupportRole,
   configEmbed,
+  getUser,
 } = require("../../index.js");
 
 module.exports = {
@@ -42,7 +42,7 @@ module.exports = {
     }
     await interaction.deferReply({ ephemeral: true });
 
-    let ticketUserID = client.users.cache.get(
+    let ticketUserID = await getUser(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
 

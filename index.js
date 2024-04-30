@@ -174,6 +174,22 @@ async function addTicketCreator(userID) {
   await mainDB.set("ticketCreators", ticketCreators);
 }
 
+async function getUser(id) {
+  let user = client.users.cache.get(id);
+
+  if (user) {
+    return user;
+  } else {
+    try {
+      user = await client.users.fetch(id);
+      return user;
+    } catch (error) {
+      console.error(`Error fetching user with ID ${id}:`, error);
+      return null;
+    }
+  }
+}
+
 async function configEmbed(configPath, defaultValues = {}) {
   const embed = new EmbedBuilder();
 
@@ -289,12 +305,15 @@ async function saveTranscriptTxt(interaction) {
   let lastId;
   let transcript = [];
   let totalFetched = 0;
-  let ticketUserID = client.users.cache.get(
+  let ticketUserID = await getUser(
     await ticketsDB.get(`${interaction.channel.id}.userID`),
   );
-  let claimUser = client.users.cache.get(
-    await ticketsDB.get(`${interaction.channel.id}.claimUser`),
-  );
+  let claimUserID = await ticketsDB.get(`${interaction.channel.id}.claimUser`);
+  let claimUser;
+
+  if (claimUserID) {
+    claimUser = await getUser(claimUserID);
+  }
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -485,6 +504,7 @@ module.exports = {
   addTicketCreator,
   isBlacklistExpired,
   parseDurationToMilliseconds,
+  getUser,
 };
 
 // Holding commands cooldown data

@@ -28,6 +28,7 @@ const {
   addTicketCreator,
   isBlacklistExpired,
   parseDurationToMilliseconds,
+  getUser,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -740,7 +741,7 @@ module.exports = {
         }
         await interaction.deferReply({ ephemeral: true });
 
-        let ticketUserID = client.users.cache.get(
+        let ticketUserID = await getUser(
           await ticketsDB.get(`${interaction.channel.id}.userID`),
         );
         let attachment;
@@ -828,7 +829,7 @@ module.exports = {
 
         await interaction.deferReply();
 
-        let ticketUserID = client.users.cache.get(
+        let ticketUserID = await getUser(
           await ticketsDB.get(`${interaction.channel.id}.userID`),
         );
         let ticketChannel = interaction.guild.channels.cache.get(
@@ -920,9 +921,14 @@ module.exports = {
           }
         });
 
-        let claimUser = client.users.cache.get(
-          await ticketsDB.get(`${interaction.channel.id}.claimUser`),
+        let claimUserID = await ticketsDB.get(
+          `${interaction.channel.id}.claimUser`,
         );
+        let claimUser;
+
+        if (claimUserID) {
+          claimUser = await getUser(claimUserID);
+        }
         await interaction.channel.permissionOverwrites.create(ticketUserID.id, {
           ViewChannel: true,
           SendMessages: true,
@@ -1042,12 +1048,17 @@ module.exports = {
         } else if (config.transcriptType === "TXT") {
           attachment = await saveTranscriptTxt(interaction);
         }
-        let ticketUserID = client.users.cache.get(
+        let ticketUserID = await getUser(
           await ticketsDB.get(`${interaction.channel.id}.userID`),
         );
-        let claimUser = client.users.cache.get(
-          await ticketsDB.get(`${interaction.channel.id}.claimUser`),
+        let claimUserID = await ticketsDB.get(
+          `${interaction.channel.id}.claimUser`,
         );
+        let claimUser;
+
+        if (claimUserID) {
+          claimUser = await getUser(claimUserID);
+        }
 
         const logDefaultValues = {
           color: "#FF0000",
@@ -1319,12 +1330,17 @@ module.exports = {
           `${interaction.channel.id}.closeUserID`,
           interaction.user.id,
         );
-        let ticketUserID = client.users.cache.get(
+        let ticketUserID = await getUser(
           await ticketsDB.get(`${interaction.channel.id}.userID`),
         );
-        let claimUser = client.users.cache.get(
-          await ticketsDB.get(`${interaction.channel.id}.claimUser`),
+        let claimUserID = await ticketsDB.get(
+          `${interaction.channel.id}.claimUser`,
         );
+        let claimUser;
+
+        if (claimUserID) {
+          claimUser = await getUser(claimUserID);
+        }
         let ticketButton = await ticketsDB.get(
           `${interaction.channel.id}.button`,
         );

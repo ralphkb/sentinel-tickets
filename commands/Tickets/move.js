@@ -10,7 +10,7 @@ const {
   ticketCategories,
   checkSupportRole,
   configEmbed,
-  client,
+  getUser,
 } = require("../../index.js");
 
 module.exports = {
@@ -79,7 +79,7 @@ module.exports = {
     const categoryID = category.categoryID;
     if (config.commands.move.updateTopic) {
       const ticketTopic = category.ticketTopic;
-      const ticketCreator = client.users.cache.get(
+      const ticketCreator = await getUser(
         await ticketsDB.get(`${interaction.channel.id}.userID`),
       );
       await interaction.channel.setTopic(

@@ -15,7 +15,7 @@ const {
   configEmbed,
   saveTranscript,
   saveTranscriptTxt,
-  client,
+  getUser,
 } = require("../../index.js");
 
 module.exports = {
@@ -48,7 +48,7 @@ module.exports = {
     }
     await interaction.deferReply({ ephemeral: true });
 
-    let ticketUserID = client.users.cache.get(
+    let ticketUserID = await getUser(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
 

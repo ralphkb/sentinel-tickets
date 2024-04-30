@@ -17,6 +17,7 @@ const {
   mainDB,
   checkSupportRole,
   configEmbed,
+  getUser,
 } = require("../../index.js");
 
 module.exports = {
@@ -54,7 +55,14 @@ module.exports = {
     }
 
     let claimStatus = await ticketsDB.get(`${interaction.channel.id}.claimed`);
-    let claimUser = await ticketsDB.get(`${interaction.channel.id}.claimUser`);
+    let claimUserID = await ticketsDB.get(
+      `${interaction.channel.id}.claimUser`,
+    );
+    let claimUser;
+
+    if (claimUserID) {
+      claimUser = await getUser(claimUserID);
+    }
 
     if (claimStatus) {
       return interaction.reply({

@@ -17,6 +17,7 @@ const {
   checkSupportRole,
   configEmbed,
   sanitizeInput,
+  getUser,
 } = require("../../index.js");
 
 module.exports = {
@@ -49,9 +50,7 @@ module.exports = {
     const member = interaction.targetMember;
     const user =
       member.user ||
-      client.users.cache.get(
-        await ticketsDB.get(`${interaction.channel.id}.userID`),
-      );
+      (await getUser(await ticketsDB.get(`${interaction.channel.id}.userID`)));
 
     if (user.bot) {
       return interaction.reply({

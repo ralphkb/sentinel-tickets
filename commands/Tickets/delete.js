@@ -20,6 +20,7 @@ const {
   checkSupportRole,
   configEmbed,
   countMessagesInTicket,
+  getUser,
 } = require("../../index.js");
 
 module.exports = {
@@ -51,12 +52,17 @@ module.exports = {
 
     await interaction.deferReply();
     const totalMessages = await mainDB.get("totalMessages");
-    let ticketUserID = client.users.cache.get(
+    let ticketUserID = await getUser(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
-    let claimUser = client.users.cache.get(
-      await ticketsDB.get(`${interaction.channel.id}.claimUser`),
+    let claimUserID = await ticketsDB.get(
+      `${interaction.channel.id}.claimUser`,
     );
+    let claimUser;
+
+    if (claimUserID) {
+      claimUser = await getUser(claimUserID);
+    }
     let ticketType = await ticketsDB.get(
       `${interaction.channel.id}.ticketType`,
     );

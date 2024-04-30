@@ -12,6 +12,7 @@ const {
   logMessage,
   checkSupportRole,
   configEmbed,
+  getUser,
 } = require("../../index.js");
 
 module.exports = {
@@ -49,7 +50,7 @@ module.exports = {
     }
 
     await interaction.deferReply();
-    let ticketUserID = client.users.cache.get(
+    let ticketUserID = await getUser(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
     let ticketChannel = interaction.guild.channels.cache.get(
@@ -138,9 +139,14 @@ module.exports = {
       }
     });
 
-    let claimUser = client.users.cache.get(
-      await ticketsDB.get(`${interaction.channel.id}.claimUser`),
+    let claimUserID = await ticketsDB.get(
+      `${interaction.channel.id}.claimUser`,
     );
+    let claimUser;
+
+    if (claimUserID) {
+      claimUser = await getUser(claimUserID);
+    }
     await interaction.channel.permissionOverwrites.create(ticketUserID.id, {
       ViewChannel: true,
       SendMessages: true,
