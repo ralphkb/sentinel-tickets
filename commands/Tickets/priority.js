@@ -169,7 +169,7 @@ module.exports = {
       await interaction.editReply({ embeds: [priorityAddEmbed] });
       await logChannel.send({ embeds: [logPriorityAddEmbed] });
       logMessage(
-        `${interaction.user.tag} updated the priority of the ticket #${interaction.channel.name} to ${option}.`,
+        `${interaction.user.tag} updated the priority of the ticket #${interaction.channel.name} to ${option} with reason ${reason}.`,
       );
     }
 
