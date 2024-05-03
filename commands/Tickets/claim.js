@@ -200,7 +200,9 @@ module.exports = {
           },
         ]);
 
-        await logsChannel.send({ embeds: [logClaimedEmbed] });
+        if (config.toggleLogs.ticketClaim) {
+          await logsChannel.send({ embeds: [logClaimedEmbed] });
+        }
         await mainDB.set("totalClaims", totalClaims + 1);
         logMessage(
           `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,

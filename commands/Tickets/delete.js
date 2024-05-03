@@ -118,7 +118,9 @@ module.exports = {
 
     let logChannelId = config.logs.ticketDelete || config.logs.default;
     let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-    await logsChannel.send({ embeds: [logDeleteEmbed], files: [attachment] });
+    if (config.toggleLogs.ticketDelete) {
+      await logsChannel.send({ embeds: [logDeleteEmbed], files: [attachment] });
+    }
     logMessage(
       `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
     );
@@ -293,7 +295,9 @@ module.exports = {
           dmErrorReply.content = `<@${ticketUserID.id}>`;
         }
 
-        await logChannel.send(dmErrorReply);
+        if (config.toggleLogs.DMErrors) {
+          await logChannel.send(dmErrorReply);
+        }
         logMessage(
           `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
         );

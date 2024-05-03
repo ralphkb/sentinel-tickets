@@ -235,7 +235,9 @@ module.exports = {
               value: `> ${duration}`,
             },
           ]);
-          await logChannel.send({ embeds: [logBlacklistEmbed] });
+          if (config.toggleLogs.blacklistAdd) {
+            await logChannel.send({ embeds: [logBlacklistEmbed] });
+          }
 
           return interaction.editReply({
             embeds: [blacklistedEmbedUser],
@@ -344,7 +346,9 @@ module.exports = {
               value: `> ${duration}`,
             },
           ]);
-          await logChannel.send({ embeds: [logBlacklistEmbed] });
+          if (config.toggleLogs.blacklistAdd) {
+            await logChannel.send({ embeds: [logBlacklistEmbed] });
+          }
           return interaction.editReply({
             embeds: [blacklistedEmbedRole],
             ephemeral: true,
@@ -458,7 +462,9 @@ module.exports = {
               value: `> ${reason}`,
             },
           ]);
-          await logChannel.send({ embeds: [logUnblacklistEmbed] });
+          if (config.toggleLogs.blacklistRemove) {
+            await logChannel.send({ embeds: [logUnblacklistEmbed] });
+          }
 
           return interaction.editReply({
             embeds: [unblacklistedEmbedUser],
@@ -557,7 +563,9 @@ module.exports = {
               value: `> ${reason}`,
             },
           ]);
-          await logChannel.send({ embeds: [logUnblacklistEmbed] });
+          if (config.toggleLogs.blacklistRemove) {
+            await logChannel.send({ embeds: [logUnblacklistEmbed] });
+          }
 
           return interaction.editReply({
             embeds: [unblacklistedEmbedRole],

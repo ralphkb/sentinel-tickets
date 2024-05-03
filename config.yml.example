@@ -347,6 +347,27 @@ outsideWorkingHoursEmbed:
 # Log channels
 # ==============================================
 
+# In this section you can enable/disable certain logs. By default all logs are enabled.
+toggleLogs:
+  userAdd: true
+  userRemove: true
+  ticketCreate: true
+  ticketClose: true
+  ticketReopen: true
+  ticketDelete: true
+  ticketClaim: true
+  ticketUnclaim: true
+  ticketMove: true
+  ticketRename: true
+  ticketTransfer: true
+  ticketPin: true
+  ticketSlowmode: true
+  ticketPriority: true
+  ticketFeedback: true
+  DMErrors: true
+  blacklistAdd: true
+  blacklistRemove: true
+
 # This section allows you to configure the channels where the bot will send different logs. Make sure to at least configure the default log channel.
 # By leaving a channel empty "" the bot will fallback to the default log channel.
 logs:

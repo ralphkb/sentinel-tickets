@@ -95,7 +95,9 @@ module.exports = {
     }
 
     await interaction.editReply({ embeds: [renameEmbed] });
-    await logChannel.send({ embeds: [logRenameEmbed] });
+    if (config.toggleLogs.ticketRename) {
+      await logChannel.send({ embeds: [logRenameEmbed] });
+    }
     logMessage(
       `${interaction.user.tag} renamed the ticket #${interaction.channel.name} to #${newName}`,
     );

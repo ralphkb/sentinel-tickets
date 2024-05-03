@@ -143,7 +143,9 @@ module.exports = {
       }
 
       await interaction.editReply(userAddReply);
-      await logChannel.send({ embeds: [logUserAddEmbed] });
+      if (config.toggleLogs.userAdd) {
+        await logChannel.send({ embeds: [logUserAddEmbed] });
+      }
       logMessage(
         `${interaction.user.tag} added ${user.tag} to the ticket #${interaction.channel.name} with reason ${reason}`,
       );
@@ -219,7 +221,9 @@ module.exports = {
         );
       }
       await interaction.editReply({ embeds: [roleAddEmbed] });
-      await logChannel.send({ embeds: [logRoleAddEmbed] });
+      if (config.toggleLogs.userAdd) {
+        await logChannel.send({ embeds: [logRoleAddEmbed] });
+      }
       logMessage(
         `${interaction.user.tag} added ${role.name} to the ticket #${interaction.channel.name} with reason ${reason}`,
       );

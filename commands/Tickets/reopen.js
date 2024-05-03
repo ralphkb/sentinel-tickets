@@ -91,7 +91,9 @@ module.exports = {
 
     let logChannelId = config.logs.ticketReopen || config.logs.default;
     let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-    await logsChannel.send({ embeds: [logReopenEmbed] });
+    if (config.toggleLogs.ticketReopen) {
+      await logsChannel.send({ embeds: [logReopenEmbed] });
+    }
 
     const defaultValues = {
       color: "#2FF200",
@@ -231,7 +233,9 @@ module.exports = {
           dmErrorReply.content = `<@${ticketUserID.id}>`;
         }
 
-        await logChannel.send(dmErrorReply);
+        if (config.toggleLogs.DMErrors) {
+          await logChannel.send(dmErrorReply);
+        }
         logMessage(
           `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
         );

@@ -169,7 +169,9 @@ module.exports = {
           dmErrorReply.content = `<@${user.id}>`;
         }
 
-        await logChannel.send(dmErrorReply);
+        if (config.toggleLogs.DMErrors) {
+          await logChannel.send(dmErrorReply);
+        }
         logMessage(
           `The bot could not DM ${user.tag} because their DMs were closed`,
         );

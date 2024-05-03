@@ -872,7 +872,9 @@ module.exports = {
 
         let logChannelId = config.logs.ticketReopen || config.logs.default;
         let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-        await logsChannel.send({ embeds: [logReopenEmbed] });
+        if (config.toggleLogs.ticketReopen) {
+          await logsChannel.send({ embeds: [logReopenEmbed] });
+        }
 
         const defaultValues = {
           color: "#2FF200",
@@ -1016,7 +1018,9 @@ module.exports = {
               dmErrorReply.content = `<@${ticketUserID.id}>`;
             }
 
-            await logChannel.send(dmErrorReply);
+            if (config.toggleLogs.DMErrors) {
+              await logChannel.send(dmErrorReply);
+            }
             logMessage(
               `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
             );
@@ -1102,10 +1106,12 @@ module.exports = {
           });
         let logChannelId = config.logs.ticketDelete || config.logs.default;
         let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-        await logsChannel.send({
-          embeds: [logDeleteEmbed],
-          files: [attachment],
-        });
+        if (config.toggleLogs.ticketDelete) {
+          await logsChannel.send({
+            embeds: [logDeleteEmbed],
+            files: [attachment],
+          });
+        }
         logMessage(
           `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
         );
@@ -1285,7 +1291,9 @@ module.exports = {
               dmErrorReply.content = `<@${ticketUserID.id}>`;
             }
 
-            await logChannel.send(dmErrorReply);
+            if (config.toggleLogs.DMErrors) {
+              await logChannel.send(dmErrorReply);
+            }
             logMessage(
               `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
             );
@@ -1383,7 +1391,9 @@ module.exports = {
           });
         let logChannelId = config.logs.ticketClose || config.logs.default;
         let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-        await logsChannel.send({ embeds: [logCloseEmbed] });
+        if (config.toggleLogs.ticketClose) {
+          await logsChannel.send({ embeds: [logCloseEmbed] });
+        }
         logMessage(
           `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
         );
@@ -1525,7 +1535,9 @@ module.exports = {
               dmErrorReply.content = `<@${ticketUserID.id}>`;
             }
 
-            await logChannel.send(dmErrorReply);
+            if (config.toggleLogs.DMErrors) {
+              await logChannel.send(dmErrorReply);
+            }
             logMessage(
               `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
             );
@@ -1705,7 +1717,9 @@ module.exports = {
               },
             ]);
 
-            await logsChannel.send({ embeds: [logClaimedEmbed] });
+            if (config.toggleLogs.ticketClaim) {
+              await logsChannel.send({ embeds: [logClaimedEmbed] });
+            }
             await mainDB.set("totalClaims", totalClaims + 1);
             logMessage(
               `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
@@ -1843,7 +1857,9 @@ module.exports = {
               },
             ]);
 
-            await logsChannel.send({ embeds: [logUnclaimedEmbed] });
+            if (config.toggleLogs.ticketUnclaim) {
+              await logsChannel.send({ embeds: [logUnclaimedEmbed] });
+            }
             await mainDB.set("totalClaims", totalClaims - 1);
             logMessage(
               `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,
@@ -2166,9 +2182,11 @@ module.exports = {
                       config.logs.ticketCreate || config.logs.default;
                     let logChannel =
                       interaction.guild.channels.cache.get(logChannelId);
-                    await logChannel.send({
-                      embeds: [logTicketOpenEmbed],
-                    });
+                    if (config.toggleLogs.ticketCreate) {
+                      await logChannel.send({
+                        embeds: [logTicketOpenEmbed],
+                      });
+                    }
                     logMessage(
                       `${interaction.user.tag} created the ticket #${channel.name}`,
                     );
@@ -2304,7 +2322,9 @@ module.exports = {
           });
           let logChannelId = config.logs.ticketFeedback || config.logs.default;
           let logChannel = client.channels.cache.get(logChannelId);
-          await logChannel.send({ embeds: [logRatingEmbed] });
+          if (config.toggleLogs.ticketFeedback) {
+            await logChannel.send({ embeds: [logRatingEmbed] });
+          }
           await mainDB.set("totalReviews", totalReviews + 1);
           await mainDB.push("ratings", i);
           await interaction.editReply({

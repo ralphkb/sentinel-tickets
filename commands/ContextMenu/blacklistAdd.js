@@ -133,7 +133,9 @@ module.exports = {
           value: `> permanent`,
         },
       ]);
-      await logChannel.send({ embeds: [logBlacklistEmbed] });
+      if (config.toggleLogs.blacklistAdd) {
+        await logChannel.send({ embeds: [logBlacklistEmbed] });
+      }
 
       return interaction.editReply({
         embeds: [blacklistedEmbedUser],

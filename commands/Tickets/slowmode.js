@@ -121,7 +121,9 @@ module.exports = {
       );
     }
     await interaction.editReply({ embeds: [slowmodeEmbed] });
-    await logChannel.send({ embeds: [logSlowmodeEmbed] });
+    if (config.toggleLogs.ticketSlowmode) {
+      await logChannel.send({ embeds: [logSlowmodeEmbed] });
+    }
     logMessage(
       `${interaction.user.tag} added a slow mode of ${formattedTime} to the ticket #${interaction.channel.name}`,
     );

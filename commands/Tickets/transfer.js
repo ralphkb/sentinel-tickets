@@ -121,7 +121,9 @@ module.exports = {
       },
     ]);
 
-    await logChannel.send({ embeds: [logTransferEmbed] });
+    if (config.toggleLogs.ticketTransfer) {
+      await logChannel.send({ embeds: [logTransferEmbed] });
+    }
 
     const defaultValues = {
       color: "#2FF200",

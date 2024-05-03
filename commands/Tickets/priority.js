@@ -167,7 +167,9 @@ module.exports = {
       }
 
       await interaction.editReply({ embeds: [priorityAddEmbed] });
-      await logChannel.send({ embeds: [logPriorityAddEmbed] });
+      if (config.toggleLogs.ticketPriority) {
+        await logChannel.send({ embeds: [logPriorityAddEmbed] });
+      }
       logMessage(
         `${interaction.user.tag} updated the priority of the ticket #${interaction.channel.name} to ${option} with reason ${reason}.`,
       );
@@ -227,7 +229,9 @@ module.exports = {
       );
 
       await interaction.editReply({ embeds: [priorityRemoveEmbed] });
-      await logChannel.send({ embeds: [logPriorityRemoveEmbed] });
+      if (config.toggleLogs.ticketPriority) {
+        await logChannel.send({ embeds: [logPriorityRemoveEmbed] });
+      }
       logMessage(
         `${interaction.user.tag} removed the priority from the ticket #${interaction.channel.name}.`,
       );

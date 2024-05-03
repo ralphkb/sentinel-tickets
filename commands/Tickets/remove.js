@@ -129,7 +129,9 @@ module.exports = {
       }
 
       await interaction.editReply({ embeds: [userRemoveEmbed] });
-      await logChannel.send({ embeds: [logUserRemoveEmbed] });
+      if (config.toggleLogs.userRemove) {
+        await logChannel.send({ embeds: [logUserRemoveEmbed] });
+      }
       logMessage(
         `${interaction.user.tag} removed ${user.tag} from the ticket #${interaction.channel.name} with reason ${reason}`,
       );
@@ -200,7 +202,9 @@ module.exports = {
       }
 
       await interaction.editReply({ embeds: [roleRemoveEmbed] });
-      await logChannel.send({ embeds: [logRoleRemoveEmbed] });
+      if (config.toggleLogs.userRemove) {
+        await logChannel.send({ embeds: [logRoleRemoveEmbed] });
+      }
       logMessage(
         `${interaction.user.tag} removed ${role.name} from the ticket #${interaction.channel.name} with reason ${reason}`,
       );

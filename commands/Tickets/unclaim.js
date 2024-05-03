@@ -174,7 +174,9 @@ module.exports = {
           },
         ]);
 
-        await logsChannel.send({ embeds: [logUnclaimedEmbed] });
+        if (config.toggleLogs.ticketUnclaim) {
+          await logsChannel.send({ embeds: [logUnclaimedEmbed] });
+        }
         await mainDB.set("totalClaims", totalClaims - 1);
         logMessage(
           `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,

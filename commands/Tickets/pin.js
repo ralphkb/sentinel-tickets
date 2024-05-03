@@ -91,7 +91,9 @@ module.exports = {
 
     const pinEmbed = await configEmbed("pinEmbed", defaultValues);
     await interaction.editReply({ embeds: [pinEmbed] });
-    await logChannel.send({ embeds: [logPinEmbed] });
+    if (config.toggleLogs.ticketPin) {
+      await logChannel.send({ embeds: [logPinEmbed] });
+    }
     logMessage(
       `${interaction.user.tag} pinned the ticket #${interaction.channel.name}`,
     );

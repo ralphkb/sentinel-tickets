@@ -129,7 +129,9 @@ module.exports = {
           value: `> ${reason}`,
         },
       ]);
-      await logChannel.send({ embeds: [logUnblacklistEmbed] });
+      if (config.toggleLogs.blacklistRemove) {
+        await logChannel.send({ embeds: [logUnblacklistEmbed] });
+      }
 
       return interaction.editReply({
         embeds: [unblacklistedEmbedUser],
