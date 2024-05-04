@@ -172,6 +172,10 @@ commands:
   close:
     enabled: true
     permission: "KickMembers"
+  closerequest:
+    enabled: true
+    permission: "ViewChannel"
+    pingRoles: false # Enable or disable pinging the support roles of the ticket category where the command is used, no roles will be pinged if the category ping_role_ids is empty.
   reopen:
     enabled: true
     permission: "KickMembers"
@@ -1071,6 +1075,23 @@ logCloseEmbed:
   field_staff: "• Closed By"
   field_user: "• Ticket Creator"
   field_ticket: "• Ticket"
+
+# Close request command embed
+closeRequestEmbed:
+  color: "#FF2400"
+  title: "Ticket Close Request"
+  description: "**{user} ({user.tag})** has requested to have his ticket closed." # Use {user} for the username of the user and {user.tag} to have the user tagged
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""  
 
 # Reopen ticket embed
 reopenEmbed:
