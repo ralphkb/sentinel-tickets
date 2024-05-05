@@ -194,6 +194,18 @@ async function getUser(id) {
   }
 }
 
+// Find the first available category ID
+const findAvailableCategory = async (categoryIDs) => {
+  for (const categoryID of categoryIDs) {
+    const category = client.channels.cache.get(categoryID);
+    const channelCount = category.children.cache.size;
+    if (channelCount < 50) {
+      return categoryID;
+    }
+  }
+  return null; // No available category found
+};
+
 async function configEmbed(configPath, defaultValues = {}) {
   const embed = new EmbedBuilder();
 
@@ -509,6 +521,7 @@ module.exports = {
   isBlacklistExpired,
   parseDurationToMilliseconds,
   getUser,
+  findAvailableCategory,
 };
 
 // Holding commands cooldown data

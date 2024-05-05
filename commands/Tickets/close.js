@@ -19,6 +19,7 @@ const {
   checkSupportRole,
   configEmbed,
   getUser,
+  findAvailableCategory,
 } = require("../../index.js");
 
 module.exports = {
@@ -259,7 +260,9 @@ module.exports = {
     Object.keys(ticketCategories).forEach(async (id) => {
       if (ticketButton === id) {
         const category = ticketCategories[id];
-        await interaction.channel.setParent(category.closedCategoryID, {
+        const categoryIDs = category.closedCategoryID;
+        const closedCategoryID = await findAvailableCategory(categoryIDs);
+        await interaction.channel.setParent(closedCategoryID, {
           lockPermissions: false,
         });
 

@@ -29,6 +29,7 @@ const {
   isBlacklistExpired,
   parseDurationToMilliseconds,
   getUser,
+  findAvailableCategory,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -901,12 +902,15 @@ module.exports = {
         Object.keys(ticketCategories).forEach(async (id) => {
           if (ticketButton === id) {
             const category = ticketCategories[id];
+            const categoryIDs = category.categoryID;
+            const categoryID = await findAvailableCategory(categoryIDs);
 
             if (
-              category.closedCategoryID &&
-              ticketChannel.parentId !== category.categoryID
+              !category.categoryID.some(
+                (catId) => catId === ticketChannel.parentId,
+              )
             ) {
-              await ticketChannel.setParent(category.categoryID, {
+              await ticketChannel.setParent(categoryID, {
                 lockPermissions: false,
               });
             }
@@ -1547,7 +1551,9 @@ module.exports = {
         Object.keys(ticketCategories).forEach(async (id) => {
           if (ticketButton === id) {
             const category = ticketCategories[id];
-            await interaction.channel.setParent(category.closedCategoryID, {
+            const categoryIDs = category.closedCategoryID;
+            const closedCategoryID = await findAvailableCategory(categoryIDs);
+            await interaction.channel.setParent(closedCategoryID, {
               lockPermissions: false,
             });
 
@@ -1998,6 +2004,8 @@ module.exports = {
             const TICKETCOUNT = await mainDB.get("totalTickets");
             const USERNAME = interaction.user.username;
             const configValue = category.ticketName;
+            const categoryIDs = category.categoryID;
+            const selectedCategoryID = await findAvailableCategory(categoryIDs);
 
             let channelName;
             switch (configValue) {
@@ -2020,7 +2028,7 @@ module.exports = {
               .create({
                 name: channelName,
                 type: ChannelType.GuildText,
-                parent: category.categoryID,
+                parent: selectedCategoryID,
                 rateLimitPerUser: category.slowmode || 0,
                 topic: category.ticketTopic
                   .replace(/\{user\}/g, interaction.user.tag)

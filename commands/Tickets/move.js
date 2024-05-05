@@ -11,6 +11,7 @@ const {
   checkSupportRole,
   configEmbed,
   getUser,
+  findAvailableCategory,
 } = require("../../index.js");
 
 module.exports = {
@@ -76,7 +77,8 @@ module.exports = {
     const category = Object.values(ticketCategories).find(
       (category) => category.name === option,
     );
-    const categoryID = category.categoryID;
+    const categoryIDs = category.categoryID;
+    const categoryID = await findAvailableCategory(categoryIDs);
     if (config.commands.move.updateTopic) {
       const ticketTopic = category.ticketTopic;
       const ticketCreator = await getUser(

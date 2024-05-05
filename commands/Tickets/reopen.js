@@ -119,12 +119,13 @@ module.exports = {
     Object.keys(ticketCategories).forEach(async (id) => {
       if (ticketButton === id) {
         const category = ticketCategories[id];
+        const categoryIDs = category.categoryID;
+        const categoryID = await findAvailableCategory(categoryIDs);
 
         if (
-          category.closedCategoryID &&
-          ticketChannel.parentId !== category.categoryID
+          !category.categoryID.some((catId) => catId === ticketChannel.parentId)
         ) {
-          await ticketChannel.setParent(category.categoryID, {
+          await ticketChannel.setParent(categoryID, {
             lockPermissions: false,
           });
         }
