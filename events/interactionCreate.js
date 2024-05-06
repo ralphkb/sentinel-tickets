@@ -2072,17 +2072,25 @@ module.exports = {
                 ],
               })
               .then(async (channel) => {
+                let textContent =
+                  category.textContent !== undefined
+                    ? category.textContent
+                    : "Please wait for the support staff to check your ticket!";
                 const pingRoles =
                   category.pingRoles && category.ping_role_ids.length > 0;
-                const rolesToMention = pingRoles
-                  ? category.ping_role_ids
-                      .map((roleId) => `<@&${roleId}>`)
-                      .join(" ")
-                  : "";
+                if (pingRoles) {
+                  const rolesToMention = category.ping_role_ids
+                    .map((roleId) => `<@&${roleId}>`)
+                    .join(" ");
+                  textContent = textContent.replace(
+                    /\{support-roles\}/g,
+                    rolesToMention,
+                  );
+                }
 
                 await channel
                   .send({
-                    content: rolesToMention,
+                    content: textContent,
                     embeds: [ticketOpenEmbed],
                     components: [answerRow],
                     fetchReply: true,
