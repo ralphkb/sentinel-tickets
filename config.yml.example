@@ -206,6 +206,9 @@ commands:
   stats:
     enabled: true
     permission: "KickMembers"
+  help:
+    enabled: true
+    permission: "KickMembers"
 
 contextMenuCommands:
   userInfo:
@@ -1234,6 +1237,23 @@ userInfoEmbed:
   URL: ""
   image: ""
 #  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Help command embed
+helpEmbed:
+  color: "#2FF200"
+  title: "Help"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
 #  footer:
 #    text: ""
 #    iconURL: ""
