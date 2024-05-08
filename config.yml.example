@@ -124,7 +124,7 @@ DMUserSettings:
 # ==============================================
 
 # You can disable a command by setting enabled: false for any of them, although it's recommended you keep all of them enabled
-# For information regarding what options you have as permissions for each command, check out this link: https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags
+# For information regarding what options you have as permissions for each command, check out this link: https://discord-api-types.dev/api/discord-api-types-payloads/common#PermissionFlagsBits
 commands:
   add:
     enabled: true
