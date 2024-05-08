@@ -141,15 +141,11 @@ module.exports = {
       );
     }
 
-    let transferReply = {
-      embeds: [transferEmbed],
-    };
-
+    await interaction.editReply({ embeds: [transferEmbed] });
     if (config.commands.transfer.pingUser) {
-      transferReply.content = `<@${optionUser.id}>`;
+      await interaction.channel.send(`<@${optionUser.id}>`);
     }
 
-    await interaction.editReply(transferReply);
     logMessage(
       `${interaction.user.tag} transferred the ownership of the ticket #${interaction.channel.name} to the user ${optionUser.tag}.`,
     );

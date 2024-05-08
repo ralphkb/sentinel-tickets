@@ -86,11 +86,17 @@ module.exports = {
 
     const alertEmbed = await configEmbed("alertEmbed", defaultValues);
 
-    interaction.editReply({
-      content: `<@${user.id}>`,
-      embeds: [alertEmbed],
-      components: [ticketAlertRow],
-    });
+    await interaction
+      .editReply({
+        embeds: [alertEmbed],
+        components: [ticketAlertRow],
+      })
+      .then(async () => {
+        await interaction.followUp(`<@${user.id}>`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
     if (config.alertReply.enabled) {
       const filter = (m) => m.author.id === user.id;

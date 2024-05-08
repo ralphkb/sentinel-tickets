@@ -134,15 +134,10 @@ module.exports = {
         );
       }
 
-      let userAddReply = {
-        embeds: [userAddEmbed],
-      };
-
+      await interaction.editReply({ embeds: [userAddEmbed] });
       if (config.commands.add.pingUser) {
-        userAddReply.content = `<@${user.id}>`;
+        await interaction.channel.send(`<@${user.id}>`);
       }
-
-      await interaction.editReply(userAddReply);
       if (config.toggleLogs.userAdd) {
         await logChannel.send({ embeds: [logUserAddEmbed] });
       }
