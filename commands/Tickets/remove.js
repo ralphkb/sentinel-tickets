@@ -128,6 +128,7 @@ module.exports = {
         );
       }
 
+      await ticketsDB.pull(`${interaction.channel.id}.addedUsers`, user.id);
       await interaction.editReply({ embeds: [userRemoveEmbed] });
       if (config.toggleLogs.userRemove) {
         await logChannel.send({ embeds: [logUserRemoveEmbed] });

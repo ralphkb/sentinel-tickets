@@ -942,7 +942,7 @@ module.exports = {
           EmbedLinks: true,
           ReadMessageHistory: true,
         });
-        if (claimUser)
+        if (claimUser) {
           await interaction.channel.permissionOverwrites.create(claimUser.id, {
             ViewChannel: true,
             SendMessages: true,
@@ -950,6 +950,30 @@ module.exports = {
             EmbedLinks: true,
             ReadMessageHistory: true,
           });
+        }
+
+        const addedUsers = await ticketsDB.get(
+          `${interaction.channel.id}.addedUsers`,
+        );
+        const usersArray = await Promise.all(
+          addedUsers.map(async (userId) => {
+            return await getUser(userId);
+          }),
+        );
+
+        try {
+          for (const member of usersArray) {
+            await interaction.channel.permissionOverwrites.edit(member, {
+              SendMessages: true,
+              ViewChannel: true,
+            });
+          }
+        } catch (error) {
+          console.error(
+            "An error occurred while editing permission overwrites on reopening a ticket:",
+            error,
+          );
+        }
 
         await interaction.channel.messages
           .fetch(await ticketsDB.get(`${interaction.channel.id}.closeMsgID`))
@@ -1388,11 +1412,12 @@ module.exports = {
           },
         ]);
 
-        if (claimUser)
+        if (claimUser) {
           logCloseEmbed.addFields({
             name: "• Claimed By",
             value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
           });
+        }
         let logChannelId = config.logs.ticketClose || config.logs.default;
         let logsChannel = interaction.guild.channels.cache.get(logChannelId);
         if (config.toggleLogs.ticketClose) {
@@ -1447,16 +1472,40 @@ module.exports = {
           );
         }
 
-        await interaction.channel.members.forEach((member) => {
-          if (member.id !== client.user.id) {
-            interaction.channel.permissionOverwrites
-              .edit(member, {
-                SendMessages: false,
-                ViewChannel: true,
-              })
-              .catch(console.error);
-          }
+        await interaction.channel.permissionOverwrites.edit(ticketUserID, {
+          SendMessages: false,
+          ViewChannel: true,
         });
+
+        if (claimUser) {
+          await interaction.channel.permissionOverwrites.edit(claimUser, {
+            SendMessages: false,
+            ViewChannel: true,
+          });
+        }
+
+        const addedUsers = await ticketsDB.get(
+          `${interaction.channel.id}.addedUsers`,
+        );
+        const usersArray = await Promise.all(
+          addedUsers.map(async (userId) => {
+            return await getUser(userId);
+          }),
+        );
+
+        try {
+          for (const member of usersArray) {
+            await interaction.channel.permissionOverwrites.edit(member, {
+              SendMessages: false,
+              ViewChannel: true,
+            });
+          }
+        } catch (error) {
+          console.error(
+            "An error occurred while editing permission overwrites on closing a ticket:",
+            error,
+          );
+        }
 
         let messageID;
         await interaction
@@ -2153,6 +2202,7 @@ module.exports = {
                       status: "Open",
                       closeUserID: "",
                       creationTime: creationTime,
+                      addedUsers: [],
                     });
 
                     await mainDB.push("openTickets", `${channel.id}`);

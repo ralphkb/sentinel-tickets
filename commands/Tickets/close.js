@@ -103,11 +103,12 @@ module.exports = {
       },
     ]);
 
-    if (claimUser)
+    if (claimUser) {
       logCloseEmbed.addFields({
         name: "• Claimed By",
         value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
       });
+    }
 
     let logChannelId = config.logs.ticketClose || config.logs.default;
     let logsChannel = interaction.guild.channels.cache.get(logChannelId);
@@ -163,16 +164,40 @@ module.exports = {
       );
     }
 
-    await interaction.channel.members.forEach((member) => {
-      if (member.id !== client.user.id) {
-        interaction.channel.permissionOverwrites
-          .edit(member, {
-            SendMessages: false,
-            ViewChannel: true,
-          })
-          .catch(console.error);
-      }
+    await interaction.channel.permissionOverwrites.edit(ticketUserID, {
+      SendMessages: false,
+      ViewChannel: true,
     });
+
+    if (claimUser) {
+      await interaction.channel.permissionOverwrites.edit(claimUser, {
+        SendMessages: false,
+        ViewChannel: true,
+      });
+    }
+
+    const addedUsers = await ticketsDB.get(
+      `${interaction.channel.id}.addedUsers`,
+    );
+    const usersArray = await Promise.all(
+      addedUsers.map(async (userId) => {
+        return await getUser(userId);
+      }),
+    );
+
+    try {
+      for (const member of usersArray) {
+        await interaction.channel.permissionOverwrites.edit(member, {
+          SendMessages: false,
+          ViewChannel: true,
+        });
+      }
+    } catch (error) {
+      console.error(
+        "An error occurred while editing permission overwrites on closing a ticket:",
+        error,
+      );
+    }
 
     let messageID;
     await interaction

@@ -13,6 +13,7 @@ const {
   checkSupportRole,
   configEmbed,
   getUser,
+  findAvailableCategory,
 } = require("../../index.js");
 
 module.exports = {
@@ -157,7 +158,7 @@ module.exports = {
       EmbedLinks: true,
       ReadMessageHistory: true,
     });
-    if (claimUser)
+    if (claimUser) {
       await interaction.channel.permissionOverwrites.create(claimUser.id, {
         ViewChannel: true,
         SendMessages: true,
@@ -165,6 +166,30 @@ module.exports = {
         EmbedLinks: true,
         ReadMessageHistory: true,
       });
+    }
+
+    const addedUsers = await ticketsDB.get(
+      `${interaction.channel.id}.addedUsers`,
+    );
+    const usersArray = await Promise.all(
+      addedUsers.map(async (userId) => {
+        return await getUser(userId);
+      }),
+    );
+
+    try {
+      for (const member of usersArray) {
+        await interaction.channel.permissionOverwrites.edit(member, {
+          SendMessages: true,
+          ViewChannel: true,
+        });
+      }
+    } catch (error) {
+      console.error(
+        "An error occurred while editing permission overwrites on reopening a ticket:",
+        error,
+      );
+    }
 
     await interaction.channel.messages
       .fetch(await ticketsDB.get(`${interaction.channel.id}.closeMsgID`))

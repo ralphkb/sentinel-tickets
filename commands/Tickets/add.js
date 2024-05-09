@@ -134,6 +134,7 @@ module.exports = {
         );
       }
 
+      await ticketsDB.push(`${interaction.channel.id}.addedUsers`, user.id);
       await interaction.editReply({ embeds: [userAddEmbed] });
       if (config.commands.add.pingUser) {
         await interaction.channel.send(`<@${user.id}>`);
