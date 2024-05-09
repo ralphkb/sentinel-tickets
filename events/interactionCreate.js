@@ -1701,11 +1701,19 @@ module.exports = {
             );
             message.edit({ embeds: [embed], components: [actionRow2] });
 
-            if (config.claim1on1) {
-              let ticketButton = await ticketsDB.get(
-                `${interaction.channel.id}.button`,
-              );
+            let ticketButton = await ticketsDB.get(
+              `${interaction.channel.id}.button`,
+            );
 
+            if (config.claimRename) {
+              const category = ticketCategories[ticketButton];
+              const claimUsername = interaction.user.username;
+              await interaction.channel.setName(
+                `${category.name}-${claimUsername}`,
+              );
+            }
+
+            if (config.claim1on1) {
               Object.keys(ticketCategories).forEach(async (id) => {
                 if (ticketButton === id) {
                   ticketCategories[id].support_role_ids.forEach(
