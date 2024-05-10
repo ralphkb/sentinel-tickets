@@ -952,9 +952,8 @@ module.exports = {
           });
         }
 
-        const addedUsers = await ticketsDB.get(
-          `${interaction.channel.id}.addedUsers`,
-        );
+        const addedUsers =
+          (await ticketsDB.get(`${interaction.channel.id}.addedUsers`)) || [];
         const usersArray = await Promise.all(
           addedUsers.map(async (userId) => {
             return await getUser(userId);
@@ -1487,9 +1486,8 @@ module.exports = {
           });
         }
 
-        const addedUsers = await ticketsDB.get(
-          `${interaction.channel.id}.addedUsers`,
-        );
+        const addedUsers =
+          (await ticketsDB.get(`${interaction.channel.id}.addedUsers`)) || [];
         const usersArray = await Promise.all(
           addedUsers.map(async (userId) => {
             return await getUser(userId);
