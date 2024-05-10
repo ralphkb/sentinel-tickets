@@ -193,7 +193,13 @@ module.exports = {
 
     await interaction.channel.messages
       .fetch(await ticketsDB.get(`${interaction.channel.id}.closeMsgID`))
-      .then((msg) => msg.delete());
+      .then((msg) => msg.delete())
+      .catch((error) => {
+        console.error(
+          `An error occurred while fetching and deleting the message in the ticket #${interaction.channel.name} while reopening it:`,
+          error,
+        );
+      });
     await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
     await mainDB.push("openTickets", interaction.channel.id);
     await interaction.editReply({ embeds: [reopenEmbed] });
