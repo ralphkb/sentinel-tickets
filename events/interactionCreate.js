@@ -1637,6 +1637,15 @@ module.exports = {
           });
         }
 
+        const isClaimInProgress = await mainDB.get("isClaimInProgress");
+        if (isClaimInProgress) {
+          return interaction.reply({
+            content: "Another user is already claiming this ticket.",
+            ephemeral: true,
+          });
+        }
+
+        await mainDB.set("isClaimInProgress", true);
         await interaction.deferReply({ ephemeral: true });
         const totalClaims = await mainDB.get("totalClaims");
 
@@ -1751,6 +1760,8 @@ module.exports = {
               `${interaction.channel.id}.claimUser`,
               interaction.user.id,
             );
+            await mainDB.set("totalClaims", totalClaims + 1);
+            await mainDB.set("isClaimInProgress", false);
 
             let logChannelId = config.logs.ticketClaim || config.logs.default;
             let logsChannel =
@@ -1786,7 +1797,6 @@ module.exports = {
             if (config.toggleLogs.ticketClaim) {
               await logsChannel.send({ embeds: [logClaimedEmbed] });
             }
-            await mainDB.set("totalClaims", totalClaims + 1);
             logMessage(
               `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
             );
