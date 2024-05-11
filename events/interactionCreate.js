@@ -452,23 +452,26 @@ module.exports = {
       if (interaction.customId === "ratingMenu") {
         // Reset the select menu upon selection
         const ratingMenuOptions = await mainDB.get("ratingMenuOptions");
-        await interaction.user.dmChannel.messages
-          .fetch(interaction.message.id)
-          .then(async (message) => {
-            const selectMenu = new StringSelectMenuBuilder()
-              .setCustomId("ratingMenu")
-              .setPlaceholder(
-                config.DMUserSettings.ratingSystem.menu.placeholder,
-              )
-              .setMinValues(1)
-              .setMaxValues(1)
-              .addOptions(ratingMenuOptions);
+        try {
+          const dmChannel = await interaction.user.createDM();
+          const message = await dmChannel.messages.fetch(
+            interaction.message.id,
+          );
 
-            const updatedActionRow = new ActionRowBuilder().addComponents(
-              selectMenu,
-            );
-            await message.edit({ components: [updatedActionRow] });
-          });
+          const selectMenu = new StringSelectMenuBuilder()
+            .setCustomId("ratingMenu")
+            .setPlaceholder(config.DMUserSettings.ratingSystem.menu.placeholder)
+            .setMinValues(1)
+            .setMaxValues(1)
+            .addOptions(ratingMenuOptions);
+
+          const updatedActionRow = new ActionRowBuilder().addComponents(
+            selectMenu,
+          );
+          await message.edit({ components: [updatedActionRow] });
+        } catch (error) {
+          console.error("Error fetching DM channel or message:", error);
+        }
 
         for (let i = 1; i <= 5; i++) {
           if (interaction.values[0] === `${i}-star`) {
