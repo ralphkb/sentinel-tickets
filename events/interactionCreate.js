@@ -1716,11 +1716,18 @@ module.exports = {
             );
 
             if (config.claimRename) {
+              let claimRenameName =
+                config.claimRenameName || "{category}-{username}";
               const category = ticketCategories[ticketButton];
               const claimUsername = interaction.user.username;
-              await interaction.channel.setName(
-                `${category.name}-${claimUsername}`,
-              );
+              const claimDisplayname = interaction.user.displayName;
+
+              claimRenameName = claimRenameName
+                .replace(/\{category\}/g, category.name)
+                .replace(/\{username\}/g, claimUsername)
+                .replace(/\{displayname\}/g, claimDisplayname);
+
+              await interaction.channel.setName(claimRenameName);
             }
 
             if (config.claim1on1) {
