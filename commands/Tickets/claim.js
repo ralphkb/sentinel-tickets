@@ -30,6 +30,16 @@ module.exports = {
     )
     .setDMPermission(false),
   async execute(interaction) {
+    const isClaimInProgress = await mainDB.get("isClaimInProgress");
+    if (isClaimInProgress) {
+      return interaction.reply({
+        content: "Another user is already claiming this ticket.",
+        ephemeral: true,
+      });
+    }
+
+    await mainDB.set("isClaimInProgress", true);
+
     if (!(await ticketsDB.has(interaction.channel.id))) {
       return interaction.reply({
         content:
@@ -71,15 +81,6 @@ module.exports = {
       });
     }
 
-    const isClaimInProgress = await mainDB.get("isClaimInProgress");
-    if (isClaimInProgress) {
-      return interaction.reply({
-        content: "Another user is already claiming this ticket.",
-        ephemeral: true,
-      });
-    }
-
-    await mainDB.set("isClaimInProgress", true);
     await interaction.deferReply({ ephemeral: true });
     const totalClaims = await mainDB.get("totalClaims");
 

@@ -1626,15 +1626,6 @@ module.exports = {
 
       // Ticket Claim button
       if (interaction.customId === "ticketclaim") {
-        const hasSupportRole = await checkSupportRole(interaction);
-        if (!hasSupportRole) {
-          return interaction.reply({
-            content:
-              config.errors.not_allowed || "You are not allowed to use this!",
-            ephemeral: true,
-          });
-        }
-
         const isClaimInProgress = await mainDB.get("isClaimInProgress");
         if (isClaimInProgress) {
           return interaction.reply({
@@ -1644,6 +1635,15 @@ module.exports = {
         }
 
         await mainDB.set("isClaimInProgress", true);
+        const hasSupportRole = await checkSupportRole(interaction);
+        if (!hasSupportRole) {
+          return interaction.reply({
+            content:
+              config.errors.not_allowed || "You are not allowed to use this!",
+            ephemeral: true,
+          });
+        }
+
         await interaction.deferReply({ ephemeral: true });
         const totalClaims = await mainDB.get("totalClaims");
 
