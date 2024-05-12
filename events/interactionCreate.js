@@ -1958,10 +1958,13 @@ module.exports = {
           const category = ticketCategories[customId];
 
           await interaction.deferReply({ ephemeral: true });
+          const embedDescription = category.description
+            .replace(/\{user\}/g, interaction.user)
+            .replace(/\{user.tag\}/g, interaction.user.username);
 
           const defaultValues = {
             color: category.color || "#2FF200",
-            description: category.description,
+            description: embedDescription,
             timestamp: true,
             thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
             footer: {
@@ -1975,7 +1978,7 @@ module.exports = {
             defaultValues,
           );
 
-          ticketOpenEmbed.setDescription(category.description);
+          ticketOpenEmbed.setDescription(embedDescription);
           ticketOpenEmbed.setColor(category.color || "#2FF200");
           ticketOpenEmbed.setAuthor({
             name: `${category.embedTitle}`,
