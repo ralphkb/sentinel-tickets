@@ -1640,9 +1640,20 @@ module.exports = {
         await mainDB.set("isClaimInProgress", true);
         const hasSupportRole = await checkSupportRole(interaction);
         if (!hasSupportRole) {
+          await mainDB.set("isClaimInProgress", false);
           return interaction.reply({
             content:
               config.errors.not_allowed || "You are not allowed to use this!",
+            ephemeral: true,
+          });
+        }
+
+        if (
+          (await ticketsDB.get(`${interaction.channel.id}.status`)) === "Closed"
+        ) {
+          await mainDB.set("isClaimInProgress", false);
+          return interaction.reply({
+            content: "You cannot claim a closed ticket!",
             ephemeral: true,
           });
         }

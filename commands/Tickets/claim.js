@@ -41,6 +41,7 @@ module.exports = {
     await mainDB.set("isClaimInProgress", true);
 
     if (!(await ticketsDB.has(interaction.channel.id))) {
+      await mainDB.set("isClaimInProgress", false);
       return interaction.reply({
         content:
           config.errors.not_in_a_ticket || "You are not in a ticket channel!",
@@ -50,6 +51,7 @@ module.exports = {
 
     const hasSupportRole = await checkSupportRole(interaction);
     if (!hasSupportRole) {
+      await mainDB.set("isClaimInProgress", false);
       return interaction.reply({
         content:
           config.errors.not_allowed || "You are not allowed to use this!",
@@ -58,6 +60,7 @@ module.exports = {
     }
 
     if (config.claimFeature === false) {
+      await mainDB.set("isClaimInProgress", false);
       return interaction.reply({
         content: "The claim feature is currently disabled.",
         ephemeral: true,
@@ -75,8 +78,19 @@ module.exports = {
     }
 
     if (claimStatus) {
+      await mainDB.set("isClaimInProgress", false);
       return interaction.reply({
         content: `This ticket has already been claimed by <@!${claimUser}>`,
+        ephemeral: true,
+      });
+    }
+
+    if (
+      (await ticketsDB.get(`${interaction.channel.id}.status`)) === "Closed"
+    ) {
+      await mainDB.set("isClaimInProgress", false);
+      return interaction.reply({
+        content: "You cannot claim a closed ticket!",
         ephemeral: true,
       });
     }
