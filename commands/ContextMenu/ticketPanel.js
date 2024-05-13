@@ -84,10 +84,11 @@ module.exports = {
 
       // Create an array to store the action rows
       const actionRows = [];
+      const maxButtonsPerRow = config.maxButtonsPerRow || 5;
 
-      // Divide the buttons into groups of 5 and create a new action row for each group
-      for (let i = 0; i < buttons.length; i += 5) {
-        const buttonsGroup = buttons.slice(i, i + 5);
+      // Divide the buttons into groups of maxButtonsPerRow and create a new action row for each group
+      for (let i = 0; i < buttons.length; i += maxButtonsPerRow) {
+        const buttonsGroup = buttons.slice(i, i + maxButtonsPerRow);
         const actionRow = new ActionRowBuilder().addComponents(...buttonsGroup);
         actionRows.push(actionRow);
       }

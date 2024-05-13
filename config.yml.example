@@ -3,6 +3,7 @@
 # ==============================================
 
 panelMethod: "Buttons" # The method of the panel, can be either Buttons or Menu
+maxButtonsPerRow: "5" # The maximum number of buttons per row, note that this will reduce the total amount of categories you can create due to a limitation of 5 rows per message
 menuPlaceholder: "Select a category to open a ticket." # The placeholder of the select menu
 rolesThatCanBlacklist: ["111111111111111111"] # The IDs of the staff roles on your server which should have access to blacklisting and unblacklisting users from creating tickets, for example ["000000000000000000", "111111111111111111"]
 transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT"
