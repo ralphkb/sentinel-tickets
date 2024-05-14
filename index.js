@@ -198,6 +198,24 @@ async function getUser(id) {
   }
 }
 
+async function getRole(id) {
+  let role = client.guilds.cache.get(process.env.GUILD_ID).roles.cache.get(id);
+
+  if (!role) {
+    try {
+      role = await client.guilds.cache
+        .get(process.env.GUILD_ID)
+        .roles.fetch(id);
+      return role;
+    } catch (error) {
+      console.error(`Error fetching role with ID ${id}:`, error);
+      return null;
+    }
+  }
+
+  return role;
+}
+
 // Find the first available category ID
 const findAvailableCategory = async (categoryIDs) => {
   for (const categoryID of categoryIDs) {
@@ -526,6 +544,7 @@ module.exports = {
   parseDurationToMilliseconds,
   getUser,
   findAvailableCategory,
+  getRole,
 };
 
 // Holding commands cooldown data

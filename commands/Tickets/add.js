@@ -216,6 +216,7 @@ module.exports = {
             .replace(/\{reason\}/g, reason),
         );
       }
+      await ticketsDB.push(`${interaction.channel.id}.addedRoles`, role.id);
       await interaction.editReply({ embeds: [roleAddEmbed] });
       if (config.toggleLogs.userAdd) {
         await logChannel.send({ embeds: [logRoleAddEmbed] });

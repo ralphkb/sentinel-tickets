@@ -30,6 +30,7 @@ const {
   parseDurationToMilliseconds,
   getUser,
   findAvailableCategory,
+  getRole,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -957,9 +958,16 @@ module.exports = {
 
         const addedUsers =
           (await ticketsDB.get(`${interaction.channel.id}.addedUsers`)) || [];
+        const addedRoles =
+          (await ticketsDB.get(`${interaction.channel.id}.addedRoles`)) || [];
         const usersArray = await Promise.all(
           addedUsers.map(async (userId) => {
             return await getUser(userId);
+          }),
+        );
+        const rolesArray = await Promise.all(
+          addedRoles.map(async (roleId) => {
+            return await getRole(roleId);
           }),
         );
 
@@ -973,6 +981,20 @@ module.exports = {
         } catch (error) {
           console.error(
             "An error occurred while editing permission overwrites on reopening a ticket:",
+            error,
+          );
+        }
+
+        try {
+          for (const role of rolesArray) {
+            await interaction.channel.permissionOverwrites.edit(role, {
+              SendMessages: true,
+              ViewChannel: true,
+            });
+          }
+        } catch (error) {
+          console.error(
+            "An error occurred while editing permission overwrites on closing a ticket:",
             error,
           );
         }
@@ -1491,15 +1513,36 @@ module.exports = {
 
         const addedUsers =
           (await ticketsDB.get(`${interaction.channel.id}.addedUsers`)) || [];
+        const addedRoles =
+          (await ticketsDB.get(`${interaction.channel.id}.addedRoles`)) || [];
         const usersArray = await Promise.all(
           addedUsers.map(async (userId) => {
             return await getUser(userId);
+          }),
+        );
+        const rolesArray = await Promise.all(
+          addedRoles.map(async (roleId) => {
+            return await getRole(roleId);
           }),
         );
 
         try {
           for (const member of usersArray) {
             await interaction.channel.permissionOverwrites.edit(member, {
+              SendMessages: false,
+              ViewChannel: true,
+            });
+          }
+        } catch (error) {
+          console.error(
+            "An error occurred while editing permission overwrites on closing a ticket:",
+            error,
+          );
+        }
+
+        try {
+          for (const role of rolesArray) {
+            await interaction.channel.permissionOverwrites.edit(role, {
               SendMessages: false,
               ViewChannel: true,
             });
@@ -2252,6 +2295,7 @@ module.exports = {
                       closeUserID: "",
                       creationTime: creationTime,
                       addedUsers: [],
+                      addedRoles: [],
                     });
 
                     await mainDB.push("openTickets", `${channel.id}`);
