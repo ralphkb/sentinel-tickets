@@ -2168,6 +2168,12 @@ module.exports = {
                   category.textContent !== undefined
                     ? category.textContent
                     : "Please wait for the support staff to check your ticket!";
+                textContent = textContent
+                  .replace(/\{user\}/g, interaction.user)
+                  .replace(
+                    /\{user\.tag\}/g,
+                    sanitizeInput(interaction.user.tag),
+                  );
                 const pingRoles =
                   category.pingRoles && category.ping_role_ids.length > 0;
                 if (pingRoles) {
