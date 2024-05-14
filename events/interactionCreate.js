@@ -2046,13 +2046,18 @@ module.exports = {
           ) {
             const question = category.questions[questionIndex];
             const { label } = question;
-            const value = interaction.fields.getTextInputValue(
+            let value = interaction.fields.getTextInputValue(
               `question${questionIndex + 1}`,
             );
 
+            if (category?.useCodeBlocks) {
+              value = `\`\`\`${value}\`\`\``;
+            } else {
+              value = `>>> ${value}`;
+            }
             ticketOpenEmbed.addFields({
               name: `${label}`,
-              value: `>>> ${value}`,
+              value: value,
             });
           }
 

@@ -106,6 +106,7 @@ config.TicketCategories.forEach((category) => {
     ticketName,
     ticketTopic,
     slowmode,
+    useCodeBlocks,
     modalTitle,
     questions,
   } = category;
@@ -144,6 +145,7 @@ config.TicketCategories.forEach((category) => {
     ticketName,
     ticketTopic,
     slowmode,
+    useCodeBlocks,
     modalTitle,
     questions: extractedQuestions,
   };
