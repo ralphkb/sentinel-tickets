@@ -2319,6 +2319,17 @@ module.exports = {
                     message.delete();
                   });
 
+                if (pingRoles && category.ghostPingRoles) {
+                  const rolesToMention = category.ping_role_ids
+                    .map((roleId) => `<@&${roleId}>`)
+                    .join(" ");
+                  await channel
+                    .send({ content: rolesToMention })
+                    .then((message) => {
+                      message.delete();
+                    });
+                }
+
                 if (
                   timeRegex.test(openingTime) &&
                   timeRegex.test(closingTime)

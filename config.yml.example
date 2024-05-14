@@ -41,6 +41,7 @@ TicketCategories:
     support_role_ids: ["000000000000000000", "111111111111111111"] # The IDs of the staff roles on your server that can access only this ticket category, for example ["000000000000000000", "111111111111111111"]
     pingRoles: false # Enable or disable pinging roles when a ticket is opened in this category
     ping_role_ids: [] # The IDs of the roles you want to ping when a ticket is opened in this category, for example ["000000000000000000", "111111111111111111"]
+    ghostPingRoles: false # Enable or disable ghost pinging the ping_role_ids when a ticket is opened, use either {support-roles} in textContent below or this option, avoid using both because then the support roles will receive 2 pings
     textContent: "" # The text content that is sent alongside the embed, use {support-roles} for the support roles only if you enabled pingRoles above, you may also use {user} and {user.tag}
     creatorRoles: [] # The IDs of the roles that can create tickets in this category, keep it empty to allow all roles to create tickets
     buttonEmoji: "👮" # The emoji of the button, leave it empty "" to use no emojis
@@ -79,6 +80,7 @@ TicketCategories:
     support_role_ids: ["000000000000000000"] # The IDs of the staff roles on your server that can access only this ticket category, for example ["000000000000000000", "111111111111111111"]
     pingRoles: true # Enable or disable pinging roles when a ticket is opened in this category
     ping_role_ids: ["000000000000000000"] # The IDs of the roles you want to ping when a ticket is opened in this category,, for example ["000000000000000000", "111111111111111111"]
+    ghostPingRoles: false # Enable or disable ghost pinging the ping_role_ids when a ticket is opened, use either {support-roles} in textContent below or this option, avoid using both because then the support roles will receive 2 pings
     textContent: "Please wait for the {support-roles} to check your ticket!" # The text content that is sent alongside the embed, use {support-roles} for the support roles only if you enabled pingRoles above, you may also use {user} and {user.tag}
     creatorRoles: [] # The IDs of the roles that can create tickets in this category, keep it empty to allow all roles to create tickets
     buttonEmoji: "🤔" # The emoji of the button, leave it empty "" to use no emojis
