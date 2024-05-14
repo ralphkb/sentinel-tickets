@@ -1482,3 +1482,14 @@ categoryNotAllowedEmbed:
     name: ""
     iconURL: ""
     url: ""
+
+# ==============================================
+# Logs.txt channel settings
+# ==============================================
+
+# This section is for users who host the bot in a limited environment without write access to a logs.txt file.
+# Enabling the option below and adding a channel ID will mean the bot will send errors that were supposed to go to logs.txt into that channel instead.
+# Please make sure the channel ID you add below is that of a private and secure channel, not a public one.
+
+logsFileToChannel: false # False by default, unless you need it don't enable it
+logsFileChannelID: ""

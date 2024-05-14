@@ -571,9 +571,20 @@ for (const file of eventFiles) {
 // Function to log errors
 async function logError(errorType, error) {
   const errorMessage = `[${timeString}] [Bot v${packageJson.version}] [NodeJS ${process.version}] [${errorType}]\n${error.stack}\n\n`;
+  const logsFileToChannel = config?.logsFileToChannel ?? false;
+  const logsFileChannelID = config?.logsFileChannelID ?? "";
 
   try {
-    await fs.promises.appendFile("./logs.txt", errorMessage);
+    if (logsFileToChannel && logsFileChannelID) {
+      const channel = client.channels.cache.get(logsFileChannelID);
+      if (channel) {
+        await channel.send(errorMessage);
+      } else {
+        throw new Error("Channel not found for logging errors.");
+      }
+    } else {
+      await fs.promises.appendFile("./logs.txt", errorMessage);
+    }
   } catch (err) {
     console.log("Error writing to log file:", err);
   }
