@@ -695,6 +695,7 @@ client.on("ready", async () => {
     }
 
     client.user.setPresence(presence);
+    await mainDB.set("isClaimInProgress", false);
     console.log(`The ticket bot is now ready! Logged in as ${client.user.tag}`);
   } catch (error) {
     console.error("An error occurred during initialization:", error);
