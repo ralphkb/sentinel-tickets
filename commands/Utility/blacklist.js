@@ -9,6 +9,7 @@ const {
   logMessage,
   configEmbed,
   parseDurationToMilliseconds,
+  getRole,
 } = require("../../index.js");
 
 module.exports = {
@@ -110,6 +111,10 @@ module.exports = {
 
     if (subcommand === "add") {
       let user = interaction.options.getUser("user");
+      let member;
+      if (user) {
+        member = interaction.guild.members.cache.get(user.id);
+      }
       let role = interaction.options.getRole("role");
       let duration = interaction.options.getString("duration") || "permanent";
       let reason =
@@ -194,6 +199,21 @@ module.exports = {
             timestamp: Date.now(),
             staff: interaction.user.id,
             duration: duration,
+          });
+          const blacklistRoles = config.rolesOnBlacklist || [];
+          blacklistRoles.forEach(async (roleId) => {
+            const role = await getRole(roleId);
+            if (role) {
+              await member.roles
+                .add(role)
+                .catch((error) =>
+                  console.error(
+                    `Error adding role to blacklisted user: ${error}`,
+                  ),
+                );
+            } else {
+              console.error(`Role with ID ${roleId} not found.`);
+            }
           });
           logMessage(
             `${interaction.user.tag} added ${user.tag} to the blacklist with reason ${reason} and duration ${duration}.`,
@@ -359,6 +379,10 @@ module.exports = {
 
     if (subcommand === "remove") {
       let user = interaction.options.getUser("user");
+      let member;
+      if (user) {
+        member = interaction.guild.members.cache.get(user.id);
+      }
       let role = interaction.options.getRole("role");
       let reason =
         interaction.options.getString("reason") || "No reason provided.";
@@ -426,6 +450,21 @@ module.exports = {
         } else {
           // User is blacklisted
           await blacklistDB.delete(`user-${user.id}`);
+          const blacklistRoles = config.rolesOnBlacklist || [];
+          blacklistRoles.forEach(async (roleId) => {
+            const role = await getRole(roleId);
+            if (role) {
+              await member.roles
+                .remove(role)
+                .catch((error) =>
+                  console.error(
+                    `Error removing role from blacklisted user: ${error}`,
+                  ),
+                );
+            } else {
+              console.error(`Role with ID ${roleId} not found.`);
+            }
+          });
           logMessage(
             `${interaction.user.tag} removed ${user.tag} from the blacklist with reason ${reason}.`,
           );

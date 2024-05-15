@@ -12,6 +12,7 @@ const {
   configEmbed,
   logMessage,
   blacklistDB,
+  getRole,
 } = require("../../index.js");
 
 module.exports = {
@@ -36,7 +37,8 @@ module.exports = {
       });
     }
     await interaction.deferReply({ ephemeral: true });
-    const user = interaction.targetUser;
+    const member = interaction.targetMember;
+    const user = member.user;
     const reason = "Blacklisted using the Context Menu command";
     const failedDefault = {
       color: "#2FF200",
@@ -92,6 +94,19 @@ module.exports = {
         timestamp: Date.now(),
         staff: interaction.user.id,
         duration: "permanent",
+      });
+      const blacklistRoles = config.rolesOnBlacklist || [];
+      blacklistRoles.forEach(async (roleId) => {
+        const role = await getRole(roleId);
+        if (role) {
+          await member.roles
+            .add(role)
+            .catch((error) =>
+              console.error(`Error adding role to blacklisted user: ${error}`),
+            );
+        } else {
+          console.error(`Role with ID ${roleId} not found.`);
+        }
       });
       logMessage(
         `${interaction.user.tag} added ${user.tag} to the blacklist with reason ${reason} and duration permanent.`,

@@ -255,6 +255,21 @@ module.exports = {
         ) {
           await blacklistDB.delete(`user-${interaction.user.id}`);
           isUserBlacklisted = null;
+          const blacklistRoles = config.rolesOnBlacklist || [];
+          blacklistRoles.forEach(async (roleId) => {
+            const role = await getRole(roleId);
+            if (role) {
+              await interaction.member.roles
+                .remove(role)
+                .catch((error) =>
+                  console.error(
+                    `Error removing role from blacklisted user: ${error}`,
+                  ),
+                );
+            } else {
+              console.error(`Role with ID ${roleId} not found.`);
+            }
+          });
         }
 
         if (isUserBlacklisted || isRoleBlacklisted) {
@@ -548,6 +563,21 @@ module.exports = {
       ) {
         await blacklistDB.delete(`user-${interaction.user.id}`);
         isUserBlacklisted = null;
+        const blacklistRoles = config.rolesOnBlacklist || [];
+        blacklistRoles.forEach(async (roleId) => {
+          const role = await getRole(roleId);
+          if (role) {
+            await interaction.member.roles
+              .remove(role)
+              .catch((error) =>
+                console.error(
+                  `Error removing role from blacklisted user: ${error}`,
+                ),
+              );
+          } else {
+            console.error(`Role with ID ${roleId} not found.`);
+          }
+        });
       }
 
       if (isUserBlacklisted || isRoleBlacklisted) {

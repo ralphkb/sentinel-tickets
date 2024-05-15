@@ -12,6 +12,7 @@ const {
   configEmbed,
   logMessage,
   blacklistDB,
+  getRole,
 } = require("../../index.js");
 
 module.exports = {
@@ -38,7 +39,8 @@ module.exports = {
       });
     }
     await interaction.deferReply({ ephemeral: true });
-    const user = interaction.targetUser;
+    const member = interaction.targetMember;
+    const user = member.user;
     const reason = "Unblacklisted using the Context Menu command";
     const failedDefault = {
       color: "#2FF200",
@@ -93,6 +95,21 @@ module.exports = {
     } else {
       // User is blacklisted
       await blacklistDB.delete(`user-${user.id}`);
+      const blacklistRoles = config.rolesOnBlacklist || [];
+      blacklistRoles.forEach(async (roleId) => {
+        const role = await getRole(roleId);
+        if (role) {
+          await member.roles
+            .remove(role)
+            .catch((error) =>
+              console.error(
+                `Error removing role from blacklisted user: ${error}`,
+              ),
+            );
+        } else {
+          console.error(`Role with ID ${roleId} not found.`);
+        }
+      });
       logMessage(
         `${interaction.user.tag} removed ${user.tag} from the blacklist with reason ${reason}.`,
       );

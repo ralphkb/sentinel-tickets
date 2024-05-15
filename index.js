@@ -461,6 +461,64 @@ function isBlacklistExpired(timestamp, duration) {
   return Date.now() >= expirationTime;
 }
 
+async function cleanBlacklist() {
+  const currentTime = Date.now();
+  const blacklistedUsers = (await blacklistDB.all()) || [];
+  const guild = client.guilds.cache.get(process.env.GUILD_ID);
+  const userArray = blacklistedUsers.filter(
+    (entry) =>
+      entry.id.startsWith("user-") && entry.value.duration !== "permanent",
+  );
+  const rolesArray = blacklistedUsers.filter(
+    (entry) =>
+      entry.id.startsWith("role-") && entry.value.duration !== "permanent",
+  );
+
+  if (userArray.length > 0) {
+    for (const { id, value } of userArray) {
+      const userId = id.split("-")[1];
+      const member =
+        guild.members.cache.get(userId) || (await guild.members.fetch(userId));
+      const { timestamp, duration } = value;
+      const expiryTime = timestamp + parseDurationToMilliseconds(duration);
+
+      if (currentTime >= expiryTime) {
+        await blacklistDB.delete(`user-${userId}`);
+        const blacklistRoles = config.rolesOnBlacklist || [];
+        blacklistRoles.forEach(async (roleId) => {
+          const role = await getRole(roleId);
+          if (role) {
+            await member.roles
+              .remove(role)
+              .catch((error) =>
+                console.error(
+                  `Error removing role from blacklisted user: ${error}`,
+                ),
+              );
+          } else {
+            console.error(`Role with ID ${roleId} not found.`);
+          }
+        });
+      }
+    }
+  }
+
+  if (rolesArray.length > 0) {
+    for (const { id, value } of rolesArray) {
+      const roleId = id.split("-")[1];
+      const { timestamp, duration } = value;
+      const expiryTime = timestamp + parseDurationToMilliseconds(duration);
+
+      if (currentTime >= expiryTime) {
+        await blacklistDB.delete(`role-${roleId}`);
+      }
+    }
+  }
+}
+
+// Schedule the blacklist cleanup check every 2 minutes
+setInterval(cleanBlacklist, 2 * 60 * 1000);
+
 // Function to parse duration string to milliseconds
 function parseDurationToMilliseconds(duration) {
   const unitMap = {
