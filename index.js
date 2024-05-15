@@ -638,7 +638,7 @@ async function logError(errorType, error) {
     if (logsFileToChannel && logsFileChannelID) {
       const channel = client.channels.cache.get(logsFileChannelID);
       if (channel) {
-        await channel.send(errorMessage);
+        await channel.send(`\`\`\`${errorMessage}\`\`\``);
       } else {
         throw new Error("Channel not found for logging errors.");
       }
