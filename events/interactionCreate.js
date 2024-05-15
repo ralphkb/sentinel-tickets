@@ -1807,7 +1807,7 @@ module.exports = {
                 config.claimRenameName || "{category}-{username}";
               const category = ticketCategories[ticketButton];
               const claimUsername = interaction.user.username;
-              const claimDisplayname = interaction.user.displayName;
+              const claimDisplayname = interaction.member.displayName;
 
               claimRenameName = claimRenameName
                 .replace(/\{category\}/g, category.name)
