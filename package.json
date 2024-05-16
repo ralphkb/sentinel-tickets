@@ -17,7 +17,7 @@
   "author": "ralphkb",
   "license": "MIT",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "dependencies": {
     "@discordjs/rest": "^2.2.0",
