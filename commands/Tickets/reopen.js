@@ -118,6 +118,9 @@ module.exports = {
       );
     }
 
+    const keepSupportPerms =
+      config.keepSupportPerms !== undefined ? config.keepSupportPerms : false;
+
     Object.keys(ticketCategories).forEach(async (id) => {
       if (ticketButton === id) {
         const category = ticketCategories[id];
@@ -132,15 +135,17 @@ module.exports = {
           });
         }
 
-        category.support_role_ids.forEach(async (roleId) => {
-          await interaction.channel.permissionOverwrites.create(roleId, {
-            ViewChannel: true,
-            SendMessages: true,
-            AttachFiles: true,
-            EmbedLinks: true,
-            ReadMessageHistory: true,
+        if (!keepSupportPerms) {
+          category.support_role_ids.forEach(async (roleId) => {
+            await interaction.channel.permissionOverwrites.create(roleId, {
+              ViewChannel: true,
+              SendMessages: true,
+              AttachFiles: true,
+              EmbedLinks: true,
+              ReadMessageHistory: true,
+            });
           });
-        });
+        }
       }
     });
 

@@ -11,6 +11,7 @@ transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT"
 reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
 closeStaffOnly: true # When enabled, only staff members with support roles can use the close ticket button
 closeRemoveUser: false # When enabled, the ticket creator will be removed from the ticket when it is closed and added back if the ticket is re-opened
+keepSupportPerms: false # When enabled, the support roles will keep their permissions when a ticket is closed, so they will be able to send messages in both open and closed tickets
 commands_cooldown: "5" # The cooldown of commands in seconds
 buttons_cooldown: "5" # The cooldown of buttons in seconds
 maxOpenTickets: "1" # The maximum number of open tickets a user can have at one time

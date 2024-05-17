@@ -303,6 +303,9 @@ module.exports = {
       }
     }
 
+    const keepSupportPerms =
+      config.keepSupportPerms !== undefined ? config.keepSupportPerms : false;
+
     Object.keys(ticketCategories).forEach(async (id) => {
       if (ticketButton === id) {
         const category = ticketCategories[id];
@@ -312,19 +315,21 @@ module.exports = {
           lockPermissions: false,
         });
 
-        category.support_role_ids.forEach(async (roleId) => {
-          await interaction.channel.permissionOverwrites
-            .edit(roleId, {
-              SendMessages: false,
-              ViewChannel: true,
-            })
-            .catch((error) => {
-              console.error(
-                `Error updating permissions of support roles:`,
-                error,
-              );
-            });
-        });
+        if (!keepSupportPerms) {
+          category.support_role_ids.forEach(async (roleId) => {
+            await interaction.channel.permissionOverwrites
+              .edit(roleId, {
+                SendMessages: false,
+                ViewChannel: true,
+              })
+              .catch((error) => {
+                console.error(
+                  `Error updating permissions of support roles:`,
+                  error,
+                );
+              });
+          });
+        }
       }
     });
   },
