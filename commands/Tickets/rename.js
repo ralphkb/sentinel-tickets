@@ -40,8 +40,12 @@ module.exports = {
         ephemeral: true,
       });
     }
+    const isEphemeral =
+      config.renameEmbed.ephemeral !== undefined
+        ? config.renameEmbed.ephemeral
+        : false;
 
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: isEphemeral });
     let newName = interaction.options.getString("name");
     interaction.channel.setName(`${newName}`);
     let logChannelId = config.logs.ticketRename || config.logs.default;
@@ -94,7 +98,10 @@ module.exports = {
       );
     }
 
-    await interaction.editReply({ embeds: [renameEmbed] });
+    await interaction.editReply({
+      embeds: [renameEmbed],
+      ephemeral: isEphemeral,
+    });
     if (config.toggleLogs.ticketRename) {
       await logChannel.send({ embeds: [logRenameEmbed] });
     }

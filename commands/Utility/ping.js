@@ -15,7 +15,11 @@ module.exports = {
     )
     .setDMPermission(false),
   async execute(interaction) {
-    await interaction.deferReply();
+    const isEphemeral =
+      config.pingEmbed.ephemeral !== undefined
+        ? config.pingEmbed.ephemeral
+        : false;
+    await interaction.deferReply({ ephemeral: isEphemeral });
 
     const defaultDMValues = {
       color: "#2FF200",
@@ -42,6 +46,9 @@ module.exports = {
       },
     ]);
 
-    await interaction.editReply({ embeds: [pingEmbed] });
+    await interaction.editReply({
+      embeds: [pingEmbed],
+      ephemeral: isEphemeral,
+    });
   },
 };

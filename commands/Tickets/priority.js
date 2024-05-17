@@ -85,8 +85,12 @@ module.exports = {
           ephemeral: true,
         });
       }
+      const isEphemeral =
+        config.priorityAddEmbed.ephemeral !== undefined
+          ? config.priorityAddEmbed.ephemeral
+          : false;
 
-      await interaction.deferReply();
+      await interaction.deferReply({ ephemeral: isEphemeral });
       const option = interaction.options.getString("priority");
       let reason =
         interaction.options.getString("reason") || "No reason provided.";
@@ -102,9 +106,9 @@ module.exports = {
           priorityEmoji = emojiHigh;
           break;
         default:
-          return interaction.reply({
+          return interaction.editReply({
             content: "Invalid priority option",
-            ephemeral: true,
+            ephemeral: isEphemeral,
           });
       }
 
@@ -166,7 +170,10 @@ module.exports = {
         );
       }
 
-      await interaction.editReply({ embeds: [priorityAddEmbed] });
+      await interaction.editReply({
+        embeds: [priorityAddEmbed],
+        ephemeral: isEphemeral,
+      });
       if (config.toggleLogs.ticketPriority) {
         await logChannel.send({ embeds: [logPriorityAddEmbed] });
       }
@@ -182,8 +189,12 @@ module.exports = {
           ephemeral: true,
         });
       }
+      const isEphemeral =
+        config.priorityRemoveEmbed.ephemeral !== undefined
+          ? config.priorityRemoveEmbed.ephemeral
+          : false;
 
-      await interaction.deferReply();
+      await interaction.deferReply({ ephemeral: isEphemeral });
       const channelName = interaction.channel.name;
       const updatedChannelName = priorityEmoji.reduce((acc, emoji) => {
         return acc.replace(emoji, "");
@@ -228,7 +239,10 @@ module.exports = {
         defaultValues,
       );
 
-      await interaction.editReply({ embeds: [priorityRemoveEmbed] });
+      await interaction.editReply({
+        embeds: [priorityRemoveEmbed],
+        ephemeral: isEphemeral,
+      });
       if (config.toggleLogs.ticketPriority) {
         await logChannel.send({ embeds: [logPriorityRemoveEmbed] });
       }

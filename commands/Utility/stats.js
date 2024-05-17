@@ -17,7 +17,11 @@ module.exports = {
     )
     .setDMPermission(false),
   async execute(interaction) {
-    await interaction.deferReply();
+    const isEphemeral =
+      config.statsEmbed.ephemeral !== undefined
+        ? config.statsEmbed.ephemeral
+        : false;
+    await interaction.deferReply({ ephemeral: isEphemeral });
     const totalTickets = (await mainDB.get("totalTickets")) ?? 0;
     const openTickets = (await mainDB.get("openTickets")) ?? [];
     const totalClaims = (await mainDB.get("totalClaims")) ?? 0;
@@ -71,6 +75,9 @@ module.exports = {
       },
     ]);
 
-    await interaction.editReply({ embeds: [statsEmbed] });
+    await interaction.editReply({
+      embeds: [statsEmbed],
+      ephemeral: isEphemeral,
+    });
   },
 };

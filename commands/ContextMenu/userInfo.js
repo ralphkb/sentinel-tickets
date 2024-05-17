@@ -19,7 +19,11 @@ module.exports = {
     )
     .setDMPermission(false),
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    const isEphemeral =
+      config.userInfoEmbed.ephemeral !== undefined
+        ? config.userInfoEmbed.ephemeral
+        : true;
+    await interaction.deferReply({ ephemeral: isEphemeral });
     const member = interaction.targetMember;
     const user = member.user;
     const joinedAtTimestamp = `<t:${Math.floor(member.joinedAt / 1000)}:F>`;
@@ -69,6 +73,9 @@ module.exports = {
       },
     ]);
 
-    await interaction.editReply({ embeds: [userInfoEmbed], ephemeral: true });
+    await interaction.editReply({
+      embeds: [userInfoEmbed],
+      ephemeral: isEphemeral,
+    });
   },
 };

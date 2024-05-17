@@ -71,7 +71,11 @@ module.exports = {
       });
     }
 
-    await interaction.deferReply();
+    const isEphemeral =
+      config.moveEmbed.ephemeral !== undefined
+        ? config.moveEmbed.ephemeral
+        : false;
+    await interaction.deferReply({ ephemeral: isEphemeral });
 
     // Find the categoryID based on the name
     const category = Object.values(ticketCategories).find(
@@ -141,7 +145,10 @@ module.exports = {
       );
     }
 
-    await interaction.editReply({ embeds: [moveEmbed] });
+    await interaction.editReply({
+      embeds: [moveEmbed],
+      ephemeral: isEphemeral,
+    });
     logMessage(
       `${interaction.user.tag} moved the ticket #${interaction.channel.name} to the category ${option}.`,
     );

@@ -56,6 +56,10 @@ module.exports = {
       interaction.options.getString("reason") || "No reason provided.";
     let logChannelId = config.logs.userAdd || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    const isEphemeral =
+      config.addEmbed.ephemeral !== undefined
+        ? config.addEmbed.ephemeral
+        : false;
 
     if ((!user && !role) || (user && role)) {
       return interaction.reply({
@@ -72,7 +76,7 @@ module.exports = {
           ephemeral: true,
         });
       }
-      await interaction.deferReply();
+      await interaction.deferReply({ ephemeral: isEphemeral });
 
       interaction.channel.permissionOverwrites.create(user, {
         ViewChannel: true,
@@ -135,7 +139,10 @@ module.exports = {
       }
 
       await ticketsDB.push(`${interaction.channel.id}.addedUsers`, user.id);
-      await interaction.editReply({ embeds: [userAddEmbed] });
+      await interaction.editReply({
+        embeds: [userAddEmbed],
+        ephemeral: isEphemeral,
+      });
       if (config.commands.add.pingUser) {
         await interaction.channel.send(`<@${user.id}>`);
       }
@@ -155,7 +162,7 @@ module.exports = {
           ephemeral: true,
         });
       }
-      await interaction.deferReply();
+      await interaction.deferReply({ ephemeral: isEphemeral });
 
       interaction.channel.permissionOverwrites.create(role, {
         ViewChannel: true,
@@ -217,7 +224,10 @@ module.exports = {
         );
       }
       await ticketsDB.push(`${interaction.channel.id}.addedRoles`, role.id);
-      await interaction.editReply({ embeds: [roleAddEmbed] });
+      await interaction.editReply({
+        embeds: [roleAddEmbed],
+        ephemeral: isEphemeral,
+      });
       if (config.toggleLogs.userAdd) {
         await logChannel.send({ embeds: [logRoleAddEmbed] });
       }

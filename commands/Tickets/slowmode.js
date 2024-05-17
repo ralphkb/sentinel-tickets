@@ -69,8 +69,12 @@ module.exports = {
         ephemeral: true,
       });
     }
+    const isEphemeral =
+      config.slowmodeEmbed.ephemeral !== undefined
+        ? config.slowmodeEmbed.ephemeral
+        : false;
 
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: isEphemeral });
     await interaction.channel.setRateLimitPerUser(time);
     const formattedTime = formatTime(time);
 
@@ -120,7 +124,10 @@ module.exports = {
         slowmodeEmbed.data.description.replace(/\{time\}/g, formattedTime),
       );
     }
-    await interaction.editReply({ embeds: [slowmodeEmbed] });
+    await interaction.editReply({
+      embeds: [slowmodeEmbed],
+      ephemeral: isEphemeral,
+    });
     if (config.toggleLogs.ticketSlowmode) {
       await logChannel.send({ embeds: [logSlowmodeEmbed] });
     }

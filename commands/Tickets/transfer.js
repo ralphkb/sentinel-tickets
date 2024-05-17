@@ -64,7 +64,12 @@ module.exports = {
       });
     }
 
-    await interaction.deferReply();
+    const isEphemeral =
+      config.transferEmbed.ephemeral !== undefined
+        ? config.transferEmbed.ephemeral
+        : false;
+
+    await interaction.deferReply({ ephemeral: isEphemeral });
     await interaction.channel.permissionOverwrites.delete(currentUser);
     await ticketsDB.set(`${interaction.channel.id}.userID`, optionUser.id);
     await interaction.channel.permissionOverwrites.create(optionUser, {
@@ -141,7 +146,10 @@ module.exports = {
       );
     }
 
-    await interaction.editReply({ embeds: [transferEmbed] });
+    await interaction.editReply({
+      embeds: [transferEmbed],
+      ephemeral: isEphemeral,
+    });
     if (config.commands.transfer.pingUser) {
       await interaction.channel.send(`<@${optionUser.id}>`);
     }

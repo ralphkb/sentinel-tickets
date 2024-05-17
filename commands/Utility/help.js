@@ -15,7 +15,11 @@ module.exports = {
     )
     .setDMPermission(false),
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    const isEphemeral =
+      config.helpEmbed.ephemeral !== undefined
+        ? config.helpEmbed.ephemeral
+        : true;
+    await interaction.deferReply({ ephemeral: isEphemeral });
 
     const defaultDMValues = {
       color: "#2FF200",
@@ -128,6 +132,9 @@ module.exports = {
       },
     ]);
 
-    await interaction.editReply({ embeds: [helpEmbed], ephemeral: true });
+    await interaction.editReply({
+      embeds: [helpEmbed],
+      ephemeral: isEphemeral,
+    });
   },
 };

@@ -48,7 +48,11 @@ module.exports = {
         ephemeral: true,
       });
     }
-    await interaction.deferReply();
+    const isEphemeral =
+      config.pinEmbed.ephemeral !== undefined
+        ? config.pinEmbed.ephemeral
+        : false;
+    await interaction.deferReply({ ephemeral: isEphemeral });
 
     let logChannelId = config.logs.ticketPin || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
@@ -94,7 +98,7 @@ module.exports = {
     };
 
     const pinEmbed = await configEmbed("pinEmbed", defaultValues);
-    await interaction.editReply({ embeds: [pinEmbed] });
+    await interaction.editReply({ embeds: [pinEmbed], ephemeral: isEphemeral });
     if (config.toggleLogs.ticketPin) {
       await logChannel.send({ embeds: [logPinEmbed] });
     }

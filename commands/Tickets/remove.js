@@ -56,6 +56,10 @@ module.exports = {
       interaction.options.getString("reason") || "No reason provided.";
     let logChannelId = config.logs.userRemove || config.logs.default;
     let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    const isEphemeral =
+      config.removeEmbed.ephemeral !== undefined
+        ? config.removeEmbed.ephemeral
+        : false;
 
     if ((!user && !role) || (user && role)) {
       return interaction.reply({
@@ -73,7 +77,7 @@ module.exports = {
         });
       }
 
-      await interaction.deferReply();
+      await interaction.deferReply({ ephemeral: isEphemeral });
       interaction.channel.permissionOverwrites.delete(user);
 
       const logDefaultValues = {
@@ -129,7 +133,10 @@ module.exports = {
       }
 
       await ticketsDB.pull(`${interaction.channel.id}.addedUsers`, user.id);
-      await interaction.editReply({ embeds: [userRemoveEmbed] });
+      await interaction.editReply({
+        embeds: [userRemoveEmbed],
+        ephemeral: isEphemeral,
+      });
       if (config.toggleLogs.userRemove) {
         await logChannel.send({ embeds: [logUserRemoveEmbed] });
       }
@@ -147,7 +154,7 @@ module.exports = {
         });
       }
 
-      await interaction.deferReply();
+      await interaction.deferReply({ ephemeral: isEphemeral });
       interaction.channel.permissionOverwrites.delete(role);
 
       const logDefaultValues = {
@@ -203,7 +210,10 @@ module.exports = {
       }
 
       await ticketsDB.pull(`${interaction.channel.id}.addedRoles`, role.id);
-      await interaction.editReply({ embeds: [roleRemoveEmbed] });
+      await interaction.editReply({
+        embeds: [roleRemoveEmbed],
+        ephemeral: isEphemeral,
+      });
       if (config.toggleLogs.userRemove) {
         await logChannel.send({ embeds: [logRoleRemoveEmbed] });
       }
