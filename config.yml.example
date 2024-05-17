@@ -613,6 +613,7 @@ blacklistListEmbed:
 
 # User and role add embed
 addEmbed:
+  ephemeral: false
   color: "#2FF200"
   title: ""
   description: "Added **{target} ({target.tag})** to the ticket.\nReason: **{reason}**" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role & {reason} for the reason.
@@ -668,6 +669,7 @@ alertEmbed:
 
 # User and role remove embed
 removeEmbed:
+  ephemeral: false
   color: "#FF0000"
   title: ""
   description: "Removed **{target} ({target.tag})** from the ticket.\nReason: **{reason}**" # Use {target} for the user or role such as @User, @Role and {target.tag} for the name of the user or role without it being mentioned such as User, Role & {reason} for the reason.
@@ -724,6 +726,7 @@ userLeftEmbed:
 
 # Move command embed
 moveEmbed:
+  ephemeral : false
   color: "2FF200"
   title: ""
   description: "Moved this ticket to the **{category}** category." # Use {category} for the name of the category
@@ -761,6 +764,7 @@ logMoveEmbed:
 
 # Pin command embed
 pinEmbed:
+  ephemeral : false
   color: "2FF200"
   title: ""
   description: "This ticket has been pinned."
@@ -797,6 +801,7 @@ logPinEmbed:
 
 # Priority add command embed
 priorityAddEmbed:
+  ephemeral: false
   color: "2FF200"
   title: ""
   description: "The priority of this ticket has been set to **{priority}**.\nReason: **{reason}**" # Use {priority} for the name of the priority, {reason} for the reason
@@ -835,6 +840,7 @@ logPriorityAddEmbed:
 
 # Priority remove command embed
 priorityRemoveEmbed:
+  ephemeral: false
   color: "FF2400"
   title: ""
   description: "The priority of this ticket has been removed."
@@ -871,6 +877,7 @@ logPriorityRemoveEmbed:
 
 # Rename command embed
 renameEmbed:
+  ephemeral: false
   color: "#2FF200"
   title: ""
   description: "This ticket has been renamed to **{name}**!" # Use {name} for the new channel name
@@ -908,6 +915,7 @@ logRenameEmbed:
 
 # Slowmode command embed
 slowmodeEmbed:
+  ephemeral: false
   color: "#2FF200"
   title: ""
   description: "A slowmode of **{time}** has been added to this ticket." # Use {time} for the time in hh mm ss format, example: 1h 5m 7s
@@ -945,6 +953,7 @@ logSlowmodeEmbed:
 
 # Transfer command embed
 transferEmbed:
+  ephemeral: false
   color: "#2FF200"
   title: ""
   description: "The ownership of this ticket has been transferred to **{user} ({user.tag})**." # Use {user} for the user such as @User and {user.tag} for the name of the user without it being mentioned such as User
@@ -1204,6 +1213,7 @@ transcriptEmbed:
 
 # Stats command embed
 statsEmbed:
+  ephemeral: false
   color: "#2FF200"
   title: "📊 Statistics"
   description: ""
@@ -1221,6 +1231,7 @@ statsEmbed:
 
 # Ping command embed
 pingEmbed:
+  ephemeral: false
   color: "#2FF200"
   title: "Ping & Latency"
   description: ""
@@ -1238,6 +1249,7 @@ pingEmbed:
 
 # User Info command embed
 userInfoEmbed:
+  ephemeral: true
   color: "#2FF200"
   title: "User Information"
   description: ""
@@ -1255,6 +1267,7 @@ userInfoEmbed:
 
 # Help command embed
 helpEmbed:
+  ephemeral: true
   color: "#2FF200"
   title: "Help"
   description: ""
