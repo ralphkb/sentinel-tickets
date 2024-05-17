@@ -1211,6 +1211,24 @@ transcriptEmbed:
   field_category: "Category"
   field_creation: "Creation Time"
 
+# Embed for the reply to manually created transcripts via the button or command
+transcriptReplyEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "Transcript Saved"
+  description: "A Transcript has been saved by {user} ({user.tag}) to {channel}" # Use {user} for the username of the staff and {user.tag} to have the staff tagged and {channel} for the transcript log channel
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
 # Stats command embed
 statsEmbed:
   ephemeral: false

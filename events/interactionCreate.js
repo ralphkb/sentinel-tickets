@@ -774,7 +774,11 @@ module.exports = {
             ephemeral: true,
           });
         }
-        await interaction.deferReply({ ephemeral: true });
+        const isEphemeral =
+          config.transcriptReplyEmbed.ephemeral !== undefined
+            ? config.transcriptReplyEmbed.ephemeral
+            : true;
+        await interaction.deferReply({ ephemeral: isEphemeral });
 
         let ticketUserID = await getUser(
           await ticketsDB.get(`${interaction.channel.id}.userID`),
@@ -836,13 +840,41 @@ module.exports = {
 
         let logChannelId = config.logs.transcripts || config.logs.default;
         let logChannel = interaction.guild.channels.cache.get(logChannelId);
+
+        const replyDefaultValues = {
+          color: "#2FF200",
+          title: "Transcript Saved",
+          description: `A Transcript has been saved by {user} ({user.tag}) to {channel}`,
+          timestamp: true,
+          footer: {
+            text: `${interaction.user.tag}`,
+            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+          },
+        };
+
+        const transcriptReplyEmbed = await configEmbed(
+          "transcriptReplyEmbed",
+          replyDefaultValues,
+        );
+
+        if (
+          transcriptReplyEmbed.data &&
+          transcriptReplyEmbed.data.description
+        ) {
+          transcriptReplyEmbed.setDescription(
+            transcriptReplyEmbed.data.description
+              .replace(/\{user\}/g, interaction.user)
+              .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag))
+              .replace(/\{channel\}/g, `<#${logChannel.id}>`),
+          );
+        }
         await logChannel.send({
           embeds: [transcriptEmbed],
           files: [attachment],
         });
-        interaction.followUp({
-          content: `Transcript saved to <#${logChannel.id}>`,
-          ephemeral: true,
+        await interaction.editReply({
+          embeds: [transcriptReplyEmbed],
+          ephemeral: isEphemeral,
         });
         logMessage(
           `${interaction.user.tag} manually saved the transcript of ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
