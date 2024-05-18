@@ -7,6 +7,7 @@ maxButtonsPerRow: "5" # The maximum number of buttons per row, note that this wi
 menuPlaceholder: "Select a category to open a ticket." # The placeholder of the select menu
 rolesThatCanBlacklist: ["111111111111111111"] # The IDs of the staff roles on your server which should have access to blacklisting and unblacklisting users from creating tickets, for example ["000000000000000000", "111111111111111111"]
 rolesOnBlacklist: [] # The IDs of the roles that the bot will add to blacklisted users, leave it empty to disable this feature
+blacklistCleanup: "120" # The amount of time in seconds between blacklist cleanup checks, to automatically remove expired blacklisted users/roles
 transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT"
 reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
 closeStaffOnly: true # When enabled, only staff members with support roles can use the close ticket button

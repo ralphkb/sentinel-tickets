@@ -516,8 +516,9 @@ async function cleanBlacklist() {
   }
 }
 
-// Schedule the blacklist cleanup check every 2 minutes
-setInterval(cleanBlacklist, 2 * 60 * 1000);
+const intervalInSeconds = config.blacklistCleanup || 120;
+// Schedule the blacklist cleanup check every intervalInSeconds seconds
+setInterval(cleanBlacklist, intervalInSeconds * 1000);
 
 // Function to parse duration string to milliseconds
 function parseDurationToMilliseconds(duration) {
