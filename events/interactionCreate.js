@@ -1748,7 +1748,8 @@ module.exports = {
 
       // Ticket Claim button
       if (interaction.customId === "ticketclaim") {
-        const isClaimInProgress = await mainDB.get("isClaimInProgress");
+        const claimKey = `isClaimInProgress-${interaction.channel.id}`;
+        const isClaimInProgress = await mainDB.get(claimKey);
         if (isClaimInProgress) {
           return interaction.reply({
             content: "Another user is already claiming this ticket.",
@@ -1756,10 +1757,15 @@ module.exports = {
           });
         }
 
-        await mainDB.set("isClaimInProgress", true);
+        await mainDB.set(claimKey, true);
         const hasSupportRole = await checkSupportRole(interaction);
         if (!hasSupportRole) {
-          await mainDB.set("isClaimInProgress", false);
+          await mainDB.delete(claimKey).catch((error) => {
+            console.error(
+              `Error deleting claim key for ticket #${interaction.channel.name}:`,
+              error,
+            );
+          });
           return interaction.reply({
             content:
               config.errors.not_allowed || "You are not allowed to use this!",
@@ -1770,7 +1776,12 @@ module.exports = {
         if (
           (await ticketsDB.get(`${interaction.channel.id}.status`)) === "Closed"
         ) {
-          await mainDB.set("isClaimInProgress", false);
+          await mainDB.delete(claimKey).catch((error) => {
+            console.error(
+              `Error deleting claim key for ticket #${interaction.channel.name}:`,
+              error,
+            );
+          });
           return interaction.reply({
             content: "You cannot claim a closed ticket!",
             ephemeral: true,
@@ -1899,7 +1910,12 @@ module.exports = {
               interaction.user.id,
             );
             await mainDB.set("totalClaims", totalClaims + 1);
-            await mainDB.set("isClaimInProgress", false);
+            await mainDB.delete(claimKey).catch((error) => {
+              console.error(
+                `Error deleting claim key for ticket #${interaction.channel.name}:`,
+                error,
+              );
+            });
 
             let logChannelId = config.logs.ticketClaim || config.logs.default;
             let logsChannel =

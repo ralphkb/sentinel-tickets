@@ -788,7 +788,14 @@ client.on("ready", async () => {
     }
 
     client.user.setPresence(presence);
-    await mainDB.set("isClaimInProgress", false);
+    const keysToDelete = (await mainDB.startsWith("isClaimInProgress")).map(
+      ({ id }) => id,
+    );
+    await Promise.all(
+      keysToDelete.map(async (key) => {
+        await mainDB.delete(key);
+      }),
+    );
     console.log(`The ticket bot is now ready! Logged in as ${client.user.tag}`);
   } catch (error) {
     console.error("An error occurred during initialization:", error);
