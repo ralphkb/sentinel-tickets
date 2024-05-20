@@ -152,17 +152,7 @@ config.TicketCategories.forEach((category) => {
 });
 
 async function checkSupportRole(interaction) {
-  const customIds = Object.keys(ticketCategories);
-  let foundId;
-  const ticketType = await ticketsDB.get(
-    `${interaction.channel.id}.ticketType`,
-  );
-  for (const id of customIds) {
-    if (ticketCategories[id].name === ticketType) {
-      foundId = id;
-      break;
-    }
-  }
+  const foundId = await ticketsDB.get(`${interaction.channel.id}.button`);
   const allowedRoles = ticketCategories[foundId].support_role_ids;
   return interaction.member.roles.cache.some((role) =>
     allowedRoles.includes(role.id),
