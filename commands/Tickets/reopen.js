@@ -212,7 +212,7 @@ module.exports = {
       }
     } catch (error) {
       console.error(
-        "An error occurred while editing permission overwrites on closing a ticket:",
+        "An error occurred while editing permission overwrites on reopening a ticket:",
         error,
       );
     }

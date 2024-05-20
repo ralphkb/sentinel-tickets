@@ -95,7 +95,7 @@ module.exports = {
         await interaction.followUp(`<@${user.id}>`);
       })
       .catch((error) => {
-        console.error(error);
+        console.error(`[Slash Command: Alert] Error: ${error}`);
       });
 
     if (config.alertReply.enabled) {

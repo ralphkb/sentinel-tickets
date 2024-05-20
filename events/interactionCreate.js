@@ -197,7 +197,9 @@ module.exports = {
       try {
         await command.execute(interaction);
       } catch (error) {
-        console.error(error);
+        console.error(
+          `[InteractionCreate] ${command.data.name} command error: ${error}`,
+        );
         await interaction.reply({
           content: "There was an error while executing this command!",
           ephemeral: true,
@@ -1063,7 +1065,7 @@ module.exports = {
           }
         } catch (error) {
           console.error(
-            "An error occurred while editing permission overwrites on closing a ticket:",
+            "An error occurred while editing permission overwrites on reopening a ticket:",
             error,
           );
         }
