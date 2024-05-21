@@ -89,6 +89,7 @@ config.TicketCategories.forEach((category) => {
     categoryID,
     closedCategoryID,
     support_role_ids,
+    permissions,
     pingRoles,
     ping_role_ids,
     ghostPingRoles,
@@ -128,6 +129,7 @@ config.TicketCategories.forEach((category) => {
     categoryID,
     closedCategoryID,
     support_role_ids,
+    permissions,
     pingRoles,
     ping_role_ids,
     ghostPingRoles,
@@ -219,6 +221,27 @@ const findAvailableCategory = async (categoryIDs) => {
   }
   return null; // No available category found
 };
+
+async function getPermissionOverwrites(
+  permissions,
+  type = "open",
+  defaults = {},
+) {
+  const permissionOverwrites = {};
+  const allowPermissions = permissions?.[type]?.allow || defaults?.allow || [];
+  const denyPermissions = permissions?.[type]?.deny || defaults?.deny || [];
+  await Promise.all(
+    allowPermissions.map(async (permission) => {
+      permissionOverwrites[permission] = true;
+    }),
+  );
+  await Promise.all(
+    denyPermissions.map(async (permission) => {
+      permissionOverwrites[permission] = false;
+    }),
+  );
+  return permissionOverwrites;
+}
 
 async function configEmbed(configPath, defaultValues = {}) {
   const embed = new EmbedBuilder();
@@ -596,6 +619,7 @@ module.exports = {
   getUser,
   findAvailableCategory,
   getRole,
+  getPermissionOverwrites,
 };
 
 // Holding commands cooldown data

@@ -11,8 +11,6 @@ blacklistCleanup: "120" # The amount of time in seconds between blacklist cleanu
 transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT"
 reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
 closeStaffOnly: true # When enabled, only staff members with support roles can use the close ticket button
-closeRemoveUser: false # When enabled, the ticket creator will be removed from the ticket when it is closed and added back if the ticket is re-opened
-keepSupportPerms: false # When enabled, the support roles will keep their permissions when a ticket is closed, so they will be able to send messages in both open and closed tickets
 commands_cooldown: "5" # The cooldown of commands in seconds
 buttons_cooldown: "5" # The cooldown of buttons in seconds
 maxOpenTickets: "1" # The maximum number of open tickets a user can have at one time
@@ -36,12 +34,29 @@ alertReply:
 # ==============================================
 
 # The limit set by discord is 25, though it is highly recommended not to use such a high amount of types considering each types uses 2 categories and the discord limit is 50 categories, you would no longer have categories left to use for your normal discord channels...
+# For the permissions section, the possible values are: ViewChannel, SendMessages, EmbedLinks, AttachFiles, ReadMessageHistory, ManageChannels, ManageWebhooks, CreateInstantInvite, CreatePrivateThreads, CreatePublicThreads, SendMessagesInThreads, AddReactions, UseExternalEmojis, UseExternalStickers, MentionEveryone, ManageMessages, ManageThreads, UseApplicationCommands, SendVoiceMessages, UseEmbeddedActivities, SendTTSMessages
+# NOTE: The bot may need to be given Administrator permissions depending on the permissions you set in the categories, if you get a console error that says "Missing Permissions" then your bot is lacking permissions.																																																		   
 TicketCategories:
   - id: 1 # Unique ID for each category, ONLY USE NUMBERS (It is suggested to just increment this value by 1 each time)
     name: "report" # The name of the category, it will be in lowercase anyways
     categoryID: ["111111111111111111"] # The IDs of the categories where those tickets will be created, for example ["000000000000000000", "111111111111111111"]
     closedCategoryID: ["111111111111111111"] # The IDs of the categories where the closed tickets will go, for example ["000000000000000000", "111111111111111111"]
     support_role_ids: ["000000000000000000", "111111111111111111"] # The IDs of the staff roles on your server that can access only this ticket category, for example ["000000000000000000", "111111111111111111"]
+    permissions: # The permissions of the category, make sure to never add the same permission to both the allow and deny arrays of either open or close properties
+      ticketCreator:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"] # The bot will allow those permissions to the ticket creator in an open ticket
+          deny: [] # The bot will deny those permissions from the ticket creator in an open ticket
+        close:
+          allow: [] # The bot will allow those permissions to the ticket creator in a closed ticket
+          deny: ["SendMessages"] # The bot will deny those permissions from the ticket creator in a closed ticket
+      supportRoles:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
     pingRoles: false # Enable or disable pinging roles when a ticket is opened in this category
     ping_role_ids: [] # The IDs of the roles you want to ping when a ticket is opened in this category, for example ["000000000000000000", "111111111111111111"]
     ghostPingRoles: false # Enable or disable ghost pinging the ping_role_ids when a ticket is opened, use either {support-roles} in textContent below or this option, avoid using both because then the support roles will receive 2 pings
@@ -82,6 +97,21 @@ TicketCategories:
     categoryID: ["111111111111111111"] # The IDs of the categories where those tickets will be created, for example ["000000000000000000", "111111111111111111"]
     closedCategoryID: ["111111111111111111"] # The IDs of the categories where the closed tickets will go, for example ["000000000000000000", "111111111111111111"]
     support_role_ids: ["000000000000000000"] # The IDs of the staff roles on your server that can access only this ticket category, for example ["000000000000000000", "111111111111111111"]
+    permissions: # The permissions of the category, make sure to never add the same permission to both the allow and deny arrays of either open or close properties
+      ticketCreator:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"] # The bot will allow those permissions to the ticket creator in an open ticket
+          deny: [] # The bot will deny those permissions from the ticket creator in an open ticket
+        close:
+          allow: [] # The bot will allow those permissions to the ticket creator in a closed ticket
+          deny: ["SendMessages"] # The bot will deny those permissions from the ticket creator in a closed ticket
+      supportRoles:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
     pingRoles: true # Enable or disable pinging roles when a ticket is opened in this category
     ping_role_ids: ["000000000000000000"] # The IDs of the roles you want to ping when a ticket is opened in this category,, for example ["000000000000000000", "111111111111111111"]
     ghostPingRoles: false # Enable or disable ghost pinging the ping_role_ids when a ticket is opened, use either {support-roles} in textContent below or this option, avoid using both because then the support roles will receive 2 pings

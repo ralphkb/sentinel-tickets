@@ -21,6 +21,7 @@ const {
   getUser,
   findAvailableCategory,
   getRole,
+  getPermissionOverwrites,
 } = require("../../index.js");
 
 module.exports = {
@@ -165,9 +166,39 @@ module.exports = {
       );
     }
 
-    await interaction.channel.permissionOverwrites.edit(ticketUserID, {
-      SendMessages: false,
-      ViewChannel: true,
+    const category = ticketCategories[ticketButton];
+    const categoryIDs = category.closedCategoryID;
+    const closedCategoryID = await findAvailableCategory(categoryIDs);
+    const ticketCreatorPerms = category?.permissions?.ticketCreator;
+    const rolesPerms = category?.permissions?.supportRoles;
+    const creatorClosePerms = await getPermissionOverwrites(
+      ticketCreatorPerms,
+      "close",
+      {
+        allow: [],
+        deny: ["SendMessages"],
+      },
+    );
+    const rolesClosePerms = await getPermissionOverwrites(rolesPerms, "close", {
+      allow: [],
+      deny: ["SendMessages"],
+    });
+
+    await interaction.channel.permissionOverwrites.edit(
+      ticketUserID,
+      creatorClosePerms,
+    );
+
+    await interaction.channel.setParent(closedCategoryID, {
+      lockPermissions: false,
+    });
+
+    category.support_role_ids.forEach(async (roleId) => {
+      await interaction.channel.permissionOverwrites
+        .edit(roleId, rolesClosePerms)
+        .catch((error) => {
+          console.error(`Error updating permissions of support roles:`, error);
+        });
     });
 
     if (claimUser) {
@@ -229,9 +260,6 @@ module.exports = {
     await ticketsDB.set(`${interaction.channel.id}.closeMsgID`, messageID);
     await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
     await mainDB.pull("openTickets", interaction.channel.id);
-    if (config.closeRemoveUser) {
-      interaction.channel.permissionOverwrites.delete(ticketUserID);
-    }
     if (
       config.closeDMEmbed.enabled &&
       interaction.user.id !== ticketUserID.id
@@ -302,35 +330,5 @@ module.exports = {
         );
       }
     }
-
-    const keepSupportPerms =
-      config.keepSupportPerms !== undefined ? config.keepSupportPerms : false;
-
-    Object.keys(ticketCategories).forEach(async (id) => {
-      if (ticketButton === id) {
-        const category = ticketCategories[id];
-        const categoryIDs = category.closedCategoryID;
-        const closedCategoryID = await findAvailableCategory(categoryIDs);
-        await interaction.channel.setParent(closedCategoryID, {
-          lockPermissions: false,
-        });
-
-        if (!keepSupportPerms) {
-          category.support_role_ids.forEach(async (roleId) => {
-            await interaction.channel.permissionOverwrites
-              .edit(roleId, {
-                SendMessages: false,
-                ViewChannel: true,
-              })
-              .catch((error) => {
-                console.error(
-                  `Error updating permissions of support roles:`,
-                  error,
-                );
-              });
-          });
-        }
-      }
-    });
   },
 };

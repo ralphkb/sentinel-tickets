@@ -10,6 +10,8 @@ const {
   getUser,
   checkSupportRole,
   configEmbed,
+  ticketCategories,
+  getPermissionOverwrites,
 } = require("../../index.js");
 
 module.exports = {
@@ -46,6 +48,7 @@ module.exports = {
     let ticketType = await ticketsDB.get(
       `${interaction.channel.id}.ticketType`,
     );
+    let ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
     let currentUser = await getUser(
       await ticketsDB.get(`${interaction.channel.id}.userID`),
     );
@@ -72,13 +75,28 @@ module.exports = {
     await interaction.deferReply({ ephemeral: isEphemeral });
     await interaction.channel.permissionOverwrites.delete(currentUser);
     await ticketsDB.set(`${interaction.channel.id}.userID`, optionUser.id);
-    await interaction.channel.permissionOverwrites.create(optionUser, {
-      ViewChannel: true,
-      SendMessages: true,
-      ReadMessageHistory: true,
-      AttachFiles: true,
-      EmbedLinks: true,
-    });
+
+    const category = ticketCategories[ticketButton];
+    const ticketCreatorPerms = category?.permissions?.ticketCreator;
+    const creatorOpenPerms = await getPermissionOverwrites(
+      ticketCreatorPerms,
+      "open",
+      {
+        allow: [
+          "ViewChannel",
+          "SendMessages",
+          "EmbedLinks",
+          "AttachFiles",
+          "ReadMessageHistory",
+        ],
+        deny: [],
+      },
+    );
+
+    await interaction.channel.permissionOverwrites.create(
+      optionUser,
+      creatorOpenPerms,
+    );
     if (config.commands.transfer.updateTopic) {
       let newTopic =
         config.commands.transfer.newTopic ||

@@ -31,6 +31,7 @@ const {
   getUser,
   findAvailableCategory,
   getRole,
+  getPermissionOverwrites,
 } = require("../index.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -967,39 +968,62 @@ module.exports = {
           );
         }
 
-        const keepSupportPerms =
-          config.keepSupportPerms !== undefined
-            ? config.keepSupportPerms
-            : false;
+        const category = ticketCategories[ticketButton];
+        const categoryIDs = category.categoryID;
+        const categoryID = await findAvailableCategory(categoryIDs);
+        const ticketCreatorPerms = category?.permissions?.ticketCreator;
+        const rolesPerms = category?.permissions?.supportRoles;
+        const creatorOpenPerms = await getPermissionOverwrites(
+          ticketCreatorPerms,
+          "open",
+          {
+            allow: [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ],
+            deny: [],
+          },
+        );
+        const rolesOpenPerms = await getPermissionOverwrites(
+          rolesPerms,
+          "open",
+          {
+            allow: [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ],
+            deny: [],
+          },
+        );
 
-        Object.keys(ticketCategories).forEach(async (id) => {
-          if (ticketButton === id) {
-            const category = ticketCategories[id];
-            const categoryIDs = category.categoryID;
-            const categoryID = await findAvailableCategory(categoryIDs);
+        await interaction.channel.permissionOverwrites.edit(
+          ticketUserID.id,
+          creatorOpenPerms,
+        );
 
-            if (
-              !category.categoryID.some(
-                (catId) => catId === ticketChannel.parentId,
-              )
-            ) {
-              await ticketChannel.setParent(categoryID, {
-                lockPermissions: false,
-              });
-            }
+        if (
+          !category.categoryID.some((catId) => catId === ticketChannel.parentId)
+        ) {
+          await ticketChannel.setParent(categoryID, {
+            lockPermissions: false,
+          });
+        }
 
-            if (!keepSupportPerms) {
-              category.support_role_ids.forEach(async (roleId) => {
-                await interaction.channel.permissionOverwrites.create(roleId, {
-                  ViewChannel: true,
-                  SendMessages: true,
-                  AttachFiles: true,
-                  EmbedLinks: true,
-                  ReadMessageHistory: true,
-                });
-              });
-            }
-          }
+        category.support_role_ids.forEach(async (roleId) => {
+          await interaction.channel.permissionOverwrites
+            .edit(roleId, rolesOpenPerms)
+            .catch((error) => {
+              console.error(
+                `Error updating permissions of support roles:`,
+                error,
+              );
+            });
         });
 
         let claimUserID = await ticketsDB.get(
@@ -1010,13 +1034,6 @@ module.exports = {
         if (claimUserID) {
           claimUser = await getUser(claimUserID);
         }
-        await interaction.channel.permissionOverwrites.create(ticketUserID.id, {
-          ViewChannel: true,
-          SendMessages: true,
-          AttachFiles: true,
-          EmbedLinks: true,
-          ReadMessageHistory: true,
-        });
         if (claimUser) {
           await interaction.channel.permissionOverwrites.create(claimUser.id, {
             ViewChannel: true,
@@ -1570,9 +1587,46 @@ module.exports = {
           );
         }
 
-        await interaction.channel.permissionOverwrites.edit(ticketUserID, {
-          SendMessages: false,
-          ViewChannel: true,
+        const category = ticketCategories[ticketButton];
+        const categoryIDs = category.closedCategoryID;
+        const closedCategoryID = await findAvailableCategory(categoryIDs);
+        const ticketCreatorPerms = category?.permissions?.ticketCreator;
+        const rolesPerms = category?.permissions?.supportRoles;
+        const creatorClosePerms = await getPermissionOverwrites(
+          ticketCreatorPerms,
+          "close",
+          {
+            allow: [],
+            deny: ["SendMessages"],
+          },
+        );
+        const rolesClosePerms = await getPermissionOverwrites(
+          rolesPerms,
+          "close",
+          {
+            allow: [],
+            deny: ["SendMessages"],
+          },
+        );
+
+        await interaction.channel.permissionOverwrites.edit(
+          ticketUserID,
+          creatorClosePerms,
+        );
+
+        await interaction.channel.setParent(closedCategoryID, {
+          lockPermissions: false,
+        });
+
+        category.support_role_ids.forEach(async (roleId) => {
+          await interaction.channel.permissionOverwrites
+            .edit(roleId, rolesClosePerms)
+            .catch((error) => {
+              console.error(
+                `Error updating permissions of support roles:`,
+                error,
+              );
+            });
         });
 
         if (claimUser) {
@@ -1638,9 +1692,6 @@ module.exports = {
         await ticketsDB.set(`${interaction.channel.id}.closeMsgID`, messageID);
         await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
         await mainDB.pull("openTickets", interaction.channel.id);
-        if (config.closeRemoveUser) {
-          interaction.channel.permissionOverwrites.delete(ticketUserID);
-        }
         if (
           config.closeDMEmbed.enabled &&
           interaction.user.id !== ticketUserID.id
@@ -1714,38 +1765,6 @@ module.exports = {
             );
           }
         }
-
-        const keepSupportPerms =
-          config.keepSupportPerms !== undefined
-            ? config.keepSupportPerms
-            : false;
-
-        Object.keys(ticketCategories).forEach(async (id) => {
-          if (ticketButton === id) {
-            const category = ticketCategories[id];
-            const categoryIDs = category.closedCategoryID;
-            const closedCategoryID = await findAvailableCategory(categoryIDs);
-            await interaction.channel.setParent(closedCategoryID, {
-              lockPermissions: false,
-            });
-
-            if (!keepSupportPerms) {
-              category.support_role_ids.forEach(async (roleId) => {
-                await interaction.channel.permissionOverwrites
-                  .edit(roleId, {
-                    SendMessages: false,
-                    ViewChannel: true,
-                  })
-                  .catch((error) => {
-                    console.error(
-                      `Error updating permissions of support roles:`,
-                      error,
-                    );
-                  });
-              });
-            }
-          }
-        });
       }
 
       // Ticket Claim button
@@ -2240,6 +2259,36 @@ module.exports = {
             const configValue = category.ticketName;
             const categoryIDs = category.categoryID;
             const selectedCategoryID = await findAvailableCategory(categoryIDs);
+            const ticketCreatorPerms = category?.permissions?.ticketCreator;
+            const allowedCreatorPerms = ticketCreatorPerms?.open?.allow || [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ];
+            const deniedCreatorPerms = ticketCreatorPerms?.open?.deny || [];
+            const openAllowCreator = allowedCreatorPerms.map(
+              (permission) => PermissionFlagsBits[permission],
+            );
+            const openDenyCreator = deniedCreatorPerms.map(
+              (permission) => PermissionFlagsBits[permission],
+            );
+            const rolesPerms = category?.permissions?.supportRoles;
+            const allowedRolePerms = rolesPerms?.open?.allow || [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ];
+            const deniedRolePerms = rolesPerms?.open?.deny || [];
+            const openAllowRoles = allowedRolePerms.map(
+              (permission) => PermissionFlagsBits[permission],
+            );
+            const openDenyRoles = deniedRolePerms.map(
+              (permission) => PermissionFlagsBits[permission],
+            );
 
             let channelName;
             switch (configValue) {
@@ -2277,13 +2326,8 @@ module.exports = {
                   },
                   {
                     id: interaction.user.id,
-                    allow: [
-                      PermissionFlagsBits.ViewChannel,
-                      PermissionFlagsBits.SendMessages,
-                      PermissionFlagsBits.EmbedLinks,
-                      PermissionFlagsBits.AttachFiles,
-                      PermissionFlagsBits.ReadMessageHistory,
-                    ],
+                    allow: openAllowCreator,
+                    deny: openDenyCreator,
                   },
                   {
                     id: process.env.CLIENT_ID,
@@ -2295,13 +2339,8 @@ module.exports = {
                   },
                   ...category.support_role_ids.map((roleId) => ({
                     id: roleId,
-                    allow: [
-                      PermissionFlagsBits.ViewChannel,
-                      PermissionFlagsBits.SendMessages,
-                      PermissionFlagsBits.EmbedLinks,
-                      PermissionFlagsBits.AttachFiles,
-                      PermissionFlagsBits.ReadMessageHistory,
-                    ],
+                    allow: openAllowRoles,
+                    deny: openDenyRoles,
                   })),
                 ],
               })
