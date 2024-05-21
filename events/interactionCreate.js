@@ -1127,6 +1127,7 @@ module.exports = {
           try {
             await ticketUserID.send({ embeds: [reopenDMEmbed] });
           } catch (error) {
+            console.log(error);
             const defaultErrorValues = {
               color: "#FF0000",
               title: "DMs Disabled",
@@ -1281,7 +1282,8 @@ module.exports = {
         // DM the user with an embed and the transcript of the ticket depending on the enabled settings
         const sendEmbed = config.DMUserSettings.embed;
         const sendTranscript = config.DMUserSettings.transcript;
-        if (sendEmbed || sendTranscript) {
+        const sendRatingSystem = config.DMUserSettings.ratingSystem.enabled;
+        if (sendEmbed || sendTranscript || sendRatingSystem) {
           const defaultDMValues = {
             color: "#2FF200",
             title: "Ticket Deleted",
@@ -1385,18 +1387,21 @@ module.exports = {
           }
 
           try {
-            if (config.DMUserSettings.ratingSystem.enabled === false) {
+            if (sendRatingSystem === false) {
               await ticketUserID.send(messageDM);
             }
-            if (config.DMUserSettings.ratingSystem.enabled === true) {
+            if (sendRatingSystem === true) {
+              if (Object.keys(messageDM).length !== 0) {
+                await ticketUserID.send(messageDM);
+              }
               await mainDB.set(`ratingMenuOptions`, options);
-              await ticketUserID.send(messageDM);
               await ticketUserID.send({
                 embeds: [ratingDMEmbed],
                 components: [actionRowMenu],
               });
             }
           } catch (error) {
+            console.log(error);
             const defaultErrorValues = {
               color: "#FF0000",
               title: "DMs Disabled",
@@ -1720,6 +1725,7 @@ module.exports = {
           try {
             await ticketUserID.send({ embeds: [closeDMEmbed] });
           } catch (error) {
+            console.log(error);
             const defaultErrorValues = {
               color: "#FF0000",
               title: "DMs Disabled",

@@ -268,6 +268,7 @@ module.exports = {
       try {
         await ticketUserID.send({ embeds: [reopenDMEmbed] });
       } catch (error) {
+        console.log(error);
         const defaultErrorValues = {
           color: "#FF0000",
           title: "DMs Disabled",

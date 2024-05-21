@@ -142,12 +142,12 @@ TicketCategories:
 # Ticket DM user settings
 # ==============================================
 # Enable or disable sending a direct message to a user once their ticket has been deleted.
-# To disable this DM, you can put both embed and transcript to false.
+# If all 3 options are set to false, then no DM will be sent.
 DMUserSettings:
   embed: true # Enable or disable sending an embed in the DM
   transcript: true # Enable or disable sending a transcript in the DM
   ratingSystem:
-    enabled: false
+    enabled: false # You can enable the rating system while keeping the above 2 options disabled
     menu:
       emoji: "⭐"
       placeholder: "Select a Rating"

@@ -138,6 +138,7 @@ module.exports = {
       try {
         await user.send({ embeds: [alertDMEmbed] });
       } catch (error) {
+        console.log(error);
         const defaultErrorValues = {
           color: "#FF0000",
           title: "DMs Disabled",
