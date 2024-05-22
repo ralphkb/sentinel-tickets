@@ -74,20 +74,17 @@ module.exports = {
     const totalClaims = await mainDB.get("totalClaims");
 
     let ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
+    const category = ticketCategories[ticketButton];
 
-    Object.keys(ticketCategories).forEach(async (id) => {
-      if (ticketButton === id) {
-        ticketCategories[id].support_role_ids.forEach(async (roleId) => {
-          await interaction.channel.permissionOverwrites
-            .edit(roleId, {
-              SendMessages: true,
-              ViewChannel: true,
-            })
-            .catch((error) => {
-              console.error(`Error updating permissions:`, error);
-            });
+    category.support_role_ids.forEach(async (roleId) => {
+      await interaction.channel.permissionOverwrites
+        .edit(roleId, {
+          SendMessages: true,
+          ViewChannel: true,
+        })
+        .catch((error) => {
+          console.error(`Error updating permissions:`, error);
         });
-      }
     });
 
     const defaultValues = {

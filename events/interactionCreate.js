@@ -1885,11 +1885,11 @@ module.exports = {
             let ticketButton = await ticketsDB.get(
               `${interaction.channel.id}.button`,
             );
+            const category = ticketCategories[ticketButton];
 
             if (config.claimRename) {
               let claimRenameName =
                 config.claimRenameName || "{category}-{username}";
-              const category = ticketCategories[ticketButton];
               const claimUsername = interaction.user.username;
               const claimDisplayname = interaction.member.displayName;
 
@@ -1902,21 +1902,15 @@ module.exports = {
             }
 
             if (config.claim1on1) {
-              Object.keys(ticketCategories).forEach(async (id) => {
-                if (ticketButton === id) {
-                  ticketCategories[id].support_role_ids.forEach(
-                    async (roleId) => {
-                      await interaction.channel.permissionOverwrites
-                        .edit(roleId, {
-                          SendMessages: false,
-                          ViewChannel: true,
-                        })
-                        .catch((error) => {
-                          console.error(`Error updating permissions:`, error);
-                        });
-                    },
-                  );
-                }
+              category.support_role_ids.forEach(async (roleId) => {
+                await interaction.channel.permissionOverwrites
+                  .edit(roleId, {
+                    SendMessages: false,
+                    ViewChannel: true,
+                  })
+                  .catch((error) => {
+                    console.error(`Error updating permissions:`, error);
+                  });
               });
             }
 
@@ -2007,20 +2001,17 @@ module.exports = {
         let ticketButton = await ticketsDB.get(
           `${interaction.channel.id}.button`,
         );
+        const category = ticketCategories[ticketButton];
 
-        Object.keys(ticketCategories).forEach(async (id) => {
-          if (ticketButton === id) {
-            ticketCategories[id].support_role_ids.forEach(async (roleId) => {
-              await interaction.channel.permissionOverwrites
-                .edit(roleId, {
-                  SendMessages: true,
-                  ViewChannel: true,
-                })
-                .catch((error) => {
-                  console.error(`Error updating permissions:`, error);
-                });
+        category.support_role_ids.forEach(async (roleId) => {
+          await interaction.channel.permissionOverwrites
+            .edit(roleId, {
+              SendMessages: true,
+              ViewChannel: true,
+            })
+            .catch((error) => {
+              console.error(`Error updating permissions:`, error);
             });
-          }
         });
 
         const defaultValues = {
