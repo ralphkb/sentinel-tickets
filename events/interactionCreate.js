@@ -1547,29 +1547,38 @@ module.exports = {
           `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
         );
 
-        const reOpenButton = new ButtonBuilder()
-          .setCustomId("reOpen")
-          .setLabel(config.reOpenButton.label)
-          .setEmoji(config.reOpenButton.emoji)
-          .setStyle(ButtonStyle[config.reOpenButton.style]);
+        const reOpenButton =
+          config.closeEmbed.reOpenButton !== false
+            ? new ButtonBuilder()
+                .setCustomId("reOpen")
+                .setLabel(config.reOpenButton.label)
+                .setEmoji(config.reOpenButton.emoji)
+                .setStyle(ButtonStyle[config.reOpenButton.style])
+            : null;
 
-        const transcriptButton = new ButtonBuilder()
-          .setCustomId("createTranscript")
-          .setLabel(config.transcriptButton.label)
-          .setEmoji(config.transcriptButton.emoji)
-          .setStyle(ButtonStyle[config.transcriptButton.style]);
+        const transcriptButton =
+          config.closeEmbed.transcriptButton !== false
+            ? new ButtonBuilder()
+                .setCustomId("createTranscript")
+                .setLabel(config.transcriptButton.label)
+                .setEmoji(config.transcriptButton.emoji)
+                .setStyle(ButtonStyle[config.transcriptButton.style])
+            : null;
 
-        const deleteButton = new ButtonBuilder()
-          .setCustomId("deleteTicket")
-          .setLabel(config.deleteButton.label)
-          .setEmoji(config.deleteButton.emoji)
-          .setStyle(ButtonStyle[config.deleteButton.style]);
+        const deleteButton =
+          config.closeEmbed.deleteButton !== false
+            ? new ButtonBuilder()
+                .setCustomId("deleteTicket")
+                .setLabel(config.deleteButton.label)
+                .setEmoji(config.deleteButton.emoji)
+                .setStyle(ButtonStyle[config.deleteButton.style])
+            : null;
 
-        let row = new ActionRowBuilder().addComponents(
-          reOpenButton,
-          transcriptButton,
-          deleteButton,
-        );
+        let row = new ActionRowBuilder();
+
+        if (reOpenButton) row.addComponents(reOpenButton);
+        if (transcriptButton) row.addComponents(transcriptButton);
+        if (deleteButton) row.addComponents(deleteButton);
 
         const defaultValues = {
           color: "#FF2400",
@@ -1685,15 +1694,13 @@ module.exports = {
         }
 
         let messageID;
-        await interaction
-          .editReply({
-            embeds: [closeEmbed],
-            components: [row],
-            fetchReply: true,
-          })
-          .then(async function (message) {
-            messageID = message.id;
-          });
+        const options = { embeds: [closeEmbed], fetchReply: true };
+        if (row.components.length > 0) {
+          options.components = [row];
+        }
+        await interaction.editReply(options).then(async function (message) {
+          messageID = message.id;
+        });
         await ticketsDB.set(`${interaction.channel.id}.closeMsgID`, messageID);
         await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
         await mainDB.pull("openTickets", interaction.channel.id);

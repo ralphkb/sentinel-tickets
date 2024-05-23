@@ -1109,6 +1109,9 @@ closeEmbed:
     name: ""
     iconURL: ""
     url: ""
+  reOpenButton: true
+  transcriptButton: true
+  deleteButton: true
 
 # Log embed for closing tickets
 logCloseEmbed:
