@@ -212,6 +212,11 @@ async function getRole(id) {
 
 // Find the first available category ID
 const findAvailableCategory = async (categoryIDs) => {
+  if (!Array.isArray(categoryIDs)) {
+    throw new Error(
+      'categoryID and closedCategoryID of each configured ticket category must be an array, such as ["ID"]',
+    );
+  }
   for (const categoryID of categoryIDs) {
     const category = client.channels.cache.get(categoryID);
     const channelCount = category.children.cache.size;
