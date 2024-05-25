@@ -209,16 +209,22 @@ module.exports = {
     } else if (interaction.isStringSelectMenu()) {
       if (interaction.customId === "categoryMenu") {
         // Reset the select menu upon selection
-        const selectMenuOptions = await mainDB.get("selectMenuOptions");
+        const messageId = interaction.message.id;
+        const selectMenuOptions = await mainDB.get(
+          `selectMenuOptions-${messageId}`,
+        );
         await interaction.channel.messages
-          .fetch(interaction.message.id)
+          .fetch(messageId)
           .then(async (message) => {
             const selectMenu = new StringSelectMenuBuilder()
               .setCustomId("categoryMenu")
-              .setPlaceholder(config.menuPlaceholder)
+              .setPlaceholder(
+                selectMenuOptions?.placeholder ||
+                  "Select a category to open a ticket.",
+              )
               .setMinValues(1)
               .setMaxValues(1)
-              .addOptions(selectMenuOptions);
+              .addOptions(selectMenuOptions.options);
 
             const updatedActionRow = new ActionRowBuilder().addComponents(
               selectMenu,

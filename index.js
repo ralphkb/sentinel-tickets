@@ -250,74 +250,68 @@ async function getPermissionOverwrites(
 
 async function configEmbed(configPath, defaultValues = {}) {
   const embed = new EmbedBuilder();
+  if (Array.isArray(configPath) && configPath[0] === "panelEmbed") {
+    const panelIndex = configPath[1];
+    configValue = config.panels[panelIndex].panelEmbed;
+  } else {
+    configValue = config[configPath];
+  }
 
   embed.setDescription(
-    config[configPath].description || defaultValues.description || null,
+    configValue.description || defaultValues.description || null,
   );
 
-  embed.setColor(config[configPath].color || defaultValues.color || "#2FF200");
+  embed.setColor(configValue.color || defaultValues.color || "#2FF200");
 
-  if (config[configPath].title !== "" && config[configPath].title !== null) {
-    embed.setTitle(config[configPath].title || defaultValues.title);
+  if (configValue.title !== "" && configValue.title !== null) {
+    embed.setTitle(configValue.title || defaultValues.title);
   }
 
-  if (config[configPath].URL !== "" && config[configPath].URL !== null) {
-    embed.setURL(config[configPath].URL || defaultValues.URL);
+  if (configValue.URL !== "" && configValue.URL !== null) {
+    embed.setURL(configValue.URL || defaultValues.URL);
   }
 
-  if (config[configPath].image !== "" && config[configPath].image !== null) {
-    embed.setImage(config[configPath].image || defaultValues.image);
+  if (configValue.image !== "" && configValue.image !== null) {
+    embed.setImage(configValue.image || defaultValues.image);
   }
 
-  if (
-    config[configPath].thumbnail !== "" &&
-    config[configPath].thumbnail !== null
-  ) {
-    embed.setThumbnail(config[configPath].thumbnail || defaultValues.thumbnail);
+  if (configValue.thumbnail !== "" && configValue.thumbnail !== null) {
+    embed.setThumbnail(configValue.thumbnail || defaultValues.thumbnail);
   }
 
-  if (config[configPath].timestamp === true) {
+  if (configValue.timestamp === true) {
     embed.setTimestamp();
   } else if (
-    config[configPath].timestamp !== false &&
+    configValue.timestamp !== false &&
     defaultValues.timestamp === true
   ) {
     embed.setTimestamp();
   }
 
   // Setting author and footer
-  if (
-    config[configPath]?.author?.name !== "" &&
-    config[configPath]?.author?.name !== null
-  ) {
+  if (configValue?.author?.name !== "" && configValue?.author?.name !== null) {
     const authorValues = {
-      name:
-        config[configPath]?.author?.name || defaultValues.author?.name || null,
+      name: configValue?.author?.name || defaultValues.author?.name || null,
       url:
-        config[configPath]?.author?.url !== "" &&
-        config[configPath]?.author?.url !== null
-          ? config[configPath]?.author?.url || defaultValues.author?.url
+        configValue?.author?.url !== "" && configValue?.author?.url !== null
+          ? configValue?.author?.url || defaultValues.author?.url
           : undefined,
       iconURL:
-        config[configPath]?.author?.iconURL !== "" &&
-        config[configPath]?.author?.iconURL !== null
-          ? config[configPath]?.author?.iconURL || defaultValues.author?.iconURL
+        configValue?.author?.iconURL !== "" &&
+        configValue?.author?.iconURL !== null
+          ? configValue?.author?.iconURL || defaultValues.author?.iconURL
           : undefined,
     };
     embed.setAuthor(authorValues);
   }
 
-  if (
-    config[configPath]?.footer?.text !== "" &&
-    config[configPath]?.footer?.text !== null
-  ) {
+  if (configValue?.footer?.text !== "" && configValue?.footer?.text !== null) {
     const footerValues = {
-      text:
-        config[configPath]?.footer?.text || defaultValues.footer?.text || null,
+      text: configValue?.footer?.text || defaultValues.footer?.text || null,
       iconURL:
-        config[configPath]?.footer?.iconURL !== "" &&
-        config[configPath]?.footer?.iconURL !== null
-          ? config[configPath]?.footer?.iconURL || defaultValues.footer?.iconURL
+        configValue?.footer?.iconURL !== "" &&
+        configValue?.footer?.iconURL !== null
+          ? configValue?.footer?.iconURL || defaultValues.footer?.iconURL
           : undefined,
     };
     embed.setFooter(footerValues);

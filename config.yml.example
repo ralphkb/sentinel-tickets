@@ -2,9 +2,6 @@
 # Ticket bot general settings
 # ==============================================
 
-panelMethod: "Buttons" # The method of the panel, can be either Buttons or Menu
-maxButtonsPerRow: "5" # The maximum number of buttons per row, note that this will reduce the total amount of categories you can create due to a limitation of 5 rows per message
-menuPlaceholder: "Select a category to open a ticket." # The placeholder of the select menu
 rolesThatCanBlacklist: ["111111111111111111"] # The IDs of the staff roles on your server which should have access to blacklisting and unblacklisting users from creating tickets, for example ["000000000000000000", "111111111111111111"]
 rolesOnBlacklist: [] # The IDs of the roles that the bot will add to blacklisted users, leave it empty to disable this feature
 blacklistCleanup: "120" # The amount of time in seconds between blacklist cleanup checks, to automatically remove expired blacklisted users/roles
@@ -137,6 +134,31 @@ TicketCategories:
         style: "Paragraph" # Short or Paragraph
         required: true # If this input is required or not, can be true or false
         minLength: 10 # Set the minimum number of characters required for submission
+
+# ==============================================
+# Multi Panel settings
+# ==============================================
+
+panels:
+  - id: 1 # Unique ID for each panel
+    categories: ["1, 2"] # The categories that the panel will contain, use the IDs of the categories above, make sure they are valid and don't leave it empty
+    maxButtonsPerRow: "5" # The maximum number of buttons per row, note that this will reduce the total amount of categories you can create due to a limitation of 5 rows per message
+    menuPlaceholder: "Select a category to open a ticket." # The placeholder of the select menu
+    panelEmbed:
+      color: "#2FF200"
+      title: "Support Tickets"
+      description: "To create a support ticket, click on one of the buttons below depending on what help you need." # Use \n to create a new line for this embed description if needed
+      timestamp: true
+      URL: ""
+      image: ""
+      thumbnail: ""
+      footer:
+        text: "Sentinel Tickets"
+        iconURL: ""
+      author:
+        name: ""
+        iconURL: ""
+        url: ""
 
 # ==============================================
 # Ticket DM user settings
@@ -494,23 +516,6 @@ newTicketEmbed:
 #  footer:
 #    text: ""
 #    iconURL: ""
-  author:
-    name: ""
-    iconURL: ""
-    url: ""
-
-# Panel command embed
-panelEmbed:
-  color: "#2FF200"
-  title: "Support Tickets"
-  description: "To create a support ticket, click on one of the buttons below depending on what help you need." # Use \n to create a new line for this embed description if needed
-  timestamp: true
-  URL: ""
-  image: ""
-  thumbnail: ""
-  footer:
-    text: "Sentinel Tickets"
-    iconURL: ""
   author:
     name: ""
     iconURL: ""
