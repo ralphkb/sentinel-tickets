@@ -291,9 +291,6 @@ contextMenuCommands:
   ticketTranscript:
     enabled: true
     permission: "KickMembers"
-  ticketPanel:
-    enabled: true
-    permission: "ManageChannels"
 
 # ==============================================
 # General button settings
