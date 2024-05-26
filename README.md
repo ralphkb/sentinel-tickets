@@ -37,11 +37,14 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 
 - Up to 25 Categories: Organize support requests in different categories.
 - Intuitive Ticket Panel: Create and manage tickets with ease using buttons or a select menu.
+- Option to create many ticket panels and send them to any channel.
 - Modal Questions: Gather necessary information before opening a ticket.
 - Configuration to customize many of the messages and embed options.
 - Option to configure support roles per ticket category.
 - Option to require one or more roles to create a ticket per ticket category.
 - Option to ping support roles on ticket creation per ticket category.
+- The ability to have configure fallback categories if one becomes full.
+- Edit permissions of the ticket creator and support roles per ticket category.
 - Per Day Working Hours feature with an option to specify the timezone and block ticket creation outside the working hours.
 - Option to configure the amount of max opened tickets at one time.
 - Ticket claiming feature that can be turned on/off.
@@ -57,7 +60,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Option to edit the activity of the bot.
 - Blacklist system with the ability to add users or roles with an optional reason and view them in a list.
 - Multiple Commands: Efficiently manage tickets with various commands.
-    - Send the tickets panel in any channel
+    - Send the ticket panels in any channel using the panel id
     - Add Users or Roles to a ticket
     - Remove Users or Roles from a ticket
     - Rename Ticket Channel
@@ -72,6 +75,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Add a custom slowmode to a ticket
     - Transfer ticket ownership to another user
     - Add a priority to a ticket
+    - Close Request so users can request that staff close their ticket
 - Context Menu Commands: Right click commands that are easy to use.
     - Get User Info
     - Blacklist Add
@@ -79,7 +83,6 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Ticket Alert
     - Ticket Pin
     - Ticket Transcript
-    - Ticket Panel
 - Useful statistics such as:
     - Total Tickets
     - Total Open Tickets
