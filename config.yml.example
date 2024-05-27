@@ -295,16 +295,19 @@ contextMenuCommands:
 # ==============================================
 # General button settings
 # ==============================================
+# If you intend to use the allowedRoles options in this section, you should probably disable reOpenStaffOnly & closeStaffOnly at the top of the configuration because otherwise the users will require both the below allowed roles & the support role of a ticket category.
 
 closeButton:
   label: "Close" # The label of the button
   emoji: "🔒" # The emoji of the button
   style: "Danger" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+  allowedRoles: [] # The IDs of the roles that can use the close button, keep it empty to not require a role
 
 reOpenButton:
   label: "Reopen" # The label of the button
   emoji: "🔓" # The emoji of the button
   style: "Success" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+  allowedRoles: [] # The IDs of the roles that can use the reopen button, keep it empty to not require a role
 
 transcriptButton:
   label: "Transcript" # The label of the button
@@ -315,6 +318,7 @@ deleteButton:
   label: "Delete" # The label of the button
   emoji: "⛔" # The emoji of the button
   style: "Danger" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+  allowedRoles: [] # The IDs of the roles that can use the delete button, keep it empty to not require a role
 
 claimButton:
   label: "Claim" # The label of the button

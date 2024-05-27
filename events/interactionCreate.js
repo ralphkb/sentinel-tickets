@@ -903,6 +903,20 @@ module.exports = {
           }
         }
 
+        const allowedRoles = config.reOpenButton.allowedRoles ?? [];
+        if (
+          allowedRoles.length !== 0 &&
+          !interaction.member.roles.cache.some((role) =>
+            allowedRoles.includes(role.id),
+          )
+        ) {
+          return interaction.reply({
+            content:
+              config.errors.not_allowed || "You are not allowed to use this!",
+            ephemeral: true,
+          });
+        }
+
         await interaction.deferReply();
 
         let ticketUserID = await getUser(
@@ -1187,6 +1201,20 @@ module.exports = {
       if (interaction.customId === "deleteTicket") {
         const hasSupportRole = await checkSupportRole(interaction);
         if (!hasSupportRole) {
+          return interaction.reply({
+            content:
+              config.errors.not_allowed || "You are not allowed to use this!",
+            ephemeral: true,
+          });
+        }
+
+        const allowedRoles = config.deleteButton.allowedRoles ?? [];
+        if (
+          allowedRoles.length !== 0 &&
+          !interaction.member.roles.cache.some((role) =>
+            allowedRoles.includes(role.id),
+          )
+        ) {
           return interaction.reply({
             content:
               config.errors.not_allowed || "You are not allowed to use this!",
@@ -1485,6 +1513,20 @@ module.exports = {
               ephemeral: true,
             });
           }
+        }
+
+        const allowedRoles = config.closeButton.allowedRoles ?? [];
+        if (
+          allowedRoles.length !== 0 &&
+          !interaction.member.roles.cache.some((role) =>
+            allowedRoles.includes(role.id),
+          )
+        ) {
+          return interaction.reply({
+            content:
+              config.errors.not_allowed || "You are not allowed to use this!",
+            ephemeral: true,
+          });
         }
 
         await interaction.deferReply();
