@@ -892,7 +892,9 @@ module.exports = {
 
       // Ticket Re-Open button
       if (interaction.customId === "reOpen") {
-        if (config.reOpenStaffOnly) {
+        const reOpenStaffOnly =
+          config.reOpenStaffOnly !== undefined ? config.reOpenStaffOnly : false;
+        if (reOpenStaffOnly) {
           const hasSupportRole = await checkSupportRole(interaction);
           if (!hasSupportRole) {
             return interaction.reply({
@@ -1508,7 +1510,10 @@ module.exports = {
           });
         }
 
-        if (config.closeStaffOnly) {
+        const closeStaffOnly =
+          config.closeStaffOnly !== undefined ? config.closeStaffOnly : true;
+
+        if (closeStaffOnly) {
           const hasSupportRole = await checkSupportRole(interaction);
           if (!hasSupportRole) {
             return interaction.reply({
