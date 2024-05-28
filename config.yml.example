@@ -8,6 +8,7 @@ blacklistCleanup: "120" # The amount of time in seconds between blacklist cleanu
 transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT"
 reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
 closeStaffOnly: true # When enabled, only staff members with support roles can use the close ticket button
+deleteStaffOnly: true # When enabled, only staff members with support roles can use the delete ticket button, it's recommended to keep this option enabled unless you intend to use the allowedRoles array feature while configuring the buttons down in the config
 commands_cooldown: "5" # The cooldown of commands in seconds
 buttons_cooldown: "5" # The cooldown of buttons in seconds
 maxOpenTickets: "1" # The maximum number of open tickets a user can have at one time
@@ -295,7 +296,7 @@ contextMenuCommands:
 # ==============================================
 # General button settings
 # ==============================================
-# If you intend to use the allowedRoles options in this section, you should probably disable reOpenStaffOnly & closeStaffOnly at the top of the configuration because otherwise the users will require both the below allowed roles & the support role of a ticket category.
+# If you intend to use the allowedRoles options in this section, you should probably disable reOpenStaffOnly, closeStaffOnly & deleteStaffOnly at the top of the configuration because otherwise the users will require both the below allowed roles & the support role of a ticket category.
 
 closeButton:
   label: "Close" # The label of the button

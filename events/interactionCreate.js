@@ -1199,13 +1199,17 @@ module.exports = {
       }
       // Ticket Delete button
       if (interaction.customId === "deleteTicket") {
-        const hasSupportRole = await checkSupportRole(interaction);
-        if (!hasSupportRole) {
-          return interaction.reply({
-            content:
-              config.errors.not_allowed || "You are not allowed to use this!",
-            ephemeral: true,
-          });
+        const deleteStaffOnly =
+          config.deleteStaffOnly !== undefined ? config.deleteStaffOnly : true;
+        if (deleteStaffOnly) {
+          const hasSupportRole = await checkSupportRole(interaction);
+          if (!hasSupportRole) {
+            return interaction.reply({
+              content:
+                config.errors.not_allowed || "You are not allowed to use this!",
+              ephemeral: true,
+            });
+          }
         }
 
         const allowedRoles = config.deleteButton.allowedRoles ?? [];
