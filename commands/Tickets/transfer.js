@@ -98,13 +98,12 @@ module.exports = {
       creatorOpenPerms,
     );
     if (config.commands.transfer.updateTopic) {
-      let newTopic =
-        config.commands.transfer.newTopic ||
-        "Ticket Creator: {user} | Ticket Type: {type}";
-      newTopic = newTopic
-        .replace(/\{user\}/g, `${sanitizeInput(optionUser.tag)}`)
-        .replace(/\{type\}/g, `${ticketType}`);
-      await interaction.channel.setTopic(newTopic);
+      const ticketTopic = category.ticketTopic;
+      await interaction.channel.setTopic(
+        ticketTopic
+          .replace(/\{user\}/g, `${sanitizeInput(optionUser.tag)}`)
+          .replace(/\{type\}/g, `${ticketType}`),
+      );
     }
     if (interaction.channel.name.includes(currentUser.username)) {
       await interaction.channel.setName(`${ticketType}-${optionUser.username}`);
