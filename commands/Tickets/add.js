@@ -9,6 +9,8 @@ const {
   logMessage,
   checkSupportRole,
   configEmbed,
+  ticketCategories,
+  getPermissionOverwrites,
 } = require("../../index.js");
 
 module.exports = {
@@ -78,7 +80,7 @@ module.exports = {
       }
       await interaction.deferReply({ ephemeral: isEphemeral });
 
-      interaction.channel.permissionOverwrites.create(user, {
+      await interaction.channel.permissionOverwrites.create(user, {
         ViewChannel: true,
         SendMessages: true,
         ReadMessageHistory: true,
@@ -164,13 +166,26 @@ module.exports = {
       }
       await interaction.deferReply({ ephemeral: isEphemeral });
 
-      interaction.channel.permissionOverwrites.create(role, {
-        ViewChannel: true,
-        SendMessages: true,
-        ReadMessageHistory: true,
-        AttachFiles: true,
-        EmbedLinks: true,
+      let ticketButton = await ticketsDB.get(
+        `${interaction.channel.id}.button`,
+      );
+      const category = ticketCategories[ticketButton];
+      const rolesPerms = category?.permissions?.addedRoles;
+      const rolesOpenPerms = await getPermissionOverwrites(rolesPerms, "open", {
+        allow: [
+          "ViewChannel",
+          "SendMessages",
+          "EmbedLinks",
+          "AttachFiles",
+          "ReadMessageHistory",
+        ],
+        deny: [],
       });
+
+      await interaction.channel.permissionOverwrites.create(
+        role,
+        rolesOpenPerms,
+      );
 
       const logDefaultValues = {
         color: "#2FF200",

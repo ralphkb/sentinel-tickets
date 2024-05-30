@@ -55,6 +55,13 @@ TicketCategories:
         close:
           allow: []
           deny: ["SendMessages"]
+      addedRoles:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
     pingRoles: false # Enable or disable pinging roles when a ticket is opened in this category
     ping_role_ids: [] # The IDs of the roles you want to ping when a ticket is opened in this category, for example ["000000000000000000", "111111111111111111"]
     ghostPingRoles: false # Enable or disable ghost pinging the ping_role_ids when a ticket is opened, use either {support-roles} in textContent below or this option, avoid using both because then the support roles will receive 2 pings
@@ -104,6 +111,13 @@ TicketCategories:
           allow: [] # The bot will allow those permissions to the ticket creator in a closed ticket
           deny: ["SendMessages"] # The bot will deny those permissions from the ticket creator in a closed ticket
       supportRoles:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      addedRoles:
         open:
           allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
           deny: []

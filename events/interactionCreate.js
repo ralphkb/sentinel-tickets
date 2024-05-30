@@ -1024,6 +1024,22 @@ module.exports = {
           },
         );
 
+        const addedRolesPerms = category?.permissions?.addedRoles;
+        const addedRolesOpenPerms = await getPermissionOverwrites(
+          addedRolesPerms,
+          "open",
+          {
+            allow: [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ],
+            deny: [],
+          },
+        );
+
         await interaction.channel.permissionOverwrites.edit(
           ticketUserID.id,
           creatorOpenPerms,
@@ -1097,10 +1113,10 @@ module.exports = {
 
         try {
           for (const role of rolesArray) {
-            await interaction.channel.permissionOverwrites.edit(role, {
-              SendMessages: true,
-              ViewChannel: true,
-            });
+            await interaction.channel.permissionOverwrites.edit(
+              role,
+              addedRolesOpenPerms,
+            );
           }
         } catch (error) {
           console.error(
@@ -1499,7 +1515,7 @@ module.exports = {
         }, deleteTime);
       }
 
-      //Ticket Close Button
+      // Ticket Close Button
       if (interaction.customId === "closeTicket") {
         if (
           (await ticketsDB.get(`${interaction.channel.id}.status`)) === "Closed"
@@ -1680,6 +1696,16 @@ module.exports = {
           },
         );
 
+        const addedRolesPerms = category?.permissions?.addedRoles;
+        const addedRolesClosePerms = await getPermissionOverwrites(
+          addedRolesPerms,
+          "close",
+          {
+            allow: [],
+            deny: ["SendMessages"],
+          },
+        );
+
         await interaction.channel.permissionOverwrites.edit(
           ticketUserID,
           creatorClosePerms,
@@ -1738,10 +1764,10 @@ module.exports = {
 
         try {
           for (const role of rolesArray) {
-            await interaction.channel.permissionOverwrites.edit(role, {
-              SendMessages: false,
-              ViewChannel: true,
-            });
+            await interaction.channel.permissionOverwrites.edit(
+              role,
+              addedRolesClosePerms,
+            );
           }
         } catch (error) {
           console.error(

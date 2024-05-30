@@ -193,6 +193,16 @@ module.exports = {
       deny: ["SendMessages"],
     });
 
+    const addedRolesPerms = category?.permissions?.addedRoles;
+    const addedRolesClosePerms = await getPermissionOverwrites(
+      addedRolesPerms,
+      "close",
+      {
+        allow: [],
+        deny: ["SendMessages"],
+      },
+    );
+
     await interaction.channel.permissionOverwrites.edit(
       ticketUserID,
       creatorClosePerms,
@@ -248,10 +258,10 @@ module.exports = {
 
     try {
       for (const role of rolesArray) {
-        await interaction.channel.permissionOverwrites.edit(role, {
-          SendMessages: false,
-          ViewChannel: true,
-        });
+        await interaction.channel.permissionOverwrites.edit(
+          role,
+          addedRolesClosePerms,
+        );
       }
     } catch (error) {
       console.error(

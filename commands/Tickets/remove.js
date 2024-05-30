@@ -78,7 +78,7 @@ module.exports = {
       }
 
       await interaction.deferReply({ ephemeral: isEphemeral });
-      interaction.channel.permissionOverwrites.delete(user);
+      await interaction.channel.permissionOverwrites.delete(user);
 
       const logDefaultValues = {
         color: "#FF0000",
@@ -155,7 +155,7 @@ module.exports = {
       }
 
       await interaction.deferReply({ ephemeral: isEphemeral });
-      interaction.channel.permissionOverwrites.delete(role);
+      await interaction.channel.permissionOverwrites.delete(role);
 
       const logDefaultValues = {
         color: "#FF0000",
