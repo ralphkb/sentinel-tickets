@@ -80,13 +80,26 @@ module.exports = {
       }
       await interaction.deferReply({ ephemeral: isEphemeral });
 
-      await interaction.channel.permissionOverwrites.create(user, {
-        ViewChannel: true,
-        SendMessages: true,
-        ReadMessageHistory: true,
-        AttachFiles: true,
-        EmbedLinks: true,
+      let ticketButton = await ticketsDB.get(
+        `${interaction.channel.id}.button`,
+      );
+      const category = ticketCategories[ticketButton];
+      const usersPerms = category?.permissions?.addedUsers;
+      const usersOpenPerms = await getPermissionOverwrites(usersPerms, "open", {
+        allow: [
+          "ViewChannel",
+          "SendMessages",
+          "EmbedLinks",
+          "AttachFiles",
+          "ReadMessageHistory",
+        ],
+        deny: [],
       });
+
+      await interaction.channel.permissionOverwrites.create(
+        user,
+        usersOpenPerms,
+      );
 
       const logDefaultValues = {
         color: "#2FF200",

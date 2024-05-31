@@ -1024,6 +1024,21 @@ module.exports = {
           },
         );
 
+        const addedUsersPerms = category?.permissions?.addedUsers;
+        const addedUsersOpenPerms = await getPermissionOverwrites(
+          addedUsersPerms,
+          "open",
+          {
+            allow: [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ],
+            deny: [],
+          },
+        );
         const addedRolesPerms = category?.permissions?.addedRoles;
         const addedRolesOpenPerms = await getPermissionOverwrites(
           addedRolesPerms,
@@ -1099,10 +1114,10 @@ module.exports = {
 
         try {
           for (const member of usersArray) {
-            await interaction.channel.permissionOverwrites.edit(member, {
-              SendMessages: true,
-              ViewChannel: true,
-            });
+            await interaction.channel.permissionOverwrites.edit(
+              member,
+              addedUsersOpenPerms,
+            );
           }
         } catch (error) {
           console.error(
@@ -1696,6 +1711,15 @@ module.exports = {
           },
         );
 
+        const addedUsersPerms = category?.permissions?.addedUsers;
+        const addedUsersClosePerms = await getPermissionOverwrites(
+          addedUsersPerms,
+          "close",
+          {
+            allow: [],
+            deny: ["SendMessages"],
+          },
+        );
         const addedRolesPerms = category?.permissions?.addedRoles;
         const addedRolesClosePerms = await getPermissionOverwrites(
           addedRolesPerms,
@@ -1750,10 +1774,10 @@ module.exports = {
 
         try {
           for (const member of usersArray) {
-            await interaction.channel.permissionOverwrites.edit(member, {
-              SendMessages: false,
-              ViewChannel: true,
-            });
+            await interaction.channel.permissionOverwrites.edit(
+              member,
+              addedUsersClosePerms,
+            );
           }
         } catch (error) {
           console.error(

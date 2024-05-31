@@ -149,6 +149,21 @@ module.exports = {
       deny: [],
     });
 
+    const addedUsersPerms = category?.permissions?.addedUsers;
+    const addedUsersOpenPerms = await getPermissionOverwrites(
+      addedUsersPerms,
+      "open",
+      {
+        allow: [
+          "ViewChannel",
+          "SendMessages",
+          "EmbedLinks",
+          "AttachFiles",
+          "ReadMessageHistory",
+        ],
+        deny: [],
+      },
+    );
     const addedRolesPerms = category?.permissions?.addedRoles;
     const addedRolesOpenPerms = await getPermissionOverwrites(
       addedRolesPerms,
@@ -221,10 +236,10 @@ module.exports = {
 
     try {
       for (const member of usersArray) {
-        await interaction.channel.permissionOverwrites.edit(member, {
-          SendMessages: true,
-          ViewChannel: true,
-        });
+        await interaction.channel.permissionOverwrites.edit(
+          member,
+          addedUsersOpenPerms,
+        );
       }
     } catch (error) {
       console.error(
