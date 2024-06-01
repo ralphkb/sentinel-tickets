@@ -548,6 +548,17 @@ function parseDurationToMilliseconds(duration) {
   return numericValue * unitMap[unit] || 0;
 }
 
+async function getUserPreference(id, type) {
+  const preference = await blacklistDB.get(`userPreference-${id}`);
+  if (preference === undefined || preference === null) {
+    return true;
+  } else if (preference[type] === undefined) {
+    return true;
+  } else {
+    return preference[type];
+  }
+}
+
 // Time formatting function
 function formatTime(seconds) {
   const d = Math.floor(seconds / 86400);
@@ -619,6 +630,7 @@ module.exports = {
   findAvailableCategory,
   getRole,
   getPermissionOverwrites,
+  getUserPreference,
 };
 
 // Holding commands cooldown data

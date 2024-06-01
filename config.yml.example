@@ -299,6 +299,9 @@ commands:
   help:
     enabled: true
     permission: "KickMembers"
+  preference:
+    enabled: false
+    permission: "ViewChannel"
 
 contextMenuCommands:
   userInfo:
