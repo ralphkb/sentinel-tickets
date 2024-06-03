@@ -118,6 +118,10 @@ module.exports = {
       });
     }
 
+    logMessage(
+      `${interaction.user.tag} sent an alert to ${user.tag} in the ticket #${interaction.channel.name}`,
+    );
+
     if (config.alertDMEmbed.enabled) {
       const defaultDMValues = {
         color: "#FF0000",
@@ -141,7 +145,8 @@ module.exports = {
         try {
           await user.send({ embeds: [alertDMEmbed] });
         } catch (error) {
-          console.log(error);
+          error.errorContext = `[Alert Slash Command Error]: failed to DM ${user.tag} because their DMs were closed.`;
+          client.emit("error", error);
           const defaultErrorValues = {
             color: "#FF0000",
             title: "DMs Disabled",
@@ -188,8 +193,5 @@ module.exports = {
         }
       }
     }
-    logMessage(
-      `${interaction.user.tag} sent an alert to ${user.tag} in the ticket #${interaction.channel.name}`,
-    );
   },
 };

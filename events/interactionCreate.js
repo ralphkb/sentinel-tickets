@@ -1153,6 +1153,9 @@ module.exports = {
         await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
         await mainDB.push("openTickets", interaction.channel.id);
         await interaction.followUp({ embeds: [reopenEmbed] });
+        logMessage(
+          `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
+        );
         if (
           config.reopenDMEmbed.enabled &&
           interaction.user.id !== ticketUserID.id
@@ -1186,7 +1189,8 @@ module.exports = {
             try {
               await ticketUserID.send({ embeds: [reopenDMEmbed] });
             } catch (error) {
-              console.log(error);
+              error.errorContext = `[Reopen Button Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
+              client.emit("error", error);
               const defaultErrorValues = {
                 color: "#FF0000",
                 title: "DMs Disabled",
@@ -1233,9 +1237,6 @@ module.exports = {
             }
           }
         }
-        logMessage(
-          `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
-        );
       }
       // Ticket Delete button
       if (interaction.customId === "deleteTicket") {
@@ -1479,7 +1480,8 @@ module.exports = {
               });
             }
           } catch (error) {
-            console.log(error);
+            error.errorContext = `[Delete Button Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
+            client.emit("error", error);
             const defaultErrorValues = {
               color: "#FF0000",
               title: "DMs Disabled",
@@ -1851,7 +1853,8 @@ module.exports = {
             try {
               await ticketUserID.send({ embeds: [closeDMEmbed] });
             } catch (error) {
-              console.log(error);
+              error.errorContext = `[Close Button Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
+              client.emit("error", error);
               const defaultErrorValues = {
                 color: "#FF0000",
                 title: "DMs Disabled",

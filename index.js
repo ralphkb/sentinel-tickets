@@ -656,7 +656,11 @@ for (const file of eventFiles) {
 
 // Function to log errors
 async function logError(errorType, error) {
-  const errorMessage = `[${timeString}] [Bot v${packageJson.version}] [NodeJS ${process.version}] [${errorType}]\n${error.stack}\n\n`;
+  const errorContext =
+    error?.errorContext !== undefined
+      ? `\n[Error Context] ${error?.errorContext}`
+      : "";
+  const errorMessage = `[${timeString}] [Bot v${packageJson.version}] [NodeJS ${process.version}] [${errorType}]\n${error.stack}${errorContext}\n\n`;
   const logsFileToChannel = config?.logsFileToChannel ?? false;
   const logsFileChannelID = config?.logsFileChannelID ?? "";
 
@@ -678,22 +682,22 @@ async function logError(errorType, error) {
 
 client.on("warn", async (error) => {
   console.log(error);
-  logError("WARN", error);
+  await logError("WARN", error);
 });
 
 client.on("error", async (error) => {
   console.log(error);
-  logError("ERROR", error);
+  await logError("ERROR", error);
 });
 
 process.on("unhandledRejection", async (error) => {
   console.log(error);
-  logError("unhandledRejection", error);
+  await logError("unhandledRejection", error);
 });
 
 process.on("uncaughtException", async (error) => {
   console.log(error);
-  logError("uncaughtException", error);
+  await logError("uncaughtException", error);
 });
 
 client.commands = new Collection();
@@ -847,10 +851,10 @@ async function reloadAllSlashCommands() {
 }
 
 // Log in to Discord with your app's token
-client.login(process.env.BOT_TOKEN).catch((error) => {
+client.login(process.env.BOT_TOKEN).catch(async (error) => {
   if (error.message.includes("An invalid token was provided")) {
     console.log(error);
-    logError("INVALID_TOKEN", error);
+    await logError("INVALID_TOKEN", error);
     process.exit();
   } else if (
     error.message.includes(
@@ -858,11 +862,11 @@ client.login(process.env.BOT_TOKEN).catch((error) => {
     )
   ) {
     console.log(error);
-    logError("DISALLOWED_INTENTS", error);
+    await logError("DISALLOWED_INTENTS", error);
     process.exit();
   } else {
     console.log(error);
-    logError("ERROR", error);
+    await logError("ERROR", error);
     process.exit();
   }
 });

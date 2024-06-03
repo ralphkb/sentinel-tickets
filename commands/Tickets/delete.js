@@ -261,7 +261,8 @@ module.exports = {
           });
         }
       } catch (error) {
-        console.log(error);
+        error.errorContext = `[Delete Slash Command Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
+        client.emit("error", error);
         const defaultErrorValues = {
           color: "#FF0000",
           title: "DMs Disabled",

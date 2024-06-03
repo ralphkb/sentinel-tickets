@@ -318,7 +318,8 @@ module.exports = {
         try {
           await ticketUserID.send({ embeds: [closeDMEmbed] });
         } catch (error) {
-          console.log(error);
+          error.errorContext = `[Close Slash Command Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
+          client.emit("error", error);
           const defaultErrorValues = {
             color: "#FF0000",
             title: "DMs Disabled",
