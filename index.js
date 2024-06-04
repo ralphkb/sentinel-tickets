@@ -195,7 +195,9 @@ async function getUser(id) {
 async function getRole(id) {
   let role = client.guilds.cache.get(process.env.GUILD_ID).roles.cache.get(id);
 
-  if (!role) {
+  if (role) {
+    return role;
+  } else {
     try {
       role = await client.guilds.cache
         .get(process.env.GUILD_ID)
@@ -206,8 +208,6 @@ async function getRole(id) {
       return null;
     }
   }
-
-  return role;
 }
 
 // Find the first available category ID
