@@ -21,6 +21,7 @@ const {
   configEmbed,
   countMessagesInTicket,
   getUser,
+  getUserPreference,
 } = require("../../index.js");
 
 module.exports = {
@@ -148,164 +149,170 @@ module.exports = {
     const sendEmbed = config.DMUserSettings.embed;
     const sendTranscript = config.DMUserSettings.transcript;
     const sendRatingSystem = config.DMUserSettings.ratingSystem.enabled;
-    if (sendEmbed || sendTranscript || sendRatingSystem) {
-      const defaultDMValues = {
-        color: "#2FF200",
-        title: "Ticket Deleted",
-        description:
-          "Your support ticket has been deleted. Here is your transcript and other information.",
-        thumbnail: interaction.guild.iconURL(),
-        timestamp: true,
-      };
+    const userPreference = await getUserPreference(ticketUserID.id, "delete");
+    if (userPreference) {
+      if (sendEmbed || sendTranscript || sendRatingSystem) {
+        const defaultDMValues = {
+          color: "#2FF200",
+          title: "Ticket Deleted",
+          description:
+            "Your support ticket has been deleted. Here is your transcript and other information.",
+          thumbnail: interaction.guild.iconURL(),
+          timestamp: true,
+        };
 
-      const deleteDMEmbed = await configEmbed("deleteDMEmbed", defaultDMValues);
+        const deleteDMEmbed = await configEmbed(
+          "deleteDMEmbed",
+          defaultDMValues,
+        );
 
-      deleteDMEmbed
-        .addFields(
-          {
-            name: "Server",
-            value: `> ${interaction.guild.name}`,
+        deleteDMEmbed
+          .addFields(
+            {
+              name: "Server",
+              value: `> ${interaction.guild.name}`,
+              inline: true,
+            },
+            {
+              name: "Ticket",
+              value: `> #${sanitizeInput(interaction.channel.name)}`,
+              inline: true,
+            },
+            {
+              name: "Category",
+              value: `> ${ticketType}`,
+              inline: true,
+            },
+          )
+          .addFields(
+            {
+              name: "Ticket Author",
+              value: `> ${sanitizeInput(ticketUserID.tag)}`,
+              inline: true,
+            },
+            {
+              name: "Deleted By",
+              value: `> ${sanitizeInput(interaction.user.tag)}`,
+              inline: true,
+            },
+            {
+              name: "Claimed By",
+              value: `> ${claimUser ? sanitizeInput(claimUser.tag) : "None"}`,
+              inline: true,
+            },
+          )
+          .addFields({
+            name: "Ticket Creation Time",
+            value: `> <t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
             inline: true,
-          },
-          {
-            name: "Ticket",
-            value: `> #${sanitizeInput(interaction.channel.name)}`,
-            inline: true,
-          },
-          {
-            name: "Category",
-            value: `> ${ticketType}`,
-            inline: true,
-          },
-        )
-        .addFields(
-          {
-            name: "Ticket Author",
-            value: `> ${sanitizeInput(ticketUserID.tag)}`,
-            inline: true,
-          },
-          {
-            name: "Deleted By",
-            value: `> ${sanitizeInput(interaction.user.tag)}`,
-            inline: true,
-          },
-          {
-            name: "Claimed By",
-            value: `> ${claimUser ? sanitizeInput(claimUser.tag) : "None"}`,
-            inline: true,
-          },
-        )
-        .addFields({
-          name: "Ticket Creation Time",
-          value: `> <t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
-          inline: true,
+          });
+
+        const options = [];
+        for (let i = 1; i <= 5; i++) {
+          const option = new StringSelectMenuOptionBuilder()
+            .setLabel(`${i} ${i > 1 ? "stars" : "star"}`)
+            .setEmoji(config.DMUserSettings.ratingSystem.menu.emoji)
+            .setValue(`${i}-star`);
+
+          options.push(option);
+        }
+
+        const selectMenu = new StringSelectMenuBuilder()
+          .setCustomId("ratingMenu")
+          .setPlaceholder(config.DMUserSettings.ratingSystem.menu.placeholder)
+          .setMinValues(1)
+          .setMaxValues(1)
+          .addOptions(options);
+
+        const actionRowMenu = new ActionRowBuilder().addComponents(selectMenu);
+
+        const defaultRatingValues = {
+          color: "#2FF200",
+          title: "Ticket Feedback & Rating",
+          description:
+            "We value your feedback! Please take a moment to share your thoughts and rate our support system. Your rating can be between 1 and 5 stars by using the select menu below. Thank you for helping us improve.",
+        };
+
+        const ratingDMEmbed = await configEmbed(
+          "ratingDMEmbed",
+          defaultRatingValues,
+        );
+
+        ratingDMEmbed.setFooter({
+          text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
         });
 
-      const options = [];
-      for (let i = 1; i <= 5; i++) {
-        const option = new StringSelectMenuOptionBuilder()
-          .setLabel(`${i} ${i > 1 ? "stars" : "star"}`)
-          .setEmoji(config.DMUserSettings.ratingSystem.menu.emoji)
-          .setValue(`${i}-star`);
+        const messageDM = {};
 
-        options.push(option);
-      }
-
-      const selectMenu = new StringSelectMenuBuilder()
-        .setCustomId("ratingMenu")
-        .setPlaceholder(config.DMUserSettings.ratingSystem.menu.placeholder)
-        .setMinValues(1)
-        .setMaxValues(1)
-        .addOptions(options);
-
-      const actionRowMenu = new ActionRowBuilder().addComponents(selectMenu);
-
-      const defaultRatingValues = {
-        color: "#2FF200",
-        title: "Ticket Feedback & Rating",
-        description:
-          "We value your feedback! Please take a moment to share your thoughts and rate our support system. Your rating can be between 1 and 5 stars by using the select menu below. Thank you for helping us improve.",
-      };
-
-      const ratingDMEmbed = await configEmbed(
-        "ratingDMEmbed",
-        defaultRatingValues,
-      );
-
-      ratingDMEmbed.setFooter({
-        text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
-      });
-
-      const messageDM = {};
-
-      if (sendEmbed) {
-        messageDM.embeds = [deleteDMEmbed];
-      }
-
-      if (sendTranscript) {
-        messageDM.files = [attachment];
-      }
-
-      try {
-        if (sendRatingSystem === false) {
-          await ticketUserID.send(messageDM);
+        if (sendEmbed) {
+          messageDM.embeds = [deleteDMEmbed];
         }
-        if (sendRatingSystem === true) {
-          if (Object.keys(messageDM).length !== 0) {
+
+        if (sendTranscript) {
+          messageDM.files = [attachment];
+        }
+
+        try {
+          if (sendRatingSystem === false) {
             await ticketUserID.send(messageDM);
           }
-          await mainDB.set(`ratingMenuOptions`, options);
-          await ticketUserID.send({
-            embeds: [ratingDMEmbed],
-            components: [actionRowMenu],
-          });
-        }
-      } catch (error) {
-        error.errorContext = `[Delete Slash Command Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
-        client.emit("error", error);
-        const defaultErrorValues = {
-          color: "#FF0000",
-          title: "DMs Disabled",
-          description:
-            "The bot could not DM **{user} ({user.tag})** because their DMs were closed.\nPlease enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
-          timestamp: true,
-          thumbnail: `${ticketUserID.displayAvatarURL({ extension: "png", size: 1024 })}`,
-          footer: {
-            text: `${ticketUserID.tag}`,
-            iconURL: `${ticketUserID.displayAvatarURL({ extension: "png", size: 1024 })}`,
-          },
-        };
+          if (sendRatingSystem === true) {
+            if (Object.keys(messageDM).length !== 0) {
+              await ticketUserID.send(messageDM);
+            }
+            await mainDB.set(`ratingMenuOptions`, options);
+            await ticketUserID.send({
+              embeds: [ratingDMEmbed],
+              components: [actionRowMenu],
+            });
+          }
+        } catch (error) {
+          error.errorContext = `[Delete Slash Command Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
+          client.emit("error", error);
+          const defaultErrorValues = {
+            color: "#FF0000",
+            title: "DMs Disabled",
+            description:
+              "The bot could not DM **{user} ({user.tag})** because their DMs were closed.\nPlease enable `Allow Direct Messages` in this server to receive further information from the bot!\n\nFor help, please read [this article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).",
+            timestamp: true,
+            thumbnail: `${ticketUserID.displayAvatarURL({ extension: "png", size: 1024 })}`,
+            footer: {
+              text: `${ticketUserID.tag}`,
+              iconURL: `${ticketUserID.displayAvatarURL({ extension: "png", size: 1024 })}`,
+            },
+          };
 
-        const dmErrorEmbed = await configEmbed(
-          "dmErrorEmbed",
-          defaultErrorValues,
-        );
+          const dmErrorEmbed = await configEmbed(
+            "dmErrorEmbed",
+            defaultErrorValues,
+          );
 
-        if (dmErrorEmbed.data && dmErrorEmbed.data.description) {
-          dmErrorEmbed.setDescription(
-            dmErrorEmbed.data.description
-              .replace(/\{user\}/g, ticketUserID)
-              .replace(/\{user\.tag\}/g, sanitizeInput(ticketUserID.tag)),
+          if (dmErrorEmbed.data && dmErrorEmbed.data.description) {
+            dmErrorEmbed.setDescription(
+              dmErrorEmbed.data.description
+                .replace(/\{user\}/g, ticketUserID)
+                .replace(/\{user\.tag\}/g, sanitizeInput(ticketUserID.tag)),
+            );
+          }
+
+          let logChannelId = config.logs.DMErrors || config.logs.default;
+          let logChannel = client.channels.cache.get(logChannelId);
+
+          let dmErrorReply = {
+            embeds: [dmErrorEmbed],
+          };
+
+          if (config.dmErrorEmbed.pingUser) {
+            dmErrorReply.content = `<@${ticketUserID.id}>`;
+          }
+
+          if (config.toggleLogs.DMErrors) {
+            await logChannel.send(dmErrorReply);
+          }
+          logMessage(
+            `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
           );
         }
-
-        let logChannelId = config.logs.DMErrors || config.logs.default;
-        let logChannel = client.channels.cache.get(logChannelId);
-
-        let dmErrorReply = {
-          embeds: [dmErrorEmbed],
-        };
-
-        if (config.dmErrorEmbed.pingUser) {
-          dmErrorReply.content = `<@${ticketUserID.id}>`;
-        }
-
-        if (config.toggleLogs.DMErrors) {
-          await logChannel.send(dmErrorReply);
-        }
-        logMessage(
-          `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
-        );
       }
     }
 

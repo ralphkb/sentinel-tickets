@@ -23,6 +23,7 @@ module.exports = {
               { name: "Alert", value: "alert" },
               { name: "Reopen", value: "reopen" },
               { name: "Close", value: "close" },
+              { name: "Delete", value: "delete" },
             ),
         )
         .addBooleanOption((option) =>
