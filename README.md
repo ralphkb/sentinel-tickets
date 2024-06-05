@@ -1,9 +1,9 @@
 # Sentinel Tickets Discord Bot
 
-![GitHub Repo stars](https://img.shields.io/github/stars/ralphkb/sentinel-tickets?style=flat)
-![GitHub release (latest)](https://img.shields.io/github/v/release/ralphkb/sentinel-tickets)
-![GitHub commits since latest release](https://img.shields.io/github/commits-since/ralphkb/sentinel-tickets/latest)
-![GitHub last commit](https://img.shields.io/github/last-commit/ralphkb/sentinel-tickets)
+[![GitHub Repo stars](https://img.shields.io/github/stars/ralphkb/sentinel-tickets?style=flat)](https://github.com/ralphkb/sentinel-tickets/stargazers)
+[![GitHub release (latest)](https://img.shields.io/github/v/release/ralphkb/sentinel-tickets)](https://github.com/ralphkb/sentinel-tickets/releases/latest)
+[![GitHub commits since latest release](https://img.shields.io/github/commits-since/ralphkb/sentinel-tickets/latest)](https://github.com/ralphkb/sentinel-tickets/commits/main/)
+[![GitHub last commit](https://img.shields.io/github/last-commit/ralphkb/sentinel-tickets)](https://github.com/ralphkb/sentinel-tickets/commits/main/)
 
 ## Introduction
 This is a ticket bot that aims to provide a free and open source solution for managing tickets on Discord. The bot is designed to be lightweight, without any watermarks or unnecessary bloat. It allows users to create, track, and manage tickets seamlessly.
