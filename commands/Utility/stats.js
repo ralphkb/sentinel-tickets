@@ -3,9 +3,8 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { mainDB } = require("../../index.js");
 const packageJson = require("../../package.json");
-const { configEmbed, formatTime } = require("../../index.js");
+const { mainDB, configEmbed, formatTime } = require("../../index.js");
 
 module.exports = {
   enabled: config.commands.stats.enabled,
