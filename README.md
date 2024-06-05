@@ -1,5 +1,10 @@
 # Sentinel Tickets Discord Bot
 
+![GitHub Repo stars](https://img.shields.io/github/stars/ralphkb/sentinel-tickets?style=flat)
+![GitHub release (latest)](https://img.shields.io/github/v/release/ralphkb/sentinel-tickets)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/ralphkb/sentinel-tickets/latest)
+![GitHub last commit](https://img.shields.io/github/last-commit/ralphkb/sentinel-tickets)
+
 ## Introduction
 This is a ticket bot that aims to provide a free and open source solution for managing tickets on Discord. The bot is designed to be lightweight, without any watermarks or unnecessary bloat. It allows users to create, track, and manage tickets seamlessly.
 
@@ -44,7 +49,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Option to require one or more roles to create a ticket per ticket category.
 - Option to ping support roles on ticket creation per ticket category.
 - The ability to have configure fallback categories if one becomes full.
-- Edit permissions of the ticket creator and support roles per ticket category.
+- Edit permissions of the ticket creator, support roles, added roles and added users per ticket category.
 - Per Day Working Hours feature with an option to specify the timezone and block ticket creation outside the working hours.
 - Option to configure the amount of max opened tickets at one time.
 - Ticket claiming feature that can be turned on/off.
@@ -59,6 +64,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Precise and organized logs of errors and all ticket events in a logs.txt file.
 - Option to edit the activity of the bot.
 - Blacklist system with the ability to add users or roles with an optional reason and view them in a list.
+- DM preference system, allowing users to toggle their preference regarding receiving DMs from the bot such as alert, close, reopen & delete.
 - Multiple Commands: Efficiently manage tickets with various commands.
     - Send the ticket panels in any channel using the panel id
     - Add Users or Roles to a ticket
