@@ -186,7 +186,8 @@ async function getUser(id) {
       user = await client.users.fetch(id);
       return user;
     } catch (error) {
-      console.error(`Error fetching user with ID ${id}:`, error);
+      error.errorContext = `[getUser Function Error]: error fetching user with ID ${id}`;
+      client.emit("error", error);
       return null;
     }
   }
@@ -204,7 +205,8 @@ async function getRole(id) {
         .roles.fetch(id);
       return role;
     } catch (error) {
-      console.error(`Error fetching role with ID ${id}:`, error);
+      error.errorContext = `[getRole Function Error]: error fetching role with ID ${id}`;
+      client.emit("error", error);
       return null;
     }
   }
@@ -581,8 +583,9 @@ async function logMessage(message) {
 
   try {
     await fs.promises.appendFile("./logs.txt", logMessage);
-  } catch (err) {
-    console.log("Error writing to log file:", err);
+  } catch (error) {
+    error.errorContext = `[logMessage Function Error]: error writing to log file`;
+    client.emit("error", error);
   }
 }
 
@@ -675,8 +678,9 @@ async function logError(errorType, error) {
     } else {
       await fs.promises.appendFile("./logs.txt", errorMessage);
     }
-  } catch (err) {
-    console.log("Error writing to log file:", err);
+  } catch (error) {
+    error.errorContext = `[logError Function Error]: error writing to log file`;
+    client.emit("error", error);
   }
 }
 
@@ -788,10 +792,8 @@ client.on("ready", async () => {
         }
       } catch (error) {
         if (error) {
-          console.error(
-            "An error occurred during slash command registration:",
-            error,
-          );
+          error.errorContext = `[Commands Registration Error]: an error occurred during slash command registration`;
+          client.emit("error", error);
           console.log(
             `The bot may have been invited with some missing options. Please use the link below to re-invite your bot if that is the case.`,
           );
@@ -827,7 +829,8 @@ client.on("ready", async () => {
     );
     console.log(`The ticket bot is now ready! Logged in as ${client.user.tag}`);
   } catch (error) {
-    console.error("An error occurred during initialization:", error);
+    error.errorContext = `[Ready Event Error]: an error occurred during initialization`;
+    client.emit("error", error);
   }
 });
 
