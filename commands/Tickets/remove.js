@@ -77,6 +77,17 @@ module.exports = {
         });
       }
 
+      const ticketCreatorID = await ticketsDB.get(
+        `${interaction.channel.id}.userID`,
+      );
+      // Check if the user is the ticket creator
+      if (user.id === ticketCreatorID) {
+        return interaction.reply({
+          content: "You cannot remove the ticket creator.",
+          ephemeral: true,
+        });
+      }
+
       await interaction.deferReply({ ephemeral: isEphemeral });
       await interaction.channel.permissionOverwrites.delete(user);
 
