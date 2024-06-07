@@ -51,7 +51,11 @@ module.exports = {
         iconURL: `${pngURL}`,
       },
     };
-
+    const userRoles = member.roles.cache
+      .filter((role) => role.id !== interaction.guild.id)
+      .sort((a, b) => b.position - a.position)
+      .map((role) => ` ${role}`)
+      .join(", ");
     const userInfoEmbed = await configEmbed("userInfoEmbed", defaultValues);
 
     userInfoEmbed.addFields([
@@ -62,6 +66,10 @@ module.exports = {
       {
         name: "Avatar",
         value: `> ${avatarLinks}`,
+      },
+      {
+        name: "Roles",
+        value: `> ${userRoles}`,
       },
       {
         name: "Created At",
