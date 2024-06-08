@@ -93,12 +93,6 @@ module.exports = {
       },
     ]);
 
-    let logChannelId = config.logs.ticketReopen || config.logs.default;
-    let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-    if (config.toggleLogs.ticketReopen) {
-      await logsChannel.send({ embeds: [logReopenEmbed] });
-    }
-
     const defaultValues = {
       color: "#2FF200",
       title: "Ticket Re-Opened",
@@ -275,6 +269,11 @@ module.exports = {
     await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
     await mainDB.push("openTickets", interaction.channel.id);
     await interaction.editReply({ embeds: [reopenEmbed] });
+    let logChannelId = config.logs.ticketReopen || config.logs.default;
+    let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+    if (config.toggleLogs.ticketReopen) {
+      await logsChannel.send({ embeds: [logReopenEmbed] });
+    }
     logMessage(
       `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
     );

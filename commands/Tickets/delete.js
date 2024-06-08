@@ -117,15 +117,6 @@ module.exports = {
       attachment = await saveTranscriptTxt(interaction);
     }
 
-    let logChannelId = config.logs.ticketDelete || config.logs.default;
-    let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-    if (config.toggleLogs.ticketDelete) {
-      await logsChannel.send({ embeds: [logDeleteEmbed], files: [attachment] });
-    }
-    logMessage(
-      `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
-    );
-
     const deleteTicketTime = config.deleteTicketTime || 5;
     const deleteTime = deleteTicketTime * 1000;
 
@@ -144,6 +135,25 @@ module.exports = {
         ),
       );
     }
+
+    const ticketMessages = await countMessagesInTicket(interaction.channel);
+    await mainDB.set("totalMessages", totalMessages + ticketMessages);
+    await interaction.editReply({ embeds: [deleteEmbed] });
+
+    setTimeout(async () => {
+      await ticketsDB.delete(interaction.channel.id);
+      await mainDB.pull("openTickets", interaction.channel.id);
+      await interaction.channel.delete();
+    }, deleteTime);
+
+    let logChannelId = config.logs.ticketDelete || config.logs.default;
+    let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+    if (config.toggleLogs.ticketDelete) {
+      await logsChannel.send({ embeds: [logDeleteEmbed], files: [attachment] });
+    }
+    logMessage(
+      `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
+    );
 
     // DM the user with an embed and the transcript of the ticket depending on the enabled settings
     const sendEmbed = config.DMUserSettings.embed;
@@ -315,15 +325,5 @@ module.exports = {
         }
       }
     }
-
-    const ticketMessages = await countMessagesInTicket(interaction.channel);
-    await mainDB.set("totalMessages", totalMessages + ticketMessages);
-    await interaction.editReply({ embeds: [deleteEmbed] });
-
-    setTimeout(async () => {
-      await ticketsDB.delete(interaction.channel.id);
-      await mainDB.pull("openTickets", interaction.channel.id);
-      await interaction.channel.delete();
-    }, deleteTime);
   },
 };

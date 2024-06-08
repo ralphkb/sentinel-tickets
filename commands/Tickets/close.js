@@ -113,15 +113,6 @@ module.exports = {
       });
     }
 
-    let logChannelId = config.logs.ticketClose || config.logs.default;
-    let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-    if (config.toggleLogs.ticketClose) {
-      await logsChannel.send({ embeds: [logCloseEmbed] });
-    }
-    logMessage(
-      `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
-    );
-
     const reOpenButton =
       config.closeEmbed.reOpenButton !== false
         ? new ButtonBuilder()
@@ -291,6 +282,14 @@ module.exports = {
     await ticketsDB.set(`${interaction.channel.id}.closeMsgID`, messageID);
     await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
     await mainDB.pull("openTickets", interaction.channel.id);
+    let logChannelId = config.logs.ticketClose || config.logs.default;
+    let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+    if (config.toggleLogs.ticketClose) {
+      await logsChannel.send({ embeds: [logCloseEmbed] });
+    }
+    logMessage(
+      `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
+    );
     if (
       config.closeDMEmbed.enabled &&
       interaction.user.id !== ticketUserID.id

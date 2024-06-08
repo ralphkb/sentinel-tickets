@@ -963,12 +963,6 @@ module.exports = {
           },
         ]);
 
-        let logChannelId = config.logs.ticketReopen || config.logs.default;
-        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-        if (config.toggleLogs.ticketReopen) {
-          await logsChannel.send({ embeds: [logReopenEmbed] });
-        }
-
         const defaultValues = {
           color: "#2FF200",
           title: "Ticket Re-Opened",
@@ -1153,6 +1147,11 @@ module.exports = {
         await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
         await mainDB.push("openTickets", interaction.channel.id);
         await interaction.followUp({ embeds: [reopenEmbed] });
+        let logChannelId = config.logs.ticketReopen || config.logs.default;
+        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+        if (config.toggleLogs.ticketReopen) {
+          await logsChannel.send({ embeds: [logReopenEmbed] });
+        }
         logMessage(
           `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
         );
@@ -1327,17 +1326,6 @@ module.exports = {
             name: "• Claimed By",
             value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
           });
-        let logChannelId = config.logs.ticketDelete || config.logs.default;
-        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-        if (config.toggleLogs.ticketDelete) {
-          await logsChannel.send({
-            embeds: [logDeleteEmbed],
-            files: [attachment],
-          });
-        }
-        logMessage(
-          `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
-        );
 
         const deleteTicketTime = config.deleteTicketTime || 5;
         const deleteTime = deleteTicketTime * 1000;
@@ -1357,6 +1345,28 @@ module.exports = {
             ),
           );
         }
+
+        const ticketMessages = await countMessagesInTicket(interaction.channel);
+        await mainDB.set("totalMessages", totalMessages + ticketMessages);
+        await interaction.editReply({ embeds: [deleteEmbed] });
+
+        setTimeout(async () => {
+          await ticketsDB.delete(interaction.channel.id);
+          await mainDB.pull("openTickets", interaction.channel.id);
+          await interaction.channel.delete();
+        }, deleteTime);
+
+        let logChannelId = config.logs.ticketDelete || config.logs.default;
+        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+        if (config.toggleLogs.ticketDelete) {
+          await logsChannel.send({
+            embeds: [logDeleteEmbed],
+            files: [attachment],
+          });
+        }
+        logMessage(
+          `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
+        );
 
         // DM the user with an embed and the transcript of the ticket depending on the enabled settings
         const sendEmbed = config.DMUserSettings.embed;
@@ -1535,16 +1545,6 @@ module.exports = {
             }
           }
         }
-
-        const ticketMessages = await countMessagesInTicket(interaction.channel);
-        await mainDB.set("totalMessages", totalMessages + ticketMessages);
-        await interaction.editReply({ embeds: [deleteEmbed] });
-
-        setTimeout(async () => {
-          await ticketsDB.delete(interaction.channel.id);
-          await mainDB.pull("openTickets", interaction.channel.id);
-          await interaction.channel.delete();
-        }, deleteTime);
       }
 
       // Ticket Close Button
@@ -1643,14 +1643,6 @@ module.exports = {
             value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
           });
         }
-        let logChannelId = config.logs.ticketClose || config.logs.default;
-        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
-        if (config.toggleLogs.ticketClose) {
-          await logsChannel.send({ embeds: [logCloseEmbed] });
-        }
-        logMessage(
-          `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
-        );
 
         const reOpenButton =
           config.closeEmbed.reOpenButton !== false
@@ -1828,6 +1820,14 @@ module.exports = {
         await ticketsDB.set(`${interaction.channel.id}.closeMsgID`, messageID);
         await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
         await mainDB.pull("openTickets", interaction.channel.id);
+        let logChannelId = config.logs.ticketClose || config.logs.default;
+        let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+        if (config.toggleLogs.ticketClose) {
+          await logsChannel.send({ embeds: [logCloseEmbed] });
+        }
+        logMessage(
+          `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
+        );
         if (
           config.closeDMEmbed.enabled &&
           interaction.user.id !== ticketUserID.id
