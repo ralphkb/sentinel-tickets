@@ -536,6 +536,10 @@ setInterval(cleanBlacklist, intervalInSeconds * 1000);
 
 // Function to parse duration string to milliseconds
 function parseDurationToMilliseconds(duration) {
+  if (!duration) {
+    return 0;
+  }
+
   const unitMap = {
     s: 1000,
     m: 60000,

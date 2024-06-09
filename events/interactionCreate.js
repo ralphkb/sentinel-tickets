@@ -250,7 +250,7 @@ module.exports = {
             ) {
               await blacklistDB.delete(`role-${roleId}`);
             } else {
-              isRoleBlacklisted = true;
+              isRoleBlacklisted = roleBlacklist;
               break;
             }
           }
@@ -283,13 +283,24 @@ module.exports = {
         }
 
         if (isUserBlacklisted || isRoleBlacklisted) {
-          const expirationTime =
-            isUserBlacklisted?.timestamp +
-            parseDurationToMilliseconds(isUserBlacklisted?.duration);
-          const expiryDate =
-            isUserBlacklisted?.duration === "permanent"
-              ? "Never"
-              : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+          let expiryDate;
+          if (isUserBlacklisted) {
+            const expirationTime =
+              isUserBlacklisted?.timestamp +
+              parseDurationToMilliseconds(isUserBlacklisted?.duration);
+            expiryDate =
+              isUserBlacklisted?.duration === "permanent"
+                ? "Never"
+                : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+          } else if (isRoleBlacklisted) {
+            const expirationTime =
+              isRoleBlacklisted?.timestamp +
+              parseDurationToMilliseconds(isRoleBlacklisted?.duration);
+            expiryDate =
+              isRoleBlacklisted?.duration === "permanent"
+                ? "Never"
+                : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+          }
           const defaultblacklistedValues = {
             color: "#FF0000",
             title: "Blacklisted",
