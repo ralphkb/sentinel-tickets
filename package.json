@@ -26,7 +26,7 @@
     "dotenv": "^16.4.5",
     "moment-timezone": "^0.5.45",
     "quick.db": "^9.1.7",
-    "yaml": "^2.4.3"
+    "yaml": "^2.4.5"
   },
   "devDependencies": {
     "eslint": "^9.4.0",
