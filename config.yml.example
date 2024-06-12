@@ -1146,9 +1146,14 @@ closeEmbed:
     name: ""
     iconURL: ""
     url: ""
-  reOpenButton: true
-  transcriptButton: true
-  deleteButton: true
+  reOpenButton: true # Enable or disable the re-open button/select menu option
+  transcriptButton: true # Enable or disable the transcript button/select menu option
+  deleteButton: true # Enable or disable the delete button/select menu option
+  useMenu: false # Enable or disable using a select menu instead of buttons
+  menuPlaceholder: "Select an option" # The placeholder of the select menu if it's enabled
+  reopenDescription: "Reopen this ticket." # The description of the re-open select menu option if it's enabled
+  transcriptDescription: "Generate a transcript of this ticket." # The description of the transcript select menu option if it's enabled
+  deleteDescription: "Delete this ticket." # The description of the delete select menu option if it's enabled
 
 # Log embed for closing tickets
 logCloseEmbed:

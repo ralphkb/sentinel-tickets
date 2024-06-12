@@ -1,4 +1,10 @@
-const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
+const {
+  ButtonBuilder,
+  ButtonStyle,
+  ActionRowBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -72,38 +78,83 @@ async function closeTicket(interaction) {
     });
   }
 
-  const reOpenButton =
-    config.closeEmbed.reOpenButton !== false
-      ? new ButtonBuilder()
-          .setCustomId("reOpen")
-          .setLabel(config.reOpenButton.label)
-          .setEmoji(config.reOpenButton.emoji)
-          .setStyle(ButtonStyle[config.reOpenButton.style])
-      : null;
-
-  const transcriptButton =
-    config.closeEmbed.transcriptButton !== false
-      ? new ButtonBuilder()
-          .setCustomId("createTranscript")
-          .setLabel(config.transcriptButton.label)
-          .setEmoji(config.transcriptButton.emoji)
-          .setStyle(ButtonStyle[config.transcriptButton.style])
-      : null;
-
-  const deleteButton =
-    config.closeEmbed.deleteButton !== false
-      ? new ButtonBuilder()
-          .setCustomId("deleteTicket")
-          .setLabel(config.deleteButton.label)
-          .setEmoji(config.deleteButton.emoji)
-          .setStyle(ButtonStyle[config.deleteButton.style])
-      : null;
-
   let row = new ActionRowBuilder();
+  if (config.closeEmbed.useMenu) {
+    const options = [];
 
-  if (reOpenButton) row.addComponents(reOpenButton);
-  if (transcriptButton) row.addComponents(transcriptButton);
-  if (deleteButton) row.addComponents(deleteButton);
+    if (config.closeEmbed.reOpenButton !== false) {
+      const reopenOption = new StringSelectMenuOptionBuilder()
+        .setLabel(config.reOpenButton.label)
+        .setDescription(config.closeEmbed.reopenDescription)
+        .setValue("reOpen")
+        .setEmoji(config.reOpenButton.emoji);
+      options.push(reopenOption);
+    }
+
+    if (config.closeEmbed.transcriptButton !== false) {
+      const transcriptOption = new StringSelectMenuOptionBuilder()
+        .setLabel(config.transcriptButton.label)
+        .setDescription(config.closeEmbed.transcriptDescription)
+        .setValue("createTranscript")
+        .setEmoji(config.transcriptButton.emoji);
+      options.push(transcriptOption);
+    }
+
+    if (config.closeEmbed.deleteButton !== false) {
+      const deleteOption = new StringSelectMenuOptionBuilder()
+        .setLabel(config.deleteButton.label)
+        .setDescription(config.closeEmbed.deleteDescription)
+        .setValue("deleteTicket")
+        .setEmoji(config.deleteButton.emoji);
+      options.push(deleteOption);
+    }
+
+    const selectMenu = new StringSelectMenuBuilder()
+      .setCustomId("closeMenu")
+      .setPlaceholder(config.closeEmbed.menuPlaceholder || "Select an option")
+      .setMinValues(1)
+      .setMaxValues(1)
+      .addOptions(options);
+
+    if (selectMenu.options.length > 0) {
+      row.addComponents(selectMenu);
+      await mainDB.set("closeMenuOptions", {
+        options,
+        placeholder: config.closeEmbed.menuPlaceholder || "Select an option",
+      });
+    }
+  } else {
+    const reOpenButton =
+      config.closeEmbed.reOpenButton !== false
+        ? new ButtonBuilder()
+            .setCustomId("reOpen")
+            .setLabel(config.reOpenButton.label)
+            .setEmoji(config.reOpenButton.emoji)
+            .setStyle(ButtonStyle[config.reOpenButton.style])
+        : null;
+
+    const transcriptButton =
+      config.closeEmbed.transcriptButton !== false
+        ? new ButtonBuilder()
+            .setCustomId("createTranscript")
+            .setLabel(config.transcriptButton.label)
+            .setEmoji(config.transcriptButton.emoji)
+            .setStyle(ButtonStyle[config.transcriptButton.style])
+        : null;
+
+    const deleteButton =
+      config.closeEmbed.deleteButton !== false
+        ? new ButtonBuilder()
+            .setCustomId("deleteTicket")
+            .setLabel(config.deleteButton.label)
+            .setEmoji(config.deleteButton.emoji)
+            .setStyle(ButtonStyle[config.deleteButton.style])
+        : null;
+
+    if (reOpenButton) row.addComponents(reOpenButton);
+    if (transcriptButton) row.addComponents(transcriptButton);
+    if (deleteButton) row.addComponents(deleteButton);
+  }
 
   const defaultValues = {
     color: "#FF2400",

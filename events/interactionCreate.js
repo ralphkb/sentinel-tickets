@@ -560,6 +560,116 @@ module.exports = {
           }
         }
       }
+
+      if (interaction.customId === "closeMenu") {
+        // Reset the select menu upon selection
+        const messageId = interaction.message.id;
+        const closeMenuOptions = await mainDB.get("closeMenuOptions");
+        await interaction.channel.messages
+          .fetch(messageId)
+          .then(async (message) => {
+            const selectMenu = new StringSelectMenuBuilder()
+              .setCustomId("closeMenu")
+              .setPlaceholder(
+                closeMenuOptions.placeholder || "Select an option",
+              )
+              .setMinValues(1)
+              .setMaxValues(1)
+              .addOptions(closeMenuOptions.options);
+
+            const updatedActionRow = new ActionRowBuilder().addComponents(
+              selectMenu,
+            );
+            await message.edit({ components: [updatedActionRow] });
+          });
+
+        if (interaction.values[0] === "reOpen") {
+          const reOpenStaffOnly =
+            config.reOpenStaffOnly !== undefined
+              ? config.reOpenStaffOnly
+              : false;
+          if (reOpenStaffOnly) {
+            const hasSupportRole = await checkSupportRole(interaction);
+            if (!hasSupportRole) {
+              return interaction.reply({
+                content:
+                  config.errors.not_allowed ||
+                  "You are not allowed to use this!",
+                ephemeral: true,
+              });
+            }
+          }
+
+          const allowedRoles = config.reOpenButton.allowedRoles ?? [];
+          if (
+            allowedRoles.length !== 0 &&
+            !interaction.member.roles.cache.some((role) =>
+              allowedRoles.includes(role.id),
+            )
+          ) {
+            return interaction.reply({
+              content:
+                config.errors.not_allowed || "You are not allowed to use this!",
+              ephemeral: true,
+            });
+          }
+
+          await interaction.deferReply();
+          await reopenTicket(interaction);
+        }
+
+        if (interaction.values[0] === "createTranscript") {
+          const hasSupportRole = await checkSupportRole(interaction);
+          if (!hasSupportRole) {
+            return interaction.reply({
+              content:
+                config.errors.not_allowed || "You are not allowed to use this!",
+              ephemeral: true,
+            });
+          }
+          const isEphemeral =
+            config.transcriptReplyEmbed.ephemeral !== undefined
+              ? config.transcriptReplyEmbed.ephemeral
+              : true;
+          await interaction.deferReply({ ephemeral: isEphemeral });
+          await transcriptTicket(interaction);
+        }
+
+        if (interaction.values[0] === "deleteTicket") {
+          const deleteStaffOnly =
+            config.deleteStaffOnly !== undefined
+              ? config.deleteStaffOnly
+              : true;
+          if (deleteStaffOnly) {
+            const hasSupportRole = await checkSupportRole(interaction);
+            if (!hasSupportRole) {
+              return interaction.reply({
+                content:
+                  config.errors.not_allowed ||
+                  "You are not allowed to use this!",
+                ephemeral: true,
+              });
+            }
+          }
+
+          const allowedRoles = config.deleteButton.allowedRoles ?? [];
+          if (
+            allowedRoles.length !== 0 &&
+            !interaction.member.roles.cache.some((role) =>
+              allowedRoles.includes(role.id),
+            )
+          ) {
+            return interaction.reply({
+              content:
+                config.errors.not_allowed || "You are not allowed to use this!",
+              ephemeral: true,
+            });
+          }
+
+          await interaction.deferReply();
+          await deleteTicket(interaction);
+        }
+      }
     } else if (interaction.isButton()) {
       const userRoles = interaction.member.roles.cache.map((role) => role.id);
       let isUserBlacklisted = await blacklistDB.get(
