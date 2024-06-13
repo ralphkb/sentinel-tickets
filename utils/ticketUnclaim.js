@@ -1,4 +1,10 @@
-const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
+const {
+  ButtonBuilder,
+  ButtonStyle,
+  ActionRowBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -59,24 +65,55 @@ async function unclaimTicket(interaction) {
     .then(async (message) => {
       const embed = message.embeds[0];
       embed.fields.pop();
+      let actionRow3 = new ActionRowBuilder();
 
-      const closeButton = new ButtonBuilder()
-        .setCustomId("closeTicket")
-        .setLabel(config.closeButton.label)
-        .setEmoji(config.closeButton.emoji)
-        .setStyle(ButtonStyle[config.closeButton.style]);
+      if (config.ticketOpenEmbed.useMenu) {
+        const options = [];
 
-      const claimButton = new ButtonBuilder()
-        .setCustomId("ticketclaim")
-        .setLabel(config.claimButton.label)
-        .setEmoji(config.claimButton.emoji)
-        .setStyle(ButtonStyle[config.claimButton.style]);
+        const closeOption = new StringSelectMenuOptionBuilder()
+          .setLabel(config.closeButton.label)
+          .setDescription(config.ticketOpenEmbed.closeDescription)
+          .setValue("closeTicket")
+          .setEmoji(config.closeButton.emoji);
+        options.push(closeOption);
 
-      let actionRow3 = new ActionRowBuilder().addComponents(
-        closeButton,
-        claimButton,
-      );
+        const claimOption = new StringSelectMenuOptionBuilder()
+          .setLabel(config.claimButton.label)
+          .setDescription(config.ticketOpenEmbed.claimDescription)
+          .setValue("ticketclaim")
+          .setEmoji(config.claimButton.emoji);
+        options.push(claimOption);
 
+        const selectMenu = new StringSelectMenuBuilder()
+          .setCustomId("ticketOpenMenu")
+          .setPlaceholder(
+            config.ticketOpenEmbed.menuPlaceholder || "Select an option",
+          )
+          .setMinValues(1)
+          .setMaxValues(1)
+          .addOptions(options);
+
+        actionRow3.addComponents(selectMenu);
+        await mainDB.set("ticketOpenMenuOptions", {
+          options,
+          placeholder:
+            config.ticketOpenEmbed.menuPlaceholder || "Select an option",
+        });
+      } else {
+        const closeButton = new ButtonBuilder()
+          .setCustomId("closeTicket")
+          .setLabel(config.closeButton.label)
+          .setEmoji(config.closeButton.emoji)
+          .setStyle(ButtonStyle[config.closeButton.style]);
+
+        const claimButton = new ButtonBuilder()
+          .setCustomId("ticketclaim")
+          .setLabel(config.claimButton.label)
+          .setEmoji(config.claimButton.emoji)
+          .setStyle(ButtonStyle[config.claimButton.style]);
+
+        actionRow3.addComponents(closeButton, claimButton);
+      }
       await message.edit({ embeds: [embed], components: [actionRow3] });
 
       await ticketsDB.set(`${interaction.channel.id}.claimed`, false);

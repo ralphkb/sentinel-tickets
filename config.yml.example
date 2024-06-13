@@ -515,6 +515,11 @@ ticketOpenEmbed:
 #  footer:
 #    text: ""
 #    iconURL: ""
+  useMenu: false # Enable or disable using a select menu instead of buttons
+  menuPlaceholder: "Select an option" # The placeholder of the select menu if it's enabled
+  closeDescription: "Close this ticket." # The description of the close select menu option
+  claimDescription: "Claim this ticket." # The description of the claim select menu option
+  unclaimDescription: "Unclaim this ticket." # The description of the unclaim select menu option
 
 # Log embed for newly created tickets
 logTicketOpenEmbed:

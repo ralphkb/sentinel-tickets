@@ -561,6 +561,140 @@ module.exports = {
         }
       }
 
+      if (interaction.customId === "ticketOpenMenu") {
+        // Reset the select menu upon selection
+        const messageId = interaction.message.id;
+        const ticketOpenMenuOptions = await mainDB.get("ticketOpenMenuOptions");
+        await interaction.channel.messages
+          .fetch(messageId)
+          .then(async (message) => {
+            const selectMenu = new StringSelectMenuBuilder()
+              .setCustomId("ticketOpenMenu")
+              .setPlaceholder(
+                ticketOpenMenuOptions.placeholder || "Select an option",
+              )
+              .setMinValues(1)
+              .setMaxValues(1)
+              .addOptions(ticketOpenMenuOptions.options);
+
+            const updatedActionRow = new ActionRowBuilder().addComponents(
+              selectMenu,
+            );
+            await message.edit({ components: [updatedActionRow] });
+          });
+
+        if (interaction.values[0] === "closeTicket") {
+          if (
+            (await ticketsDB.get(`${interaction.channel.id}.status`)) ===
+            "Closed"
+          ) {
+            return interaction.reply({
+              content: "This ticket is already closed!",
+              ephemeral: true,
+            });
+          }
+
+          const closeStaffOnly =
+            config.closeStaffOnly !== undefined ? config.closeStaffOnly : true;
+
+          if (closeStaffOnly) {
+            const hasSupportRole = await checkSupportRole(interaction);
+            if (!hasSupportRole) {
+              return interaction.reply({
+                content:
+                  config.errors.not_allowed ||
+                  "You are not allowed to use this!",
+                ephemeral: true,
+              });
+            }
+          }
+
+          const allowedRoles = config.closeButton.allowedRoles ?? [];
+          if (
+            allowedRoles.length !== 0 &&
+            !interaction.member.roles.cache.some((role) =>
+              allowedRoles.includes(role.id),
+            )
+          ) {
+            return interaction.reply({
+              content:
+                config.errors.not_allowed || "You are not allowed to use this!",
+              ephemeral: true,
+            });
+          }
+
+          await interaction.deferReply();
+          await closeTicket(interaction);
+        }
+
+        if (interaction.values[0] === "ticketclaim") {
+          const claimKey = `isClaimInProgress-${interaction.channel.id}`;
+          const isClaimInProgress = await mainDB.get(claimKey);
+          if (isClaimInProgress) {
+            return interaction.reply({
+              content: "Another user is already claiming this ticket.",
+              ephemeral: true,
+            });
+          }
+
+          await mainDB.set(claimKey, true);
+          const hasSupportRole = await checkSupportRole(interaction);
+          if (!hasSupportRole) {
+            await mainDB.delete(claimKey).catch((error) => {
+              console.error(
+                `Error deleting claim key for ticket #${interaction.channel.name}:`,
+                error,
+              );
+            });
+            return interaction.reply({
+              content:
+                config.errors.not_allowed || "You are not allowed to use this!",
+              ephemeral: true,
+            });
+          }
+
+          if (
+            (await ticketsDB.get(`${interaction.channel.id}.status`)) ===
+            "Closed"
+          ) {
+            await mainDB.delete(claimKey).catch((error) => {
+              console.error(
+                `Error deleting claim key for ticket #${interaction.channel.name}:`,
+                error,
+              );
+            });
+            return interaction.reply({
+              content: "You cannot claim a closed ticket!",
+              ephemeral: true,
+            });
+          }
+
+          await interaction.deferReply({ ephemeral: true });
+          await claimTicket(interaction);
+        }
+
+        if (interaction.values[0] === "ticketunclaim") {
+          if (
+            (await ticketsDB.get(`${interaction.channel.id}.claimed`)) === false
+          )
+            return interaction.reply({
+              content: "This ticket has not been claimed!",
+              ephemeral: true,
+            });
+          if (
+            (await ticketsDB.get(`${interaction.channel.id}.claimUser`)) !==
+            interaction.user.id
+          )
+            return interaction.reply({
+              content: `You did not claim this ticket, only the user that claimed this ticket can unclaim it! (<@!${await ticketsDB.get(`${interaction.channel.id}.claimUser`)}>)`,
+              ephemeral: true,
+            });
+
+          await interaction.deferReply({ ephemeral: true });
+          await unclaimTicket(interaction);
+        }
+      }
+
       if (interaction.customId === "closeMenu") {
         // Reset the select menu upon selection
         const messageId = interaction.message.id;
@@ -1212,22 +1346,60 @@ module.exports = {
               value: workingHoursText,
             });
           }
-          const closeButton = new ButtonBuilder()
-            .setCustomId("closeTicket")
-            .setLabel(config.closeButton.label)
-            .setEmoji(config.closeButton.emoji)
-            .setStyle(ButtonStyle[config.closeButton.style]);
 
-          const answerRow = new ActionRowBuilder().addComponents(closeButton);
+          let answerRow = new ActionRowBuilder();
+          if (config.ticketOpenEmbed.useMenu) {
+            const options = [];
 
-          if (config.claimFeature) {
-            const claimButton = new ButtonBuilder()
-              .setCustomId("ticketclaim")
-              .setLabel(config.claimButton.label)
-              .setEmoji(config.claimButton.emoji)
-              .setStyle(ButtonStyle[config.claimButton.style]);
+            const closeOption = new StringSelectMenuOptionBuilder()
+              .setLabel(config.closeButton.label)
+              .setDescription(config.ticketOpenEmbed.closeDescription)
+              .setValue("closeTicket")
+              .setEmoji(config.closeButton.emoji);
+            options.push(closeOption);
 
-            answerRow.addComponents(claimButton);
+            if (config.claimFeature) {
+              const claimOption = new StringSelectMenuOptionBuilder()
+                .setLabel(config.claimButton.label)
+                .setDescription(config.ticketOpenEmbed.claimDescription)
+                .setValue("ticketclaim")
+                .setEmoji(config.claimButton.emoji);
+              options.push(claimOption);
+            }
+
+            const selectMenu = new StringSelectMenuBuilder()
+              .setCustomId("ticketOpenMenu")
+              .setPlaceholder(
+                config.ticketOpenEmbed.menuPlaceholder || "Select an option",
+              )
+              .setMinValues(1)
+              .setMaxValues(1)
+              .addOptions(options);
+
+            answerRow.addComponents(selectMenu);
+            await mainDB.set("ticketOpenMenuOptions", {
+              options,
+              placeholder:
+                config.ticketOpenEmbed.menuPlaceholder || "Select an option",
+            });
+          } else {
+            const closeButton = new ButtonBuilder()
+              .setCustomId("closeTicket")
+              .setLabel(config.closeButton.label)
+              .setEmoji(config.closeButton.emoji)
+              .setStyle(ButtonStyle[config.closeButton.style]);
+
+            answerRow.addComponents(closeButton);
+
+            if (config.claimFeature) {
+              const claimButton = new ButtonBuilder()
+                .setCustomId("ticketclaim")
+                .setLabel(config.claimButton.label)
+                .setEmoji(config.claimButton.emoji)
+                .setStyle(ButtonStyle[config.claimButton.style]);
+
+              answerRow.addComponents(claimButton);
+            }
           }
 
           try {
