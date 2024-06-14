@@ -86,6 +86,7 @@ config.TicketCategories.forEach((category) => {
   const {
     id,
     name,
+    nameEmoji,
     categoryID,
     closedCategoryID,
     support_role_ids,
@@ -126,6 +127,7 @@ config.TicketCategories.forEach((category) => {
 
   ticketCategories[id] = {
     name,
+    nameEmoji,
     categoryID,
     closedCategoryID,
     support_role_ids,

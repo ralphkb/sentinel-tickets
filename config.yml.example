@@ -37,6 +37,7 @@ alertReply:
 TicketCategories:
   - id: 1 # Unique ID for each category, ONLY USE NUMBERS (It is suggested to just increment this value by 1 each time)
     name: "report" # The name of the category, it will be in lowercase anyways
+    nameEmoji: "⌛️" # The emoji of the category name, "⌛️-report" in that case or leave it as an empty string "" to use no emojis
     categoryID: ["111111111111111111"] # The IDs of the categories where those tickets will be created, for example ["000000000000000000", "111111111111111111"]
     closedCategoryID: ["111111111111111111"] # The IDs of the categories where the closed tickets will go, for example ["000000000000000000", "111111111111111111"]
     support_role_ids: ["000000000000000000", "111111111111111111"] # The IDs of the staff roles on your server that can access only this ticket category, for example ["000000000000000000", "111111111111111111"]
@@ -106,6 +107,7 @@ TicketCategories:
         minLength: 50
   - id: 2 # Unique ID for each category
     name: "other"
+    nameEmoji: "" # The emoji of the category name, leave it as an empty string "" to use no emojis
     categoryID: ["111111111111111111"] # The IDs of the categories where those tickets will be created, for example ["000000000000000000", "111111111111111111"]
     closedCategoryID: ["111111111111111111"] # The IDs of the categories where the closed tickets will go, for example ["000000000000000000", "111111111111111111"]
     support_role_ids: ["000000000000000000"] # The IDs of the staff roles on your server that can access only this ticket category, for example ["000000000000000000", "111111111111111111"]

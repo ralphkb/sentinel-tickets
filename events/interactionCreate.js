@@ -1455,6 +1455,10 @@ module.exports = {
                   `Invalid category ticketName configuration value: ${configValue}`,
                 );
             }
+            const nameEmoji = category.nameEmoji ?? "";
+            if (nameEmoji !== "") {
+              channelName = `${nameEmoji}-${channelName}`;
+            }
 
             await interaction.guild.channels
               .create({
