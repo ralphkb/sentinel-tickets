@@ -1,137 +1,228 @@
 # ==============================================
-# Paramètre générale
+# Paramètres généraux du Bot de tickets
 # ==============================================
 
-panelMethod: "Buttons" # La méthode utilisée pour afficher le panneau, cela peut être "Buttons" ou "Menu".
-menuPlaceholder: "Sélectionnez une catégorie pour ouvrir un ticket." # Le message en-dessous du menu
-rolesThatCanBlacklist: ["111111111111111111"] # Les IDs des membres qui ont accès pour gérer la liste noire, liste qui empêche de créer des tickets. Par exemple : ["000000000000000000", "111111111111111111"]
-transcriptType: "HTML" # Le type de transcription, peut être "HTML" ou "TXT". PS : Le "TXT" est limité à 400 messages.
-reOpenStaffOnly: false # Quand c'est activé, seuls les membres ayant le rôle de support peuvent ré-ouvrir un ticket.
-closeStaffOnly: true # Lorsque activé, seuls les membres du personnel avec des rôles de support peuvent utiliser le bouton de fermeture de ticket
-closeRemoveUser: false # Lorsque activé, le créateur du ticket sera retiré du ticket lorsqu'il est fermé et ajouté à nouveau si le ticket est ré-ouvert
+rolesThatCanBlacklist: ["111111111111111111"] # Les identifiants des rôles du Staff sur votre serveur qui doivent avoir accès à ajouter et supprimer des membres de la blacklist (impossible de créer un ticket), par exemple ["000000000000000000", "111111111111111111"]
+rolesOnBlacklist: [] # Les identifiants des rôles que le bot ajoutera la blacklist
+blacklistCleanup: "120" # La durée en seconde que le bot actualise la blacklist (pour vérifier quel utilisateur/role a été ajouté/supprimé)
+transcriptType: "HTML" # Le type de transcription peut être "HTML" ou "TXT"
+reOpenStaffOnly: false # Lorsque cette option est activée, seuls les membres du Staff ayant des rôles de support peuvent rouvrir un ticket
+closeStaffOnly: true # Lorsqu'il est activé, seuls les membres du Staff ayant des rôles de support peuvent utiliser le bouton de fermeture du ticket
+deleteStaffOnly: true # Lorsqu'il est activé, seuls les membres du Staff ayant des rôles de support peuvent utiliser le bouton Supprimer le ticket. Il est recommandé de garder cette option activée, sauf si vous avez l'intention d'utiliser la fonctionnalité de tableau AllowRoles lors de la configuration des boutons dans la configuration.
 commands_cooldown: "5" # Le temps de recharge des commandes en secondes
 buttons_cooldown: "5" # Le temps de recharge des boutons en secondes
-maxOpenTickets: "1" # Le nombre maximum de tickets ouverts qu'un utilisateur peut avoir à la fois
-deleteTicketTime: "5" # Le temps en secondes avant qu'un ticket soit supprimé
-claimFeature: false # Activer ou désactiver le bouton/la fonction de réclamation
-claim1on1: false # Lorsque cette fonctionnalité est activée, lors de la réclamation d'un ticket, seul le créateur du ticket et le personnel ayant réclamé le ticket pourront discuter dedans
+maxOpenTickets: "1" # Le nombre maximum de tickets ouverts qu'un utilisateur peut avoir en même temps
+deleteTicketTime: "5" # Le temps en secondes avant qu'un ticket soit supprimé (après avoir cliqué sur le bouton Supprimer)
+claimFeature: false # Activer ou désactiver le bouton/la fonctionnalité de réclamation de ticket (claim)
+claimRename: false # Activez ou désactivez le rename d'un ticket en Category-USERNAME lorsqu'il est réclamé, il utilisera le nom d'utilisateur du Staff qui l'a réclamé.
+claimRenameName: "{category}-{username}" # Le nouveau nom du ticket lorsqu'il est réclamé, les options sont: {category} pour la catégorie du ticket, {username} pour le nom d'utilisateur du Staff qui l'a réclamé, {displayname} pour le nom d'affichage/surnom du Staff
+  claim1on1: false # Lorsque cette fonctionnalité est activée, lors de la réclamation d'un ticket, seuls le créateur du ticket et le Staff qui a réclamé le ticket pourront y discuter.
 status:
-  botActivityText: "Tickets de support" # Le message d'activité du bot
-  botActivityType: "Watching" # Le type d'activité du bot, peut être "Playing", "Streaming", "Listening", "Watching", "Competing"
-  streamingOptionURL: "" # L'URL au cas où vous utilisez l'option de diffusion
-  botStatus: "online" # Le statut du bot, peut être "online", "idle", "dnd", "invisible", notez que le type de diffusion nécessite le statut "online"
+  botActivityText: "Assistance aux tickets" # Le message d'activité du bot
+  botActivityType: "Watching" # Le type d'activité du bot peut être "Playing", "Streaming", "Listening", "Watching", "Competing"
+  streamingOptionURL: "" # L'URL si vous utilisez l'option de streaming exemple : (hhtps://twitch.tv/VOTRECOMPTETWITCH)
+  botStatus: "online" # Le statut du bot peut être "online", "idle", "dnd", "invisible", notez que le type de streaming nécessite le statut "online"
+alertReply:
+  enabled: false # Activez ou désactivez la réponse du robot après que la commande alert ait été effectuée
+  time: "120" # La durée en secondes, évitez d'utiliser des valeurs trop élevées
+  reply: "L'utilisateur a répondu à l'alerte et semble être disponible." # La réponse qui sera envoyée dans le ticket si le créateur du ticket est actif et a répondu
 
 # ==============================================
-# Paramètre des catégories
+# Paramètres de catégorie de ticket
 # ==============================================
 
-# La limite fixée par Discord est de 25, bien qu'il soit fortement recommandé de ne pas utiliser un nombre aussi élevé de types étant donné que chaque type utilise 2 catégories et que la limite de Discord est de 50 catégories, vous n'auriez plus de catégories disponibles pour vos canaux Discord normaux...
+# La limite fixée par Discord est de 25, bien qu'il soit fortement recommandé de ne pas utiliser un nombre aussi élevé de types étant donné que chaque type utilise 2 catégories et que la limite de Discord est de 50 catégories, vous n'aurez plus de catégories à utiliser pour vos salons Discord normales. ...
+# Pour la section autorisations, les permissions possibles sont: ViewChannel, SendMessages, EmbedLinks, AttachFiles, ReadMessageHistory, ManageChannels, ManageWebhooks, CreateInstantInvite, CreatePrivateThreads, CreatePublicThreads, SendMessagesInThreads, AddReactions, UseExternalEmojis, UseExternalStickers, MentionEveryone, ManageMessages, ManageThreads, UseApplicationCommands, SendVoiceMessages, UseEmbeddedActivities, SendTTSMessages
+# NOTE: Le bot devra peut-être recevoir des autorisations d'administrateur en fonction des autorisations que vous avez définies dans les catégories. Si vous obtenez une erreur de console indiquant « Autorisations manquantes », alors votre bot ne dispose pas d'autorisations.																																																	   
 TicketCategories:
-  - id: 1 # ID unique pour chaque catégorie, UTILISEZ UNIQUEMENT DES NOMBRES (Il est suggéré d'incrémenter simplement cette valeur de 1 à chaque fois)
-    name: "signalement" # Le nom de la catégorie, il sera en minuscules de toute façon
-    categoryID: "111111111111111111" # L'ID de la catégorie où ces tickets seront créés
-    closedCategoryID: "111111111111111111" # L'ID de la catégorie où les tickets fermés iront
-    support_role_ids: ["000000000000000000", "111111111111111111"] # Les IDs des rôles du personnel sur votre serveur qui peuvent accéder uniquement à cette catégorie de ticket, par exemple ["000000000000000000", "111111111111111111"]
-    pingRoles: false # Activer ou désactiver le ping des rôles lorsque qu'un ticket est ouvert dans cette catégorie
-    ping_role_ids: [] # Les IDs des rôles que vous souhaitez pinguer lorsqu'un ticket est ouvert dans cette catégorie, par exemple ["000000000000000000", "111111111111111111"]
-    creatorRoles: [] # Les IDs des rôles qui peuvent créer des tickets dans cette catégorie, laissez-le vide pour permettre à tous les rôles de créer des tickets
-    buttonEmoji: "👮" # L'emoji du bouton
+  - id: 1 # ID unique pour chaque catégorie, UTILISEZ UNIQUEMENT DES CHIFFRES (il est suggéré d'incrémenter simplement cette valeur de 1 à chaque fois)
+    name: "report" # Le nom de la catégorie, il sera en minuscule de toute façon
+    nameEmoji: "⌛️" # L'emoji du nom du nouveau ticket, "⌛️-report" dans ce cas ou laissez-le comme vide "" pour ne pas utiliser d'émoji.
+    categoryID: ["111111111111111111"] # Les identifiants des catégories dans lesquelles ces tickets seront créés, par exemple ["000000000000000000", "111111111111111111"]
+    closedCategoryID: ["111111111111111111"] # Les identifiants des catégories où iront les tickets clôturés, par exemple ["000000000000000000", "111111111111111111"]
+    support_role_ids: ["000000000000000000", "111111111111111111"] # Les identifiants des rôles du Staff sur votre serveur qui peuvent accéder uniquement à cette catégorie de ticket, par exemple ["000000000000000000", "111111111111111111"]
+    permissions: # Pour les autorisations de la catégorie, assurez-vous de ne jamais ajouter la même autorisation aux catégorie "Allow" et "Deny"
+      ticketCreator:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"] # Le bot accordera ces autorisations au créateur du ticket dans un ticket ouvert
+          deny: [] # Le bot refusera ces autorisations du créateur du ticket dans un ticket ouvert
+        close:
+          allow: [] # Le bot accordera ces autorisations au créateur du ticket dans un ticket fermé
+          deny: ["SendMessages"] # Le bot refusera ces autorisations du créateur du ticket dans un ticket fermé
+      supportRoles:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      addedRoles:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      addedUsers:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+    pingRoles: false # Activer ou désactiver la mention de rôle lorsqu'un ticket est ouvert dans cette catégorie
+    ping_role_ids: [] # Les ID des rôles que vous souhaitez ping lorsqu'un ticket est ouvert dans cette catégorie, par exemple ["000000000000000000", "111111111111111111"]
+    ghostPingRoles: false # Activez ou désactivez le ping fantôme sur "ping_role_ids" lorsqu'un ticket est ouvert, utilisez soit {support-roles} dans textContent ci-dessous ou cette option, évitez d'utiliser les deux car les rôles de support recevront alors 2 notifications.
+    textContent: "" # Le contenu textuel envoyé avec l'intégration, utilisez {support-roles} pour les rôles de support uniquement si vous avez activé pingRoles ci-dessus, vous pouvez également utiliser {user} et {user.tag}
+    creatorRoles: [] # Les ID des rôles pouvant créer des tickets dans cette catégorie, gardez-le vide pour permettre à tous les rôles de créer des tickets
+    buttonEmoji: "👮" # L'emoji du bouton, laissez-le vide "" pour ne pas utiliser d'emojis
     buttonLabel: "Signaler un utilisateur" # Le nom du bouton
-    buttonStyle: "Success" # Options : "Primary" qui est bleu, "Secondary" qui est gris, "Success" qui est vert, "Danger" qui est rouge et NE PAS utiliser "Link"
-    menuEmoji: "👮" # L'emoji de l'option de menu déroulant
-    menuLabel: "Signaler un utilisateur" # Le nom de l'option de menu déroulant
-    menuDescription: "Cliquez sur cette option pour ouvrir un signalement d'un utilisateur" # La description de l'option de menu déroulant
-    embedTitle: "Ticket de signalement" # Le titre de l'embed
-    color: "#FFD700" # La couleur de l'embed dans le ticket ouvert
-    description: "Bienvenue sur votre ticket de signalement ! Soyez patient, un membre du personnel répondra à votre ticket." # La description de l'embed dans le ticket créé, juste au-dessus des champs des questions
-    ticketName: "TICKETCOUNT" # Peut être USERNAME ou TICKETCOUNT, sera appelé nom-ticketName tel que "signalement-12348"
-    modalTitle: "Formulaire de signalement d'utilisateur" # Le titre de la fenêtre modale
-    questions: # Le nombre maximal de questions est de 5, vous devriez garder au moins 1 question car cette information vous aidera toujours dans n'importe quel ticket
-      - label: "Quel est votre pseudo ?"
-        placeholder: "Écrivez votre pseudo"
-        style: "Short" # Court ou Paragraphe
-        required: true # Si cette entrée est obligatoire ou non, peut être vrai ou faux
-        minLength: 3 # Définissez le nombre minimum de caractères requis pour la soumission
-      - label: "Quel est le pseudo signalé ?"
-        placeholder: "Écrivez son pseudo"
+    buttonStyle: "Success" # Options: "Primary" pour la couleur bleu, "Secondary" pour du gris, "Success" pour du vert, "Danger" pour du rouge mais n'UTILISEZ PAS "Link"
+    menuEmoji: "👮" # L'emoji de l'option de menu de sélection, laissez-le vide "" pour n'utiliser aucun emoji
+    menuLabel: "Signaler un utilisateur" # Le nom de l'option de menu de sélection
+    menuDescription: "Cliquez sur cette option pour ouvrir un ticket signalement d'utilisateur !" # La description de l'option de menu de sélection
+    embedTitle: "Ticket de signalement" # Le titre de l'intégration
+    color: "#FFD700" # La couleur d'intégration dans le ticket ouvert
+    description: "Bienvenue {user} ({user.tag}) dans votre ticket de signalement ! Veuillez être patient pendant qu'un membre du Staff répond à votre signalement." # La description de l'embed dans le ticket créé, juste au dessus des champs de questions, utilise {user} pour l'utilisateur comme @User et {user.tag} pour le nom de l'utilisateur sans qu'il soit mentionné comme User
+    ticketName: "TICKETCOUNT" # Options disponibless: USERNAME (sera comme name-USERNAME pour "report-ralphkb"), TICKETCOUNT (sera comme name-TICKETCOUNT pour "report-12348") or BOTH (sera comme USERNAME-TICKETCOUNT pour "ralphkb-12348")
+    ticketTopic: "Créateur du ticket: {user} | Type de ticket: {type}" # La description du ticket (fonctionnalité Discord)
+    slowmode: "0" # Le mode lent du canal ticket en secondes, gardez-le à 0 si vous ne souhaitez pas de mode lent et n'utilisez pas de valeurs négatives
+    useCodeBlocks: false # Définissez ceci sur true si vous souhaitez utiliser des blocs de code pour afficher les réponses aux questions sur la catégorie de ticket
+    modalTitle: "Formulaire de signalement" # Le titre du formulaire
+    questions: # Le nombre maximum de questions est de 5, vous devez conserver au moins 1 question car cette information vous aidera toujours dans n'importe quel ticket.
+      - label: "Quel est votre nom d'utilisateur?"
+        placeholder: "Écrivez votre nom d'utilisateur"
+        style: "Short" # Short or Paragraph
+        required: true # Si cette question est obligatoire ou non, utilisez true pour oui ou false pour non
+        minLength: 3 # Définir le nombre minimum de caractères requis pour la réponse
+      - label: "Nom d'utilisateur de(s) personne(s) a signalée(s)?"
+        placeholder: "Écrivez leur nom d'utilisateur"
         style: "Short"
         required: true
         minLength: 3
-      - label: "Quelle est la raison du signalement ?"
-        placeholder: "Expliquez en détail"
+      - label: "Pourquoi le(s) signaler(ez-vous) ?"
+        placeholder: "Expliquez avec des détails"
         style: "Paragraph"
         required: true
         minLength: 50
   - id: 2 # ID unique pour chaque catégorie
-    name: "autre"
-    categoryID: "111111111111111111" # L'ID de la catégorie où ces tickets seront créés
-    closedCategoryID: "111111111111111111" # L'ID de la catégorie où les tickets fermés iront
-    support_role_ids: ["000000000000000000"] # Les IDs des rôles du personnel sur votre serveur qui peuvent accéder uniquement à cette catégorie de ticket, par exemple ["000000000000000000", "111111111111111111"]
-    pingRoles: true # Activer ou désactiver le ping des rôles lorsque qu'un ticket est ouvert dans cette catégorie
-    ping_role_ids: ["000000000000000000"] # Les IDs des rôles que vous souhaitez pinguer lorsqu'un ticket est ouvert dans cette catégorie, par exemple ["000000000000000000", "111111111111111111"]
-    creatorRoles: [] # Les IDs des rôles qui peuvent créer des tickets dans cette catégorie, laissez-le vide pour permettre à tous les rôles de créer des tickets
-    buttonEmoji: "🤔" # L'emoji du bouton
-    buttonLabel: "Autre" # Le nom du bouton
-    buttonStyle: "Primary" # Options : "Primary" qui est bleu, "Secondary" qui est gris, "Success" qui est vert, "Danger" qui est rouge et NE PAS utiliser "Link"
-    menuEmoji: "🤔" # L'emoji de l'option de menu déroulant
-    menuLabel: "Autre" # Le nom de l'option de menu déroulant
-    menuDescription: "Cliquez sur cette option pour ouvrir un ticket divers !" # La description de l'option de menu déroulant
-    embedTitle: "Ticket Autre" # Le titre de l'embed
-    color: "#ADD8E6" # La couleur de l'embed dans le ticket ouvert
-    description: "Bienvenue sur votre ticket de signalement ! Soyez patient, un membre du personnel répondra à votre ticket." # La description de l'embed dans le ticket créé, juste au-dessus des champs des questions
-    ticketName: "USERNAME" # Peut être USERNAME ou TICKETCOUNT
-    modalTitle: "Formulaire de ticket autres." # Le titre de la fenêtre modale
-    questions: # Le nombre maximal de questions est de 5, vous devriez garder au moins 1 question car cette information vous aidera toujours dans n'importe quel ticket
-      - label: "Quelle est votre question ?"
-        placeholder: "Écrivez votre question ?"
-        style: "Paragraph" # Court ou Paragraphe
-        required: true # Si cette entrée est obligatoire ou non, peut être vrai ou faux
-        minLength: 10 # Définissez le nombre minimum de caractères requis pour la soumission
-
+    name: "Divers" # Le nom de la catégorie, il sera en minuscule de toute façon
+    nameEmoji: "❓" # L'emoji du nom du nouveau ticket, "❓-divers" dans ce cas ou laissez-le comme vide "" pour ne pas utiliser d'émoji.
+    categoryID: ["111111111111111111"] # Les identifiants des catégories dans lesquelles ces tickets seront créés, par exemple ["000000000000000000", "111111111111111111"]
+    closedCategoryID: ["111111111111111111"] # Les identifiants des catégories où iront les tickets clôturés, par exemple ["000000000000000000", "111111111111111111"]
+    support_role_ids: ["000000000000000000", "111111111111111111"] # Les identifiants des rôles du Staff sur votre serveur qui peuvent accéder uniquement à cette catégorie de ticket, par exemple ["000000000000000000", "111111111111111111"]
+    permissions: # Pour les autorisations de la catégorie, assurez-vous de ne jamais ajouter la même autorisation aux catégorie "Allow" et "Deny"
+      ticketCreator:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"] # Le bot accordera ces autorisations au créateur du ticket dans un ticket ouvert
+          deny: [] # Le bot refusera ces autorisations du créateur du ticket dans un ticket ouvert
+        close:
+          allow: [] # Le bot accordera ces autorisations au créateur du ticket dans un ticket fermé
+          deny: ["SendMessages"] # Le bot refusera ces autorisations du créateur du ticket dans un ticket fermé
+      supportRoles:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      addedRoles:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      addedUsers:
+        open:
+          allow: ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles", "ReadMessageHistory"]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+    pingRoles: false # Activer ou désactiver la mention de rôle lorsqu'un ticket est ouvert dans cette catégorie
+    ping_role_ids: [] # Les ID des rôles que vous souhaitez ping lorsqu'un ticket est ouvert dans cette catégorie, par exemple ["000000000000000000", "111111111111111111"]
+    ghostPingRoles: false # Activez ou désactivez le ping fantôme sur "ping_role_ids" lorsqu'un ticket est ouvert, utilisez soit {support-roles} dans textContent ci-dessous ou cette option, évitez d'utiliser les deux car les rôles de support recevront alors 2 notifications.
+    textContent: "" # Le contenu textuel envoyé avec l'intégration, utilisez {support-roles} pour les rôles de support uniquement si vous avez activé pingRoles ci-dessus, vous pouvez également utiliser {user} et {user.tag}
+    creatorRoles: [] # Les ID des rôles pouvant créer des tickets dans cette catégorie, gardez-le vide pour permettre à tous les rôles de créer des tickets
+    buttonEmoji: "❓" # L'emoji du bouton, laissez-le vide "" pour ne pas utiliser d'emojis
+    buttonLabel: "Divers" # The name of the button
+    buttonStyle: "Primary" # Options: "Primary" pour la couleur bleu, "Secondary" pour du gris, "Success" pour du vert, "Danger" pour du rouge mais n'UTILISEZ PAS "Link"
+    menuEmoji: "❓" # L'emoji de l'option de menu de sélection, laissez-le vide "" pour n'utiliser aucun emoji
+    menuLabel: "Divers" # Le nom de l'option de menu de sélection
+    menuDescription: "Cliquez sur cette option pour ouvrir un ticket divers !" # La description de l'option de menu de sélection
+    embedTitle: "Ticket Divers" # Le titre de l'intégration
+    color: "#ADD8E6" # La couleur d'intégration dans le ticket ouvert
+    description: "Bienvenue {user} ({user.tag}) dans votre ticket! Veuillez patienter pendant qu'un membre du Staff répond à vos questions." # La description de l'embed dans le ticket créé, juste au dessus des champs de questions, utilise {user} pour l'utilisateur comme @User et {user.tag} pour le nom de l'utilisateur sans qu'il soit mentionné comme User
+    ticketName: "USERNAME" # Options disponibless: USERNAME (sera comme name-USERNAME pour "report-ralphkb"), TICKETCOUNT (sera comme name-TICKETCOUNT pour "report-12348") or BOTH (sera comme USERNAME-TICKETCOUNT pour "ralphkb-12348")
+    ticketTopic: "Créateur du ticket: {user} | Type de ticket: {type}" # La description du ticket (fonctionnalité Discord)
+    slowmode: "0" # Le mode lent du canal ticket en secondes, gardez-le à 0 si vous ne souhaitez pas de mode lent et n'utilisez pas de valeurs négatives
+    useCodeBlocks: false # Définissez ceci sur true si vous souhaitez utiliser des blocs de code pour afficher les réponses aux questions sur la catégorie de ticket
+    modalTitle: "Formulaire de ticket divers" # Le titre du formulaire
+    questions: # Le nombre maximum de questions est de 5, vous devez conserver au moins 1 question car cette information vous aidera toujours dans n'importe quel ticket.
+      - label: "Quelle est ta question?"
+        placeholder: "Écrivez votre question"
+        style: "Paragraph" # Short or Paragraph
+        required: true # Si cette question est obligatoire ou non, utilisez true pour oui ou false pour non
+        minLength: 10 # Définir le nombre minimum de caractères requis pour la réponse
 
 # ==============================================
-# Paramètre des messages privés
+# Paramètres multi-panel
 # ==============================================
+
+panels:
+  - id: 1 # ID unique pour chaque panneau
+    categories: ["1, 2"] # Les catégories que contiendra le panneau, utilisez les identifiants des catégories ci-dessus, assurez-vous qu'elles sont valides et ne le laissez pas vide
+    maxButtonsPerRow: "5" # Le nombre maximum de boutons par ligne. Notez que cela réduira le nombre total de catégories que vous pouvez créer en raison d'une limitation de 5 lignes par message.
+    menuPlaceholder: "Sélectionnez une catégorie pour ouvrir un ticket." # L'espace réservé du menu de sélection
+    panelEmbed:
+      color: "#2FF200"
+      title: "Tickets"
+      description: "Pour créer un ticket d'assistance, cliquez sur l'un des boutons ci-dessous en fonction de l'aide dont vous avez besoin." # Utilisez \n pour créer une nouvelle ligne pour cette description intégrée si nécessaire
+      timestamp: true
+      URL: ""
+      image: ""
+      thumbnail: ""
+      footer:
+        text: "Sentinel Tickets"
+        iconURL: ""
+      author:
+        name: ""
+        iconURL: ""
+        url: ""
+
+# ==============================================
+# Paramètres concernant l'envoie d'un message privé à l'utilisateur
+# ==============================================
+# Activez ou désactivez l'envoi d'un message direct à un utilisateur une fois son ticket supprimé.
+# Si les 3 options sont définies sur false, aucun DM ne sera envoyé.
 DMUserSettings:
-  enabled: true # Activer ou désactiver l'envoi d'un message direct à un utilisateur une fois que son ticket a été supprimé. Il contiendrait la transcription et un embed.
-  embed:
-    color: "2FF200"
-    title: "Ticket Supprimé"
-    description: "Ton ticket a été supprimé. Voici ta transcription ainsi que d'autres informations." # Cette description apparaîtra en haut des autres informations dans l'embed du message direct.
+  embed: true # Activer ou désactiver l'envoi d'une intégration dans le DM
+  transcript: true # Activer ou désactiver l'envoi d'un transcription dans le DM
   ratingSystem:
-    enabled: false
-    embed:
-      color: "2FF200"
-      title: "Ticket retour & avis"
-      description: "Donne-nous ton avis ! S'il te plaît, prends un moment pour nous dire ce que tu penses et évalue notre support. Ta note peut être entre 1 et 5 étoiles en utilisant le menu ci-dessous. Merci pour ton aide."
+    enabled: false # Vous pouvez activer le système de notation tout en gardant les 2 options ci-dessus désactivées
     menu:
       emoji: "⭐"
-      placeholder: "Sélectionne une note"
-    modalTitle: "Ticket avis"
-    questions: # Le nombre maximum de questions est de 5, vous devez en garder au moins 1 pour utiliser cette fonctionnalité
-      - label: "Quel est ton avis ?"
-        placeholder: "Dis-nous ton avis ici."
-        style: "Paragraph" # Court ou Paragraphe
-        required: true # Si cette entrée est obligatoire ou non, peut être vrai ou faux (doit être maintenu à true lorsqu'il n'y a qu'une seule question)
+      placeholder: "Selectionnez une note"
+    modalTitle: "Commentaires sur les tickets"
+    questions: # Le nombre maximum de questions est de 5, vous devez en conserver au minimum 1 pour utiliser cette fonctionnalité
+      - label: "Quel est votre commentaire ?"
+        placeholder: "Écrivez votre commentaire ici"
+        style: "Paragraph" # Short or Paragraph
+        required: true # Si cette question est obligatoire ou non, utilisez true pour oui ou false pour non
         minLength: 80 # Définir le nombre minimum de caractères requis pour la soumission
 
 # ==============================================
-# Paramètre des commandes slash
+# Paramètres des commandes Slash
 # ==============================================
 
-# Vous pouvez désactiver une commande en définissant enabled: false pour n'importe laquelle d'entre elles, bien qu'il soit recommandé de toutes les laisser activées
-# Pour des informations sur les options que vous avez comme permissions pour chaque commande, consultez ce lien: https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags
-
+# Vous pouvez désactiver une commande en définissant: false pour chacune d'entre elles, bien qu'il soit recommandé de les laisser toutes activées.
+# Pour plus d'informations sur les options dont vous disposez en tant que permissions pour chaque commande, consultez ce lien: https://discord-api-types.dev/api/discord-api-types-payloads/common#PermissionFlagsBits
 commands:
   add:
     enabled: true
     permission: "KickMembers"
-    LogEmbed:
-      color: "2FF200"
-      title: "Logs des tickets | Cible ajoutée"
-      field_staff: "• Staff"
-      field_target: "• Cible"
-      field_ticket: "• Ticket"
+    pingUser: false # Ping le nouveau utilisateur qui est rajouté
   alert:
     enabled: true
     permission: "KickMembers"
@@ -147,34 +238,17 @@ commands:
   move:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "2FF200"
-      description: "Déplacer ce ticket vers la catégorie **{category}**." # Utilisez {category} pour le nom de la catégorie
-    LogEmbed:
-      color: "2FF200"
-      title: "Logs des tickets | Ticket déplacé"
-      field_staff: "• Staff"
-      field_ticket: "• Ticket"
+    updateTopic: true
   transfer:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "2FF200"
-      description: "Le propriétaire de ce ticket a été transféré à **{user} ({user.tag})**." # Utilisez {user} pour l'utilisateur tel que @Utilisateur et {user.tag} pour le nom de l'utilisateur sans le mentionner, tel que Utilisateur
-    LogEmbed:
-      color: "2FF200"
-      title: "Logs des tickets | Propriétaire du ticket transféré"
-      field_staff: "• Staff"
-      field_ticket: "• Ticket"
-      field_transfer: "• Détails du transfert"
+    pingUser: false # Ping le nouveau créateur du ticket
+    updateTopic: true # Mettre à jours la description du ticket (fonctionnalité discord)
   pin:
     enabled: true
     permission: "KickMembers"
     emoji: "📌"
     alreadyPinned: "Ce ticket est déjà épinglé !"
-    embed:
-      color: "2FF200"
-      description: "Ce ticket a été épinglé."
   priority:
     enabled: true
     permission: "KickMembers"
@@ -182,85 +256,36 @@ commands:
       low: "🟢"
       medium: "🟡"
       high: "🔴"
-    alreadyPriority: "Ce ticket a déjà une priorité assignée !"
-    notPriority: "Ce ticket n'a pas de priorité assignée !"
-    embedAdd: # L'embed utilisé lors de l'ajout d'une priorité
-      color: "2FF200"
-      description: "La priorité de ce ticket a été définie sur **{priority}**." # Utilisez {priority} pour le nom de la priorité
-    embedRemove: # L'embed utilisé lors de la suppression d'une priorité
-      color: "FF2400"
-      description: "La priorité de ce ticket a été retirée."
+    alreadyPriority: "Ce ticket est déjà prioritaire !"
+    notPriority: "Ce ticket n'est pas prioritaire!"
   slowmode:
     enabled: true
     permission: "KickMembers"
-    alreadySlowmode: "Ce ticket a déjà le mode lent activé."
-    slowmodeRemoved: "Le mode lent a été retiré de ce ticket."
-    embed:
-      color: "2FF200"
-      description: "Un mode lent de **{time}** a été ajouté à ce ticket." # Utilisez {time} pour le temps au format hh mm ss, exemple: 1h 5m 7s
+    alreadySlowmode: "Ce ticket a déjà ce mode lent."
+    slowmodeRemoved: "Le mode lent a été supprimé de ce ticket."
   close:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "#FF2400"
-      title: "Ticket fermé"
-      description: "Ce ticket a été fermé par **{user} ({user.tag})**" # Utilisez {user} pour le nom d'utilisateur du personnel et {user.tag} pour mentionner le personnel
-    LogEmbed:
-      color: "#FF2400"
-      title: "Logs des tickets | Ticket fermé"
-      field_staff: "• Fermé par"
-      field_user: "• Créateur du ticket"
-      field_ticket: "• Ticket"
+  closerequest:
+    enabled: true
+    permission: "ViewChannel"
+    pingRoles: false # Activez ou désactivez le mention des rôles de support de la catégorie de ticket où la commande est utilisée, aucun rôle ne sera pingé si la catégorie ping_role_ids est vide.
   reopen:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "#2FF200"
-      title: "Ticket Ré-ouvert"
-      description: "Ce ticket a été ré-ouvert par **{user} ({user.tag})**" # Utilisez {user} pour le nom d'utilisateur du personnel et {user.tag} pour mentionner le personnel
-    LogEmbed:
-      color: "#2FF200"
-      title: "Logs des tickets | Ticket Ré-ouvert"
-      field_staff: "• Ré-ouvert par"
-      field_user: "• Créateur du ticket"
-      field_ticket: "• Ticket"
   delete:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "#FF0000"
-      description: "Ticket supprimé dans {time} secondes" # Utilisez {time} pour le temps en secondes
-    LogEmbed:
-      color: "#FF0000"
-      title: "Logs des tickets | Ticket fermé de force"
-      field_staff: "• Supprimé par"
-      field_user: "• Créateur du ticket"
-      field_ticket: "• Ticket"
   panel:
     enabled: true
     permission: "ManageChannels"
-    support_role_ids: [] # Les IDs des rôles du personnel sur votre serveur qui peuvent utiliser la commande de panneau, ils doivent également avoir la permission ci-dessus, laissez-le vide pour ne pas nécessiter de rôle.
+    support_role_ids: [] # Les ID des rôles du Staff sur votre serveur qui peuvent utiliser la commande panel, ils doivent également avoir l'autorisation ci-dessus, gardez-la vide pour ne pas nécessiter de rôle.
   remove:
     enabled: true
     permission: "KickMembers"
-    LogEmbed:
-      color: "#FF0000"
-      title: "Logs des tickets | Utilisateur retiré"
-      field_staff: "• Staff"
-      field_target: "• Cible"
-      field_ticket: "• Ticket"
   rename:
     enabled: true
     permission: "KickMembers"
-    embed:
-      color: "#2FF200"
-      description: "Ce ticket a été renommé en **{name}**!" # Utilisez {name} pour le nouveau nom du canal
-    LogEmbed:
-      color: "#2FF200"
-      title: "Logs des tickets | Ticket Renommé"
-      field_staff: "• Staff"
-      field_oldname: "• Ancien nom du ticket"
-      field_newname: "• Nouveau nom du ticket"
   blacklist:
     enabled: true
     permission: "KickMembers"
@@ -273,136 +298,273 @@ commands:
   stats:
     enabled: true
     permission: "KickMembers"
+  help:
+    enabled: true
+    permission: "KickMembers"
+  preference:
+    enabled: false
+    permission: "ViewChannel"
+
+contextMenuCommands:
+  userInfo:
+    enabled: true
+    permission: "KickMembers"
+  blacklistAdd:
+    enabled: true
+    permission: "KickMembers"
+  blacklistRemove:
+    enabled: true
+    permission: "KickMembers"
+  ticketAlert:
+    enabled: true
+    permission: "KickMembers"
+  ticketPin:
+    enabled: true
+    permission: "KickMembers"
+  ticketTranscript:
+    enabled: true
+    permission: "KickMembers"
 
 # ==============================================
-# Paramètre générale des boutons
+# Paramètres généraux des boutons
 # ==============================================
+# If you intend to use the allowedRoles options in this section, you should probably disable reOpenStaffOnly, closeStaffOnly & deleteStaffOnly at the top of the configuration because otherwise the users will require both the below allowed roles & the support role of a ticket category.
 
 closeButton:
-  label: "Fermé" # Le libellé du bouton
-  emoji: "🔒" # L'emoji du bouton
-  style: "Danger" # Options : "Primary" qui est bleu-violet, "Secondary" qui est gris, "Success" qui est vert, "Danger" qui est rouge et NE PAS utiliser "Link"
+  label: "Fermer" # Le nom du boutton
+  emoji: "🔒" # L'émoji du button
+  style: "Danger" # Options: "Primary" pour la couleur bleu, "Secondary" pour du gris, "Success" pour du vert, "Danger" pour du rouge mais n'UTILISEZ PAS "Link"
+  allowedRoles: [] # The IDs of the roles that can use the close button, keep it empty to not require a role
 
 reOpenButton:
-  label: "Ré-ouvrir" # Le libellé du bouton
-  emoji: "🔓" # L'emoji du bouton
-  style: "Success" # Options : "Primary" qui est bleu-violet, "Secondary" qui est gris, "Success" qui est vert, "Danger" qui est rouge et NE PAS utiliser "Link"
+  label: "Rouvrir" # Le nom du boutton
+  emoji: "🔓" # L'émoji du button
+  style: "Success" # Options: "Primary" pour la couleur bleu, "Secondary" pour du gris, "Success" pour du vert, "Danger" pour du rouge mais n'UTILISEZ PAS "Link"
+  allowedRoles: [] # The IDs of the roles that can use the reopen button, keep it empty to not require a role
 
 transcriptButton:
-  label: "Transcript" # Le libellé du bouton
-  emoji: "📝" # L'emoji du bouton
-  style: "Primary" # Options : "Primary" qui est bleu-violet, "Secondary" qui est gris, "Success" qui est vert, "Danger" qui est rouge et NE PAS utiliser "Link"
+  label: "Transcript" # Le nom du boutton
+  emoji: "📝" # L'émoji du button
+  style: "Primary" # Options: "Primary" pour la couleur bleu, "Secondary" pour du gris, "Success" pour du vert, "Danger" pour du rouge mais n'UTILISEZ PAS "Link"
 
 deleteButton:
-  label: "Supprimé" # Le libellé du bouton
-  emoji: "⛔" # L'emoji du bouton
-  style: "Danger" # Options : "Primary" qui est bleu-violet, "Secondary" qui est gris, "Success" qui est vert, "Danger" qui est rouge et NE PAS utiliser "Link"
+  label: "Supprimer" # Le nom du boutton
+  emoji: "⛔" # L'émoji du button
+  style: "Danger" # Options: "Primary" pour la couleur bleu, "Secondary" pour du gris, "Success" pour du vert, "Danger" pour du rouge mais n'UTILISEZ PAS "Link"
+  allowedRoles: [] # The IDs of the roles that can use the delete button, keep it empty to not require a role
 
 claimButton:
-  label: "Claim" # Le libellé du bouton
-  emoji: "👋" # L'emoji du bouton
-  style: "Success" # Options : "Primary" qui est bleu-violet, "Secondary" qui est gris, "Success" qui est vert, "Danger" qui est rouge et NE PAS utiliser "Link"
+  label: "Réclamer" # Le nom du boutton
+  emoji: "👋" # L'émoji du button
+  style: "Success" # Options: "Primary" pour la couleur bleu, "Secondary" pour du gris, "Success" pour du vert, "Danger" pour du rouge mais n'UTILISEZ PAS "Link"
 
 unclaimButton:
-  label: "Unclaim" # Le libellé du bouton
-  emoji: "👋" # L'emoji du bouton
-  style: "Danger" # Options : "Primary" qui est bleu-violet, "Secondary" qui est gris, "Success" qui est vert, "Danger" qui est rouge et NE PAS utiliser "Link"
+  label: "Abandonner" # Le nom du boutton
+  emoji: "👋" # L'émoji du button
+  style: "Danger" # Options: "Primary" pour la couleur bleu, "Secondary" pour du gris, "Success" pour du vert, "Danger" pour du rouge mais n'UTILISEZ PAS "Link"
+
+newTicketButton:
+  label: "Cliquez ici" # Le nom du boutton
+  emoji: "🎫" # L'émoji du button
 
 # ==============================================
-# Paramètre des DM au utilisateur qui quitte
+# Paramètres des heures de travail
 # ==============================================
 
-userLeftEmbed:
-  embed_color: "#FF0000" # La couleur de l'encart
-  embed_title: "L'utilisateur a quitté le serveur." # Le titre de l'encart
-  embed_description: "L'utilisateur {user} a quitté le serveur." # Vous pouvez utiliser {user} comme espace réservé pour le nom d'utilisateur du membre qui a quitté & \n pour une nouvelle ligne
-
-reopenDM:
-  enabled: false # Activer ou désactiver l'encart de MP
-  embed:
-    color: "#2FF200" # La couleur de l'encart
-    title: "Ticket Ré-ouvert" # Le titre de l'encart
-    description: "Ton ticket **#{ticketName}** a été ré-ouvert par {user} sur le serveur **{server}**." # Vous pouvez utiliser {ticketName} pour le nom du ticket, {user} pour le nom de l'utilisateur qui a ré-ouvert le ticket, {server} pour le nom de votre serveur & \n pour une nouvelle ligne
-
-closeDM:
-  enabled: false # Activer ou désactiver l'encart de MP
-  embed:
-    color: "#FF0000" # La couleur de l'encart
-    title: "Ticket Fermé" # Le titre de l'encart
-    description: "Ton ticket **#{ticketName}** a été fermé par {user} sur le serveur **{server}**." # Vous pouvez utiliser {ticketName} pour le nom du ticket, {user} pour le nom de l'utilisateur qui a fermé le ticket, {server} pour le nom de votre serveur & \n pour une nouvelle ligne
-
-alertDM:
-  enabled: false # Activer ou désactiver l'encart de MP
-  embed:
-    color: "#FF0000" # La couleur de l'encart
-    title: "Notification de fermeture de ticket" # Le titre de l'encart
-    description: "Ton ticket **#{ticketName}** sur le serveur **{server}** va bientôt être fermé si tu ne réponds pas." # Vous pouvez utiliser {ticketName} pour le nom du ticket, {server} pour le nom de votre serveur & \n pour une nouvelle ligne
-
+# Note: si le système des heures de travail ne fonctionne pas, cela est probablement dû à une mauvaise configuration des heures min et max.
 workingHours:
-  enabled: false # Activer ou désactiver la fonction des horaires de travail
-  timezone: "Europe/Paris" # Le fuseau horaire des horaires de travail, les options sur ce lien devraient fonctionner : https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-  min: "09:00" # L'heure minimum, assurez-vous d'utiliser le format 24 heures HH:MM, exemples : 00:59, 05:00, 17:00, 23:59 n'oubliez pas d'inclure le premier 0.
-  max: "17:00" # L'heure maximum, assurez-vous d'utiliser le format 24 heures HH:MM, exemples : 00:59, 05:00, 17:00, 23:59 n'oubliez pas d'inclure le premier 0.
-  blockTicketCreation: true # Activer ou désactiver le blocage de la création de tickets en dehors des horaires de travail
-  blockTicketEmbed:
-    embed_color: "#FF0000" # La couleur de l'encart
-    embed_title: "Horaires de travail" # Le titre de l'encart
-    embed_description: "Les tickets ne sont ouverts que de {openingTime} à {closingTime}.\nL'heure actuelle est {now}." # Le message affiché lorsque la création de ticket est bloquée, utilisez {openingTime} pour l'heure d'ouverture, {closingTime} pour l'heure de fermeture et {now} pour l'heure actuelle
-  addField: true # Si les horaires de travail sont activés, cette option activera ou désactivera l'ajout du champ des horaires de travail à l'encart de création de ticket
-  fieldTitle: "Horaires de travail" # Le titre du champ des horaires de travail
-  fieldValue: "> {openingTime} à {closingTime}" # La valeur du champ des horaires de travail, utilisez {openingTime} pour l'heure d'ouverture et {closingTime} pour l'heure de fermeture
+  enabled: false # Activer ou désactiver la fonctionnalité des heures de travail
+  timezone: "Europe/Paris" # Le fuseau horaire des heures de travail, les options sur ce lien devraient fonctionner : https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  default: # Les heures de travail par défaut pour tout jour non spécifié ci-dessous
+    min: "09:00"
+    max: "17:00"
+    blockTicketCreation: true
+  days:
+    - day: "monday" # Le jour de la semaine, les options sont "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
+      min: "09:00" # L'heure minimum, veillez à utiliser le format 24 heures HH:MM, exemples : 00:59, 05:00, 17:00, 23:59 n'oubliez pas d'inclure le premier 0.
+      max: "17:00" # L'heure maximum, veillez à utiliser le format 24 heures HH:MM, exemples : 00:59, 05:00, 17:00, 23:59 n'oubliez pas d'inclure le premier 0.
+      blockTicketCreation: true # Activer ou désactiver le blocage de la création de tickets en dehors des heures ouvrées
+    - day: "tuesday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "wednesday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "thursday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "friday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "saturday"
+      min: "09:00"
+      max: "12:00"
+      blockTicketCreation: true
+    - day: "sunday"
+      min: "09:00"
+      max: "12:00"
+      blockTicketCreation: true
+  outsideWarning: true # Si les heures de travail sont activées, cette option activera ou désactivera l'avertissement intégré lorsqu'un ticket est créé en dehors des heures de travail.
+  addField: true # Si les heures de travail sont activées, cette option activera ou désactivera l'ajout du champ des heures de travail à l'intégration de création de ticket.
+  fieldTitle: "Heure de travail" # Le titre du champ Horaires de travail
+  valueDays: "TODAY" # Options disponibles: "TODAY" qui affichera uniquement les heures de travail d'aujourd'hui ou "ALL" qui affichera les heures de travail configurées pour chaque jour
+  fieldValue: "> {day}: {openingTime} jusqu'à {closingTime}" # La valeur de chaque champ d'heures de travail, utilisez {day} pour le jour de la semaine d'aujourd'hui, {openingTime} pour l'heure d'ouverture et {closingTime} pour l'heure de fermeture.
 
-# ==============================================
-# Paramètre des salons de logs
-# ==============================================
-
-logs:
-  default: "111111111111111111" # L'ID du canal de journal par défaut
-  transcripts: "111111111111111111" # L'ID du canal de journal pour les transcriptions manuelles obtenues avec le bouton ou la commande de transcription
-  userAdd: "" # L'ID du canal de journal pour les ajouts d'utilisateurs
-  userRemove: "" # L'ID du canal de journal pour les suppressions d'utilisateurs
-  ticketCreate: "" # L'ID du canal de journal pour la création de tickets
-  ticketClose: "" # L'ID du canal de journal pour la fermeture de tickets
-  ticketReopen: "" # L'ID du canal de journal pour la réouverture de tickets
-  ticketDelete: "" # L'ID du canal de journal pour la suppression de tickets
-  ticketClaim: "" # L'ID du canal de journal pour la revendication de tickets
-  ticketUnclaim: "" # L'ID du canal de journal pour l'abandon de tickets
-  ticketMove: "" # L'ID du canal de journal pour le déplacement de tickets
-  ticketRename: "" # L'ID du canal de journal pour le renommage de tickets
-  ticketTransfer: "" # L'ID du canal de journal pour le transfert de propriété de tickets
-  ticketFeedback: "" # L'ID du canal de journal pour les retours d'informations sur les tickets
-  DMErrors: "" # L'ID du canal de journal pour les erreurs de MP
-
-# ==============================================
-# Paramètre des embeds
-# ==============================================
-
-# REMARQUE : Lors de la configuration des options d'encart, vous pouvez laisser une chaîne vide pour ne pas utiliser l'option ou la définir sur n'importe quoi.
-# En supprimant complètement une option de cette partie de la configuration, le bot essaiera de revenir à une valeur par défaut, sinon il sautera l'option.
-# Par exemple, si vous supprimez l'option de vignette, le bot utilisera la vignette par défaut si disponible, sinon aucune vignette ne sera ajoutée.
-
-# Panel command embed
-panelEmbed:
-  color: "#2FF200"
-  title: "Ticket Support"
-  description: "Pour créer un ticket de support, cliquez sur les boutons ci-dessous selon l'aide que tu cherches." # Utilisez \n pour créer une nouvelle ligne si nécessaire dans cette description d'incorporation.
+# L'embed qui est envoyé lorsque la création du ticket est bloquée car elle est en dehors des heures de travail
+workingHoursEmbed:
+  color: "#FF0000"
+  title: "Heure de travail"
+  description: "Les tickets ne sont ouverts qu'entre {openingTime} et {closingTime}.\nL'heure actuelle est {now}." # Le message affiché lorsque la création du ticket est bloquée, utilisez {openingTime} pour l'heure d'ouverture, {closingTime} pour l'heure de fermeture et {now} pour l'heure actuelle
   timestamp: true
   URL: ""
   image: ""
   thumbnail: ""
   footer:
-    text: "Sentinel Tickets"
+    text: ""
     iconURL: ""
   author:
     name: ""
     iconURL: ""
     url: ""
 
-# Blacklist command embed when it fails to blacklist a user or role
+# L'embed envoyé lorsqu'un ticket est créé en dehors des heures de travail
+outsideWorkingHoursEmbed:
+  color: "#FF0000"
+  title: "En dehors des heures de travail"
+  description: "Vous avez créé un ticket en dehors de nos heures de travail. Veuillez noter que notre délai de réponse peut être retardé.\nNos heures de travail pour aujourd'hui sont de {openingTime} à {closingTime}." # Utilisez {openingTime} pour l'heure d'ouverture, {closingTime} pour l'heure de fermeture.
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# ==============================================
+# Salon de logs
+# ==============================================
+
+# Dans cette section, vous pouvez activer/désactiver certains logs. Par défaut, tous les logs sont activés
+toggleLogs:
+  userAdd: true
+  userRemove: true
+  ticketCreate: true
+  ticketClose: true
+  ticketReopen: true
+  ticketDelete: true
+  ticketClaim: true
+  ticketUnclaim: true
+  ticketMove: true
+  ticketRename: true
+  ticketTransfer: true
+  ticketPin: true
+  ticketSlowmode: true
+  ticketPriority: true
+  ticketFeedback: true
+  DMErrors: true
+  blacklistAdd: true
+  blacklistRemove: true
+
+# Cette section vous permet de configurer les salons sur lesquels le bot enverra différents logs. Assurez-vous de configurer au moins le canal de logs par défaut.
+# En laissant un canal vide "", le bot reviendra au canal de journalisation par défaut.
+logs:
+  default: "111111111111111111" # L'ID du salon de logs par défaut
+  transcripts: "111111111111111111" # L'ID du salon de logs pour les transcriptions manuelles obtenues avec le bouton ou la commande de transcription
+  userAdd: ""
+  userRemove: ""
+  ticketCreate: ""
+  ticketClose: ""
+  ticketReopen: ""
+  ticketDelete: ""
+  ticketClaim: ""
+  ticketUnclaim: ""
+  ticketMove: ""
+  ticketRename: ""
+  ticketTransfer: ""
+  ticketPin: ""
+  ticketSlowmode: ""
+  ticketPriority: ""
+  ticketFeedback: ""
+  DMErrors: ""
+  blacklistAdd: ""
+  blacklistRemove: ""
+
+# ==============================================
+# Embeds Locale
+# ==============================================
+
+# NOTE: Lors de la configuration des options d'intégration, vous pouvez la laisser sous vide pour ne pas utiliser l'option ou la définir comme vous le souhaitez.
+# Les options telles que la couleur et la description peuvent revenir à une valeur par défaut, sinon une erreur serait générée dans certains cas.
+# En supprimant entièrement une option de cette partie de la configuration, le bot tentera de revenir à une valeur par défaut, sinon il ignorera l'option.
+# Par exemple, si vous supprimez l’option thumbnail, le bot utilisera la thumbnail par défaut si elle est disponible, sinon aucune thumbnail ne sera ajoutée.
+
+# L'intégration envoyée lors de la création d'un nouveau ticket, avec les questions incluses
+# Pour cette intégration, les options que vous ne trouvez pas ici sont probablement uniques à chaque catégorie et configurées dans les paramètres de catégorie ci-dessus.
+ticketOpenEmbed:
+  title: "" # Gardez-le vide pour utiliser le champ auteur comme titre en fonction de votre titre configuré dans les paramètres de la catégorie.
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  useMenu: false # Activer ou désactiver à l'aide d'un menu de sélection au lieu de boutons
+  menuPlaceholder: "Sélectionnez une option" # L'espace réservé du menu de sélection s'il est activé
+  closeDescription: "Fermer ce ticket" # La description de l'option de menu de sélection de fermeture
+  claimDescription: "Réclamer ce ticket" # La description de l'option de menu de sélection de réclamation
+  unclaimDescription: "Abandonner ce ticket." # La description de l'option de menu de sélection de non-réclamation
+
+# Intégration des logs pour les tickets nouvellement créés
+logTicketOpenEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Crée"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_creator: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_creation: "• Créer le"
+
+# Intégration de nouveau ticket qui est envoyé à l'utilisateur lorsqu'il ouvre un nouveau ticket, le dirigeant vers celui-ci
+newTicketEmbed:
+  color: "#2FF200"
+  title: "Ticket Crée !"
+  description: "Votre nouveau ticket ({channel}) a bien été créer, **{user}**!" # Utilisez {channel} pour le nom du nouveau ticket créé et {user} pour le nom de l'utilisateur qui a créé le ticket
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Integration lorsqu'un joueur n'a pas plus été ajouté à la blacklist
 blacklistFailedEmbed:
   color: "#2FF200"
   title: ""
-  description: "**{target} ({target.tag})** est déjà dans la liste noire." # Utilisez {target} pour l'utilisateur ou le rôle, par exemple @Utilisateur, @Rôle et {target.tag} pour le nom de l'utilisateur ou du rôle sans qu'il soit mentionné, par exemple Utilisateur, Rôle.
+  description: "**{target} ({target.tag})** est déjà blacklist" # Utilisez {target} pour l'utilisateur ou le rôle tel que @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans qu'il soit mentionné tel que User, Role.
   timestamp: false
   URL: ""
   image: ""
@@ -415,11 +577,11 @@ blacklistFailedEmbed:
     iconURL: ""
     url: ""
 
-# Blacklist command embed when it is successful in blacklisting a user or role
+# Integration lorsqu'un utilisateur a été ajouté à la blacklist
 blacklistSuccessEmbed:
   color: "#2FF200"
   title: ""
-  description: "**{target} ({target.tag})** a été ajouté à la liste noire." # Utilisez {target} pour l'utilisateur ou le rôle, comme @Utilisateur, @Rôle et {target.tag} pour le nom de l'utilisateur ou du rôle sans qu'il soit mentionné, comme Utilisateur, Rôle.
+  description: "**{target} ({target.tag})** a bien été ajouté à la blacklist.\nRaison: **{reason}**\nDurée: **{duration}**" # Utilisez {target} pour l'utilisateur ou le rôle comme @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans que cela soit mentionné comme User, Role et {reason} pour la raison, {duration} pour la durée
   timestamp: false
   URL: ""
   image: ""
@@ -432,11 +594,32 @@ blacklistSuccessEmbed:
     iconURL: ""
     url: ""
 
-# Unblacklist command embed when it fails to unblacklist a user or role
+# Intégration du logs pour la commande de blacklist
+logBlacklistEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Utilisateur blacklisté"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_target: "• Utilisateur"
+  field_reason: "• Raison"
+  field_duration: "• Durée"
+
+# Intégration de commande pour retirer un blacklist qui ne l'est pas
 unblacklistFailedEmbed:
   color: "#2FF200"
   title: ""
-  description: "" # Utilisez {target} pour l'utilisateur ou le rôle, comme @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans être mentionné, comme User, Role.
+  description: "**{target} ({target.tag})** n'est pas sur la blacklist." # Utilisez {target} pour l'utilisateur ou le rôle tel que @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans qu'il soit mentionné tel que User, Role.
   timestamp: false
   URL: ""
   image: ""
@@ -449,11 +632,49 @@ unblacklistFailedEmbed:
     iconURL: ""
     url: ""
 
-# Unblacklist command embed when it is successful in unblacklisting a user or role
+# Intégration de commande pour retirer un blacklist
 unblacklistSuccessEmbed:
   color: "#2FF200"
   title: ""
-  description: "**{target} ({target.tag})** a été retiré de la liste noire." # Utilisez {target} pour l'utilisateur ou le rôle, comme @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans être mentionné, tel que User, Role.
+  description: "**{target} ({target.tag})** a bien été retiré de la blacklist.\nRaison: **{reason}**" # Utilisez {target} pour l'utilisateur ou le rôle comme @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans que cela soit mentionné comme User, Role et {reason} pour la raison
+  horodatage : faux
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration de logs pour unblacklist
+logUnblacklistEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Utilisateur Unblacklisté"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_target: "• Utilisateur"
+  field_reason: "• Raison"
+
+# Intégration de la commande blacklist
+blacklistListEmbed:
+  color: "#2FF200"
+  title: "Blacklist {type} - Page {page}"
+# La description est le contenu de la commande blacklist list, cette option ne fonctionnera donc pas pour cette intégration. 
+#  description: ""
   timestamp: false
   URL: ""
   image: ""
@@ -466,11 +687,12 @@ unblacklistSuccessEmbed:
     iconURL: ""
     url: ""
 
-# User and role add embed
+# Intégration pour Utilisateur et rôle ajoutés
 addEmbed:
+  ephemeral: false
   color: "#2FF200"
   title: ""
-  description: "**{target} ({target.tag})** a été ajouté au ticket." # Utilisez {target} pour l'utilisateur ou le rôle, comme @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans le mentionner, tel que User, Role.
+  description: "Ajout de **{target} ({target.tag})** au tickett.\nRaison: **{reason}**" # Utilisez {target} pour l'utilisateur ou le rôle tel que @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans qu'il soit mentionné tel que User, Role & {reason} pour la raison.
   timestamp: false
   URL: ""
   image: ""
@@ -483,11 +705,32 @@ addEmbed:
     iconURL: ""
     url: ""
 
-# Alert command embed
+# Intégration logs pour la commande Utilisateur et rôle ajoutés
+logAddEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Utilisateur ajouté"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_target: "• Utilisateur"
+  field_ticket: "• Ticket"
+  field_reason: "• Raison"
+
+# Intégration pour la commande alert 
 alertEmbed:
   color: "#2FF200"
   title: "Notification de fermeture de ticket"
-  description: "Ce ticket va bientôt être fermé si aucune réponse n'a été reçue."
+  description: "Ce ticket sera bientôt fermé si aucune réponse n'a été reçue."
   timestamp: true
   URL: ""
   image: ""
@@ -500,11 +743,12 @@ alertEmbed:
     iconURL: ""
     url: ""
 
-# User and role remove embed
+# Intégration pour la commande Utilisateur et rôle supprimés
 removeEmbed:
+  ephemeral: false
   color: "#FF0000"
   title: ""
-  description: "**{target} ({target.tag})** a été retiré du ticket." # Utilisez {target} pour l'utilisateur ou le rôle, tel que @User, @Role, et {target.tag} pour le nom de l'utilisateur ou du rôle sans le mentionner, comme User, Role.
+  description: "**{target} ({target.tag})** a été retiré du ticket.\nRaison: **{reason}**" # Utilisez {target} pour l'utilisateur ou le rôle tel que @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans qu'il soit mentionné tel que User, Role & {reason} pour la raison.
   timestamp: false
   URL: ""
   image: ""
@@ -517,28 +761,854 @@ removeEmbed:
     iconURL: ""
     url: ""
 
+# Intégration logs pour Utilisateur et rôle supprimés
+logRemoveEmbed:
+  color: "#FF0000"
+  title: "Ticket Logs | Utilisateur Retiré"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_target: "• Utilisateur"
+  field_ticket: "• Ticket"
+  field_reason: "• Raison"
+
+# Intégration qui est envoyée dans un ticket si le créateur du ticket a quitté le serveur Discord
+userLeftEmbed:
+  color: "#FF0000"
+  title: "L'utilisateur a quitté le serveur"
+  description: "L'utilisateur **{user}** a quitté le serveur." # Vous pouvez utiliser {user} comme espace réservé pour le nom d'utilisateur du membre qui a quitté & \n pour une nouvelle ligne
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+# Gardez ces options en commentaire si vous souhaitez utiliser les valeurs par défaut qui sont le nom de l'utilisateur qui a quitté et l'URL de son icône.
+#  footer:
+#    text: "" 
+#    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration de la commande move
+moveEmbed:
+  ephemeral : false
+  color: "2FF200"
+  title: ""
+  description: "Déplacement de ce ticket dans la catégorie **{category}** ." # Utilisez {category} pour utilisez le nom de la catégorie
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs de la commande move
+logMoveEmbed:
+  color: "2FF200"
+  title: "Ticket Logs | Ticket Déplacé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_category: "• Catégorie"
+
+# Intégration de la commande pin
+pinEmbed:
+  ephemeral : false
+  color: "2FF200"
+  title: ""
+  description: "Ce ticket a été épinglé."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs de la commande pin
+logPinEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Épinglé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+
+# Intégration de la commande priority
+priorityAddEmbed:
+  ephemeral: false
+  color: "2FF200"
+  title: ""
+  description: "La priorité de ce ticket a été fixée à **{priority}**.\nRaison: **{reason}**" # Utilisez {priority} pour le nom de la priorité, {reason} pour la raison
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs pour la commande Priority
+logPriorityAddEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Priorité Ajoutée"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_priority: "• Priorité"
+  field_reason: "• Raison"
+
+# Intégration pour la commande retirer la priorité
+priorityRemoveEmbed:
+  ephemeral: false
+  color: "FF2400"
+  title: ""
+  description: "La priorité de ce ticket a été supprimée."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs pour la commande retirer la priorité
+logPriorityRemoveEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Priorité Retirée"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+
+# Intégration pour la commande rename
+renameEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: ""
+  description: "Ce ticket a été renommé en **{name}**!" # Utilisez {name} pour le nouveau nom du ticket
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs pour la commande rename
+logRenameEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Renommé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_oldname: "• Ancien nom du ticket"
+  field_newname: "• Nouveau nom du ticket"
+
+# Intégration pour la commande Slowmode
+slowmodeEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: ""
+  description: "Un mode lent de **{time}** a été ajouté à ce ticket." # Utilisez {time} pour l'heure au format hh mm ss, exemple : 1h 5m 7s
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs pour la commande Slowmode
+logSlowmodeEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Mode Lent"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_slowmode: "• Mode Lent"
+
+# Intégration pour la commande Transfert
+transferEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: ""
+  description: "La propriété de ce ticket a été transférée à **{user} ({user.tag})**." # Utilisez {user} pour l'utilisateur tel que @User et {user.tag} pour le nom de l'utilisateur sans il étant mentionné tel que Utilisateur
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# intégration logs pour la commande Transfert
+logTransferEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Créateur Transféré"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_transfer: "• Détails du transfert"
+
+# Intégration pour la commande Claim
+claimedEmbed:
+  color: "#2FF200"
+  title: "Ticket Réclamé"
+  description: "Ce ticket a été réclamé par {user}.\nIl vous aidera sous peu!" # Utilisez {user} pour l'utilisateur tel que @User
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs pour la commande Claim
+logClaimedEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Réclamé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+
+# Intégration pour la commande Unclaim
+unclaimedEmbed:
+  color: "#FF2400"
+  title: "Ticket Abandonné"
+  description: "Ce ticket a été abandonné par {user}." #Utilisez {user} pour l'utilisateur tel que @User
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs pour la commande Unclaim
+logUnclaimedEmbed:
+  color: "#FF2400"
+  title: "Ticket Logs | Ticket Abandonné"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+
+# Intégration pour la commande Close
+closeEmbed:
+  color: "#FF2400"
+  title: "Ticket Fermé"
+  description: "Ce ticket a été fermé par **{user} ({user.tag})**" # Utilisez {user} pour le nom d'utilisateur du Staff et {user.tag} pour que le Staff soit mentionné
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  reOpenButton: true # Activer ou désactiver le bouton de réouverture/sélectionner l'option de menu
+  transcriptButton: true # Activer ou désactiver le bouton de transcription/l'option de menu de sélection
+  deleteButton: true # Activer ou désactiver le bouton Supprimer/sélectionner l'option de menu
+  useMenu: false # Activer ou désactiver à l'aide d'un menu de sélection au lieu de boutons
+  menuPlaceholder: "Sélectionnez une option" # L'espace réservé du menu de sélection s'il est activé
+  reopenDescription: "Rouvrir le ticket." # Tla description de l'option de menu de sélection de réouverture si elle est activée
+  transcriptDescription: "Génerer un transcrip pour ce ticket." # La description de l'option de menu de sélection de transcription si elle est activée
+  deleteDescription: "Supprimer ce ticket." # La description de l'option de menu Supprimer la sélection si elle est activée
+
+# Intégration logs pour la fermeture d'un ticket
+logCloseEmbed:
+  color: "#FF2400"
+  title: "Ticket Logs | Ticket Fermé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Fermé par"
+  field_user: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+
+# Intégration pour la commande Close Request
+closeRequestEmbed:
+  color: "#FF2400"
+  title: "Demande de fermeture de ticket"
+  description: "**{user} ({user.tag})** a demandé que son ticket soit fermé." # Utilisez {user} pour le nom d'utilisateur de l'utilisateur et {user.tag} pour que l'utilisateur soit mentionné
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""  
+
+# Intégration Rouvrir ticket
+reopenEmbed:
+  color: "#2FF200"
+  title: "Ticket Réouvert"
+  description: "Ce ticket a été rouvert par **{user} ({user.tag})**" # Utilisez {user} pour le nom d'utilisateur du personnel et {user.tag} pour que le personnel soit mentionné
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs pour la réouverture d'un ticket
+logReopenEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Réouvert"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Réouvert par"
+  field_user: "• Créateur du ticket"
+  field_ticket: "• Ticket" 
+
+# Intégration pour suppression du ticket
+deleteEmbed:
+  color: "#FF0000"
+  title: ""
+  description: "Suppression du ticket dans {time} secondes" # Utilisez {time} pour le temps en secondes
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs pour suppression
+logDeleteEmbed:
+  color: "#FF0000"
+  title: "Ticket Logs | Ticket Supprimé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Supprimé par"
+  field_user: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_creation: "• Crée le"
+
+# Intégration pour transcription
+transcriptEmbed:
+  color: "#2FF200"
+  title: "Ticket Transcript"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_creator: "Créateur du ticket"
+  field_ticket: "Nom du ticket"
+  field_category: "Catégorie"
+  field_creation: "Crée le"
+
+# Intégration pour sauvegarde transcription
+transcriptReplyEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "Transcript sauvegardée"
+  description: "Une transcription a été enregistrée par {user} ({user.tag}) sur {channel}" # Utilisez {user} pour le nom d'utilisateur du Staff et {user.tag} pour que le Staff soit mentionné et {channel} pour le salon de logs
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration pour les stats
+statsEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: "📊 Statistiques"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration pour la commande Ping
+pingEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: "Ping et latence"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration pour la commande Userinfo
+userInfoEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "Informations de l'utilisateur"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration pour Help
+helpEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "Aide"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
 
 # ==============================================
-# Paramètre autres.
+# DM Embeds Locale
+# ==============================================
+
+# L'intégration qui est envoyée dans les DM d'un utilisateur si son ticket a été supprimé et si la fonctionnalité est activée dans la section des paramètres utilisateur DM ci-dessus
+deleteDMEmbed:
+  color: "#2FF200"
+  title: "Ticket Supprimé"
+  description: "Votre ticket a été supprimé. Voici différentes informations. " # Cette description apparaîtra au-dessus des autres informations dans l'intégration DM.
+  timestamp: false
+  URL: ""
+  image: ""
+#  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# L'intégration qui est envoyée dans les DM d'un utilisateur avec la suppression de DM Embed si le système de notation est activé dans les paramètres utilisateur DM
+ratingDMEmbed:
+  color: "#2FF200"
+  title: "Ticket Commentaires et évaluation"
+  description: "Nous apprécions vos commentaires ! Veuillez prendre un moment pour partager vos réflexions et évaluer notre système d'assistance. Votre note peut être comprise entre 1 et 5 étoiles en utilisant le menu de sélection ci-dessous. Merci de nous aider à nous améliorer."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+# L’option de pied de page n’est pas disponible uniquement pour cette intégration spécifique. Gardez-le vide.
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Intégration logs pour commentaires
+logRatingEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Commentaires"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# L'intégration qui est envoyée dans les DM d'un utilisateur lorsqu'un membre du personnel utilise la commande d'alerte dans son ticket
+alertDMEmbed:
+  enabled: false
+  color: "#FF0000"
+  title: "Notification de fermeture de ticket"
+  description: "Votre ticket **#{ticketName}** sur **{server}** sera bientôt fermé si aucune réponse n'a été reçue." # Vous pouvez utiliser {ticketName} pour le nom du ticket, {server} pour le nom de votre serveur & \n pour une nouvelle ligne
+  timestamp: faux
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# L'intégration qui est envoyée dans les DM d'un utilisateur si son ticket a été fermé
+closeDMEmbed:
+  enabled: false
+  color: "#FF0000"
+  title: "Ticket Fermé"
+  description: "Votre ticket **#{ticketName}** a été fermé par {user} dans **{server}**." # Vous pouvez utiliser {ticketName} pour le nom du ticket, {user} pour le nom de l'utilisateur qui a rouvert le ticket, {server} pour le nom de votre serveur & \n pour une nouvelle ligne
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# L'intégration qui est envoyée dans les DM d'un utilisateur si son ticket a été rouvert
+reopenDMEmbed:
+  enabled: false
+  color: "#2FF200"
+  title: "Ticket Réouvert"
+  description: "Votre ticket **#{ticketName}** a été rouvert par {user} dans **{server}**." # Vous pouvez utiliser {ticketName} pour le nom du ticket, {user} pour le nom de l'utilisateur qui a rouvert le ticket, {server} pour le nom de votre serveur & \n pour une nouvelle ligne
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# L'intégration qui est envoyé dans un salon lorsque le bot ne parvient pas à envoyer un DM à un utilisateur
+dmErrorEmbed:
+  pingUser: false # Ping à l'utilisateur, le bot n'a pas réussi à DM
+  color: "#FF0000"
+  title: "DM désactivés"
+  description: "Le bot n'a pas pu envoyer de message privé à **{user} ({user.tag})** car ses DM étaient fermés.\nVeuillez activer « Autoriser les messages directs » sur ce serveur pour recevoir plus d'informations du bot !\n\nPour obtenir de l'aide, veuillez lire [cet article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings).
+" # Vous pouvez utiliser {user} pour l'utilisateur auquel le bot n'a pas réussi à envoyer un DM et {user.tag} pour le tag de l'utilisateur
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# ==============================================
+# Divers Locale
 # ==============================================
 
 errors:
-  not_in_a_ticket: "Vous n'êtes pas dans un salon de ticket." # Erreur affichée lorsque qu'un utilisateur tente d'utiliser une commande dans un salon qui n'est pas un ticket
-  not_allowed: "Vous n'êtes pas autorisé à utiliser cette commande !" # Erreur affichée lorsque qu'un utilisateur tente d'utiliser une commande réservée au personnel
-  blacklisted: "Vous êtes actuellement sur liste noire pour la création de tickets." # Erreur affichée lorsque qu'un utilisateur tente de créer un ticket mais est sur liste noire
+  not_in_a_ticket: "Vous n'êtes pas dans un salon de ticket !" # Erreur affichée lorsqu'un utilisateur tente d'utiliser une commande dans un salon sans ticket
+  not_allowed: "Vous n'êtes pas autorisé à utiliser ceci !" # Erreur affichée lorsqu'un utilisateur tente d'utiliser une commande, un bouton, etc. réservé au Staff.
 
 cooldownEmbed:
-  title: "Cooldown"
   color: "#FF0000"
-  description: "Vous devez attendre **{time}** secondes avant de cliquer sur ce bouton !" # Utilisez {time} pour le temps de cooldown restant en secondes
+  title: "Mode lent"
+  description: "Vous devez attendre **{time}** secondes avant de cliquer sur ce bouton !" # Utilisez {time} pour le temps de recharge restant en secondes
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+commandCooldownEmbed:
+  color: "#FF0000"
+  title: "Mode lent Commande"
+  description: "Veuillez patienter, vous êtes en temps de recharge pour `{command}`.\nVous pouvez l'utiliser à nouveau dans {time}." # Utilisez {command} pour le nom de la commande et {time} pour le temps de recharge restant
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
 
 maxOpenTicketsEmbed:
-  title: "Nombre maximum de tickets"
   color: "#FF0000"
-  description: "Votre nombre maximum de tickets ouverts simultanément est de **{max}**." # Utilisez {max} pour le nombre maximum de tickets pouvant être ouverts en même temps
+  title: "Nombre maximum de ticketes ouverts"
+  description: "Vous ne pouvez avoir que **{max} ticket(s)** ouverts à la fois." # Utilisez {max} pour le nombre maximum de tickets pouvant être ouverts en même temps.
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
 
-DMErrors:
-  embed:
-    color: "#FF0000"
-    title: "Messages privés désactivés"
-    description: "Veuillez activer les messages privés provenant de ce serveur pour recevoir les futures informations de ce bot !\n\nPour plus d'aide, consultez cet [article](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings)."
+blacklistedEmbed:
+  color: "#FF0000"
+  title: "Blacklisté"
+  description: "Vous êtes actuellement blacklisté de nos tickets.\Expire dans: {time}" #Utilisez {time} pour le temps jusqu'à ce que l'utilisateur ne soit plus sur la blacklist.
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+categoryNotAllowedEmbed:
+  color: "#FF0000"
+  title: "Non autorisé"
+  description: "Vous n'êtes pas autorisé à créer des tickets dans cette catégorie."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# ==============================================
+# Logs.txt Salon 
+# ==============================================
+
+# Cette section est destinée aux utilisateurs qui hébergent le bot dans un environnement limité sans accès en écriture à un fichier logs.txt.
+# L'activation de l'option ci-dessous et l'ajout d'un identifiant de salon signifieront que le bot enverra à la place les erreurs qui étaient censées aller au fichier logs.txt dans ce salon.
+# Veuillez vous assurer que l'ID que vous ajoutez ci-dessous est celui d'un salon privée et sécurisée, et non publique.. (RISQUE !!)
+
+logsFileToChannel: false # False par défaut, sauf si vous en avez besoin, ne l'activez pas
+logsFileChannelID: ""
