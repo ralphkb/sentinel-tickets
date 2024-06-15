@@ -104,7 +104,7 @@ If you find value in this project, you can support the continued development by 
 You may also consider leaving a star, all support is welcome and really appreciated, thank you! ❤️ 
 
 ## Documentation
-You can find the documentation website of the bot here: https://sentinel-tickets-docs.pages.dev/
+You can find the documentation website of the bot here: https://sentineltickets.com
 
 ## Bug Reporting
 - For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
