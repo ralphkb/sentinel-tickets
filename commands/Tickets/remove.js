@@ -4,6 +4,7 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
+  client,
   ticketsDB,
   sanitizeInput,
   logMessage,
@@ -149,7 +150,12 @@ module.exports = {
         ephemeral: isEphemeral,
       });
       if (config.toggleLogs.userRemove) {
-        await logChannel.send({ embeds: [logUserRemoveEmbed] });
+        try {
+          await logChannel.send({ embeds: [logUserRemoveEmbed] });
+        } catch (error) {
+          error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+          client.emit("error", error);
+        }
       }
       logMessage(
         `${interaction.user.tag} removed ${user.tag} from the ticket #${interaction.channel.name} with reason ${reason}`,
@@ -226,7 +232,12 @@ module.exports = {
         ephemeral: isEphemeral,
       });
       if (config.toggleLogs.userRemove) {
-        await logChannel.send({ embeds: [logRoleRemoveEmbed] });
+        try {
+          await logChannel.send({ embeds: [logRoleRemoveEmbed] });
+        } catch (error) {
+          error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+          client.emit("error", error);
+        }
       }
       logMessage(
         `${interaction.user.tag} removed ${role.name} from the ticket #${interaction.channel.name} with reason ${reason}`,

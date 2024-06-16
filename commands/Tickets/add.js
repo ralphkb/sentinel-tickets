@@ -4,6 +4,7 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
+  client,
   ticketsDB,
   sanitizeInput,
   logMessage,
@@ -162,7 +163,12 @@ module.exports = {
         await interaction.channel.send(`<@${user.id}>`);
       }
       if (config.toggleLogs.userAdd) {
-        await logChannel.send({ embeds: [logUserAddEmbed] });
+        try {
+          await logChannel.send({ embeds: [logUserAddEmbed] });
+        } catch (error) {
+          error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+          client.emit("error", error);
+        }
       }
       logMessage(
         `${interaction.user.tag} added ${user.tag} to the ticket #${interaction.channel.name} with reason ${reason}`,
@@ -257,7 +263,12 @@ module.exports = {
         ephemeral: isEphemeral,
       });
       if (config.toggleLogs.userAdd) {
-        await logChannel.send({ embeds: [logRoleAddEmbed] });
+        try {
+          await logChannel.send({ embeds: [logRoleAddEmbed] });
+        } catch (error) {
+          error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+          client.emit("error", error);
+        }
       }
       logMessage(
         `${interaction.user.tag} added ${role.name} to the ticket #${interaction.channel.name} with reason ${reason}`,

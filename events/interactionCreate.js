@@ -1633,9 +1633,14 @@ module.exports = {
                     let logChannel =
                       interaction.guild.channels.cache.get(logChannelId);
                     if (config.toggleLogs.ticketCreate) {
-                      await logChannel.send({
-                        embeds: [logTicketOpenEmbed],
-                      });
+                      try {
+                        await logChannel.send({
+                          embeds: [logTicketOpenEmbed],
+                        });
+                      } catch (error) {
+                        error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+                        client.emit("error", error);
+                      }
                     }
                     logMessage(
                       `${interaction.user.tag} created the ticket #${channel.name}`,
@@ -1784,7 +1789,12 @@ module.exports = {
           let logChannelId = config.logs.ticketFeedback || config.logs.default;
           let logChannel = client.channels.cache.get(logChannelId);
           if (config.toggleLogs.ticketFeedback) {
-            await logChannel.send({ embeds: [logRatingEmbed] });
+            try {
+              await logChannel.send({ embeds: [logRatingEmbed] });
+            } catch (error) {
+              error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+              client.emit("error", error);
+            }
           }
           await mainDB.set("totalReviews", totalReviews + 1);
           await mainDB.push("ratings", i);

@@ -233,7 +233,12 @@ async function reopenTicket(interaction) {
   let logChannelId = config.logs.ticketReopen || config.logs.default;
   let logsChannel = interaction.guild.channels.cache.get(logChannelId);
   if (config.toggleLogs.ticketReopen) {
-    await logsChannel.send({ embeds: [logReopenEmbed] });
+    try {
+      await logsChannel.send({ embeds: [logReopenEmbed] });
+    } catch (error) {
+      error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+      client.emit("error", error);
+    }
   }
   logMessage(
     `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
@@ -303,7 +308,12 @@ async function reopenTicket(interaction) {
         }
 
         if (config.toggleLogs.DMErrors) {
-          await logChannel.send(dmErrorReply);
+          try {
+            await logChannel.send(dmErrorReply);
+          } catch (error) {
+            error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+            client.emit("error", error);
+          }
         }
         logMessage(
           `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,

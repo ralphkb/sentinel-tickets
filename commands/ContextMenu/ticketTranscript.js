@@ -8,6 +8,7 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
+  client,
   ticketsDB,
   logMessage,
   sanitizeInput,
@@ -135,7 +136,13 @@ module.exports = {
           .replace(/\{channel\}/g, `<#${logChannel.id}>`),
       );
     }
-    await logChannel.send({ embeds: [transcriptEmbed], files: [attachment] });
+
+    try {
+      await logChannel.send({ embeds: [transcriptEmbed], files: [attachment] });
+    } catch (error) {
+      error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+      client.emit("error", error);
+    }
     await interaction.editReply({
       embeds: [transcriptReplyEmbed],
       ephemeral: isEphemeral,

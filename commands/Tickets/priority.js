@@ -4,6 +4,7 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
+  client,
   ticketsDB,
   logMessage,
   checkSupportRole,
@@ -175,7 +176,12 @@ module.exports = {
         ephemeral: isEphemeral,
       });
       if (config.toggleLogs.ticketPriority) {
-        await logChannel.send({ embeds: [logPriorityAddEmbed] });
+        try {
+          await logChannel.send({ embeds: [logPriorityAddEmbed] });
+        } catch (error) {
+          error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+          client.emit("error", error);
+        }
       }
       logMessage(
         `${interaction.user.tag} updated the priority of the ticket #${interaction.channel.name} to ${option} with reason ${reason}.`,
@@ -244,7 +250,12 @@ module.exports = {
         ephemeral: isEphemeral,
       });
       if (config.toggleLogs.ticketPriority) {
-        await logChannel.send({ embeds: [logPriorityRemoveEmbed] });
+        try {
+          await logChannel.send({ embeds: [logPriorityRemoveEmbed] });
+        } catch (error) {
+          error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+          client.emit("error", error);
+        }
       }
       logMessage(
         `${interaction.user.tag} removed the priority from the ticket #${interaction.channel.name}.`,

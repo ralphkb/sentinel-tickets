@@ -13,6 +13,7 @@ const {
   mainDB,
   ticketsDB,
   ticketCategories,
+  client,
   configEmbed,
   sanitizeInput,
   logMessage,
@@ -195,7 +196,12 @@ async function claimTicket(interaction) {
       ]);
 
       if (config.toggleLogs.ticketClaim) {
-        await logsChannel.send({ embeds: [logClaimedEmbed] });
+        try {
+          await logsChannel.send({ embeds: [logClaimedEmbed] });
+        } catch (error) {
+          error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+          client.emit("error", error);
+        }
       }
       logMessage(
         `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,

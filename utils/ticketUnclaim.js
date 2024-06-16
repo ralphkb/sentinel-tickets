@@ -13,6 +13,7 @@ const {
   mainDB,
   ticketsDB,
   ticketCategories,
+  client,
   configEmbed,
   sanitizeInput,
   logMessage,
@@ -150,7 +151,12 @@ async function unclaimTicket(interaction) {
       ]);
 
       if (config.toggleLogs.ticketUnclaim) {
-        await logsChannel.send({ embeds: [logUnclaimedEmbed] });
+        try {
+          await logsChannel.send({ embeds: [logUnclaimedEmbed] });
+        } catch (error) {
+          error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+          client.emit("error", error);
+        }
       }
       await mainDB.set("totalClaims", totalClaims - 1);
       logMessage(

@@ -4,6 +4,7 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
+  client,
   ticketsDB,
   logMessage,
   formatTime,
@@ -129,7 +130,12 @@ module.exports = {
       ephemeral: isEphemeral,
     });
     if (config.toggleLogs.ticketSlowmode) {
-      await logChannel.send({ embeds: [logSlowmodeEmbed] });
+      try {
+        await logChannel.send({ embeds: [logSlowmodeEmbed] });
+      } catch (error) {
+        error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+        client.emit("error", error);
+      }
     }
     logMessage(
       `${interaction.user.tag} added a slow mode of ${formattedTime} to the ticket #${interaction.channel.name}`,

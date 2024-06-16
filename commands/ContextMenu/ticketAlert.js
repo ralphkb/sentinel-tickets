@@ -185,7 +185,12 @@ module.exports = {
           }
 
           if (config.toggleLogs.DMErrors) {
-            await logChannel.send(dmErrorReply);
+            try {
+              await logChannel.send(dmErrorReply);
+            } catch (error) {
+              error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+              client.emit("error", error);
+            }
           }
           logMessage(
             `The bot could not DM ${user.tag} because their DMs were closed`,

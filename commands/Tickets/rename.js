@@ -4,6 +4,7 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
+  client,
   ticketsDB,
   sanitizeInput,
   logMessage,
@@ -103,7 +104,12 @@ module.exports = {
       ephemeral: isEphemeral,
     });
     if (config.toggleLogs.ticketRename) {
-      await logChannel.send({ embeds: [logRenameEmbed] });
+      try {
+        await logChannel.send({ embeds: [logRenameEmbed] });
+      } catch (error) {
+        error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+        client.emit("error", error);
+      }
     }
     logMessage(
       `${interaction.user.tag} renamed the ticket #${interaction.channel.name} to #${newName}`,

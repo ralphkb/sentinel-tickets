@@ -13,6 +13,7 @@ const {
   logMessage,
   blacklistDB,
   getRole,
+  client,
 } = require("../../index.js");
 
 module.exports = {
@@ -147,7 +148,12 @@ module.exports = {
         },
       ]);
       if (config.toggleLogs.blacklistRemove) {
-        await logChannel.send({ embeds: [logUnblacklistEmbed] });
+        try {
+          await logChannel.send({ embeds: [logUnblacklistEmbed] });
+        } catch (error) {
+          error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+          client.emit("error", error);
+        }
       }
 
       return interaction.editReply({

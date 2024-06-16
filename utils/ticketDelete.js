@@ -113,7 +113,12 @@ async function deleteTicket(interaction) {
   let logChannelId = config.logs.ticketDelete || config.logs.default;
   let logsChannel = interaction.guild.channels.cache.get(logChannelId);
   if (config.toggleLogs.ticketDelete) {
-    await logsChannel.send({ embeds: [logDeleteEmbed], files: [attachment] });
+    try {
+      await logsChannel.send({ embeds: [logDeleteEmbed], files: [attachment] });
+    } catch (error) {
+      error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+      client.emit("error", error);
+    }
   }
   logMessage(
     `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
@@ -278,7 +283,12 @@ async function deleteTicket(interaction) {
         }
 
         if (config.toggleLogs.DMErrors) {
-          await logChannel.send(dmErrorReply);
+          try {
+            await logChannel.send(dmErrorReply);
+          } catch (error) {
+            error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+            client.emit("error", error);
+          }
         }
         logMessage(
           `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,

@@ -4,6 +4,7 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
+  client,
   blacklistDB,
   sanitizeInput,
   logMessage,
@@ -256,7 +257,12 @@ module.exports = {
             },
           ]);
           if (config.toggleLogs.blacklistAdd) {
-            await logChannel.send({ embeds: [logBlacklistEmbed] });
+            try {
+              await logChannel.send({ embeds: [logBlacklistEmbed] });
+            } catch (error) {
+              error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+              client.emit("error", error);
+            }
           }
 
           return interaction.editReply({
@@ -367,7 +373,12 @@ module.exports = {
             },
           ]);
           if (config.toggleLogs.blacklistAdd) {
-            await logChannel.send({ embeds: [logBlacklistEmbed] });
+            try {
+              await logChannel.send({ embeds: [logBlacklistEmbed] });
+            } catch (error) {
+              error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+              client.emit("error", error);
+            }
           }
           return interaction.editReply({
             embeds: [blacklistedEmbedRole],
@@ -502,7 +513,12 @@ module.exports = {
             },
           ]);
           if (config.toggleLogs.blacklistRemove) {
-            await logChannel.send({ embeds: [logUnblacklistEmbed] });
+            try {
+              await logChannel.send({ embeds: [logUnblacklistEmbed] });
+            } catch (error) {
+              error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+              client.emit("error", error);
+            }
           }
 
           return interaction.editReply({
@@ -603,7 +619,12 @@ module.exports = {
             },
           ]);
           if (config.toggleLogs.blacklistRemove) {
-            await logChannel.send({ embeds: [logUnblacklistEmbed] });
+            try {
+              await logChannel.send({ embeds: [logUnblacklistEmbed] });
+            } catch (error) {
+              error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+              client.emit("error", error);
+            }
           }
 
           return interaction.editReply({

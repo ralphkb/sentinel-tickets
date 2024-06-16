@@ -8,6 +8,7 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const {
+  client,
   ticketsDB,
   logMessage,
   sanitizeInput,
@@ -100,7 +101,12 @@ module.exports = {
     const pinEmbed = await configEmbed("pinEmbed", defaultValues);
     await interaction.editReply({ embeds: [pinEmbed], ephemeral: isEphemeral });
     if (config.toggleLogs.ticketPin) {
-      await logChannel.send({ embeds: [logPinEmbed] });
+      try {
+        await logChannel.send({ embeds: [logPinEmbed] });
+      } catch (error) {
+        error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+        client.emit("error", error);
+      }
     }
     logMessage(
       `${interaction.user.tag} pinned the ticket #${interaction.channel.name}`,
