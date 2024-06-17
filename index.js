@@ -214,6 +214,23 @@ async function getRole(id) {
   }
 }
 
+async function getChannel(id) {
+  let channel = client.channels.cache.get(id);
+
+  if (channel) {
+    return channel;
+  } else {
+    try {
+      channel = await client.channels.fetch(id);
+      return channel;
+    } catch (error) {
+      error.errorContext = `[getChannel Function Error]: error fetching channel with ID ${id}`;
+      client.emit("error", error);
+      return null;
+    }
+  }
+}
+
 // Find the first available category ID
 const findAvailableCategory = async (categoryIDs) => {
   if (!Array.isArray(categoryIDs)) {
@@ -640,6 +657,7 @@ module.exports = {
   getRole,
   getPermissionOverwrites,
   getUserPreference,
+  getChannel,
 };
 
 // Holding commands cooldown data
