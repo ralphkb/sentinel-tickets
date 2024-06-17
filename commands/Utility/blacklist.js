@@ -11,6 +11,7 @@ const {
   configEmbed,
   parseDurationToMilliseconds,
   getRole,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -220,7 +221,7 @@ module.exports = {
             `${interaction.user.tag} added ${user.tag} to the blacklist with reason ${reason} and duration ${duration}.`,
           );
           let logChannelId = config.logs.blacklistAdd || config.logs.default;
-          let logChannel = interaction.guild.channels.cache.get(logChannelId);
+          let logChannel = await getChannel(logChannelId);
 
           const logDefaultValues = {
             color: "#2FF200",
@@ -336,7 +337,7 @@ module.exports = {
             `${interaction.user.tag} added ${role.name} to the blacklist with reason ${reason} and duration ${duration}.`,
           );
           let logChannelId = config.logs.blacklistAdd || config.logs.default;
-          let logChannel = interaction.guild.channels.cache.get(logChannelId);
+          let logChannel = await getChannel(logChannelId);
 
           const logDefaultValues = {
             color: "#2FF200",
@@ -480,7 +481,7 @@ module.exports = {
             `${interaction.user.tag} removed ${user.tag} from the blacklist with reason ${reason}.`,
           );
           let logChannelId = config.logs.blacklistRemove || config.logs.default;
-          let logChannel = interaction.guild.channels.cache.get(logChannelId);
+          let logChannel = await getChannel(logChannelId);
 
           const logDefaultValues = {
             color: "#2FF200",
@@ -586,7 +587,7 @@ module.exports = {
             `${interaction.user.tag} removed ${role.name} from the blacklist with reason ${reason}.`,
           );
           let logChannelId = config.logs.blacklistRemove || config.logs.default;
-          let logChannel = interaction.guild.channels.cache.get(logChannelId);
+          let logChannel = await getChannel(logChannelId);
 
           const logDefaultValues = {
             color: "#2FF200",

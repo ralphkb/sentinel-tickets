@@ -14,15 +14,14 @@ const {
   findAvailableCategory,
   getPermissionOverwrites,
   getUserPreference,
+  getChannel,
 } = require("../index.js");
 
 async function reopenTicket(interaction) {
   const ticketUserID = await getUser(
     await ticketsDB.get(`${interaction.channel.id}.userID`),
   );
-  const ticketChannel = interaction.guild.channels.cache.get(
-    interaction.channel.id,
-  );
+  const ticketChannel = await getChannel(interaction.channel.id);
   const ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
   const ticketType = await ticketsDB.get(
     `${interaction.channel.id}.ticketType`,
@@ -231,7 +230,7 @@ async function reopenTicket(interaction) {
   await mainDB.push("openTickets", interaction.channel.id);
   await interaction.editReply({ embeds: [reopenEmbed] });
   let logChannelId = config.logs.ticketReopen || config.logs.default;
-  let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+  let logsChannel = await getChannel(logChannelId);
   if (config.toggleLogs.ticketReopen) {
     try {
       await logsChannel.send({ embeds: [logReopenEmbed] });
@@ -297,7 +296,7 @@ async function reopenTicket(interaction) {
         }
 
         let logChannelId = config.logs.DMErrors || config.logs.default;
-        let logChannel = client.channels.cache.get(logChannelId);
+        let logChannel = await getChannel(logChannelId);
 
         let dmErrorReply = {
           embeds: [dmErrorEmbed],

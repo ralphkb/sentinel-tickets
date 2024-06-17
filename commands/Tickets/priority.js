@@ -10,6 +10,7 @@ const {
   checkSupportRole,
   configEmbed,
   sanitizeInput,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -76,7 +77,7 @@ module.exports = {
     );
 
     let logChannelId = config.logs.ticketPriority || config.logs.default;
-    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    let logChannel = await getChannel(logChannelId);
 
     const subcommand = interaction.options.getSubcommand();
     if (subcommand === "add") {

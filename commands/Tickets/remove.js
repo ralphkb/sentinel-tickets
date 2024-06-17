@@ -10,6 +10,7 @@ const {
   logMessage,
   checkSupportRole,
   configEmbed,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -56,7 +57,7 @@ module.exports = {
     let reason =
       interaction.options.getString("reason") || "No reason provided.";
     let logChannelId = config.logs.userRemove || config.logs.default;
-    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    let logChannel = await getChannel(logChannelId);
     const isEphemeral =
       config.removeEmbed.ephemeral !== undefined
         ? config.removeEmbed.ephemeral

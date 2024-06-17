@@ -239,7 +239,7 @@ const findAvailableCategory = async (categoryIDs) => {
     );
   }
   for (const categoryID of categoryIDs) {
-    const category = client.channels.cache.get(categoryID);
+    const category = await getChannel(categoryID);
     const channelCount = category.children.cache.size;
     if (channelCount < 50) {
       return categoryID;
@@ -693,7 +693,7 @@ async function logError(errorType, error) {
 
   try {
     if (logsFileToChannel && logsFileChannelID) {
-      const channel = client.channels.cache.get(logsFileChannelID);
+      const channel = await getChannel(logsFileChannelID);
       if (channel) {
         await channel.send(`\`\`\`${errorMessage}\`\`\``);
       } else {

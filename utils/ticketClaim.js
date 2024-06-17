@@ -17,6 +17,7 @@ const {
   configEmbed,
   sanitizeInput,
   logMessage,
+  getChannel,
 } = require("../index.js");
 
 async function claimTicket(interaction) {
@@ -166,7 +167,7 @@ async function claimTicket(interaction) {
         });
 
       let logChannelId = config.logs.ticketClaim || config.logs.default;
-      let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+      let logsChannel = await getChannel(logChannelId);
 
       const logDefaultValues = {
         color: "#2FF200",

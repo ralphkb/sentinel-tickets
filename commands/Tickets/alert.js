@@ -18,6 +18,7 @@ const {
   sanitizeInput,
   getUser,
   getUserPreference,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -174,7 +175,7 @@ module.exports = {
           }
 
           let logChannelId = config.logs.DMErrors || config.logs.default;
-          let logChannel = client.channels.cache.get(logChannelId);
+          let logChannel = await getChannel(logChannelId);
 
           let dmErrorReply = {
             embeds: [dmErrorEmbed],

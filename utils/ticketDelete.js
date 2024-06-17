@@ -19,6 +19,7 @@ const {
   saveTranscript,
   saveTranscriptTxt,
   countMessagesInTicket,
+  getChannel,
 } = require("../index.js");
 
 async function deleteTicket(interaction) {
@@ -111,7 +112,7 @@ async function deleteTicket(interaction) {
   }, deleteTime);
 
   let logChannelId = config.logs.ticketDelete || config.logs.default;
-  let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+  let logsChannel = await getChannel(logChannelId);
   if (config.toggleLogs.ticketDelete) {
     try {
       await logsChannel.send({ embeds: [logDeleteEmbed], files: [attachment] });
@@ -272,7 +273,7 @@ async function deleteTicket(interaction) {
         }
 
         let logChannelId = config.logs.DMErrors || config.logs.default;
-        let logChannel = client.channels.cache.get(logChannelId);
+        let logChannel = await getChannel(logChannelId);
 
         let dmErrorReply = {
           embeds: [dmErrorEmbed],

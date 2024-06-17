@@ -13,6 +13,7 @@ const {
   configEmbed,
   getUser,
   findAvailableCategory,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -99,7 +100,7 @@ module.exports = {
     await interaction.channel.setParent(categoryID, { lockPermissions: false });
 
     let logChannelId = config.logs.ticketMove || config.logs.default;
-    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    let logChannel = await getChannel(logChannelId);
 
     const logDefaultValues = {
       color: "2FF200",

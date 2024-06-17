@@ -13,6 +13,7 @@ const {
   configEmbed,
   ticketCategories,
   getPermissionOverwrites,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -111,7 +112,7 @@ module.exports = {
     }
 
     let logChannelId = config.logs.ticketTransfer || config.logs.default;
-    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    let logChannel = await getChannel(logChannelId);
 
     const logDefaultValues = {
       color: "#2FF200",

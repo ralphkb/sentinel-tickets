@@ -10,6 +10,7 @@ const {
   logMessage,
   checkSupportRole,
   configEmbed,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -50,7 +51,7 @@ module.exports = {
     let newName = interaction.options.getString("name");
     interaction.channel.setName(`${newName}`);
     let logChannelId = config.logs.ticketRename || config.logs.default;
-    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    let logChannel = await getChannel(logChannelId);
 
     const logDefaultValues = {
       color: "#2FF200",

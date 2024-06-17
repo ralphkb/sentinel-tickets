@@ -33,6 +33,7 @@ const {
   getRole,
   getPermissionOverwrites,
   getUserPreference,
+  getChannel,
 } = require("../index.js");
 const { closeTicket } = require("../utils/ticketClose.js");
 const { reopenTicket } = require("../utils/ticketReopen.js");
@@ -1630,8 +1631,7 @@ module.exports = {
 
                     let logChannelId =
                       config.logs.ticketCreate || config.logs.default;
-                    let logChannel =
-                      interaction.guild.channels.cache.get(logChannelId);
+                    let logChannel = await getChannel(logChannelId);
                     if (config.toggleLogs.ticketCreate) {
                       try {
                         await logChannel.send({
@@ -1787,7 +1787,7 @@ module.exports = {
             value: `${"⭐".repeat(i)} **(${i}/5)**`,
           });
           let logChannelId = config.logs.ticketFeedback || config.logs.default;
-          let logChannel = client.channels.cache.get(logChannelId);
+          let logChannel = await getChannel(logChannelId);
           if (config.toggleLogs.ticketFeedback) {
             try {
               await logChannel.send({ embeds: [logRatingEmbed] });

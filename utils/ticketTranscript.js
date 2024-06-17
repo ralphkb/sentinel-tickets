@@ -11,6 +11,7 @@ const {
   getUser,
   saveTranscript,
   saveTranscriptTxt,
+  getChannel,
 } = require("../index.js");
 
 async function transcriptTicket(interaction) {
@@ -74,7 +75,7 @@ async function transcriptTicket(interaction) {
   ]);
 
   let logChannelId = config.logs.transcripts || config.logs.default;
-  let logChannel = interaction.guild.channels.cache.get(logChannelId);
+  let logChannel = await getChannel(logChannelId);
 
   const replyDefaultValues = {
     color: "#2FF200",

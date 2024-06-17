@@ -14,6 +14,7 @@ const {
   blacklistDB,
   getRole,
   client,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -113,7 +114,7 @@ module.exports = {
         `${interaction.user.tag} added ${user.tag} to the blacklist with reason ${reason} and duration permanent.`,
       );
       let logChannelId = config.logs.blacklistAdd || config.logs.default;
-      let logChannel = interaction.guild.channels.cache.get(logChannelId);
+      let logChannel = await getChannel(logChannelId);
 
       const logDefaultValues = {
         color: "#2FF200",

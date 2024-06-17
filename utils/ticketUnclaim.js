@@ -17,6 +17,7 @@ const {
   configEmbed,
   sanitizeInput,
   logMessage,
+  getChannel,
 } = require("../index.js");
 
 async function unclaimTicket(interaction) {
@@ -121,7 +122,7 @@ async function unclaimTicket(interaction) {
       await ticketsDB.set(`${interaction.channel.id}.claimUser`, "");
 
       let logChannelId = config.logs.ticketUnclaim || config.logs.default;
-      let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+      let logsChannel = await getChannel(logChannelId);
 
       const logDefaultValues = {
         color: "#FF2400",

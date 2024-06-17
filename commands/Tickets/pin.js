@@ -10,6 +10,7 @@ const {
   checkSupportRole,
   configEmbed,
   sanitizeInput,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -52,7 +53,7 @@ module.exports = {
     await interaction.deferReply({ ephemeral: isEphemeral });
 
     let logChannelId = config.logs.ticketPin || config.logs.default;
-    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    let logChannel = await getChannel(logChannelId);
 
     const logDefaultValues = {
       color: "#2FF200",

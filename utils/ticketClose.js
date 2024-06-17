@@ -21,6 +21,7 @@ const {
   findAvailableCategory,
   getPermissionOverwrites,
   getUserPreference,
+  getChannel,
 } = require("../index.js");
 
 async function closeTicket(interaction) {
@@ -293,7 +294,7 @@ async function closeTicket(interaction) {
   await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
   await mainDB.pull("openTickets", interaction.channel.id);
   let logChannelId = config.logs.ticketClose || config.logs.default;
-  let logsChannel = interaction.guild.channels.cache.get(logChannelId);
+  let logsChannel = await getChannel(logChannelId);
   if (config.toggleLogs.ticketClose) {
     try {
       await logsChannel.send({ embeds: [logCloseEmbed] });
@@ -359,7 +360,7 @@ async function closeTicket(interaction) {
         }
 
         let logChannelId = config.logs.DMErrors || config.logs.default;
-        let logChannel = client.channels.cache.get(logChannelId);
+        let logChannel = await getChannel(logChannelId);
 
         let dmErrorReply = {
           embeds: [dmErrorEmbed],

@@ -17,6 +17,7 @@ const {
   saveTranscript,
   saveTranscriptTxt,
   getUser,
+  getChannel,
 } = require("../../index.js");
 
 module.exports = {
@@ -110,7 +111,7 @@ module.exports = {
     ]);
 
     let logChannelId = config.logs.transcripts || config.logs.default;
-    let logChannel = interaction.guild.channels.cache.get(logChannelId);
+    let logChannel = await getChannel(logChannelId);
 
     const replyDefaultValues = {
       color: "#2FF200",
