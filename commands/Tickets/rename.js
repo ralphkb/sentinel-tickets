@@ -3,15 +3,14 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { client, ticketsDB } = require("../../init.js");
 const {
-  client,
-  ticketsDB,
   sanitizeInput,
   logMessage,
   checkSupportRole,
   configEmbed,
   getChannel,
-} = require("../../index.js");
+} = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.commands.rename.enabled,

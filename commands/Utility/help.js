@@ -3,7 +3,7 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { configEmbed } = require("../../index.js");
+const { configEmbed } = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.commands.help.enabled,

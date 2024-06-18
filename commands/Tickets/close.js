@@ -3,7 +3,8 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, checkSupportRole } = require("../../index.js");
+const { ticketsDB } = require("../../init.js");
+const { checkSupportRole } = require("../../utils/mainUtils.js");
 const { closeTicket } = require("../../utils/ticketClose.js");
 
 module.exports = {

@@ -4,7 +4,8 @@ const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const packageJson = require("../../package.json");
-const { mainDB, configEmbed, formatTime } = require("../../index.js");
+const { mainDB } = require("../../init.js");
+const { configEmbed, formatTime } = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.commands.stats.enabled,

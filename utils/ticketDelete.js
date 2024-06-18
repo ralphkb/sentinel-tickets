@@ -7,10 +7,8 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { mainDB, ticketsDB, client } = require("../init.js");
 const {
-  mainDB,
-  ticketsDB,
-  client,
   configEmbed,
   getUser,
   sanitizeInput,
@@ -20,7 +18,7 @@ const {
   saveTranscriptTxt,
   countMessagesInTicket,
   getChannel,
-} = require("../index.js");
+} = require("./mainUtils.js");
 
 async function deleteTicket(interaction) {
   const totalMessages = await mainDB.get("totalMessages");

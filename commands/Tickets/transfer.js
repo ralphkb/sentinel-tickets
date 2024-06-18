@@ -3,18 +3,16 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { client, ticketsDB, ticketCategories } = require("../../init.js");
 const {
-  client,
-  ticketsDB,
+  checkSupportRole,
   sanitizeInput,
   logMessage,
   getUser,
-  checkSupportRole,
   configEmbed,
-  ticketCategories,
   getPermissionOverwrites,
   getChannel,
-} = require("../../index.js");
+} = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.commands.transfer.enabled,

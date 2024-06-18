@@ -9,14 +9,13 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { ticketsDB, ticketCategories } = require("../../init.js");
 const {
-  ticketsDB,
-  ticketCategories,
   sanitizeInput,
   logMessage,
   configEmbed,
   getUser,
-} = require("../../index.js");
+} = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.commands.closerequest.enabled,

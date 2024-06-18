@@ -11,12 +11,8 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const {
-  ticketCategories,
-  logMessage,
-  mainDB,
-  configEmbed,
-} = require("../../index.js");
+const { ticketCategories, mainDB } = require("../../init.js");
+const { configEmbed, logMessage } = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.commands.panel.enabled,

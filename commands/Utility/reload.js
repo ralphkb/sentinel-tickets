@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
-const { reloadAllSlashCommands, logMessage } = require("../../index.js");
+const { reloadAllSlashCommands } = require("../../index.js");
+const { logMessage } = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: true,

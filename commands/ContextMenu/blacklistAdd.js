@@ -7,15 +7,14 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { blacklistDB, client } = require("../../init.js");
 const {
-  sanitizeInput,
   configEmbed,
+  sanitizeInput,
   logMessage,
-  blacklistDB,
   getRole,
-  client,
   getChannel,
-} = require("../../index.js");
+} = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.contextMenuCommands.blacklistAdd.enabled,

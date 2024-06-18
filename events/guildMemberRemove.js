@@ -8,7 +8,8 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB, sanitizeInput, configEmbed } = require("../index.js");
+const { ticketsDB } = require("../init.js");
+const { configEmbed, sanitizeInput } = require("../utils/mainUtils.js");
 
 module.exports = {
   name: Events.GuildMemberRemove,

@@ -2,9 +2,8 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { client, ticketsDB } = require("../init.js");
 const {
-  client,
-  ticketsDB,
   configEmbed,
   sanitizeInput,
   logMessage,
@@ -12,7 +11,7 @@ const {
   saveTranscript,
   saveTranscriptTxt,
   getChannel,
-} = require("../index.js");
+} = require("./mainUtils.js");
 
 async function transcriptTicket(interaction) {
   const isEphemeral =

@@ -7,7 +7,7 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { sanitizeInput, configEmbed } = require("../../index.js");
+const { configEmbed, sanitizeInput } = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.contextMenuCommands.userInfo.enabled,

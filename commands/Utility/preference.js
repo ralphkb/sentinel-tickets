@@ -3,7 +3,7 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { blacklistDB } = require("../../index.js");
+const { blacklistDB } = require("../../init.js");
 
 module.exports = {
   enabled: config.commands.preference.enabled,

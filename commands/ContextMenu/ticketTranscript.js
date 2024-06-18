@@ -7,18 +7,17 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { client, ticketsDB } = require("../../init.js");
 const {
-  client,
-  ticketsDB,
+  configEmbed,
   logMessage,
   sanitizeInput,
   checkSupportRole,
-  configEmbed,
   saveTranscript,
   saveTranscriptTxt,
   getUser,
   getChannel,
-} = require("../../index.js");
+} = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.contextMenuCommands.ticketTranscript.enabled,

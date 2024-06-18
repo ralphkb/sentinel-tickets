@@ -14,27 +14,23 @@ const {
 } = require("discord.js");
 const {
   client,
-  saveTranscript,
   mainDB,
   ticketsDB,
   ticketCategories,
+  blacklistDB,
+} = require("../init.js");
+const {
+  configEmbed,
   sanitizeInput,
   logMessage,
-  saveTranscriptTxt,
   checkSupportRole,
-  configEmbed,
-  blacklistDB,
-  countMessagesInTicket,
-  addTicketCreator,
-  isBlacklistExpired,
-  parseDurationToMilliseconds,
-  getUser,
-  findAvailableCategory,
   getRole,
-  getPermissionOverwrites,
-  getUserPreference,
   getChannel,
-} = require("../index.js");
+  findAvailableCategory,
+  isBlacklistExpired,
+  addTicketCreator,
+  parseDurationToMilliseconds,
+} = require("../utils/mainUtils.js");
 const { closeTicket } = require("../utils/ticketClose.js");
 const { reopenTicket } = require("../utils/ticketReopen.js");
 const { deleteTicket } = require("../utils/ticketDelete.js");

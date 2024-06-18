@@ -9,16 +9,13 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { mainDB, ticketsDB, ticketCategories, client } = require("../init.js");
 const {
-  mainDB,
-  ticketsDB,
-  ticketCategories,
-  client,
   configEmbed,
   sanitizeInput,
   logMessage,
   getChannel,
-} = require("../index.js");
+} = require("./mainUtils.js");
 
 async function unclaimTicket(interaction) {
   const totalClaims = await mainDB.get("totalClaims");

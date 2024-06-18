@@ -3,16 +3,15 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { client, blacklistDB } = require("../../init.js");
 const {
-  client,
-  blacklistDB,
-  sanitizeInput,
-  logMessage,
   configEmbed,
-  parseDurationToMilliseconds,
+  sanitizeInput,
   getRole,
   getChannel,
-} = require("../../index.js");
+  logMessage,
+  parseDurationToMilliseconds,
+} = require("../../utils/mainUtils.js");
 
 module.exports = {
   enabled: config.commands.blacklist.enabled,
