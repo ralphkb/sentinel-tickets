@@ -13,7 +13,7 @@ const { client, mainDB } = require("./init.js");
 const { cleanBlacklist, logError } = require("./utils/mainUtils.js");
 
 const blacklistInterval = config.blacklistCleanup || 120;
-// Schedule the blacklist cleanup check every intervalInSeconds seconds
+// Schedule the blacklist cleanup check every blacklistInterval seconds
 setInterval(cleanBlacklist, blacklistInterval * 1000);
 
 module.exports = {

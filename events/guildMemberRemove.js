@@ -10,6 +10,7 @@ const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
 const { ticketsDB } = require("../init.js");
 const { configEmbed, sanitizeInput } = require("../utils/mainUtils.js");
+const { autoCloseTicket } = require("../utils/ticketAutoClose.js");
 
 module.exports = {
   name: Events.GuildMemberRemove,
@@ -50,7 +51,11 @@ module.exports = {
               ),
             );
           }
-          ticketChannel.send({ embeds: [leftEmbed], components: [leftRow] });
+          await ticketChannel.send({
+            embeds: [leftEmbed],
+            components: [leftRow],
+          });
+          await autoCloseTicket(channel.id, true);
         }
       }
     });
