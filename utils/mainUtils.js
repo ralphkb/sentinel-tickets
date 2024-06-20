@@ -511,6 +511,35 @@ async function logError(errorType, error) {
   }
 }
 
+async function lastMsgTimestamp(userId, channelId) {
+  const channel = await getChannel(channelId);
+  let lastId;
+  let lastTimestamp = null;
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const options = { limit: 100 };
+    if (lastId) {
+      options.before = lastId;
+    }
+
+    const fetched = await channel.messages.fetch(options);
+    lastId = fetched.lastKey();
+
+    for (const msg of fetched.values()) {
+      if (msg.author.id === userId) {
+        lastTimestamp = msg.createdTimestamp;
+        break;
+      }
+    }
+
+    // break when the timestamp is found or when there are no more messages to fetch
+    if (lastTimestamp) break;
+    if (fetched.size < 100) break;
+  }
+  return lastTimestamp;
+}
+
 module.exports = {
   logMessage,
   checkSupportRole,
@@ -531,4 +560,5 @@ module.exports = {
   formatTime,
   sanitizeInput,
   logError,
+  lastMsgTimestamp,
 };

@@ -9,12 +9,50 @@ const { Routes } = require("discord-api-types/v10");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { client, mainDB } = require("./init.js");
-const { cleanBlacklist, logError } = require("./utils/mainUtils.js");
+const { client, mainDB, ticketsDB } = require("./init.js");
+const {
+  cleanBlacklist,
+  logError,
+  lastMsgTimestamp,
+} = require("./utils/mainUtils.js");
+const { autoCloseTicket } = require("./utils/ticketAutoClose.js");
 
 const blacklistInterval = config.blacklistCleanup || 120;
 // Schedule the blacklist cleanup check every blacklistInterval seconds
 setInterval(cleanBlacklist, blacklistInterval * 1000);
+
+async function autoCloseTickets() {
+  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+  const tickets = (await ticketsDB.all()) || [];
+  const openTickets = tickets.filter(
+    (ticket) => ticket.value.status === "Open",
+  );
+  const autoCloseTime = config?.autoCloseTickets?.time || 120; // Time in seconds
+
+  if (openTickets.length > 0) {
+    for (const ticket of openTickets) {
+      const channelID = ticket.id;
+      const { userID } = ticket.value;
+
+      const lastMsgTime = await lastMsgTimestamp(userID, channelID);
+      if (lastMsgTime === null) {
+        continue;
+      }
+
+      const lastMsgTimeSeconds = Math.floor(lastMsgTime / 1000);
+      const timeDifference = currentTime - lastMsgTimeSeconds;
+
+      if (timeDifference > autoCloseTime) {
+        await autoCloseTicket(channelID);
+      }
+    }
+  }
+}
+
+if (config.autoCloseTickets.enabled) {
+  const autoCloseInterval = config?.autoCloseTickets?.interval || 60;
+  setInterval(autoCloseTickets, autoCloseInterval * 1000);
+}
 
 module.exports = {
   reloadAllSlashCommands,
