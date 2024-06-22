@@ -1,11 +1,8 @@
-// Import necessary modules
 const { Collection } = require("discord.js");
 const dotenv = require("dotenv");
 dotenv.config();
 const fs = require("fs");
 const path = require("path");
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v10");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
@@ -53,10 +50,6 @@ if (config.autoCloseTickets.enabled) {
   const autoCloseInterval = config?.autoCloseTickets?.interval || 60;
   setInterval(autoCloseTickets, autoCloseInterval * 1000);
 }
-
-module.exports = {
-  reloadAllSlashCommands,
-};
 
 // Holding commands cooldown data
 client.cooldowns = new Collection();
@@ -113,28 +106,6 @@ process.on("uncaughtException", async (error) => {
   console.log(error);
   await logError("uncaughtException", error);
 });
-
-// Function to reload all slash commands
-async function reloadAllSlashCommands() {
-  const rest = new REST({ version: "10" }).setToken(process.env.BOT_TOKEN);
-  await rest.put(
-    Routes.applicationGuildCommands(
-      process.env.CLIENT_ID,
-      process.env.GUILD_ID,
-    ),
-    {
-      body: Array.from(client.commands.values()).map((command) =>
-        command.data.toJSON(),
-      ),
-    },
-  );
-  console.log(
-    "All slash commands have been reloaded! Please use with caution due to rate limits.",
-  );
-  console.log(
-    Array.from(client.commands.values()).map((command) => command.data.name),
-  );
-}
 
 // Log in to Discord with your app's token
 client.login(process.env.BOT_TOKEN).catch(async (error) => {
