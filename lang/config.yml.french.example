@@ -642,7 +642,7 @@ unblacklistSuccessEmbed:
   color: "#2FF200"
   title: ""
   description: "**{target} ({target.tag})** a bien été retiré de la blacklist.\nRaison: **{reason}**" # Utilisez {target} pour l'utilisateur ou le rôle comme @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans que cela soit mentionné comme User, Role et {reason} pour la raison
-  horodatage : faux
+  timestamp : false
   URL: ""
   image: ""
   thumbnail: ""
