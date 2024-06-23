@@ -16,7 +16,7 @@ deleteTicketTime: "5" # Le temps en secondes avant qu'un ticket soit supprimé (
 claimFeature: false # Activer ou désactiver le bouton/la fonctionnalité de réclamation de ticket (claim)
 claimRename: false # Activez ou désactivez le rename d'un ticket en Category-USERNAME lorsqu'il est réclamé, il utilisera le nom d'utilisateur du Staff qui l'a réclamé.
 claimRenameName: "{category}-{username}" # Le nouveau nom du ticket lorsqu'il est réclamé, les options sont: {category} pour la catégorie du ticket, {username} pour le nom d'utilisateur du Staff qui l'a réclamé, {displayname} pour le nom d'affichage/surnom du Staff
-  claim1on1: false # Lorsque cette fonctionnalité est activée, lors de la réclamation d'un ticket, seuls le créateur du ticket et le Staff qui a réclamé le ticket pourront y discuter.
+claim1on1: false # Lorsque cette fonctionnalité est activée, lors de la réclamation d'un ticket, seuls le créateur du ticket et le Staff qui a réclamé le ticket pourront y discuter.
 status:
   botActivityText: "Assistance aux tickets" # Le message d'activité du bot
   botActivityType: "Watching" # Le type d'activité du bot peut être "Playing", "Streaming", "Listening", "Watching", "Competing"
@@ -1578,7 +1578,7 @@ maxOpenTicketsEmbed:
 blacklistedEmbed:
   color: "#FF0000"
   title: "Blacklisté"
-  description: "Vous êtes actuellement blacklisté de nos tickets.\Expire dans: {time}" #Utilisez {time} pour le temps jusqu'à ce que l'utilisateur ne soit plus sur la blacklist.
+  description: "Vous êtes actuellement blacklisté de nos tickets.\nExpire dans: {time}" #Utilisez {time} pour le temps jusqu'à ce que l'utilisateur ne soit plus sur la blacklist.
   timestamp: true
   URL: ""
   image: ""
