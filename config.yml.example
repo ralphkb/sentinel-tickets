@@ -30,6 +30,7 @@ autoCloseTickets:
   enabled: false # Enable or disable automatically closing tickets
   interval: "60" # The interval in seconds for the automatic ticket close task to run
   time: "86400" # The amount of time in seconds from the ticket creator's last message before the ticket gets automatically closed. For example, if this is specified as 1 day in seconds, the ticket will be closed if the last message sent by the ticket creator is 1 day old. Default time is 1 day.
+onUserLeave: "close" # The automated action the bot will take when a user leaves the server while having a ticket open, can be "close" or "delete" which will either automatically close or delete their ticket, you may also put it as "none" to disable the automation
 
 # ==============================================
 # Ticket Category settings

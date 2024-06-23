@@ -11,6 +11,7 @@ const config = yaml.parse(configFile);
 const { ticketsDB } = require("../init.js");
 const { configEmbed, sanitizeInput } = require("../utils/mainUtils.js");
 const { autoCloseTicket } = require("../utils/ticketAutoClose.js");
+const { autoDeleteTicket } = require("../utils/ticketAutoDelete.js");
 
 module.exports = {
   name: Events.GuildMemberRemove,
@@ -55,7 +56,20 @@ module.exports = {
             embeds: [leftEmbed],
             components: [leftRow],
           });
-          await autoCloseTicket(channel.id, true);
+          let onUserLeave = config?.onUserLeave || "close";
+          switch (onUserLeave) {
+            case "close":
+              await autoCloseTicket(channel.id, true);
+              break;
+            case "delete":
+              await autoDeleteTicket(channel.id);
+              break;
+            case "none":
+              break;
+            default:
+              await autoCloseTicket(channel.id, true);
+              break;
+          }
         }
       }
     });

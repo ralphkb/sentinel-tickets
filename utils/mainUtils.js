@@ -224,7 +224,7 @@ async function configEmbed(configPath, defaultValues = {}) {
   return embed;
 }
 
-async function saveTranscript(interaction, message, saveImages = false) {
+async function saveTranscript(interaction, ticketChannel, saveImages = false) {
   const createTranscriptOptions = {
     limit: -1,
     saveImages,
@@ -235,8 +235,8 @@ async function saveTranscript(interaction, message, saveImages = false) {
   let channel;
   if (interaction) {
     channel = interaction.channel;
-  } else if (message) {
-    channel = message.channel;
+  } else if (ticketChannel) {
+    channel = ticketChannel;
   }
 
   if (channel) {
@@ -256,15 +256,18 @@ async function saveTranscript(interaction, message, saveImages = false) {
   return null;
 }
 
-async function saveTranscriptTxt(interaction) {
-  const channel = interaction.channel;
+async function saveTranscriptTxt(interaction, ticketChannel) {
+  let channel;
+  if (interaction) {
+    channel = interaction.channel;
+  } else if (ticketChannel) {
+    channel = ticketChannel;
+  }
   let lastId;
   let transcript = [];
   let totalFetched = 0;
-  let ticketUserID = await getUser(
-    await ticketsDB.get(`${interaction.channel.id}.userID`),
-  );
-  let claimUserID = await ticketsDB.get(`${interaction.channel.id}.claimUser`);
+  let ticketUserID = await getUser(await ticketsDB.get(`${channel.id}.userID`));
+  let claimUserID = await ticketsDB.get(`${channel.id}.claimUser`);
   let claimUser;
 
   if (claimUserID) {
@@ -338,7 +341,11 @@ async function saveTranscriptTxt(interaction) {
     if (fetched.size < 100) break;
   }
 
-  const additionalInfo = `Server: ${interaction.guild.name}\nTicket: #${interaction.channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${interaction.user.tag}\nClaimed By: ${claimUser ? claimUser.tag : "None"}\n`;
+  const deletedBy = interaction?.user?.tag || client.user.tag || "Automation";
+  const guildName =
+    interaction?.guild?.name ||
+    client.guilds.cache.get(process.env.GUILD_ID).name;
+  const additionalInfo = `Server: ${guildName}\nTicket: #${channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${deletedBy}\nClaimed By: ${claimUser ? claimUser.tag : "None"}\n`;
   const finalTranscript = [additionalInfo, ...transcript.reverse()];
   finalTranscript.push(`\nTotal messages: ${totalFetched}`);
 
