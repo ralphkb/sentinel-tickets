@@ -26,6 +26,11 @@ alertReply:
   enabled: false # Activez ou désactivez la réponse du robot après que la commande alert ait été effectuée
   time: "120" # La durée en secondes, évitez d'utiliser des valeurs trop élevées
   reply: "L'utilisateur a répondu à l'alerte et semble être disponible." # La réponse qui sera envoyée dans le ticket si le créateur du ticket est actif et a répondu
+autoCloseTickets:
+  enabled: false # Désactivés ou activés la fonctionnalité qui permet la fermeture automatique des tickets.
+  interval: "60" # La durée en seconde pour que la fermeture automatique s'effectue.
+  time: "86400" # La durée en secondes entre le dernier message du créateur du ticket et la fermeture automatique du ticket. Par exemple, si la valeur est 1 jour en secondes, le ticket sera fermé si le dernier message envoyé par le créateur du ticket date de 1 jour. L'heure par défaut est de 1 jour.
+onUserLeave: "close" # L'action automatisée que le bot entreprendra lorsqu'un utilisateur quittera le serveur alors qu'un ticket est ouvert, peut être "close" ou "delete", ce qui fermera ou supprimera automatiquement son ticket, vous pouvez également le mettre sur "none" pour désactiver la automatisation.
 
 # ==============================================
 # Paramètres de catégorie de ticket
