@@ -1452,7 +1452,7 @@ alertDMEmbed:
   color: "#FF0000"
   title: "Notification de fermeture de ticket"
   description: "Votre ticket **#{ticketName}** sur **{server}** sera bientôt fermé si aucune réponse n'a été reçue." # Vous pouvez utiliser {ticketName} pour le nom du ticket, {server} pour le nom de votre serveur & \n pour une nouvelle ligne
-  timestamp: faux
+  timestamp: false
   URL: ""
   image: ""
   thumbnail: ""
