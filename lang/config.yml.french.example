@@ -16,7 +16,7 @@ deleteTicketTime: "5" # Le temps en secondes avant qu'un ticket soit supprimé (
 claimFeature: false # Activer ou désactiver le bouton/la fonctionnalité de réclamation de ticket (claim)
 claimRename: false # Activez ou désactivez le rename d'un ticket en Category-USERNAME lorsqu'il est réclamé, il utilisera le nom d'utilisateur du Staff qui l'a réclamé.
 claimRenameName: "{category}-{username}" # Le nouveau nom du ticket lorsqu'il est réclamé, les options sont: {category} pour la catégorie du ticket, {username} pour le nom d'utilisateur du Staff qui l'a réclamé, {displayname} pour le nom d'affichage/surnom du Staff
-  claim1on1: false # Lorsque cette fonctionnalité est activée, lors de la réclamation d'un ticket, seuls le créateur du ticket et le Staff qui a réclamé le ticket pourront y discuter.
+claim1on1: false # Lorsque cette fonctionnalité est activée, lors de la réclamation d'un ticket, seuls le créateur du ticket et le Staff qui a réclamé le ticket pourront y discuter.
 status:
   botActivityText: "Assistance aux tickets" # Le message d'activité du bot
   botActivityType: "Watching" # Le type d'activité du bot peut être "Playing", "Streaming", "Listening", "Watching", "Competing"
@@ -26,6 +26,11 @@ alertReply:
   enabled: false # Activez ou désactivez la réponse du robot après que la commande alert ait été effectuée
   time: "120" # La durée en secondes, évitez d'utiliser des valeurs trop élevées
   reply: "L'utilisateur a répondu à l'alerte et semble être disponible." # La réponse qui sera envoyée dans le ticket si le créateur du ticket est actif et a répondu
+autoCloseTickets:
+  enabled: false # Désactivés ou activés la fonctionnalité qui permet la fermeture automatique des tickets.
+  interval: "60" # La durée en seconde pour que la fermeture automatique s'effectue.
+  time: "86400" # La durée en secondes entre le dernier message du créateur du ticket et la fermeture automatique du ticket. Par exemple, si la valeur est 1 jour en secondes, le ticket sera fermé si le dernier message envoyé par le créateur du ticket date de 1 jour. L'heure par défaut est de 1 jour.
+onUserLeave: "close" # L'action automatisée que le bot entreprendra lorsqu'un utilisateur quittera le serveur alors qu'un ticket est ouvert, peut être "close" ou "delete", ce qui fermera ou supprimera automatiquement son ticket, vous pouvez également le mettre sur "none" pour désactiver la automatisation.
 
 # ==============================================
 # Paramètres de catégorie de ticket
@@ -637,7 +642,7 @@ unblacklistSuccessEmbed:
   color: "#2FF200"
   title: ""
   description: "**{target} ({target.tag})** a bien été retiré de la blacklist.\nRaison: **{reason}**" # Utilisez {target} pour l'utilisateur ou le rôle comme @User, @Role et {target.tag} pour le nom de l'utilisateur ou du rôle sans que cela soit mentionné comme User, Role et {reason} pour la raison
-  horodatage : faux
+  timestamp : false
   URL: ""
   image: ""
   thumbnail: ""
@@ -1447,7 +1452,7 @@ alertDMEmbed:
   color: "#FF0000"
   title: "Notification de fermeture de ticket"
   description: "Votre ticket **#{ticketName}** sur **{server}** sera bientôt fermé si aucune réponse n'a été reçue." # Vous pouvez utiliser {ticketName} pour le nom du ticket, {server} pour le nom de votre serveur & \n pour une nouvelle ligne
-  timestamp: faux
+  timestamp: false
   URL: ""
   image: ""
   thumbnail: ""
@@ -1573,7 +1578,7 @@ maxOpenTicketsEmbed:
 blacklistedEmbed:
   color: "#FF0000"
   title: "Blacklisté"
-  description: "Vous êtes actuellement blacklisté de nos tickets.\Expire dans: {time}" #Utilisez {time} pour le temps jusqu'à ce que l'utilisateur ne soit plus sur la blacklist.
+  description: "Vous êtes actuellement blacklisté de nos tickets.\nExpire dans: {time}" #Utilisez {time} pour le temps jusqu'à ce que l'utilisateur ne soit plus sur la blacklist.
   timestamp: true
   URL: ""
   image: ""
