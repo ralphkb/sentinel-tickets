@@ -99,6 +99,9 @@ module.exports = {
           (config.commands.stats?.enabled
             ? "> `/stats` - Get useful statistics.\n"
             : "") +
+          (config.commands.preference?.enabled
+            ? "> `/preference` - Allows users to set their own preference for receiving DMs.\n"
+            : "") +
           (config.commands.ping?.enabled
             ? "> `/ping` - Get the bot's ping.\n"
             : "") +
@@ -115,9 +118,6 @@ module.exports = {
             : "") +
           (config.contextMenuCommands.ticketAlert?.enabled
             ? "> `Ticket Alert` - Alert a user in a ticket. (User Command)\n"
-            : "") +
-          (config.contextMenuCommands.ticketPanel?.enabled
-            ? "> `Ticket Panel` - Send the ticket panel in a channel. (Message Command)\n"
             : "") +
           (config.contextMenuCommands.ticketPin?.enabled
             ? "> `Ticket Pin` - Pin the ticket channel in the category (Message Command)\n"
