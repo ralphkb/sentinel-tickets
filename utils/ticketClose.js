@@ -19,6 +19,7 @@ const {
   getPermissionOverwrites,
   getUserPreference,
   getChannel,
+  getRole,
 } = require("./mainUtils.js");
 
 async function closeTicket(interaction) {

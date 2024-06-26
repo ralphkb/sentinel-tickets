@@ -154,6 +154,7 @@ async function getPermissionOverwrites(
 
 async function configEmbed(configPath, defaultValues = {}) {
   const embed = new EmbedBuilder();
+  let configValue;
   if (Array.isArray(configPath) && configPath[0] === "panelEmbed") {
     const panelIndex = configPath[1];
     configValue = config.panels[panelIndex].panelEmbed;
@@ -274,7 +275,6 @@ async function saveTranscriptTxt(interaction, ticketChannel) {
     claimUser = await getUser(claimUserID);
   }
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const options = { limit: 100 };
     if (lastId) {
@@ -357,7 +357,6 @@ async function saveTranscriptTxt(interaction, ticketChannel) {
 async function countMessagesInTicket(channel, lastId = null) {
   let messageCount = 0;
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const options = { limit: 100 };
     if (lastId) {
@@ -523,7 +522,6 @@ async function lastMsgTimestamp(userId, channelId) {
   let lastId;
   let lastTimestamp = null;
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const options = { limit: 100 };
     if (lastId) {
