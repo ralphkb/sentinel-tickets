@@ -458,10 +458,14 @@ async function cleanBlacklist() {
 
 async function getUserPreference(id, type) {
   const preference = await blacklistDB.get(`userPreference-${id}`);
+  const defaultPref =
+    config.commands.preference.defaultDM !== undefined
+      ? config.commands.preference.defaultDM
+      : true;
   if (preference === undefined || preference === null) {
-    return true;
+    return defaultPref;
   } else if (preference[type] === undefined) {
-    return true;
+    return defaultPref;
   } else {
     return preference[type];
   }

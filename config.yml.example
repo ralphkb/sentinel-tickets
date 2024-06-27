@@ -309,6 +309,7 @@ commands:
   preference:
     enabled: false
     permission: "ViewChannel"
+    defaultDM: true # The default value of the preference
 
 contextMenuCommands:
   userInfo:
