@@ -61,7 +61,7 @@ module.exports = {
     userInfoEmbed.addFields([
       {
         name: "Information",
-        value: `> **Username:** ${sanitizeInput(user.username)}\n> **User ID:** ${user.id}`,
+        value: `> **Username:** ${sanitizeInput(user.username)}\n> **Display Name:** ${member.displayName}\n> **User ID:** ${user.id}`,
       },
       {
         name: "Avatar",
@@ -69,7 +69,9 @@ module.exports = {
       },
       {
         name: "Roles",
-        value: `> ${userRoles}`,
+        value: userRoles
+          ? `> ${userRoles}`
+          : "> This user currently has no roles.",
       },
       {
         name: "Created At",
