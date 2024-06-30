@@ -1168,6 +1168,24 @@ closeEmbed:
   transcriptDescription: "Generate a transcript of this ticket." # The description of the transcript select menu option if it's enabled
   deleteDescription: "Delete this ticket." # The description of the delete select menu option if it's enabled
 
+# Auto Close ticket embed
+# Note that the settings from the above closeEmbed for buttons and menus are shared with the below autoCloseEmbed 
+autoCloseEmbed:
+  color: "#FF2400"
+  title: "Ticket Automatically Closed"
+  description: "This ticket was automatically closed by **{user} ({user.tag})**" # Use {user} for the username of the bot and {user.tag} to have the bot tagged
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
 # Log embed for closing tickets
 logCloseEmbed:
   color: "#FF2400"

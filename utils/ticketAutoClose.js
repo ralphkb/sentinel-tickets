@@ -153,7 +153,7 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
 
   const defaultValues = {
     color: "#FF2400",
-    title: "Ticket Closed",
+    title: "Ticket Automatically Closed",
     description:
       "This ticket was automatically closed by **{user} ({user.tag})**",
     timestamp: true,
@@ -163,7 +163,7 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
     },
   };
 
-  const closeEmbed = await configEmbed("closeEmbed", defaultValues);
+  const closeEmbed = await configEmbed("autoCloseEmbed", defaultValues);
 
   if (closeEmbed.data && closeEmbed.data.description) {
     closeEmbed.setDescription(
