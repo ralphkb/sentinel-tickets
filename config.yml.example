@@ -26,6 +26,7 @@ alertReply:
   enabled: false # Enable or disable listening to the ticket creator reply for the amount of time specified in the config below, after the alert is sent.
   time: "120" # The amount of time in seconds, avoid using values which are too high
   reply: "The user replied to the alert and seems to be available." # The reply that will be sent in the ticket if the ticket creator is active and answered
+  autoClose: true # Automatically close the ticket if the user did not reply in the specified amount of time above
 autoCloseTickets:
   enabled: false # Enable or disable automatically closing tickets
   interval: "60" # The interval in seconds for the automatic ticket close task to run

@@ -11,6 +11,7 @@ const {
   getChannel,
   getUserPreference,
 } = require("./mainUtils.js");
+const { autoCloseTicket } = require("./ticketAutoClose.js");
 
 async function alertTicket(interaction, user) {
   const closeButton = new ButtonBuilder()
@@ -44,6 +45,7 @@ async function alertTicket(interaction, user) {
     });
 
   if (config.alertReply.enabled) {
+    const channelID = interaction.channel.id;
     const filter = (m) => m.author.id === user.id;
     const collectorTimeInSeconds = config.alertReply.time || 120;
     const collector = interaction.channel.createMessageCollector({
@@ -58,7 +60,12 @@ async function alertTicket(interaction, user) {
         config.alertReply.reply ||
           "The user replied to the alert and seems to be available.",
       );
-      collector.stop();
+    });
+
+    collector.on("end", async () => {
+      if (config?.alertReply?.autoClose && collector.collected.size === 0) {
+        await autoCloseTicket(channelID);
+      }
     });
   }
 
