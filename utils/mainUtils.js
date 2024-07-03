@@ -162,11 +162,11 @@ async function configEmbed(configPath, defaultValues = {}) {
     configValue = config[configPath];
   }
 
-  embed.setDescription(
-    configValue.description || defaultValues.description || null,
-  );
-
   embed.setColor(configValue.color || defaultValues.color || "#2FF200");
+
+  if (configValue.description !== "" && configValue.description !== null) {
+    embed.setDescription(configValue.description || defaultValues.description);
+  }
 
   if (configValue.title !== "" && configValue.title !== null) {
     embed.setTitle(configValue.title || defaultValues.title);
