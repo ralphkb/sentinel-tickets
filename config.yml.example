@@ -737,7 +737,7 @@ logAddEmbed:
 alertEmbed:
   color: "#2FF200"
   title: "Ticket Close Notification"
-  description: "This ticket will be closed soon if no response has been received."
+  description: "This ticket will be closed soon if no response has been received." # You can use {time} for the time (format example: 1d 2h 3m 4s) until the ticket gets automatically closed if the alertReply option at the top of the config is enabled.
   timestamp: true
   URL: ""
   image: ""

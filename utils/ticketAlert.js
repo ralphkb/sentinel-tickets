@@ -10,6 +10,7 @@ const {
   logMessage,
   getChannel,
   getUserPreference,
+  formatTime,
 } = require("./mainUtils.js");
 const { autoCloseTicket } = require("./ticketAutoClose.js");
 
@@ -32,6 +33,16 @@ async function alertTicket(interaction, user) {
 
   const alertEmbed = await configEmbed("alertEmbed", defaultValues);
 
+  const collectorTimeInSeconds = config.alertReply.time || 120;
+  if (alertEmbed.data && alertEmbed.data.description) {
+    alertEmbed.setDescription(
+      alertEmbed.data.description.replace(
+        /\{time\}/g,
+        `${formatTime(collectorTimeInSeconds)}`,
+      ),
+    );
+  }
+
   await interaction
     .editReply({
       embeds: [alertEmbed],
@@ -47,7 +58,6 @@ async function alertTicket(interaction, user) {
   if (config.alertReply.enabled) {
     const channelID = interaction.channel.id;
     const filter = (m) => m.author.id === user.id;
-    const collectorTimeInSeconds = config.alertReply.time || 120;
     const collector = interaction.channel.createMessageCollector({
       filter,
       max: 1,
