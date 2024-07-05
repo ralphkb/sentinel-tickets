@@ -23,7 +23,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 ## Installation
 1. Install Node.js if not already installed (v18 recommended): [Node.js Installation Guide](https://nodejs.org/en/download/)
 2. Clone the repository: `git clone https://github.com/ralphkb/sentinel-tickets.git` or download the latest release: https://github.com/ralphkb/sentinel-tickets/releases
-3. Change to the project directory, for example: `cd ticket-bot-project` or the directory where you uploaded the release files.
+3. Change to the project directory, for example: `cd sentinel-tickets` or the directory where you uploaded the release files.
 4. Run `npm install` to install the dependencies
 5. Rename .env.example to .env and config.yml.example to config.yml
 6. Open .env file and fill it with your bot's token, guild ID and client ID
@@ -64,6 +64,9 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Precise and organized logs of errors and all ticket events in a logs.txt file.
 - Option to edit the activity of the bot.
 - Blacklist system with the ability to add users or roles with an optional reason and view them in a list.
+- Option to automatically close tickets after X amount of time from the ticket creator's last message.
+- Option to automatically close or delete a ticket after the ticket creator left the discord server.
+- Option to automatically close a ticket after an alert was sent and the ticket creator did not reply in time.
 - DM preference system, allowing users to toggle their preference regarding receiving DMs from the bot such as alert, close, reopen & delete.
 - Multiple Commands: Efficiently manage tickets with various commands.
     - Send the ticket panels in any channel using the panel id
@@ -108,7 +111,7 @@ You can find the documentation website of the bot here: https://sentineltickets.
 
 ## Bug Reporting
 - For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
-This is a free project that I enjoy working on in my free time, I cannot guarantee support however I will try my best to fix bugs, sort issues and add new features! I am still learning and improving, thank you for your understanding. 😄  
+This is a free project that I enjoy working on in my free time, I cannot guarantee support however I will try my best to fix bugs, sort issues and add new features! I am constantly learning and improving, thank you for your understanding. 😄  
 Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support. Patreon members receive unique roles and perks on the discord.
 
 ## License
