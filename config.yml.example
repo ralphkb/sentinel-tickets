@@ -1410,6 +1410,23 @@ helpEmbed:
     iconURL: ""
     url: ""
 
+# Preference command embed
+preferenceEmbed:
+  color: "#2FF200"
+  title: "User Preference"
+  description: "You will now {result}receive **{action}** DMs." # Use {action} for the type of DM preference and {result} for either "receive" or "no longer receive"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
 # ==============================================
 # DM Embeds Locale
 # ==============================================
