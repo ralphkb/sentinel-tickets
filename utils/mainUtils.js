@@ -162,33 +162,35 @@ async function configEmbed(configPath, defaultValues = {}) {
     configValue = config[configPath];
   }
 
-  embed.setColor(configValue.color || defaultValues.color || "#2FF200");
+  embed.setColor(configValue?.color || defaultValues?.color || "#2FF200");
 
-  if (configValue.description !== "" && configValue.description !== null) {
-    embed.setDescription(configValue.description || defaultValues.description);
+  if (configValue?.description !== "" && configValue?.description !== null) {
+    embed.setDescription(
+      configValue?.description || defaultValues?.description,
+    );
   }
 
-  if (configValue.title !== "" && configValue.title !== null) {
-    embed.setTitle(configValue.title || defaultValues.title);
+  if (configValue?.title !== "" && configValue?.title !== null) {
+    embed.setTitle(configValue?.title || defaultValues?.title);
   }
 
-  if (configValue.URL !== "" && configValue.URL !== null) {
-    embed.setURL(configValue.URL || defaultValues.URL);
+  if (configValue?.URL !== "" && configValue?.URL !== null) {
+    embed.setURL(configValue?.URL || defaultValues?.URL);
   }
 
-  if (configValue.image !== "" && configValue.image !== null) {
-    embed.setImage(configValue.image || defaultValues.image);
+  if (configValue?.image !== "" && configValue?.image !== null) {
+    embed.setImage(configValue?.image || defaultValues?.image);
   }
 
-  if (configValue.thumbnail !== "" && configValue.thumbnail !== null) {
-    embed.setThumbnail(configValue.thumbnail || defaultValues.thumbnail);
+  if (configValue?.thumbnail !== "" && configValue?.thumbnail !== null) {
+    embed.setThumbnail(configValue?.thumbnail || defaultValues?.thumbnail);
   }
 
-  if (configValue.timestamp === true) {
+  if (configValue?.timestamp === true) {
     embed.setTimestamp();
   } else if (
-    configValue.timestamp !== false &&
-    defaultValues.timestamp === true
+    configValue?.timestamp !== false &&
+    defaultValues?.timestamp === true
   ) {
     embed.setTimestamp();
   }
@@ -196,15 +198,15 @@ async function configEmbed(configPath, defaultValues = {}) {
   // Setting author and footer
   if (configValue?.author?.name !== "" && configValue?.author?.name !== null) {
     const authorValues = {
-      name: configValue?.author?.name || defaultValues.author?.name || null,
+      name: configValue?.author?.name || defaultValues?.author?.name || null,
       url:
         configValue?.author?.url !== "" && configValue?.author?.url !== null
-          ? configValue?.author?.url || defaultValues.author?.url
+          ? configValue?.author?.url || defaultValues?.author?.url
           : undefined,
       iconURL:
         configValue?.author?.iconURL !== "" &&
         configValue?.author?.iconURL !== null
-          ? configValue?.author?.iconURL || defaultValues.author?.iconURL
+          ? configValue?.author?.iconURL || defaultValues?.author?.iconURL
           : undefined,
     };
     embed.setAuthor(authorValues);
@@ -212,11 +214,11 @@ async function configEmbed(configPath, defaultValues = {}) {
 
   if (configValue?.footer?.text !== "" && configValue?.footer?.text !== null) {
     const footerValues = {
-      text: configValue?.footer?.text || defaultValues.footer?.text || null,
+      text: configValue?.footer?.text || defaultValues?.footer?.text || null,
       iconURL:
         configValue?.footer?.iconURL !== "" &&
         configValue?.footer?.iconURL !== null
-          ? configValue?.footer?.iconURL || defaultValues.footer?.iconURL
+          ? configValue?.footer?.iconURL || defaultValues?.footer?.iconURL
           : undefined,
     };
     embed.setFooter(footerValues);
