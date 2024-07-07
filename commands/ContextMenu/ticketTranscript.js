@@ -59,8 +59,10 @@ module.exports = {
 
     let attachment;
     const transcriptType = config.transcriptType || "HTML";
+    const transcriptImages =
+      config.transcriptImages !== undefined ? config.transcriptImages : true;
     if (transcriptType === "HTML") {
-      attachment = await saveTranscript(interaction, null, true);
+      attachment = await saveTranscript(interaction, null, transcriptImages);
     } else if (transcriptType === "TXT") {
       attachment = await saveTranscriptTxt(interaction);
     }

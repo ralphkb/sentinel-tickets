@@ -6,6 +6,7 @@ rolesThatCanBlacklist: ["111111111111111111"] # The IDs of the staff roles on yo
 rolesOnBlacklist: [] # The IDs of the roles that the bot will add to blacklisted users, leave it empty to disable this feature
 blacklistCleanup: "120" # The amount of time in seconds between blacklist cleanup checks, to automatically remove expired blacklisted users/roles
 transcriptType: "HTML" # The type of transcript, can be "HTML" or "TXT"
+transcriptImages: false # Enable or disable saving images in HTML transcripts, note that this will increase the size of the transcript and the time taken to generate it
 reOpenStaffOnly: false # When enabled, only staff members with support roles can reopen a ticket
 closeStaffOnly: true # When enabled, only staff members with support roles can use the close ticket button
 deleteStaffOnly: true # When enabled, only staff members with support roles can use the delete ticket button, it's recommended to keep this option enabled unless you intend to use the allowedRoles array feature while configuring the buttons down in the config

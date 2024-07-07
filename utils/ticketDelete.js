@@ -77,8 +77,10 @@ async function deleteTicket(interaction) {
 
   let attachment;
   const transcriptType = config.transcriptType || "HTML";
+  const transcriptImages =
+    config.transcriptImages !== undefined ? config.transcriptImages : false;
   if (transcriptType === "HTML") {
-    attachment = await saveTranscript(interaction);
+    attachment = await saveTranscript(interaction, null, transcriptImages);
   } else if (transcriptType === "TXT") {
     attachment = await saveTranscriptTxt(interaction);
   }
