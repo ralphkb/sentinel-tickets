@@ -440,11 +440,13 @@ module.exports = {
               Promise.resolve(0),
             );
 
-            if ((await userTicketCount) >= maxOpenTickets) {
-              return interaction.reply({
-                embeds: [maxOpenTicketsEmbed],
-                ephemeral: true,
-              });
+            if (maxOpenTickets > 0) {
+              if ((await userTicketCount) >= maxOpenTickets) {
+                return interaction.reply({
+                  embeds: [maxOpenTicketsEmbed],
+                  ephemeral: true,
+                });
+              }
             }
 
             const modal = new ModalBuilder()
@@ -985,11 +987,13 @@ module.exports = {
             Promise.resolve(0),
           );
 
-          if ((await userTicketCount) >= maxOpenTickets) {
-            return interaction.reply({
-              embeds: [maxOpenTicketsEmbed],
-              ephemeral: true,
-            });
+          if (maxOpenTickets > 0) {
+            if ((await userTicketCount) >= maxOpenTickets) {
+              return interaction.reply({
+                embeds: [maxOpenTicketsEmbed],
+                ephemeral: true,
+              });
+            }
           }
 
           const modal = new ModalBuilder()
