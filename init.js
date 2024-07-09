@@ -97,7 +97,8 @@ config.TicketCategories.forEach((category) => {
   } = category;
 
   const extractedQuestions = questions.map((question) => {
-    const { label, placeholder, style, required, minLength } = question;
+    const { label, placeholder, style, required, minLength, maxLength } =
+      question;
 
     return {
       label,
@@ -105,6 +106,7 @@ config.TicketCategories.forEach((category) => {
       style,
       required,
       minLength,
+      maxLength,
     };
   });
 

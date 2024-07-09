@@ -112,6 +112,7 @@ TicketCategories:
         style: "Paragraph"
         required: true
         minLength: 50
+        maxLength: 1000 # Set the maximum number of characters allowed for submission, only works for Paragraph style and the limit is 1000
   - id: 2 # Unique ID for each category
     name: "other"
     nameEmoji: "" # The emoji of the category name, leave it as an empty string "" to use no emojis
@@ -172,6 +173,7 @@ TicketCategories:
         style: "Paragraph" # Short or Paragraph
         required: true # If this input is required or not, can be true or false
         minLength: 10 # Set the minimum number of characters required for submission
+        maxLength: 1000 # Set the maximum number of characters allowed for submission, only works for Paragraph style and the limit is 1000
 
 # ==============================================
 # Multi Panel settings
@@ -218,6 +220,7 @@ DMUserSettings:
         style: "Paragraph" # Short or Paragraph
         required: true # If this input is required or not, can be true or false (must be kept to true when there is only 1 question)
         minLength: 80 # Set the minimum number of characters required for submission
+        maxLength: 1000 # Set the maximum number of characters allowed for submission, only works for Paragraph style and the limit is 1000
 
 # ==============================================
 # Slash commands settings

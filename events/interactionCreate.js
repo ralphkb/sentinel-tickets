@@ -458,8 +458,14 @@ module.exports = {
             let questionIndex = 0;
 
             category.questions.forEach((question) => {
-              const { label, placeholder, style, required, minLength } =
-                question;
+              let {
+                label,
+                placeholder,
+                style,
+                required,
+                minLength,
+                maxLength,
+              } = question;
 
               const modalQuestion = new TextInputBuilder()
                 .setCustomId(`question${questionIndex + 1}`)
@@ -470,7 +476,17 @@ module.exports = {
                 .setRequired(required);
 
               if (style === "Paragraph") {
-                modalQuestion.setMaxLength(1000);
+                if (
+                  typeof maxLength !== "number" ||
+                  maxLength < minLength ||
+                  maxLength > 1000
+                ) {
+                  maxLength = 1000;
+                  console.log(
+                    `[WARN]: Invalid maxLength value for question ${questionIndex + 1}, falling back to the default 1000`,
+                  );
+                }
+                modalQuestion.setMaxLength(maxLength);
               }
 
               modalQuestions.push(modalQuestion);
@@ -527,8 +543,14 @@ module.exports = {
             const questions = config.DMUserSettings.ratingSystem.questions;
 
             questions.forEach((question) => {
-              const { label, placeholder, style, required, minLength } =
-                question;
+              let {
+                label,
+                placeholder,
+                style,
+                required,
+                minLength,
+                maxLength,
+              } = question;
 
               const modalQuestion = new TextInputBuilder()
                 .setCustomId(`ratingQuestion${questionIndex + 1}`)
@@ -539,7 +561,17 @@ module.exports = {
                 .setRequired(required);
 
               if (style === "Paragraph") {
-                modalQuestion.setMaxLength(1000);
+                if (
+                  typeof maxLength !== "number" ||
+                  maxLength < minLength ||
+                  maxLength > 1000
+                ) {
+                  maxLength = 1000;
+                  console.log(
+                    `[WARN]: Invalid maxLength value for rating question ${questionIndex + 1}, falling back to the default 1000`,
+                  );
+                }
+                modalQuestion.setMaxLength(maxLength);
               }
 
               modalQuestions.push(modalQuestion);
@@ -1005,7 +1037,8 @@ module.exports = {
           let questionIndex = 0;
 
           category.questions.forEach((question) => {
-            const { label, placeholder, style, required, minLength } = question;
+            let { label, placeholder, style, required, minLength, maxLength } =
+              question;
 
             const modalQuestion = new TextInputBuilder()
               .setCustomId(`question${questionIndex + 1}`)
@@ -1016,7 +1049,17 @@ module.exports = {
               .setRequired(required);
 
             if (style === "Paragraph") {
-              modalQuestion.setMaxLength(1000);
+              if (
+                typeof maxLength !== "number" ||
+                maxLength < minLength ||
+                maxLength > 1000
+              ) {
+                maxLength = 1000;
+                console.log(
+                  `[WARN]: Invalid maxLength value for question ${questionIndex + 1}, falling back to the default 1000`,
+                );
+              }
+              modalQuestion.setMaxLength(maxLength);
             }
 
             modalQuestions.push(modalQuestion);
