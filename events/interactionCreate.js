@@ -37,6 +37,7 @@ const { deleteTicket } = require("../utils/ticketDelete.js");
 const { claimTicket } = require("../utils/ticketClaim.js");
 const { unclaimTicket } = require("../utils/ticketUnclaim.js");
 const { transcriptTicket } = require("../utils/ticketTranscript.js");
+const { getFeedback } = require("../utils/ticketFeedback.js");
 const dotenv = require("dotenv");
 dotenv.config();
 const fs = require("fs");
@@ -1776,78 +1777,7 @@ module.exports = {
       for (let i = 1; i <= 5; i++) {
         if (interaction.customId === `${i}-ratingModal`) {
           await interaction.deferReply({ ephemeral: true });
-          const totalReviews = await mainDB.get("totalReviews");
-          const message = await interaction.user.dmChannel.messages.fetch(
-            interaction.message.id,
-          );
-          await message.edit({ components: [] });
-          const currentFooter = message.embeds[0].footer.text;
-          const defaultValues = {
-            color: "#2FF200",
-            title: "Ticket Logs | Ticket Feedback",
-            timestamp: true,
-            thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
-            footer: {
-              text: `${interaction.user.tag}`,
-              iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
-            },
-          };
-
-          const logRatingEmbed = await configEmbed(
-            "logRatingEmbed",
-            defaultValues,
-          );
-          const questions = config.DMUserSettings.ratingSystem.questions;
-
-          logRatingEmbed.addFields({
-            name: "• Ticket Creator",
-            value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
-          });
-
-          logRatingEmbed.addFields({
-            name: "• Ticket",
-            value: `> ${sanitizeInput(currentFooter)}`,
-          });
-
-          for (
-            let questionIndex = 0;
-            questionIndex < questions.length;
-            questionIndex++
-          ) {
-            const question = questions[questionIndex];
-            const { label } = question;
-            const value = interaction.fields.getTextInputValue(
-              `ratingQuestion${questionIndex + 1}`,
-            );
-
-            logRatingEmbed.addFields({
-              name: `• ${label}`,
-              value: `>>> ${value}`,
-            });
-          }
-          logRatingEmbed.addFields({
-            name: "• Ticket Rating",
-            value: `${"⭐".repeat(i)} **(${i}/5)**`,
-          });
-          let logChannelId = config.logs.ticketFeedback || config.logs.default;
-          let logChannel = await getChannel(logChannelId);
-          if (config.toggleLogs.ticketFeedback) {
-            try {
-              await logChannel.send({ embeds: [logRatingEmbed] });
-            } catch (error) {
-              error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
-              client.emit("error", error);
-            }
-          }
-          await mainDB.set("totalReviews", totalReviews + 1);
-          await mainDB.push("ratings", i);
-          await interaction.editReply({
-            content: "Your feedback has been sent successfully!",
-            ephemeral: true,
-          });
-          logMessage(
-            `${interaction.user.tag} rated the ticket "${currentFooter}" with ${i} stars`,
-          );
+          await getFeedback(interaction, i);
         }
       }
     }
