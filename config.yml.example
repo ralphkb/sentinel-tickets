@@ -213,6 +213,7 @@ DMUserSettings:
     menu:
       emoji: "⭐"
       placeholder: "Select a Rating"
+    modal: true # Enable or disable sending a feedback modal in the DM, if disabled then the users will only provide a rating from 1 to 5   
     modalTitle: "Ticket Feedback"
     questions: # Maximum number of questions is 5, you must keep a minimum of 1 to use this feature
       - label: "What is your feedback?"

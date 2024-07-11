@@ -534,61 +534,72 @@ module.exports = {
 
         for (let i = 1; i <= 5; i++) {
           if (interaction.values[0] === `${i}-star`) {
-            const modal = new ModalBuilder()
-              .setCustomId(`${i}-ratingModal`)
-              .setTitle(config.DMUserSettings.ratingSystem.modalTitle);
+            const withModal =
+              config.DMUserSettings.ratingSystem.modal !== undefined
+                ? config.DMUserSettings.ratingSystem.modal
+                : true;
+            if (withModal) {
+              const modal = new ModalBuilder()
+                .setCustomId(`${i}-ratingModal`)
+                .setTitle(config.DMUserSettings.ratingSystem.modalTitle);
 
-            const modalQuestions = [];
-            const actionRows = [];
-            let questionIndex = 0;
-            const questions = config.DMUserSettings.ratingSystem.questions;
+              const modalQuestions = [];
+              const actionRows = [];
+              let questionIndex = 0;
+              const questions = config.DMUserSettings.ratingSystem.questions;
 
-            questions.forEach((question) => {
-              let {
-                label,
-                placeholder,
-                style,
-                required,
-                minLength,
-                maxLength,
-              } = question;
+              questions.forEach((question) => {
+                let {
+                  label,
+                  placeholder,
+                  style,
+                  required,
+                  minLength,
+                  maxLength,
+                } = question;
 
-              const modalQuestion = new TextInputBuilder()
-                .setCustomId(`ratingQuestion${questionIndex + 1}`)
-                .setLabel(label)
-                .setStyle(style)
-                .setPlaceholder(placeholder)
-                .setMinLength(minLength)
-                .setRequired(required);
+                const modalQuestion = new TextInputBuilder()
+                  .setCustomId(`ratingQuestion${questionIndex + 1}`)
+                  .setLabel(label)
+                  .setStyle(style)
+                  .setPlaceholder(placeholder)
+                  .setMinLength(minLength)
+                  .setRequired(required);
 
-              if (style === "Paragraph") {
-                if (
-                  typeof maxLength !== "number" ||
-                  maxLength < minLength ||
-                  maxLength > 1000
-                ) {
-                  maxLength = 1000;
-                  console.log(
-                    `[WARN]: Invalid maxLength value for rating question ${questionIndex + 1}, falling back to the default 1000`,
-                  );
+                if (style === "Paragraph") {
+                  if (
+                    typeof maxLength !== "number" ||
+                    maxLength < minLength ||
+                    maxLength > 1000
+                  ) {
+                    maxLength = 1000;
+                    console.log(
+                      `[WARN]: Invalid maxLength value for rating question ${questionIndex + 1}, falling back to the default 1000`,
+                    );
+                  }
+                  modalQuestion.setMaxLength(maxLength);
                 }
-                modalQuestion.setMaxLength(maxLength);
-              }
 
-              modalQuestions.push(modalQuestion);
-              questionIndex++;
-            });
+                modalQuestions.push(modalQuestion);
+                questionIndex++;
+              });
 
-            modalQuestions.forEach((question) => {
-              const actionRow = new ActionRowBuilder().addComponents(question);
-              actionRows.push(actionRow);
-            });
+              modalQuestions.forEach((question) => {
+                const actionRow = new ActionRowBuilder().addComponents(
+                  question,
+                );
+                actionRows.push(actionRow);
+              });
 
-            actionRows.forEach((actionRow) => {
-              modal.addComponents(actionRow);
-            });
+              actionRows.forEach((actionRow) => {
+                modal.addComponents(actionRow);
+              });
 
-            await interaction.showModal(modal);
+              await interaction.showModal(modal);
+            } else {
+              await interaction.deferReply({ ephemeral: true });
+              await getFeedback(interaction, i, false);
+            }
           }
         }
       }

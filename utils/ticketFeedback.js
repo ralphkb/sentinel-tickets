@@ -10,7 +10,7 @@ const {
   getChannel,
 } = require("./mainUtils.js");
 
-async function getFeedback(interaction, i) {
+async function getFeedback(interaction, i, withModal = true) {
   const totalReviews = await mainDB.get("totalReviews");
   const message = await interaction.user.dmChannel.messages.fetch(
     interaction.message.id,
@@ -40,22 +40,24 @@ async function getFeedback(interaction, i) {
     value: `> ${sanitizeInput(currentFooter)}`,
   });
 
-  const questions = config.DMUserSettings.ratingSystem.questions;
-  for (
-    let questionIndex = 0;
-    questionIndex < questions.length;
-    questionIndex++
-  ) {
-    const question = questions[questionIndex];
-    const { label } = question;
-    const value = interaction.fields.getTextInputValue(
-      `ratingQuestion${questionIndex + 1}`,
-    );
+  if (withModal) {
+    const questions = config.DMUserSettings.ratingSystem.questions;
+    for (
+      let questionIndex = 0;
+      questionIndex < questions.length;
+      questionIndex++
+    ) {
+      const question = questions[questionIndex];
+      const { label } = question;
+      const value = interaction.fields.getTextInputValue(
+        `ratingQuestion${questionIndex + 1}`,
+      );
 
-    logRatingEmbed.addFields({
-      name: `• ${label}`,
-      value: `>>> ${value}`,
-    });
+      logRatingEmbed.addFields({
+        name: `• ${label}`,
+        value: `>>> ${value}`,
+      });
+    }
   }
 
   logRatingEmbed.addFields({
