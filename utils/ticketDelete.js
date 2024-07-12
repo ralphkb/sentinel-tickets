@@ -18,6 +18,7 @@ const {
   saveTranscriptTxt,
   countMessagesInTicket,
   getChannel,
+  lastMsgTimestamp,
 } = require("./mainUtils.js");
 
 async function deleteTicket(interaction) {
@@ -237,11 +238,17 @@ async function deleteTicket(interaction) {
           if (Object.keys(messageDM).length !== 0) {
             await ticketUserID.send(messageDM);
           }
-          await mainDB.set(`ratingMenuOptions`, options);
-          await ticketUserID.send({
-            embeds: [ratingDMEmbed],
-            components: [actionRowMenu],
-          });
+          const lastMsgTime = await lastMsgTimestamp(
+            ticketUserID.id,
+            interaction.channel.id,
+          );
+          if (lastMsgTime !== null) {
+            await mainDB.set(`ratingMenuOptions`, options);
+            await ticketUserID.send({
+              embeds: [ratingDMEmbed],
+              components: [actionRowMenu],
+            });
+          }
         }
       } catch (error) {
         error.errorContext = `[Delete Slash Command Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
