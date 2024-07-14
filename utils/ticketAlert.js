@@ -13,6 +13,7 @@ const {
   formatTime,
 } = require("./mainUtils.js");
 const { autoCloseTicket } = require("./ticketAutoClose.js");
+const { autoDeleteTicket } = require("./ticketAutoDelete.js");
 
 async function alertTicket(interaction, user) {
   const closeButton = new ButtonBuilder()
@@ -73,8 +74,20 @@ async function alertTicket(interaction, user) {
     });
 
     collector.on("end", async () => {
-      if (config?.alertReply?.autoClose && collector.collected.size === 0) {
-        await autoCloseTicket(channelID);
+      let autoAction = config?.alertReply?.autoAction || "none";
+      if (collector.collected.size === 0) {
+        switch (autoAction) {
+          case "close":
+            await autoCloseTicket(channelID);
+            break;
+          case "delete":
+            await autoDeleteTicket(channelID);
+            break;
+          case "none":
+            break;
+          default:
+            break;
+        }
       }
     });
   }
