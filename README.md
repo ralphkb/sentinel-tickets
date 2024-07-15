@@ -58,7 +58,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Options to DM users upon ticket close, ticket reopen or the usage of the alert command.
 - Option to DM users on ticket deletion with their transcript and an embed with useful information.
 - Configurable rating/feedback system with logs of the responses.
-- Option to select Transcript type, can be HTML or TXT however HTML is recommended.
+- Option to save the transcripts as HTML or TXT, with the possibility to save images in HTML transcripts.
 - Ticket logs for multiple ticket events, such as ticket create, close, delete, force delete, reopen, claim, unclaim etc.
 - Option to select a channel for each log event to be sent to.
 - Precise and organized logs of errors and all ticket events in a logs.txt file.
@@ -66,7 +66,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Blacklist system with the ability to add users or roles with an optional reason and view them in a list.
 - Option to automatically close tickets after X amount of time from the ticket creator's last message.
 - Option to automatically close or delete a ticket after the ticket creator left the discord server.
-- Option to automatically close a ticket after an alert was sent and the ticket creator did not reply in time.
+- Option to automatically close or delete a ticket after an alert was sent and the ticket creator did not reply in time.
 - DM preference system, allowing users to toggle their preference regarding receiving DMs from the bot such as alert, close, reopen & delete.
 - Multiple Commands: Efficiently manage tickets with various commands.
     - Send the ticket panels in any channel using the panel id
