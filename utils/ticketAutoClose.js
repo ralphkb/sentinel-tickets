@@ -49,25 +49,28 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
     },
   };
 
-  const logCloseEmbed = await configEmbed("logCloseEmbed", logDefaultValues);
+  const logAutoCloseEmbed = await configEmbed(
+    "logAutoCloseEmbed",
+    logDefaultValues,
+  );
 
-  logCloseEmbed.addFields([
+  logAutoCloseEmbed.addFields([
     {
-      name: config.logCloseEmbed.field_staff,
+      name: config.logAutoCloseEmbed.field_staff,
       value: `> <@!${client.user.id}>\n> ${sanitizeInput(client.user.tag)}`,
     },
     {
-      name: config.logCloseEmbed.field_user,
+      name: config.logAutoCloseEmbed.field_user,
       value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
     },
     {
-      name: config.logCloseEmbed.field_ticket,
+      name: config.logAutoCloseEmbed.field_ticket,
       value: `> #${sanitizeInput(ticketChannel.name)}\n> ${ticketType}`,
     },
   ]);
 
   if (claimUser) {
-    logCloseEmbed.addFields({
+    logAutoCloseEmbed.addFields({
       name: "• Claimed By",
       value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
     });
@@ -289,7 +292,7 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
   let logsChannel = await getChannel(logChannelId);
   if (config.toggleLogs.ticketClose) {
     try {
-      await logsChannel.send({ embeds: [logCloseEmbed] });
+      await logsChannel.send({ embeds: [logAutoCloseEmbed] });
     } catch (error) {
       error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
       client.emit("error", error);
