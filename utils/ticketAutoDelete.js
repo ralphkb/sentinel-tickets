@@ -48,29 +48,32 @@ async function autoDeleteTicket(channelID) {
     },
   };
 
-  const logDeleteEmbed = await configEmbed("logDeleteEmbed", logDefaultValues);
+  const logAutoDeleteEmbed = await configEmbed(
+    "logAutoDeleteEmbed",
+    logDefaultValues,
+  );
 
-  logDeleteEmbed.addFields([
+  logAutoDeleteEmbed.addFields([
     {
-      name: config.logDeleteEmbed.field_staff,
+      name: config.logAutoDeleteEmbed.field_staff,
       value: `> <@!${client.user.id}>\n> ${sanitizeInput(client.user.tag)}`,
     },
     {
-      name: config.logDeleteEmbed.field_user,
+      name: config.logAutoDeleteEmbed.field_user,
       value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
     },
     {
-      name: config.logDeleteEmbed.field_ticket,
+      name: config.logAutoDeleteEmbed.field_ticket,
       value: `> #${sanitizeInput(ticketChannel.name)}\n> ${ticketType}`,
     },
     {
-      name: config.logDeleteEmbed.field_creation,
+      name: config.logAutoDeleteEmbed.field_creation,
       value: `> <t:${await ticketsDB.get(`${channelID}.creationTime`)}:F>`,
     },
   ]);
 
   if (claimUser)
-    logDeleteEmbed.addFields({
+    logAutoDeleteEmbed.addFields({
       name: "• Claimed By",
       value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
     });
@@ -93,17 +96,20 @@ async function autoDeleteTicket(channelID) {
     description: "Deleting ticket in {time} seconds",
   };
 
-  const deleteEmbed = await configEmbed("deleteEmbed", defaultValues);
+  const autoDeleteEmbed = await configEmbed("autoDeleteEmbed", defaultValues);
 
-  if (deleteEmbed.data && deleteEmbed.data.description) {
-    deleteEmbed.setDescription(
-      deleteEmbed.data.description.replace(/\{time\}/g, `${deleteTicketTime}`),
+  if (autoDeleteEmbed.data && autoDeleteEmbed.data.description) {
+    autoDeleteEmbed.setDescription(
+      autoDeleteEmbed.data.description.replace(
+        /\{time\}/g,
+        `${deleteTicketTime}`,
+      ),
     );
   }
 
   const ticketMessages = await countMessagesInTicket(ticketChannel);
   await mainDB.set("totalMessages", totalMessages + ticketMessages);
-  await ticketChannel.send({ embeds: [deleteEmbed] });
+  await ticketChannel.send({ embeds: [autoDeleteEmbed] });
 
   setTimeout(async () => {
     await ticketsDB.delete(channelID);
@@ -115,7 +121,10 @@ async function autoDeleteTicket(channelID) {
   let logsChannel = await getChannel(logChannelId);
   if (config.toggleLogs.ticketDelete) {
     try {
-      await logsChannel.send({ embeds: [logDeleteEmbed], files: [attachment] });
+      await logsChannel.send({
+        embeds: [logAutoDeleteEmbed],
+        files: [attachment],
+      });
     } catch (error) {
       error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
       client.emit("error", error);
