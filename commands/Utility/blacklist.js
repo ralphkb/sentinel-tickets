@@ -636,92 +636,97 @@ module.exports = {
     }
     if (subcommand === "list") {
       await interaction.deferReply({ ephemeral: true });
-      const page = interaction.options.getInteger("page") || 1;
-      if (page < 0) {
-        return interaction.editReply({
-          content:
-            "Please provide a valid page number greater than or equal to 1.",
-          ephemeral: true,
-        });
-      }
-      const type = interaction.options.getString("type") || "users";
-      const pageSize = 10;
-      const startIndex = (page - 1) * pageSize;
-      const endIndex = page * pageSize;
-      const blacklistData = await blacklistDB.all();
-      if (blacklistData.length === 0) {
-        return interaction.editReply({
-          content: `The blacklist is currently empty!`,
-          ephemeral: true,
-        });
-      }
-      const totalEntries = blacklistData.filter((entry) =>
-        entry.id.startsWith(`${type === "users" ? "user" : "role"}-`),
-      );
-      const totalEntriesCount = totalEntries.length;
-      if (totalEntriesCount === 0) {
-        return interaction.editReply({
-          content: `The ${type} blacklist is currently empty!`,
-          ephemeral: true,
-        });
-      }
-      const maxPage = Math.ceil(totalEntriesCount / pageSize);
-      if (page > maxPage) {
-        return interaction.editReply({
-          content: `The specified page does not exist. Please choose a page between 1 and ${maxPage}.`,
-          ephemeral: true,
-        });
-      }
-      const sortedBlacklistedEntries = totalEntries.sort(
-        (a, b) => a.value.timestamp - b.value.timestamp,
-      );
-
-      const paginatedEntries = sortedBlacklistedEntries.slice(
-        startIndex,
-        endIndex,
-      );
-
-      const failedDefault = {
-        color: "#2FF200",
-        title: `Blacklisted ${type === "users" ? "Users" : "Roles"} - Page ${page}`,
-      };
-
-      const blacklistListEmbed = await configEmbed(
-        "blacklistListEmbed",
-        failedDefault,
-      );
-
-      if (blacklistListEmbed.data && blacklistListEmbed.data.title) {
-        blacklistListEmbed.setTitle(
-          blacklistListEmbed.data.title
-            .replace(/\{type\}/g, `${type === "users" ? "Users" : "Roles"}`)
-            .replace(/\{page\}/g, `${page}`),
+      try {
+        const page = interaction.options.getInteger("page") || 1;
+        if (page < 0) {
+          return interaction.editReply({
+            content:
+              "Please provide a valid page number greater than or equal to 1.",
+            ephemeral: true,
+          });
+        }
+        const type = interaction.options.getString("type") || "users";
+        const pageSize = 10;
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = page * pageSize;
+        const blacklistData = await blacklistDB.all();
+        if (blacklistData.length === 0) {
+          return interaction.editReply({
+            content: `The blacklist is currently empty!`,
+            ephemeral: true,
+          });
+        }
+        const totalEntries = blacklistData.filter((entry) =>
+          entry.id.startsWith(`${type === "users" ? "user" : "role"}-`),
         );
+        const totalEntriesCount = totalEntries.length;
+        if (totalEntriesCount === 0) {
+          return interaction.editReply({
+            content: `The ${type} blacklist is currently empty!`,
+            ephemeral: true,
+          });
+        }
+        const maxPage = Math.ceil(totalEntriesCount / pageSize);
+        if (page > maxPage) {
+          return interaction.editReply({
+            content: `The specified page does not exist. Please choose a page between 1 and ${maxPage}.`,
+            ephemeral: true,
+          });
+        }
+        const sortedBlacklistedEntries = totalEntries.sort(
+          (a, b) => a.value.timestamp - b.value.timestamp,
+        );
+
+        const paginatedEntries = sortedBlacklistedEntries.slice(
+          startIndex,
+          endIndex,
+        );
+
+        const listDefault = {
+          color: "#2FF200",
+          title: `Blacklisted ${type === "users" ? "Users" : "Roles"} - Page ${page}`,
+          description: "The blacklist is currently empty",
+        };
+
+        const blacklistListEmbed = await configEmbed(
+          "blacklistListEmbed",
+          listDefault,
+        );
+
+        if (blacklistListEmbed.data && blacklistListEmbed.data.title) {
+          blacklistListEmbed.setTitle(
+            blacklistListEmbed.data.title
+              .replace(/\{type\}/g, `${type === "users" ? "Users" : "Roles"}`)
+              .replace(/\{page\}/g, `${page}`),
+          );
+        }
+
+        let description = "";
+        paginatedEntries.forEach((entry, index) => {
+          const id = entry.id.split("-")[1];
+          const userOrRole = type === "users" ? `<@${id}>` : `<@&${id}>`;
+          const reason = entry.value.reason;
+          const timestamp = entry.value.timestamp;
+          const duration = entry.value.duration || "permanent";
+          const staffID = entry.value.staff;
+          const expirationTime =
+            timestamp + parseDurationToMilliseconds(duration);
+          const expires =
+            duration === "permanent"
+              ? "never"
+              : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+          const timeAgo = `<t:${Math.floor(timestamp / 1000)}:R>`;
+          description += `${startIndex + index + 1}. ${userOrRole}\nStaff: <@${staffID}>\nReason: ${reason}\nTime: ${timeAgo}\nDuration: ${duration}\nExpires: ${expires}\n`;
+        });
+
+        blacklistListEmbed.setDescription(description);
+
+        await interaction.editReply({
+          embeds: [blacklistListEmbed],
+        });
+      } catch (error) {
+        client.emit("error", error);
       }
-
-      let description = "";
-      paginatedEntries.forEach((entry, index) => {
-        const id = entry.id.split("-")[1];
-        const userOrRole = type === "users" ? `<@${id}>` : `<@&${id}>`;
-        const reason = entry.value.reason;
-        const timestamp = entry.value.timestamp;
-        const duration = entry.value.duration || "permanent";
-        const staffID = entry.value.staff;
-        const expirationTime =
-          timestamp + parseDurationToMilliseconds(duration);
-        const expires =
-          duration === "permanent"
-            ? "never"
-            : `<t:${Math.floor(expirationTime / 1000)}:R>`;
-        const timeAgo = `<t:${Math.floor(timestamp / 1000)}:R>`;
-        description += `${startIndex + index + 1}. ${userOrRole}\nStaff: <@${staffID}>\nReason: ${reason}\nTime: ${timeAgo}\nDuration: ${duration}\nExpires: ${expires}\n`;
-      });
-
-      blacklistListEmbed.setDescription(description);
-
-      await interaction.editReply({
-        embeds: [blacklistListEmbed],
-      });
     }
   },
 };
