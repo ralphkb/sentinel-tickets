@@ -166,7 +166,7 @@ async function configEmbed(configPath, defaultValues = {}) {
 
   if (configValue?.description !== "" && configValue?.description !== null) {
     embed.setDescription(
-      configValue?.description || defaultValues?.description,
+      configValue?.description || defaultValues?.description || null,
     );
   }
 
