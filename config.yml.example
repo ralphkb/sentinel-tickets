@@ -1677,7 +1677,7 @@ maxOpenTicketsEmbed:
 blacklistedEmbed:
   color: "#FF0000"
   title: "Blacklisted"
-  description: "You are currently blacklisted from creating tickets.\nExpires: {time}" # Use {time} for the time until the user is no longer blacklisted
+  description: "You are currently blacklisted from creating tickets.\nExpires: **{time}**\nReason: **{reason}**" # Use {time} for the time until the user or role is no longer blacklisted and {reason} for the reason why the user or role is blacklisted
   timestamp: true
   URL: ""
   image: ""

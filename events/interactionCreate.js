@@ -288,6 +288,7 @@ module.exports = {
 
         if (isUserBlacklisted || isRoleBlacklisted) {
           let expiryDate;
+          let blacklistReason;
           if (isUserBlacklisted) {
             const expirationTime =
               isUserBlacklisted?.timestamp +
@@ -296,6 +297,7 @@ module.exports = {
               isUserBlacklisted?.duration === "permanent"
                 ? "Never"
                 : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+            blacklistReason = isUserBlacklisted?.reason;
           } else if (isRoleBlacklisted) {
             const expirationTime =
               isRoleBlacklisted?.timestamp +
@@ -304,6 +306,7 @@ module.exports = {
               isRoleBlacklisted?.duration === "permanent"
                 ? "Never"
                 : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+            blacklistReason = isRoleBlacklisted?.reason;
           }
           const defaultblacklistedValues = {
             color: "#FF0000",
@@ -324,10 +327,9 @@ module.exports = {
 
           if (blacklistedEmbed.data && blacklistedEmbed.data.description) {
             blacklistedEmbed.setDescription(
-              blacklistedEmbed.data.description.replace(
-                /\{time\}/g,
-                expiryDate,
-              ),
+              blacklistedEmbed.data.description
+                .replace(/\{time\}/g, expiryDate)
+                .replace(/\{reason\}/g, blacklistReason),
             );
           }
 
