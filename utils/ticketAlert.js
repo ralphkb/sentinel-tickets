@@ -10,7 +10,6 @@ const {
   logMessage,
   getChannel,
   getUserPreference,
-  formatTime,
 } = require("./mainUtils.js");
 const { autoCloseTicket } = require("./ticketAutoClose.js");
 const { autoDeleteTicket } = require("./ticketAutoDelete.js");
@@ -35,12 +34,12 @@ async function alertTicket(interaction, user) {
   const alertEmbed = await configEmbed("alertEmbed", defaultValues);
 
   const collectorTimeInSeconds = config.alertReply.time || 120;
+  const now = new Date();
+  const future = new Date(now.getTime() + collectorTimeInSeconds * 1000);
+  const inTime = Math.floor(future.getTime() / 1000);
   if (alertEmbed.data && alertEmbed.data.description) {
     alertEmbed.setDescription(
-      alertEmbed.data.description.replace(
-        /\{time\}/g,
-        `${formatTime(collectorTimeInSeconds)}`,
-      ),
+      alertEmbed.data.description.replace(/\{time\}/g, `<t:${inTime}:R>`),
     );
   }
 

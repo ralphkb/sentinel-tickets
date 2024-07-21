@@ -742,7 +742,7 @@ logAddEmbed:
 alertEmbed:
   color: "#2FF200"
   title: "Ticket Close Notification"
-  description: "This ticket will be closed soon if no response has been received." # You can use {time} for the time (format example: 1d 2h 3m 4s) until the ticket gets automatically closed if the alertReply option at the top of the config is enabled.
+  description: "This ticket will be closed soon if no response has been received." # You can use {time} for the time (uses a discord timestamp in the format: in X time, such as "in 10 minutes") until the ticket gets automatically closed or deleted depending on how you configured the alertReply options at the top of the configuration.
   timestamp: true
   URL: ""
   image: ""
