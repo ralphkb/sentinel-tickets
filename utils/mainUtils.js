@@ -551,6 +551,33 @@ async function lastMsgTimestamp(userId, channelId) {
   return lastTimestamp;
 }
 
+async function updateStatsChannels() {
+  const statsChannels = config.statsChannels.channels;
+  for (const statsChannel of statsChannels) {
+    const { channelID, type, name } = statsChannel;
+    const channel = await getChannel(channelID);
+    if (!channel) {
+      console.error(
+        `Channel with ID ${channelID} not found, double check your configuration`,
+      );
+      continue;
+    }
+    let stats = await mainDB.get(type);
+    if (type === "openTickets") {
+      stats = stats.length;
+    }
+    if (type === "ratings") {
+      const averageRating =
+        stats.reduce((total, current) => total + current, 0) / stats.length;
+      let finalResult = stats.length ? averageRating.toFixed(1) : 0;
+      await channel.setName(name.replace(/\{stats\}/g, finalResult));
+      continue;
+    }
+    const newName = name.replace(/\{stats\}/g, stats);
+    await channel.setName(newName);
+  }
+}
+
 module.exports = {
   logMessage,
   checkSupportRole,
@@ -572,4 +599,5 @@ module.exports = {
   sanitizeInput,
   logError,
   lastMsgTimestamp,
+  updateStatsChannels,
 };

@@ -11,6 +11,7 @@ const {
   cleanBlacklist,
   logError,
   lastMsgTimestamp,
+  updateStatsChannels,
 } = require("./utils/mainUtils.js");
 const { autoCloseTicket } = require("./utils/ticketAutoClose.js");
 
@@ -49,6 +50,10 @@ async function autoCloseTickets() {
 if (config.autoCloseTickets.enabled) {
   const autoCloseInterval = config?.autoCloseTickets?.interval || 60;
   setInterval(autoCloseTickets, autoCloseInterval * 1000);
+}
+
+if (config.statsChannels.enabled) {
+  setInterval(updateStatsChannels, 600 * 1000);
 }
 
 // Holding commands cooldown data
