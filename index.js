@@ -53,7 +53,9 @@ if (config.autoCloseTickets.enabled) {
 }
 
 if (config.statsChannels.enabled) {
-  setInterval(updateStatsChannels, 600 * 1000);
+  const statsInterval = parseInt(config?.statsChannels?.interval, 10) || 600;
+  const statsIntervalMs = Math.max(statsInterval * 1000, 600 * 1000);
+  setInterval(updateStatsChannels, statsIntervalMs);
 }
 
 // Holding commands cooldown data

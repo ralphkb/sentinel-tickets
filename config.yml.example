@@ -35,6 +35,7 @@ autoCloseTickets:
 onUserLeave: "close" # The automated action the bot will take when a user leaves the server while having a ticket open, can be "close" or "delete" which will either automatically close or delete their ticket, you may also put it as "none" to disable the automation
 statsChannels:
   enabled: false # Enable or disable the stats channels
+  interval: "600" # The interval in seconds for the stats channels to update, cannot be lower than 600 which is 10 minutes in order to avoid discord channel rename rate limits
   channels:
     - channelID: "111111111111111111" # The ID of the voice channel that will be renamed frequently with the updated stats
       type: "totalTickets" # The type of statistic to display, the options are the following: totalTickets, openTickets, totalClaims, totalReviews, ratings, totalMessages
