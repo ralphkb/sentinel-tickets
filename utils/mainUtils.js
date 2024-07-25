@@ -562,8 +562,24 @@ async function updateStatsChannels() {
       );
       continue;
     }
+    if (type === "avgTicketCreators") {
+      const ticketCreators = (await mainDB.get("ticketCreators")) ?? [];
+      const totalTicketCreators = ticketCreators.length;
+      const averageTicketsCreated =
+        ticketCreators.reduce(
+          (total, creator) => total + creator.ticketsCreated,
+          0,
+        ) / totalTicketCreators;
+      await channel.setName(
+        name.replace(
+          /\{stats\}/g,
+          `${ticketCreators.length ? averageTicketsCreated.toFixed(0) : 0}`,
+        ),
+      );
+      continue;
+    }
     let stats = await mainDB.get(type);
-    if (type === "openTickets") {
+    if (type === "openTickets" || type === "ticketCreators") {
       stats = stats.length;
     }
     if (type === "ratings") {
@@ -573,8 +589,7 @@ async function updateStatsChannels() {
       await channel.setName(name.replace(/\{stats\}/g, finalResult));
       continue;
     }
-    const newName = name.replace(/\{stats\}/g, stats);
-    await channel.setName(newName);
+    await channel.setName(name.replace(/\{stats\}/g, stats));
   }
 }
 
