@@ -310,6 +310,9 @@ commands:
   rename:
     enabled: true
     permission: "KickMembers"
+  topic:
+    enabled: true
+    permission: "KickMembers"
   blacklist:
     enabled: true
     permission: "KickMembers"
@@ -489,6 +492,7 @@ toggleLogs:
   ticketUnclaim: true
   ticketMove: true
   ticketRename: true
+  ticketTopic: true
   ticketTransfer: true
   ticketPin: true
   ticketSlowmode: true
@@ -513,6 +517,7 @@ logs:
   ticketUnclaim: ""
   ticketMove: ""
   ticketRename: ""
+  ticketTopic: ""
   ticketTransfer: ""
   ticketPin: ""
   ticketSlowmode: ""
@@ -1013,6 +1018,44 @@ logRenameEmbed:
   field_staff: "• Staff"
   field_oldname: "• Ticket Old Name"
   field_newname: "• Ticket New Name"
+
+# Topic command embed
+topicEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: ""
+  description: "The topic of this ticket has been changed to **{topic}**" # Use {topic} for the new channel topic
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: "" 
+    iconURL: "" 
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for topic command
+logTopicEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Topic Changed"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_oldtopic: "• Ticket Old Topic"
+  field_newtopic: "• Ticket New Topic"
 
 # Slowmode command embed
 slowmodeEmbed:
