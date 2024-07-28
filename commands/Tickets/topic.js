@@ -3,13 +3,14 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { client, ticketsDB } = require("../../init.js");
+const { client, ticketsDB, ticketCategories } = require("../../init.js");
 const {
   sanitizeInput,
   logMessage,
   checkSupportRole,
   configEmbed,
   getChannel,
+  getUser,
 } = require("../../utils/mainUtils.js");
 
 module.exports = {
@@ -49,6 +50,17 @@ module.exports = {
     await interaction.deferReply({ ephemeral: isEphemeral });
     const oldTopic = interaction.channel.topic;
     let newTopic = interaction.options.getString("topic");
+    const user = await getUser(
+      await ticketsDB.get(`${interaction.channel.id}.userID`),
+    );
+    const ticketButton = await ticketsDB.get(
+      `${interaction.channel.id}.button`,
+    );
+    const category = ticketCategories[ticketButton];
+    newTopic = newTopic
+      .replace(/\{user\}/g, user)
+      .replace(/\{user\.tag\}/g, sanitizeInput(user.tag))
+      .replace(/\{type\}/g, category.name);
     await interaction.channel.setTopic(newTopic);
     let logChannelId = config.logs.ticketTopic || config.logs.default;
     let logChannel = await getChannel(logChannelId);
