@@ -88,7 +88,8 @@ async function autoDeleteTicket(channelID) {
     attachment = await saveTranscriptTxt(null, ticketChannel);
   }
 
-  const deleteTicketTime = config.deleteTicketTime || 5;
+  const deleteTicketTime =
+    config.deleteTicketTime >= 0 ? config.deleteTicketTime : 5;
   const deleteTime = deleteTicketTime * 1000;
 
   const defaultValues = {
