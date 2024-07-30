@@ -19,7 +19,10 @@ module.exports = {
     .setName("topic")
     .setDescription("Change the topic of a ticket.")
     .addStringOption((option) =>
-      option.setName("topic").setDescription("topic").setRequired(true),
+      option
+        .setName("topic")
+        .setDescription("Placeholders: {user}, {user.tag}, {type}")
+        .setRequired(true),
     )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.topic.permission],

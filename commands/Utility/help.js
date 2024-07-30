@@ -80,7 +80,7 @@ module.exports = {
             ? "> `/slowmode` - Add slowmode to a ticket channel.\n"
             : "") +
           (config.commands.topic?.enabled
-            ? "> `/topic` - Change the topic of a ticket.\n"
+            ? "> `/topic` - Change the topic of a ticket | Placeholders: {user}, {user.tag}, {type}\n"
             : "") +
           (config.commands.transcript?.enabled
             ? "> `/transcript` - Manually save the transcript of a ticket.\n"
