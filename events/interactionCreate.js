@@ -1519,7 +1519,7 @@ module.exports = {
             }
             const nameEmoji = category.nameEmoji ?? "";
             if (nameEmoji !== "") {
-              channelName = `${nameEmoji}-${channelName}`;
+              channelName = `${nameEmoji}${channelName}`;
             }
 
             await interaction.guild.channels
