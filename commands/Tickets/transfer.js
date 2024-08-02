@@ -130,15 +130,15 @@ module.exports = {
 
     logTransferEmbed.addFields([
       {
-        name: config.logTransferEmbed.field_staff,
+        name: config.logTransferEmbed.field_staff || "• Staff",
         value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
       },
       {
-        name: config.logTransferEmbed.field_ticket,
+        name: config.logTransferEmbed.field_ticket || "• Ticket",
         value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
       },
       {
-        name: config.logTransferEmbed.field_transfer,
+        name: config.logTransferEmbed.field_transfer || "• Transfer Details",
         value: `> ${currentUser} (${sanitizeInput(currentUser.tag)}) -> ${optionUser} (${sanitizeInput(optionUser.tag)})`,
       },
     ]);

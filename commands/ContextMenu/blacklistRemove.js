@@ -135,15 +135,15 @@ module.exports = {
 
       logUnblacklistEmbed.addFields([
         {
-          name: config.logUnblacklistEmbed.field_staff,
+          name: config.logUnblacklistEmbed.field_staff || "• Staff",
           value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
         },
         {
-          name: config.logUnblacklistEmbed.field_target,
+          name: config.logUnblacklistEmbed.field_target || "• Target",
           value: `> ${user}\n> ${sanitizeInput(user.tag)}`,
         },
         {
-          name: config.logUnblacklistEmbed.field_reason,
+          name: config.logUnblacklistEmbed.field_reason || "• Reason",
           value: `> ${reason}`,
         },
       ]);

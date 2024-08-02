@@ -240,19 +240,19 @@ module.exports = {
 
           logBlacklistEmbed.addFields([
             {
-              name: config.logBlacklistEmbed.field_staff,
+              name: config.logBlacklistEmbed.field_staff || "• Staff",
               value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
             },
             {
-              name: config.logBlacklistEmbed.field_target,
+              name: config.logBlacklistEmbed.field_target || "• Target",
               value: `> ${user}\n> ${sanitizeInput(user.tag)}`,
             },
             {
-              name: config.logBlacklistEmbed.field_reason,
+              name: config.logBlacklistEmbed.field_reason || "• Reason",
               value: `> ${reason}`,
             },
             {
-              name: config.logBlacklistEmbed.field_duration,
+              name: config.logBlacklistEmbed.field_duration || "• Duration",
               value: `> ${duration}`,
             },
           ]);
@@ -356,19 +356,19 @@ module.exports = {
 
           logBlacklistEmbed.addFields([
             {
-              name: config.logBlacklistEmbed.field_staff,
+              name: config.logBlacklistEmbed.field_staff || "• Staff",
               value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
             },
             {
-              name: config.logBlacklistEmbed.field_target,
+              name: config.logBlacklistEmbed.field_target || "• Target",
               value: `> ${role}\n> ${sanitizeInput(role.name)}`,
             },
             {
-              name: config.logBlacklistEmbed.field_reason,
+              name: config.logBlacklistEmbed.field_reason || "• Reason",
               value: `> ${reason}`,
             },
             {
-              name: config.logBlacklistEmbed.field_duration,
+              name: config.logBlacklistEmbed.field_duration || "• Duration",
               value: `> ${duration}`,
             },
           ]);
@@ -500,15 +500,15 @@ module.exports = {
 
           logUnblacklistEmbed.addFields([
             {
-              name: config.logUnblacklistEmbed.field_staff,
+              name: config.logUnblacklistEmbed.field_staff || "• Staff",
               value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
             },
             {
-              name: config.logUnblacklistEmbed.field_target,
+              name: config.logUnblacklistEmbed.field_target || "• Target",
               value: `> ${user}\n> ${sanitizeInput(user.tag)}`,
             },
             {
-              name: config.logUnblacklistEmbed.field_reason,
+              name: config.logUnblacklistEmbed.field_reason || "• Reason",
               value: `> ${reason}`,
             },
           ]);
@@ -606,15 +606,15 @@ module.exports = {
 
           logUnblacklistEmbed.addFields([
             {
-              name: config.logUnblacklistEmbed.field_staff,
+              name: config.logUnblacklistEmbed.field_staff || "• Staff",
               value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
             },
             {
-              name: config.logUnblacklistEmbed.field_target,
+              name: config.logUnblacklistEmbed.field_target || "• Target",
               value: `> ${role}\n> ${sanitizeInput(role.name)}`,
             },
             {
-              name: config.logUnblacklistEmbed.field_reason,
+              name: config.logUnblacklistEmbed.field_reason || "• Reason",
               value: `> ${reason}`,
             },
           ]);

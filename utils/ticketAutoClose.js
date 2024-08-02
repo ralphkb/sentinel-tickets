@@ -56,15 +56,15 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
 
   logAutoCloseEmbed.addFields([
     {
-      name: config.logAutoCloseEmbed.field_staff,
+      name: config.logAutoCloseEmbed.field_staff || "• Auto Closed By",
       value: `> <@!${client.user.id}>\n> ${sanitizeInput(client.user.tag)}`,
     },
     {
-      name: config.logAutoCloseEmbed.field_user,
+      name: config.logAutoCloseEmbed.field_user || "• Ticket Creator",
       value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
     },
     {
-      name: config.logAutoCloseEmbed.field_ticket,
+      name: config.logAutoCloseEmbed.field_ticket || "• Ticket",
       value: `> #${sanitizeInput(ticketChannel.name)}\n> ${ticketType}`,
     },
   ]);

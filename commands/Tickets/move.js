@@ -115,15 +115,15 @@ module.exports = {
 
     logMoveEmbed.addFields([
       {
-        name: config.logMoveEmbed.field_staff,
+        name: config.logMoveEmbed.field_staff || "• Staff",
         value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
       },
       {
-        name: config.logMoveEmbed.field_ticket,
+        name: config.logMoveEmbed.field_ticket || "• Ticket",
         value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
       },
       {
-        name: config.logMoveEmbed.field_category,
+        name: config.logMoveEmbed.field_category || "• Category",
         value: `> ${ticketType} -> ${option}`,
       },
     ]);

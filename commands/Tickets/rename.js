@@ -70,15 +70,15 @@ module.exports = {
 
     logRenameEmbed.addFields([
       {
-        name: config.logRenameEmbed.field_staff,
+        name: config.logRenameEmbed.field_staff || "• Staff",
         value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
       },
       {
-        name: config.logRenameEmbed.field_oldname,
+        name: config.logRenameEmbed.field_oldname || "• Ticket Old Name",
         value: `> #${sanitizeInput(interaction.channel.name)}`,
       },
       {
-        name: config.logRenameEmbed.field_newname,
+        name: config.logRenameEmbed.field_newname || "• Ticket New Name",
         value: `> ${interaction.channel}\n> #${sanitizeInput(newName)}`,
       },
     ]);

@@ -57,15 +57,15 @@ async function closeTicket(interaction) {
 
   logCloseEmbed.addFields([
     {
-      name: config.logCloseEmbed.field_staff,
+      name: config.logCloseEmbed.field_staff || "• Closed By",
       value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
     },
     {
-      name: config.logCloseEmbed.field_user,
+      name: config.logCloseEmbed.field_user || "• Ticket Creator",
       value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
     },
     {
-      name: config.logCloseEmbed.field_ticket,
+      name: config.logCloseEmbed.field_ticket || "• Ticket",
       value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
     },
   ]);

@@ -184,11 +184,11 @@ async function claimTicket(interaction) {
 
       logClaimedEmbed.addFields([
         {
-          name: config.logClaimedEmbed.field_staff,
+          name: config.logClaimedEmbed.field_staff || "• Staff",
           value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
         },
         {
-          name: config.logClaimedEmbed.field_ticket,
+          name: config.logClaimedEmbed.field_ticket || "• Ticket",
           value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
         },
       ]);

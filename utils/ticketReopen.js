@@ -40,15 +40,15 @@ async function reopenTicket(interaction) {
 
   logReopenEmbed.addFields([
     {
-      name: config.logReopenEmbed.field_staff,
+      name: config.logReopenEmbed.field_staff || "• Re-Opened By",
       value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
     },
     {
-      name: config.logReopenEmbed.field_user,
+      name: config.logReopenEmbed.field_user || "• Ticket Creator",
       value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
     },
     {
-      name: config.logReopenEmbed.field_ticket,
+      name: config.logReopenEmbed.field_ticket || "• Ticket",
       value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
     },
   ]);

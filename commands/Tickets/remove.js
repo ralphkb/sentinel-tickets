@@ -110,19 +110,19 @@ module.exports = {
 
       logUserRemoveEmbed.addFields([
         {
-          name: config.logRemoveEmbed.field_staff,
+          name: config.logRemoveEmbed.field_staff || "• Staff",
           value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
         },
         {
-          name: config.logRemoveEmbed.field_target,
+          name: config.logRemoveEmbed.field_target || "• Target",
           value: `> ${user}\n> ${sanitizeInput(user.tag)}`,
         },
         {
-          name: config.logRemoveEmbed.field_ticket,
+          name: config.logRemoveEmbed.field_ticket || "• Ticket",
           value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
         },
         {
-          name: config.logRemoveEmbed.field_reason,
+          name: config.logRemoveEmbed.field_reason || "• Reason",
           value: `> ${reason}`,
         },
       ]);
@@ -192,19 +192,19 @@ module.exports = {
 
       logRoleRemoveEmbed.addFields([
         {
-          name: config.logRemoveEmbed.field_staff,
+          name: config.logRemoveEmbed.field_staff || "• Staff",
           value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
         },
         {
-          name: config.logRemoveEmbed.field_target,
+          name: config.logRemoveEmbed.field_target || "• Target",
           value: `> ${role}\n> ${sanitizeInput(role.name)}`,
         },
         {
-          name: config.logRemoveEmbed.field_ticket,
+          name: config.logRemoveEmbed.field_ticket || "• Ticket",
           value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
         },
         {
-          name: config.logRemoveEmbed.field_reason,
+          name: config.logRemoveEmbed.field_reason || "• Reason",
           value: `> ${reason}`,
         },
       ]);

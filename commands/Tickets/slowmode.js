@@ -100,15 +100,15 @@ module.exports = {
 
     logSlowmodeEmbed.addFields([
       {
-        name: config.logSlowmodeEmbed.field_staff,
+        name: config.logSlowmodeEmbed.field_staff || "• Staff",
         value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
       },
       {
-        name: config.logSlowmodeEmbed.field_ticket,
+        name: config.logSlowmodeEmbed.field_ticket || "• Ticket",
         value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
       },
       {
-        name: config.logSlowmodeEmbed.field_slowmode,
+        name: config.logSlowmodeEmbed.field_slowmode || "• Slowmode",
         value: `> **${formatTime(currentSlowmode)}** -> **${formattedTime}**`,
       },
     ]);

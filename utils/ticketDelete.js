@@ -53,19 +53,19 @@ async function deleteTicket(interaction) {
 
   logDeleteEmbed.addFields([
     {
-      name: config.logDeleteEmbed.field_staff,
+      name: config.logDeleteEmbed.field_staff || "• Deleted By",
       value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
     },
     {
-      name: config.logDeleteEmbed.field_user,
+      name: config.logDeleteEmbed.field_user || "• Ticket Creator",
       value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
     },
     {
-      name: config.logDeleteEmbed.field_ticket,
+      name: config.logDeleteEmbed.field_ticket || "• Ticket",
       value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
     },
     {
-      name: config.logDeleteEmbed.field_creation,
+      name: config.logDeleteEmbed.field_creation || "• Creation Time",
       value: `> <t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
     },
   ]);

@@ -131,19 +131,19 @@ module.exports = {
 
       logPriorityAddEmbed.addFields([
         {
-          name: config.logPriorityAddEmbed.field_staff,
+          name: config.logPriorityAddEmbed.field_staff || "• Staff",
           value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
         },
         {
-          name: config.logPriorityAddEmbed.field_ticket,
+          name: config.logPriorityAddEmbed.field_ticket || "• Ticket",
           value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
         },
         {
-          name: config.logPriorityAddEmbed.field_priority,
+          name: config.logPriorityAddEmbed.field_priority || "• Priority",
           value: `> ${priorityEmoji} ${option}`,
         },
         {
-          name: config.logPriorityAddEmbed.field_reason,
+          name: config.logPriorityAddEmbed.field_reason || "• Reason",
           value: `> ${reason}`,
         },
       ]);
@@ -226,11 +226,11 @@ module.exports = {
 
       logPriorityRemoveEmbed.addFields([
         {
-          name: config.logPriorityRemoveEmbed.field_staff,
+          name: config.logPriorityRemoveEmbed.field_staff || "• Staff",
           value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
         },
         {
-          name: config.logPriorityRemoveEmbed.field_ticket,
+          name: config.logPriorityRemoveEmbed.field_ticket || "• Ticket",
           value: `> #${sanitizeInput(channelName)} -> #${sanitizeInput(updatedChannelName)}`,
         },
       ]);

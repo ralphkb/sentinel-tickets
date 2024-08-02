@@ -55,19 +55,19 @@ async function autoDeleteTicket(channelID) {
 
   logAutoDeleteEmbed.addFields([
     {
-      name: config.logAutoDeleteEmbed.field_staff,
+      name: config.logAutoDeleteEmbed.field_staff || "• Auto Deleted By",
       value: `> <@!${client.user.id}>\n> ${sanitizeInput(client.user.tag)}`,
     },
     {
-      name: config.logAutoDeleteEmbed.field_user,
+      name: config.logAutoDeleteEmbed.field_user || "• Ticket Creator",
       value: `> <@!${ticketUserID.id}>\n> ${sanitizeInput(ticketUserID.tag)}`,
     },
     {
-      name: config.logAutoDeleteEmbed.field_ticket,
+      name: config.logAutoDeleteEmbed.field_ticket || "• Ticket",
       value: `> #${sanitizeInput(ticketChannel.name)}\n> ${ticketType}`,
     },
     {
-      name: config.logAutoDeleteEmbed.field_creation,
+      name: config.logAutoDeleteEmbed.field_creation || "• Creation Time",
       value: `> <t:${await ticketsDB.get(`${channelID}.creationTime`)}:F>`,
     },
   ]);

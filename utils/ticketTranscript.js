@@ -55,22 +55,22 @@ async function transcriptTicket(interaction) {
 
   transcriptEmbed.addFields([
     {
-      name: config.transcriptEmbed.field_creator,
+      name: config.transcriptEmbed.field_creator || "Ticket Creator",
       value: `<@!${ticketUserID.id}>\n${sanitizeInput(ticketUserID.tag)}`,
       inline: true,
     },
     {
-      name: config.transcriptEmbed.field_ticket,
+      name: config.transcriptEmbed.field_ticket || "Ticket Name",
       value: `<#${interaction.channel.id}>\n${sanitizeInput(interaction.channel.name)}`,
       inline: true,
     },
     {
-      name: config.transcriptEmbed.field_category,
+      name: config.transcriptEmbed.field_category || "Category",
       value: `${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
       inline: true,
     },
     {
-      name: config.transcriptEmbed.field_creation,
+      name: config.transcriptEmbed.field_creation || "Creation Time",
       value: `<t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
     },
   ]);

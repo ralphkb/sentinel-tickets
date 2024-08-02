@@ -139,11 +139,11 @@ async function unclaimTicket(interaction) {
 
       logUnclaimedEmbed.addFields([
         {
-          name: config.logUnclaimedEmbed.field_staff,
+          name: config.logUnclaimedEmbed.field_staff || "• Staff",
           value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
         },
         {
-          name: config.logUnclaimedEmbed.field_staff,
+          name: config.logUnclaimedEmbed.field_ticket || "• Ticket",
           value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
         },
       ]);

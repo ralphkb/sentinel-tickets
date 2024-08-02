@@ -83,15 +83,15 @@ module.exports = {
 
     logTopicEmbed.addFields([
       {
-        name: config.logTopicEmbed.field_staff,
+        name: config.logTopicEmbed.field_staff || "• Staff",
         value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
       },
       {
-        name: config.logTopicEmbed.field_oldtopic,
+        name: config.logTopicEmbed.field_oldtopic || "• Ticket Old Topic",
         value: `> ${sanitizeInput(oldTopic)}`,
       },
       {
-        name: config.logTopicEmbed.field_newtopic,
+        name: config.logTopicEmbed.field_newtopic || "• Ticket New Topic",
         value: `> ${sanitizeInput(newTopic)}`,
       },
     ]);

@@ -69,11 +69,11 @@ module.exports = {
 
     logPinEmbed.addFields([
       {
-        name: config.logPinEmbed.field_staff,
+        name: config.logPinEmbed.field_staff || "• Staff",
         value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
       },
       {
-        name: config.logPinEmbed.field_ticket,
+        name: config.logPinEmbed.field_ticket || "• Ticket",
         value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
       },
     ]);
