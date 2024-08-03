@@ -123,6 +123,7 @@ module.exports = {
     } else {
       blockTicketCreation = config.workingHours.default.blockTicketCreation;
     }
+    const workingHoursRoles = config.workingHours.bypassRoles ?? [];
 
     const openingTimeToday = userCurrentTime
       .clone()
@@ -352,46 +353,52 @@ module.exports = {
         if (timeRegex.test(openingTime) && timeRegex.test(closingTime)) {
           if (config.workingHours.enabled && blockTicketCreation) {
             if (
-              userCurrentTime.isBefore(openingTimeToday) ||
-              userCurrentTime.isAfter(closingTimeToday)
+              !interaction.member.roles.cache.some((role) =>
+                workingHoursRoles.includes(role.id),
+              )
             ) {
-              const defaultValues = {
-                color: "#FF0000",
-                title: "Working Hours",
-                description:
-                  "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}.",
-                timestamp: true,
-              };
-
-              const workingHoursEmbed = await configEmbed(
-                "workingHoursEmbed",
-                defaultValues,
-              );
-
               if (
-                workingHoursEmbed.data &&
-                workingHoursEmbed.data.description
+                userCurrentTime.isBefore(openingTimeToday) ||
+                userCurrentTime.isAfter(closingTimeToday)
               ) {
-                workingHoursEmbed.setDescription(
-                  workingHoursEmbed.data.description
-                    .replace(
-                      /\{openingTime\}/g,
-                      `<t:${openingTimeToday.unix()}:t>`,
-                    )
-                    .replace(
-                      /\{closingTime\}/g,
-                      `<t:${closingTimeToday.unix()}:t>`,
-                    )
-                    .replace(
-                      /\{now\}/g,
-                      `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
-                    ),
+                const defaultValues = {
+                  color: "#FF0000",
+                  title: "Working Hours",
+                  description:
+                    "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}.",
+                  timestamp: true,
+                };
+
+                const workingHoursEmbed = await configEmbed(
+                  "workingHoursEmbed",
+                  defaultValues,
                 );
+
+                if (
+                  workingHoursEmbed.data &&
+                  workingHoursEmbed.data.description
+                ) {
+                  workingHoursEmbed.setDescription(
+                    workingHoursEmbed.data.description
+                      .replace(
+                        /\{openingTime\}/g,
+                        `<t:${openingTimeToday.unix()}:t>`,
+                      )
+                      .replace(
+                        /\{closingTime\}/g,
+                        `<t:${closingTimeToday.unix()}:t>`,
+                      )
+                      .replace(
+                        /\{now\}/g,
+                        `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
+                      ),
+                  );
+                }
+                return interaction.reply({
+                  embeds: [workingHoursEmbed],
+                  ephemeral: true,
+                });
               }
-              return interaction.reply({
-                embeds: [workingHoursEmbed],
-                ephemeral: true,
-              });
             }
           }
         }
@@ -954,46 +961,52 @@ module.exports = {
           if (timeRegex.test(openingTime) && timeRegex.test(closingTime)) {
             if (config.workingHours.enabled && blockTicketCreation) {
               if (
-                userCurrentTime.isBefore(openingTimeToday) ||
-                userCurrentTime.isAfter(closingTimeToday)
+                !interaction.member.roles.cache.some((role) =>
+                  workingHoursRoles.includes(role.id),
+                )
               ) {
-                const defaultValues = {
-                  color: "#FF0000",
-                  title: "Working Hours",
-                  description:
-                    "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}.",
-                  timestamp: true,
-                };
-
-                const workingHoursEmbed = await configEmbed(
-                  "workingHoursEmbed",
-                  defaultValues,
-                );
-
                 if (
-                  workingHoursEmbed.data &&
-                  workingHoursEmbed.data.description
+                  userCurrentTime.isBefore(openingTimeToday) ||
+                  userCurrentTime.isAfter(closingTimeToday)
                 ) {
-                  workingHoursEmbed.setDescription(
-                    workingHoursEmbed.data.description
-                      .replace(
-                        /\{openingTime\}/g,
-                        `<t:${openingTimeToday.unix()}:t>`,
-                      )
-                      .replace(
-                        /\{closingTime\}/g,
-                        `<t:${closingTimeToday.unix()}:t>`,
-                      )
-                      .replace(
-                        /\{now\}/g,
-                        `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
-                      ),
+                  const defaultValues = {
+                    color: "#FF0000",
+                    title: "Working Hours",
+                    description:
+                      "Tickets are only open between {openingTime} and {closingTime}.\nThe current time now is {now}.",
+                    timestamp: true,
+                  };
+
+                  const workingHoursEmbed = await configEmbed(
+                    "workingHoursEmbed",
+                    defaultValues,
                   );
+
+                  if (
+                    workingHoursEmbed.data &&
+                    workingHoursEmbed.data.description
+                  ) {
+                    workingHoursEmbed.setDescription(
+                      workingHoursEmbed.data.description
+                        .replace(
+                          /\{openingTime\}/g,
+                          `<t:${openingTimeToday.unix()}:t>`,
+                        )
+                        .replace(
+                          /\{closingTime\}/g,
+                          `<t:${closingTimeToday.unix()}:t>`,
+                        )
+                        .replace(
+                          /\{now\}/g,
+                          `<t:${Math.floor(new Date().getTime() / 1000)}:t>`,
+                        ),
+                    );
+                  }
+                  return interaction.reply({
+                    embeds: [workingHoursEmbed],
+                    ephemeral: true,
+                  });
                 }
-                return interaction.reply({
-                  embeds: [workingHoursEmbed],
-                  ephemeral: true,
-                });
               }
             }
           }

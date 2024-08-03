@@ -403,6 +403,7 @@ newTicketButton:
 workingHours:
   enabled: false # Enable or disable the working hours feature
   timezone: "Europe/Paris" # The timezone of the working hours, options on this link should work: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  bypassRoles: [] # The IDs of the roles that can bypass the working hours block ticket creation, keep it empty to turn off this feature
   default: # The default working hours for any day that is not specified below
     min: "09:00"
     max: "17:00"
