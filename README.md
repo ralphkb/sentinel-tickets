@@ -68,6 +68,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Option to automatically close or delete a ticket after the ticket creator left the discord server.
 - Option to automatically close or delete a ticket after an alert was sent and the ticket creator did not reply in time.
 - DM preference system, allowing users to toggle their preference regarding receiving DMs from the bot such as alert, close, reopen & delete.
+- The ability to create stats channels that will be automatically updated after a configurable amount of time.
 - Multiple Commands: Efficiently manage tickets with various commands.
     - Send the ticket panels in any channel using the panel id
     - Add Users or Roles to a ticket
@@ -84,6 +85,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Add a custom slowmode to a ticket
     - Transfer ticket ownership to another user
     - Add a priority to a ticket
+    - Change the topic of a ticket, with placeholders support
     - Close Request so users can request that staff close their ticket
 - Context Menu Commands: Right click commands that are easy to use.
     - Get User Info
