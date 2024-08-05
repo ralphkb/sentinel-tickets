@@ -66,9 +66,9 @@ module.exports = {
       });
     }
 
-    const emojiLow = config.commands.priority.emojis.low;
-    const emojiMedium = config.commands.priority.emojis.medium;
-    const emojiHigh = config.commands.priority.emojis.high;
+    const emojiLow = config.commands.priority.emojis.low || "🟢";
+    const emojiMedium = config.commands.priority.emojis.medium || "🟡";
+    const emojiHigh = config.commands.priority.emojis.high || "🔴";
     const priorityEmoji = [emojiLow, emojiMedium, emojiHigh];
 
     const hasPriorityEmoji = priorityEmoji.some((emoji) =>
@@ -82,7 +82,9 @@ module.exports = {
     if (subcommand === "add") {
       if (hasPriorityEmoji) {
         return interaction.reply({
-          content: config.commands.priority.alreadyPriority,
+          content:
+            config.commands.priority.alreadyPriority ||
+            "This ticket is already assigned a priority!",
           ephemeral: true,
         });
       }
@@ -148,7 +150,7 @@ module.exports = {
         },
       ]);
 
-      interaction.channel.setName(
+      await interaction.channel.setName(
         `${priorityEmoji}${interaction.channel.name}`,
       );
 
@@ -191,7 +193,9 @@ module.exports = {
     if (subcommand === "remove") {
       if (!hasPriorityEmoji) {
         return interaction.reply({
-          content: config.commands.priority.notPriority,
+          content:
+            config.commands.priority.notPriority ||
+            "This ticket is not assigned a priority!",
           ephemeral: true,
         });
       }
@@ -206,7 +210,7 @@ module.exports = {
         return acc.replace(emoji, "");
       }, channelName);
 
-      interaction.channel.setName(updatedChannelName);
+      await interaction.channel.setName(updatedChannelName);
 
       const logDefaultValues = {
         color: "#2FF200",

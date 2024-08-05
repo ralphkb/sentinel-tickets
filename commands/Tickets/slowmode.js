@@ -58,7 +58,9 @@ module.exports = {
 
     if (currentSlowmode === time) {
       return interaction.reply({
-        content: config.commands.slowmode.alreadySlowmode,
+        content:
+          config.commands.slowmode.alreadySlowmode ||
+          "This ticket channel already has that slowmode.",
         ephemeral: true,
       });
     }
@@ -66,7 +68,9 @@ module.exports = {
     if (time === 0) {
       await interaction.channel.setRateLimitPerUser(0);
       return interaction.reply({
-        content: config.commands.slowmode.slowmodeRemoved,
+        content:
+          config.commands.slowmode.slowmodeRemoved ||
+          "The slowmode has been removed from this ticket.",
         ephemeral: true,
       });
     }

@@ -43,9 +43,12 @@ module.exports = {
       });
     }
 
-    if (interaction.channel.name.includes(config.commands.pin.emoji)) {
+    const pinEmoji = config?.commands?.pin?.emoji || "📌";
+
+    if (interaction.channel.name.includes(pinEmoji)) {
       return interaction.reply({
-        content: config.commands.pin.alreadyPinned,
+        content:
+          config.commands.pin.alreadyPinned || "This ticket is already pinned!",
         ephemeral: true,
       });
     }
@@ -82,14 +85,14 @@ module.exports = {
       },
     ]);
 
-    interaction.channel
+    await interaction.channel
       .setPosition(0)
       .then(() => {
         return new Promise((resolve) => setTimeout(resolve, 1000));
       })
-      .then(() => {
-        interaction.channel.setName(
-          `${config.commands.pin.emoji}${interaction.channel.name}`,
+      .then(async () => {
+        await interaction.channel.setName(
+          `${pinEmoji}${interaction.channel.name}`,
         );
       });
 
