@@ -3,13 +3,14 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { client, ticketsDB } = require("../../init.js");
+const { client, ticketsDB, ticketCategories } = require("../../init.js");
 const {
   sanitizeInput,
   logMessage,
   checkSupportRole,
   configEmbed,
   getChannel,
+  getUser,
 } = require("../../utils/mainUtils.js");
 
 module.exports = {
@@ -18,7 +19,10 @@ module.exports = {
     .setName("rename")
     .setDescription("Rename a ticket.")
     .addStringOption((option) =>
-      option.setName("name").setDescription("name").setRequired(true),
+      option
+        .setName("name")
+        .setDescription("Placeholders: {user}, {type}")
+        .setRequired(true),
     )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.rename.permission],
@@ -48,7 +52,17 @@ module.exports = {
 
     await interaction.deferReply({ ephemeral: isEphemeral });
     let newName = interaction.options.getString("name");
-    interaction.channel.setName(`${newName}`);
+    const ticketCreator = await getUser(
+      await ticketsDB.get(`${interaction.channel.id}.userID`),
+    );
+    const ticketButton = await ticketsDB.get(
+      `${interaction.channel.id}.button`,
+    );
+    const category = ticketCategories[ticketButton];
+    newName = newName
+      .replace(/\{user\}/g, ticketCreator.username)
+      .replace(/\{type\}/g, category.name);
+    await interaction.channel.setName(`${newName}`);
     let logChannelId = config.logs.ticketRename || config.logs.default;
     let logChannel = await getChannel(logChannelId);
 

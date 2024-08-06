@@ -71,7 +71,7 @@ module.exports = {
             ? "> `/remove` - Remove a user or role from a ticket channel.\n"
             : "") +
           (config.commands.rename?.enabled
-            ? "> `/rename` - Rename a ticket.\n"
+            ? "> `/rename` - Rename a ticket | Placeholders: {user}, {type}\n"
             : "") +
           (config.commands.reopen?.enabled
             ? "> `/reopen` - Re-Open a closed ticket.\n"
