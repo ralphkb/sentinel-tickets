@@ -875,7 +875,7 @@ module.exports = {
           ) {
             await blacklistDB.delete(`role-${roleId}`);
           } else {
-            isRoleBlacklisted = true;
+            isRoleBlacklisted = roleBlacklist;
             break;
           }
         }
@@ -908,13 +908,30 @@ module.exports = {
       }
 
       if (isUserBlacklisted || isRoleBlacklisted) {
-        const expirationTime =
-          isUserBlacklisted?.timestamp +
-          parseDurationToMilliseconds(isUserBlacklisted?.duration);
-        const expiryDate =
-          isUserBlacklisted?.duration === "permanent"
-            ? "Never"
-            : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+        let expiryDate;
+        let blacklistReason;
+        let blacklistType;
+        if (isUserBlacklisted) {
+          const expirationTime =
+            isUserBlacklisted?.timestamp +
+            parseDurationToMilliseconds(isUserBlacklisted?.duration);
+          expiryDate =
+            isUserBlacklisted?.duration === "permanent"
+              ? "Never"
+              : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+          blacklistReason = isUserBlacklisted?.reason;
+          blacklistType = "User";
+        } else if (isRoleBlacklisted) {
+          const expirationTime =
+            isRoleBlacklisted?.timestamp +
+            parseDurationToMilliseconds(isRoleBlacklisted?.duration);
+          expiryDate =
+            isRoleBlacklisted?.duration === "permanent"
+              ? "Never"
+              : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+          blacklistReason = isRoleBlacklisted?.reason;
+          blacklistType = "Role";
+        }
         const defaultblacklistedValues = {
           color: "#FF0000",
           title: "Blacklisted",
@@ -934,7 +951,10 @@ module.exports = {
 
         if (blacklistedEmbed.data && blacklistedEmbed.data.description) {
           blacklistedEmbed.setDescription(
-            blacklistedEmbed.data.description.replace(/\{time\}/g, expiryDate),
+            blacklistedEmbed.data.description
+              .replace(/\{time\}/g, expiryDate)
+              .replace(/\{reason\}/g, blacklistReason)
+              .replace(/\{type\}/g, blacklistType),
           );
         }
 
