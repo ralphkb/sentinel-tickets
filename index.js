@@ -14,6 +14,7 @@ const {
   updateStatsChannels,
 } = require("./utils/mainUtils.js");
 const { autoCloseTicket } = require("./utils/ticketAutoClose.js");
+const { autoDeleteTicket } = require("./utils/ticketAutoDelete.js");
 
 const blacklistInterval = config.blacklistCleanup || 120;
 // Schedule the blacklist cleanup check every blacklistInterval seconds
@@ -47,9 +48,41 @@ async function autoCloseTickets() {
   }
 }
 
+async function autoDeleteTickets() {
+  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+  const tickets = (await ticketsDB.all()) || [];
+  const closedTickets = tickets.filter(
+    (ticket) => ticket.value.status === "Closed",
+  );
+  const autoDeleteTime = config?.autoDeleteTickets?.time || 120; // Time in seconds
+
+  if (closedTickets.length > 0) {
+    for (const ticket of closedTickets) {
+      const channelID = ticket.id;
+      const { closedAt } = ticket.value;
+
+      if (closedAt === 0 || closedAt === undefined) {
+        continue;
+      }
+
+      const closedAtSeconds = Math.floor(closedAt / 1000);
+      const timeDifference = currentTime - closedAtSeconds;
+
+      if (timeDifference > autoDeleteTime) {
+        await autoDeleteTicket(channelID);
+      }
+    }
+  }
+}
+
 if (config.autoCloseTickets.enabled) {
   const autoCloseInterval = config?.autoCloseTickets?.interval || 60;
   setInterval(autoCloseTickets, autoCloseInterval * 1000);
+}
+
+if (config.autoDeleteTickets.enabled) {
+  const autoDeleteInterval = config?.autoDeleteTickets?.interval || 60;
+  setInterval(autoDeleteTickets, autoDeleteInterval * 1000);
 }
 
 if (config.statsChannels.enabled) {

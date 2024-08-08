@@ -287,6 +287,7 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
   });
   await ticketsDB.set(`${channelID}.closeMsgID`, messageID);
   await ticketsDB.set(`${channelID}.status`, "Closed");
+  await ticketsDB.set(`${channelID}.closedAt`, Date.now());
   await mainDB.pull("openTickets", channelID);
   let logChannelId = config.logs.ticketClose || config.logs.default;
   let logsChannel = await getChannel(logChannelId);

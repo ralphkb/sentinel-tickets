@@ -1682,6 +1682,7 @@ module.exports = {
                       creationTime: creationTime,
                       addedUsers: [],
                       addedRoles: [],
+                      closedAt: 0,
                     });
 
                     await mainDB.push("openTickets", `${channel.id}`);
