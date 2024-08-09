@@ -26,7 +26,7 @@ async function autoCloseTickets() {
   const openTickets = tickets.filter(
     (ticket) => ticket.value.status === "Open",
   );
-  const autoCloseTime = config?.autoCloseTickets?.time || 120; // Time in seconds
+  const autoCloseTime = config?.autoCloseTickets?.time || 86400; // Time in seconds
 
   if (openTickets.length > 0) {
     for (const ticket of openTickets) {
@@ -54,7 +54,7 @@ async function autoDeleteTickets() {
   const closedTickets = tickets.filter(
     (ticket) => ticket.value.status === "Closed",
   );
-  const autoDeleteTime = config?.autoDeleteTickets?.time || 120; // Time in seconds
+  const autoDeleteTime = config?.autoDeleteTickets?.time || 86400; // Time in seconds
 
   if (closedTickets.length > 0) {
     for (const ticket of closedTickets) {
