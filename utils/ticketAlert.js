@@ -3,7 +3,7 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { client } = require("../init.js");
+const { client, ticketsDB } = require("../init.js");
 const {
   configEmbed,
   sanitizeInput,
@@ -22,6 +22,37 @@ async function alertTicket(interaction, user) {
     .setStyle(ButtonStyle[config.closeButton.style]);
 
   const ticketAlertRow = new ActionRowBuilder().addComponents(closeButton);
+
+  const logDefaultValues = {
+    color: "#FF2400",
+    title: "Ticket Logs | Ticket Alert",
+    timestamp: true,
+    thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+    footer: {
+      text: `${interaction.user.tag}`,
+      iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+    },
+  };
+
+  const logAlertEmbed = await configEmbed("logAlertEmbed", logDefaultValues);
+  const ticketType = await ticketsDB.get(
+    `${interaction.channel.id}.ticketType`,
+  );
+
+  logAlertEmbed.addFields([
+    {
+      name: config.logAlertEmbed.field_staff || "• Alert Sent By",
+      value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+    },
+    {
+      name: config.logAlertEmbed.field_user || "• Ticket Creator",
+      value: `> <@!${user.id}>\n> ${sanitizeInput(user.tag)}`,
+    },
+    {
+      name: config.logAlertEmbed.field_ticket || "• Ticket",
+      value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
+    },
+  ]);
 
   const defaultValues = {
     color: "#2FF200",
@@ -89,6 +120,17 @@ async function alertTicket(interaction, user) {
         }
       }
     });
+  }
+
+  let logChannelId = config.logs.ticketAlert || config.logs.default;
+  let logsChannel = await getChannel(logChannelId);
+  if (config.toggleLogs.ticketAlert) {
+    try {
+      await logsChannel.send({ embeds: [logAlertEmbed] });
+    } catch (error) {
+      error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+      client.emit("error", error);
+    }
   }
 
   logMessage(

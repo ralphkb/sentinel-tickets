@@ -491,6 +491,7 @@ toggleLogs:
   userRemove: true
   ticketCreate: true
   ticketClose: true
+  ticketAlert: true
   ticketReopen: true
   ticketDelete: true
   ticketClaim: true
@@ -516,6 +517,7 @@ logs:
   userRemove: ""
   ticketCreate: ""
   ticketClose: ""
+  ticketAlert: ""
   ticketReopen: ""
   ticketDelete: ""
   ticketClaim: ""
@@ -777,6 +779,26 @@ alertEmbed:
     name: ""
     iconURL: ""
     url: ""
+
+# Log embed for ticket alerts
+logAlertEmbed:
+  color: "#FF2400"
+  title: "Ticket Logs | Ticket Alert"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Alert Sent By"
+  field_user: "• Ticket Creator"
+  field_ticket: "• Ticket"
 
 # User and role remove embed
 removeEmbed:
