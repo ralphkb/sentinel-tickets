@@ -10,6 +10,7 @@ const {
   logMessage,
   getChannel,
   getUserPreference,
+  getUser,
 } = require("./mainUtils.js");
 const { autoCloseTicket } = require("./ticketAutoClose.js");
 const { autoDeleteTicket } = require("./ticketAutoDelete.js");
@@ -38,6 +39,9 @@ async function alertTicket(interaction, user) {
   const ticketType = await ticketsDB.get(
     `${interaction.channel.id}.ticketType`,
   );
+  const ticketCreator = await getUser(
+    await ticketsDB.get(`${interaction.channel.id}.userID`),
+  );
 
   logAlertEmbed.addFields([
     {
@@ -45,8 +49,12 @@ async function alertTicket(interaction, user) {
       value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
     },
     {
-      name: config.logAlertEmbed.field_user || "• Ticket Creator",
+      name: config.logAlertEmbed.field_user || "• Alert Sent To",
       value: `> <@!${user.id}>\n> ${sanitizeInput(user.tag)}`,
+    },
+    {
+      name: config.logAlertEmbed.field_creator || "• Ticket Creator",
+      value: `> <@!${ticketCreator.id}>\n> ${sanitizeInput(ticketCreator.tag)}`,
     },
     {
       name: config.logAlertEmbed.field_ticket || "• Ticket",
