@@ -22,21 +22,19 @@ const {
 } = require("./mainUtils.js");
 
 async function deleteTicket(interaction) {
+  const channelID = interaction.channel.id;
+  const channelName = interaction.channel.name;
   const totalMessages = await mainDB.get("totalMessages");
   const ticketUserID = await getUser(
-    await ticketsDB.get(`${interaction.channel.id}.userID`),
+    await ticketsDB.get(`${channelID}.userID`),
   );
-  const claimUserID = await ticketsDB.get(
-    `${interaction.channel.id}.claimUser`,
-  );
+  const claimUserID = await ticketsDB.get(`${channelID}.claimUser`);
   let claimUser;
 
   if (claimUserID) {
     claimUser = await getUser(claimUserID);
   }
-  const ticketType = await ticketsDB.get(
-    `${interaction.channel.id}.ticketType`,
-  );
+  const ticketType = await ticketsDB.get(`${channelID}.ticketType`);
 
   const logDefaultValues = {
     color: "#FF0000",
@@ -62,11 +60,11 @@ async function deleteTicket(interaction) {
     },
     {
       name: config.logDeleteEmbed.field_ticket || "• Ticket",
-      value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
+      value: `> #${sanitizeInput(channelName)}\n> ${ticketType}`,
     },
     {
       name: config.logDeleteEmbed.field_creation || "• Creation Time",
-      value: `> <t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
+      value: `> <t:${await ticketsDB.get(`${channelID}.creationTime`)}:F>`,
     },
   ]);
 
@@ -105,11 +103,12 @@ async function deleteTicket(interaction) {
 
   const ticketMessages = await countMessagesInTicket(interaction.channel);
   await mainDB.set("totalMessages", totalMessages + ticketMessages);
+  const lastMsgTime = await lastMsgTimestamp(ticketUserID.id, channelID);
   await interaction.editReply({ embeds: [deleteEmbed] });
 
   setTimeout(async () => {
-    await ticketsDB.delete(interaction.channel.id);
-    await mainDB.pull("openTickets", interaction.channel.id);
+    await ticketsDB.delete(channelID);
+    await mainDB.pull("openTickets", channelID);
     await interaction.channel.delete();
   }, deleteTime);
 
@@ -124,7 +123,7 @@ async function deleteTicket(interaction) {
     }
   }
   logMessage(
-    `${interaction.user.tag} deleted the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
+    `${interaction.user.tag} deleted the ticket #${channelName} which was created by ${ticketUserID.tag}`,
   );
 
   // DM the user with an embed and the transcript of the ticket depending on the enabled settings
@@ -154,7 +153,7 @@ async function deleteTicket(interaction) {
           },
           {
             name: "Ticket",
-            value: `> #${sanitizeInput(interaction.channel.name)}`,
+            value: `> #${sanitizeInput(channelName)}`,
             inline: true,
           },
           {
@@ -182,7 +181,7 @@ async function deleteTicket(interaction) {
         )
         .addFields({
           name: "Ticket Creation Time",
-          value: `> <t:${await ticketsDB.get(`${interaction.channel.id}.creationTime`)}:F>`,
+          value: `> <t:${await ticketsDB.get(`${channelID}.creationTime`)}:F>`,
           inline: true,
         });
 
@@ -218,7 +217,7 @@ async function deleteTicket(interaction) {
       );
 
       ratingDMEmbed.setFooter({
-        text: `Ticket: #${interaction.channel.name} | Category: ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
+        text: `Ticket: #${channelName} | Category: ${await ticketsDB.get(`${channelID}.ticketType`)}`,
       });
 
       const messageDM = {};
@@ -239,10 +238,6 @@ async function deleteTicket(interaction) {
           if (Object.keys(messageDM).length !== 0) {
             await ticketUserID.send(messageDM);
           }
-          const lastMsgTime = await lastMsgTimestamp(
-            ticketUserID.id,
-            interaction.channel.id,
-          );
           if (lastMsgTime !== null) {
             await mainDB.set(`ratingMenuOptions`, options);
             await ticketUserID.send({

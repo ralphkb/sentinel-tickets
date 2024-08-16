@@ -26,6 +26,7 @@ const {
 async function autoDeleteTicket(channelID) {
   const totalMessages = await mainDB.get("totalMessages");
   const ticketChannel = await getChannel(channelID);
+  const channelName = ticketChannel.name;
   const ticketUserID = await getUser(
     await ticketsDB.get(`${channelID}.userID`),
   );
@@ -64,7 +65,7 @@ async function autoDeleteTicket(channelID) {
     },
     {
       name: config.logAutoDeleteEmbed.field_ticket || "• Ticket",
-      value: `> #${sanitizeInput(ticketChannel.name)}\n> ${ticketType}`,
+      value: `> #${sanitizeInput(channelName)}\n> ${ticketType}`,
     },
     {
       name: config.logAutoDeleteEmbed.field_creation || "• Creation Time",
@@ -110,6 +111,7 @@ async function autoDeleteTicket(channelID) {
 
   const ticketMessages = await countMessagesInTicket(ticketChannel);
   await mainDB.set("totalMessages", totalMessages + ticketMessages);
+  const lastMsgTime = await lastMsgTimestamp(ticketUserID.id, channelID);
   await ticketChannel.send({ embeds: [autoDeleteEmbed] });
 
   setTimeout(async () => {
@@ -132,7 +134,7 @@ async function autoDeleteTicket(channelID) {
     }
   }
   logMessage(
-    `${client.user.tag} deleted the ticket #${ticketChannel.name} which was created by ${ticketUserID.tag}`,
+    `${client.user.tag} deleted the ticket #${channelName} which was created by ${ticketUserID.tag}`,
   );
 
   // DM the user with an embed and the transcript of the ticket depending on the enabled settings
@@ -163,7 +165,7 @@ async function autoDeleteTicket(channelID) {
           },
           {
             name: "Ticket",
-            value: `> #${sanitizeInput(ticketChannel.name)}`,
+            value: `> #${sanitizeInput(channelName)}`,
             inline: true,
           },
           {
@@ -227,7 +229,7 @@ async function autoDeleteTicket(channelID) {
       );
 
       ratingDMEmbed.setFooter({
-        text: `Ticket: #${ticketChannel.name} | Category: ${await ticketsDB.get(`${channelID}.ticketType`)}`,
+        text: `Ticket: #${channelName} | Category: ${await ticketsDB.get(`${channelID}.ticketType`)}`,
       });
 
       const messageDM = {};
@@ -248,10 +250,6 @@ async function autoDeleteTicket(channelID) {
           if (Object.keys(messageDM).length !== 0) {
             await ticketUserID.send(messageDM);
           }
-          const lastMsgTime = await lastMsgTimestamp(
-            ticketUserID.id,
-            channelID,
-          );
           if (lastMsgTime !== null) {
             await mainDB.set(`ratingMenuOptions`, options);
             await ticketUserID.send({
