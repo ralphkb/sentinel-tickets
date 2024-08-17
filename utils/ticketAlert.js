@@ -114,17 +114,20 @@ async function alertTicket(interaction, user) {
     collector.on("end", async () => {
       let autoAction = config?.alertReply?.autoAction || "none";
       if (collector.collected.size === 0) {
-        switch (autoAction) {
-          case "close":
-            await autoCloseTicket(channelID);
-            break;
-          case "delete":
-            await autoDeleteTicket(channelID);
-            break;
-          case "none":
-            break;
-          default:
-            break;
+        const ticketExists = await ticketsDB.get(channelID);
+        if (ticketExists) {
+          switch (autoAction) {
+            case "close":
+              await autoCloseTicket(channelID);
+              break;
+            case "delete":
+              await autoDeleteTicket(channelID);
+              break;
+            case "none":
+              break;
+            default:
+              break;
+          }
         }
       }
     });
