@@ -593,6 +593,90 @@ async function updateStatsChannels() {
   }
 }
 
+async function listUserTickets(interaction, user, isEphemeral) {
+  const tickets = (await ticketsDB.all()) || [];
+  const userTickets = tickets.filter(
+    (ticket) => ticket.value.userID === user.id,
+  );
+
+  const defaultValues = {
+    color: "#2FF200",
+    title: "Current tickets of {user}",
+    timestamp: true,
+    footer: {
+      text: `Current Tickets of ${user.username}`,
+      iconURL: `${user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+    },
+  };
+
+  const ticketsEmbed = await configEmbed("ticketsEmbed", defaultValues);
+
+  if (ticketsEmbed.data && ticketsEmbed.data.title) {
+    ticketsEmbed.setTitle(
+      ticketsEmbed.data.title.replace(/\{user\}/g, user.username),
+    );
+  }
+
+  let openTickets = [];
+  let closedTickets = [];
+
+  if (userTickets.length > 0) {
+    for (const ticket of userTickets) {
+      const channel = await getChannel(ticket.id);
+      const ticketInfo = {
+        id: ticket.id,
+        name: channel.name,
+        status: ticket.value.status,
+        type: ticket.value.ticketType,
+        creationTime: ticket.value.creationTime,
+      };
+
+      if (ticket.value.status === "Open") {
+        openTickets.push(ticketInfo);
+      } else {
+        closedTickets.push(ticketInfo);
+      }
+    }
+  }
+
+  // Sort tickets by creation time
+  openTickets.sort((a, b) => b.creationTime - a.creationTime);
+  closedTickets.sort((a, b) => b.creationTime - a.creationTime);
+
+  const openTicketsField = {
+    name: "List of Currently Open Tickets",
+    value:
+      openTickets.length > 0
+        ? openTickets
+            .map(
+              (ticket) =>
+                `<#${ticket.id}> | ${ticket.name} | ${ticket.type}\nCreated on <t:${ticket.creationTime}:F>\n`,
+            )
+            .join("\n")
+        : "No currently open tickets.",
+  };
+
+  const closedTicketsField = {
+    name: "List of Currently Closed Tickets",
+    value:
+      closedTickets.length > 0
+        ? closedTickets
+            .map(
+              (ticket) =>
+                `<#${ticket.id}> | ${ticket.name} | ${ticket.type}\nCreated on <t:${ticket.creationTime}:F>\n`,
+            )
+            .join("\n")
+        : "No currently closed tickets.",
+  };
+
+  ticketsEmbed.addFields(openTicketsField, closedTicketsField);
+
+  await interaction.editReply({
+    embeds: [ticketsEmbed],
+    ephemeral: isEphemeral,
+  });
+}
+
 module.exports = {
   logMessage,
   checkSupportRole,
@@ -615,4 +699,5 @@ module.exports = {
   logError,
   lastMsgTimestamp,
   updateStatsChannels,
+  listUserTickets,
 };

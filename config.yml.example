@@ -336,6 +336,10 @@ commands:
     enabled: false
     permission: "ViewChannel"
     defaultDM: true # The default value of the preference
+  tickets:
+    enabled: true
+    permission: "ViewChannel"
+    support_role_ids: [] # The IDs of the staff roles on your server that can use this command's user argument to see the list of current tickets of other users, they must also have the permission above, keeping it empty will allow no roles to access the list of current tickets of other users.
 
 contextMenuCommands:
   userInfo:
@@ -1562,6 +1566,24 @@ preferenceEmbed:
   color: "#2FF200"
   title: "User Preference"
   description: "You will now {result}receive **{action}** DMs." # Use {action} for the type of DM preference and {result} for either "receive" or "no longer receive"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Tickets command embed
+ticketsEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "Current tickets of {user}" # Use {user} for the name of the user
+  description: ""
   timestamp: true
   URL: ""
   image: ""
