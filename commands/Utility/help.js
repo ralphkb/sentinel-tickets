@@ -93,6 +93,12 @@ module.exports = {
             : ""),
       },
       {
+        name: "🎫 Tickets",
+        value: config.commands.tickets?.enabled
+          ? "> `/tickets` - List the current tickets of a user.\n"
+          : "",
+      },
+      {
         name: "🛠️ Utility",
         value:
           "> `/help` - Get helpful information and commands.\n" +
@@ -127,6 +133,9 @@ module.exports = {
             : "") +
           (config.contextMenuCommands.ticketTranscript?.enabled
             ? "> `Ticket Transcript` - Manually save the transcript of a ticket. (Message Command)\n"
+            : "") +
+          (config.contextMenuCommands.ticketsList?.enabled
+            ? "> `Tickets List` - List the current tickets of a user. (User Command)\n"
             : "") +
           (config.contextMenuCommands.userInfo?.enabled
             ? "> `User Info` - Get useful information about a user. (User Command)\n"
