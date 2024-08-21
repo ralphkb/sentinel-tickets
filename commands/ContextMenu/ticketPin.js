@@ -7,14 +7,9 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { client, ticketsDB } = require("../../init.js");
-const {
-  configEmbed,
-  logMessage,
-  sanitizeInput,
-  checkSupportRole,
-  getChannel,
-} = require("../../utils/mainUtils.js");
+const { ticketsDB } = require("../../init.js");
+const { checkSupportRole } = require("../../utils/mainUtils.js");
+const { pinTicket } = require("../../utils/ticketPin.js");
 
 module.exports = {
   enabled: config.contextMenuCommands.ticketPin.enabled,
@@ -57,62 +52,6 @@ module.exports = {
         ? config.pinEmbed.ephemeral
         : false;
     await interaction.deferReply({ ephemeral: isEphemeral });
-
-    let logChannelId = config.logs.ticketPin || config.logs.default;
-    let logChannel = await getChannel(logChannelId);
-
-    const logDefaultValues = {
-      color: "#2FF200",
-      title: "Ticket Logs | Ticket Pinned",
-      timestamp: true,
-      thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
-      footer: {
-        text: `${interaction.user.tag}`,
-        iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
-      },
-    };
-
-    const logPinEmbed = await configEmbed("logPinEmbed", logDefaultValues);
-
-    logPinEmbed.addFields([
-      {
-        name: config.logPinEmbed.field_staff || "• Staff",
-        value: `> ${interaction.user}\n> ${sanitizeInput(interaction.user.tag)}`,
-      },
-      {
-        name: config.logPinEmbed.field_ticket || "• Ticket",
-        value: `> ${interaction.channel}\n> #${sanitizeInput(interaction.channel.name)}`,
-      },
-    ]);
-
-    await interaction.channel
-      .setPosition(0)
-      .then(() => {
-        return new Promise((resolve) => setTimeout(resolve, 1000));
-      })
-      .then(async () => {
-        await interaction.channel.setName(
-          `${pinEmoji}${interaction.channel.name}`,
-        );
-      });
-
-    const defaultValues = {
-      color: "#2FF200",
-      description: "This ticket has been pinned.",
-    };
-
-    const pinEmbed = await configEmbed("pinEmbed", defaultValues);
-    await interaction.editReply({ embeds: [pinEmbed], ephemeral: isEphemeral });
-    if (config.toggleLogs.ticketPin) {
-      try {
-        await logChannel.send({ embeds: [logPinEmbed] });
-      } catch (error) {
-        error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
-        client.emit("error", error);
-      }
-    }
-    logMessage(
-      `${interaction.user.tag} pinned the ticket #${interaction.channel.name}`,
-    );
+    await pinTicket(interaction, pinEmoji, isEphemeral);
   },
 };
