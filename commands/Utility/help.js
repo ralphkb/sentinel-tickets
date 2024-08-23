@@ -114,6 +114,9 @@ module.exports = {
           (config.commands.ping?.enabled
             ? "> `/ping` - Get the bot's ping.\n"
             : "") +
+          (config.commands.userInfo?.enabled
+            ? "> `/userinfo` - Get useful information about a user.\n"
+            : "") +
           "> `/reload` - Reload the commands.\n",
       },
       {

@@ -340,6 +340,9 @@ commands:
     enabled: true
     permission: "ViewChannel"
     support_role_ids: [] # The IDs of the staff roles on your server that can use this command's user argument to see the list of current tickets of other users, they must also have the permission above, keeping it empty will allow no roles to access the list of current tickets of other users.
+  userInfo:
+    enabled: true
+    permission: "KickMembers"
 
 contextMenuCommands:
   userInfo:
