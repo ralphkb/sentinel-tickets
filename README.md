@@ -4,6 +4,7 @@
 [![GitHub release (latest)](https://img.shields.io/github/v/release/ralphkb/sentinel-tickets)](https://github.com/ralphkb/sentinel-tickets/releases/latest)
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ralphkb/sentinel-tickets/latest)](https://github.com/ralphkb/sentinel-tickets/commits/main/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/ralphkb/sentinel-tickets)](https://github.com/ralphkb/sentinel-tickets/commits/main/)
+[![Patreon Sponsor](https://img.shields.io/badge/Patreon-Sponsor-blue?logo=patreon)](https://patreon.com/ralphkb)
 
 ## Introduction
 This is a ticket bot that aims to provide a free and open source solution for managing tickets on Discord. The bot is designed to be lightweight, without any watermarks or unnecessary bloat. It allows users to create, track, and manage tickets seamlessly.
@@ -67,6 +68,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Option to automatically close tickets after X amount of time from the ticket creator's last message.
 - Option to automatically close or delete a ticket after the ticket creator left the discord server.
 - Option to automatically close or delete a ticket after an alert was sent and the ticket creator did not reply in time.
+- Option to automatically delete closed tickets after X amount of time from the ticket's closure time.
 - DM preference system, allowing users to toggle their preference regarding receiving DMs from the bot such as alert, close, reopen & delete.
 - The ability to create stats channels that will be automatically updated after a configurable amount of time.
 - Multiple Commands: Efficiently manage tickets with various commands.
@@ -87,6 +89,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Add a priority to a ticket
     - Change the topic of a ticket, with placeholders support
     - Close Request so users can request that staff close their ticket
+    - List current open and closed tickets of a user
 - Context Menu Commands: Right click commands that are easy to use.
     - Get User Info
     - Blacklist Add
@@ -94,6 +97,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Ticket Alert
     - Ticket Pin
     - Ticket Transcript
+    - Tickets List
 - Useful statistics such as:
     - Total Tickets
     - Total Open Tickets
