@@ -366,6 +366,9 @@ contextMenuCommands:
   ticketsList: # Note that this command shares the same support_role_ids array as the tickets slash command above.
     enabled: true
     permission: "ViewChannel"
+  ticketCloseRequest:
+    enabled: true
+    permission: "ViewChannel"
 
 # ==============================================
 # General button settings
