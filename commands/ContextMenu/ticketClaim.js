@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  ContextMenuCommandBuilder,
+  ApplicationCommandType,
+  PermissionFlagsBits,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -8,12 +12,12 @@ const { checkSupportRole, getUser } = require("../../utils/mainUtils.js");
 const { claimTicket } = require("../../utils/ticketClaim.js");
 
 module.exports = {
-  enabled: config.commands.claim.enabled,
-  data: new SlashCommandBuilder()
-    .setName("claim")
-    .setDescription("Claim a ticket")
+  enabled: config.contextMenuCommands.ticketClaim.enabled,
+  data: new ContextMenuCommandBuilder()
+    .setName("Ticket Claim")
+    .setType(ApplicationCommandType.Message)
     .setDefaultMemberPermissions(
-      PermissionFlagsBits[config.commands.claim.permission],
+      PermissionFlagsBits[config.contextMenuCommands.ticketClaim.permission],
     )
     .setDMPermission(false),
   async execute(interaction) {

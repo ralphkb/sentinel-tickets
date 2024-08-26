@@ -369,6 +369,12 @@ contextMenuCommands:
   ticketCloseRequest:
     enabled: true
     permission: "ViewChannel"
+  ticketClaim:
+    enabled: true
+    permission: "KickMembers"
+  ticketUnclaim:
+    enabled: true
+    permission: "KickMembers"
 
 # ==============================================
 # General button settings

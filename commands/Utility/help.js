@@ -137,6 +137,12 @@ module.exports = {
           (config.contextMenuCommands.ticketTranscript?.enabled
             ? "> `Ticket Transcript` - Manually save the transcript of a ticket. (Message Command)\n"
             : "") +
+          (config.contextMenuCommands.ticketClaim?.enabled
+            ? "> `Ticket Claim` - Claim a ticket. (Message Command)\n"
+            : "") +
+          (config.contextMenuCommands.ticketUnclaim?.enabled
+            ? "> `Ticket Unclaim` - Unclaim a ticket. (Message Command)\n"
+            : "") +
           (config.contextMenuCommands.ticketCloseRequest?.enabled
             ? "> `Ticket Close Request` - Request closing a ticket. (Message Command)\n"
             : "") +
