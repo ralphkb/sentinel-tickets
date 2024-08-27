@@ -26,7 +26,6 @@ status:
 alertReply:
   enabled: false # Enable or disable listening to the ticket creator reply for the amount of time specified in the config below, after the alert is sent.
   time: "300" # The amount of time in seconds, avoid using values which are too high
-  reply: "The user replied to the alert and seems to be available." # The reply that will be sent in the ticket if the ticket creator is active and answered
   autoAction: "none" # The automated action the bot will take if the user did not reply within the time defined above, can be "close" or "delete" which will either automatically close or delete their ticket, you may also put it as "none" to disable the automation
 autoCloseTickets:
   enabled: false # Enable or disable automatically closing tickets
@@ -781,6 +780,23 @@ logAddEmbed:
   field_target: "• Target"
   field_ticket: "• Ticket"
   field_reason: "• Reason"
+
+# Alert reply embed that will be sent in the ticket if the ticket creator is active and answered, when the alertReply feature is enabled
+alertReplyEmbed:
+  color: "#2FF200"
+  title: "Alert Reply Notification"
+  description: "The user replied to the alert and seems to be available."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
 
 # Alert command embed
 alertEmbed:

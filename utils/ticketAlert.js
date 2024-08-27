@@ -105,10 +105,17 @@ async function alertTicket(interaction, user) {
 
     collector.on("collect", async () => {
       await interaction.deleteReply();
-      await interaction.channel.send(
-        config.alertReply.reply ||
-          "The user replied to the alert and seems to be available.",
+      const replyDefaultValues = {
+        color: "#2FF200",
+        title: "Alert Reply Notification",
+        description: "The user replied to the alert and seems to be available.",
+        timestamp: true,
+      };
+      const alertReplyEmbed = await configEmbed(
+        "alertReplyEmbed",
+        replyDefaultValues,
       );
+      await interaction.channel.send({ embeds: [alertReplyEmbed] });
     });
 
     collector.on("end", async () => {
