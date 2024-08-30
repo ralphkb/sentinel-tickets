@@ -30,7 +30,8 @@ alertReply:
 autoCloseTickets:
   enabled: false # Enable or disable automatically closing tickets
   interval: "60" # The interval in seconds for the automatic ticket close task to run
-  time: "86400" # The amount of time in seconds from the ticket creator's last message before the ticket gets automatically closed. For example, if this is specified as 1 day in seconds, the ticket will be closed if the last message sent by the ticket creator is 1 day old. Default time is 1 day.
+  time: "86400" # The amount of time in seconds from the last message in the ticket before it gets automatically closed. For example, if this is specified as 1 day in seconds, the ticket will be closed if the last message sent in the channel is 1 day old. Default time is 1 day.
+  ignoreBots: false # Ignore messages sent by bots when checking for the last message in a ticket
 autoDeleteTickets:
   enabled: false # Enable or disable automatically deleting closed tickets
   interval: "60" # The interval in seconds for the automatic ticket delete task to run

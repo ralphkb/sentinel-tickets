@@ -10,7 +10,7 @@ const { client, ticketsDB } = require("./init.js");
 const {
   cleanBlacklist,
   logError,
-  lastMsgTimestamp,
+  lastChannelMsgTimestamp,
   updateStatsChannels,
 } = require("./utils/mainUtils.js");
 const { autoCloseTicket } = require("./utils/ticketAutoClose.js");
@@ -31,9 +31,7 @@ async function autoCloseTickets() {
   if (openTickets.length > 0) {
     for (const ticket of openTickets) {
       const channelID = ticket.id;
-      const { userID } = ticket.value;
-
-      const lastMsgTime = await lastMsgTimestamp(userID, channelID);
+      const lastMsgTime = await lastChannelMsgTimestamp(channelID);
       if (lastMsgTime === null) {
         continue;
       }

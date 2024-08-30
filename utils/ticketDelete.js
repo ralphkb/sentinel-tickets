@@ -18,7 +18,7 @@ const {
   saveTranscriptTxt,
   countMessagesInTicket,
   getChannel,
-  lastMsgTimestamp,
+  lastUserMsgTimestamp,
 } = require("./mainUtils.js");
 
 async function deleteTicket(interaction) {
@@ -103,7 +103,7 @@ async function deleteTicket(interaction) {
 
   const ticketMessages = await countMessagesInTicket(interaction.channel);
   await mainDB.set("totalMessages", totalMessages + ticketMessages);
-  const lastMsgTime = await lastMsgTimestamp(ticketUserID.id, channelID);
+  const lastMsgTime = await lastUserMsgTimestamp(ticketUserID.id, channelID);
   await interaction.editReply({ embeds: [deleteEmbed] });
 
   setTimeout(async () => {

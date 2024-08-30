@@ -20,7 +20,7 @@ const {
   saveTranscriptTxt,
   countMessagesInTicket,
   getChannel,
-  lastMsgTimestamp,
+  lastUserMsgTimestamp,
 } = require("./mainUtils.js");
 
 async function autoDeleteTicket(channelID) {
@@ -111,7 +111,7 @@ async function autoDeleteTicket(channelID) {
 
   const ticketMessages = await countMessagesInTicket(ticketChannel);
   await mainDB.set("totalMessages", totalMessages + ticketMessages);
-  const lastMsgTime = await lastMsgTimestamp(ticketUserID.id, channelID);
+  const lastMsgTime = await lastUserMsgTimestamp(ticketUserID.id, channelID);
   await ticketChannel.send({ embeds: [autoDeleteEmbed] });
 
   setTimeout(async () => {
