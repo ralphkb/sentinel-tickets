@@ -22,7 +22,7 @@ const {
   getRole,
 } = require("./mainUtils.js");
 
-async function closeTicket(interaction) {
+async function closeTicket(interaction, reason = "No reason provided.") {
   await ticketsDB.set(
     `${interaction.channel.id}.closeUserID`,
     interaction.user.id,
@@ -67,6 +67,10 @@ async function closeTicket(interaction) {
     {
       name: config.logCloseEmbed.field_ticket || "• Ticket",
       value: `> #${sanitizeInput(interaction.channel.name)}\n> ${ticketType}`,
+    },
+    {
+      name: config.logCloseEmbed.field_reason || "• Reason",
+      value: `> ${reason}`,
     },
   ]);
 
@@ -158,7 +162,8 @@ async function closeTicket(interaction) {
   const defaultValues = {
     color: "#FF2400",
     title: "Ticket Closed",
-    description: "This ticket was closed by **{user} ({user.tag})**",
+    description:
+      "This ticket was closed by **{user} ({user.tag})**\nReason: **{reason}**",
     timestamp: true,
     footer: {
       text: `${interaction.user.tag}`,
@@ -172,7 +177,8 @@ async function closeTicket(interaction) {
     closeEmbed.setDescription(
       closeEmbed.data.description
         .replace(/\{user\}/g, `${interaction.user}`)
-        .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag)),
+        .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag))
+        .replace(/\{reason\}/g, reason),
     );
   }
 

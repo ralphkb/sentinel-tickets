@@ -1273,7 +1273,7 @@ logUnclaimedEmbed:
 closeEmbed:
   color: "#FF2400"
   title: "Ticket Closed"
-  description: "This ticket was closed by **{user} ({user.tag})**" # Use {user} for the username of the staff and {user.tag} to have the staff tagged
+  description: "This ticket was closed by **{user} ({user.tag})**\nReason: **{reason}**" # Use {user} for the username of the staff, {user.tag} to have the staff tagged and {reason} for the reason
   timestamp: true
   URL: ""
   image: ""
@@ -1331,6 +1331,7 @@ logCloseEmbed:
   field_staff: "• Closed By"
   field_user: "• Ticket Creator"
   field_ticket: "• Ticket"
+  field_reason: "• Reason"
 
 # Log embed for automatically closed tickets
 logAutoCloseEmbed:
