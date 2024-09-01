@@ -508,6 +508,7 @@ outsideWorkingHoursEmbed:
 toggleLogs:
   userAdd: true
   userRemove: true
+  userLeft: true
   ticketCreate: true
   ticketClose: true
   ticketAlert: true
@@ -534,6 +535,7 @@ logs:
   transcripts: "111111111111111111" # The ID of the log channel for manual transcripts obtained with the transcript button or command
   userAdd: ""
   userRemove: ""
+  userLeft: ""
   ticketCreate: ""
   ticketClose: ""
   ticketAlert: ""
@@ -893,6 +895,25 @@ userLeftEmbed:
     name: ""
     iconURL: ""
     url: ""
+
+# Log embed for when a user left the server while having tickets open
+logUserLeftEmbed:
+  color: "#FF0000"
+  title: "Ticket Logs | User Left"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_user: "• Ticket Creator"
+  field_ticket: "• Ticket"
 
 # Move command embed
 moveEmbed:

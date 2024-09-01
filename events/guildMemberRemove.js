@@ -8,8 +8,12 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
-const { ticketsDB } = require("../init.js");
-const { configEmbed, sanitizeInput } = require("../utils/mainUtils.js");
+const { ticketsDB, client } = require("../init.js");
+const {
+  configEmbed,
+  sanitizeInput,
+  getChannel,
+} = require("../utils/mainUtils.js");
 const { autoCloseTicket } = require("../utils/ticketAutoClose.js");
 const { autoDeleteTicket } = require("../utils/ticketAutoDelete.js");
 
@@ -17,10 +21,14 @@ module.exports = {
   name: Events.GuildMemberRemove,
   async execute(member) {
     await member.guild.channels.cache.forEach(async (channel) => {
-      if (await ticketsDB.has(channel.id)) {
-        const { userID } = await ticketsDB.get(channel.id);
+      const channelID = channel.id;
+      if (await ticketsDB.has(channelID)) {
+        const { userID } = await ticketsDB.get(channelID);
         if (userID && userID === member.id) {
-          let ticketChannel = member.guild.channels.cache.get(channel.id);
+          let ticketChannel = member.guild.channels.cache.get(channelID);
+          const channelName = ticketChannel.name;
+          let logChannelId = config.logs.userLeft || config.logs.default;
+          let logChannel = await getChannel(logChannelId);
 
           const ticketDeleteButton = new ButtonBuilder()
             .setCustomId("deleteTicket")
@@ -59,16 +67,51 @@ module.exports = {
           let onUserLeave = config?.onUserLeave || "close";
           switch (onUserLeave) {
             case "close":
-              await autoCloseTicket(channel.id, true);
+              await autoCloseTicket(channelID, true);
               break;
             case "delete":
-              await autoDeleteTicket(channel.id);
+              await autoDeleteTicket(channelID);
               break;
             case "none":
               break;
             default:
-              await autoCloseTicket(channel.id, true);
+              await autoCloseTicket(channelID, true);
               break;
+          }
+
+          const logDefaultValues = {
+            color: "#FF0000",
+            title: "Ticket Logs | User Left",
+            timestamp: true,
+            thumbnail: `${member.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+            footer: {
+              text: `${member.user.tag}`,
+              iconURL: `${member.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+            },
+          };
+
+          const logUserLeftEmbed = await configEmbed(
+            "logUserLeftEmbed",
+            logDefaultValues,
+          );
+
+          logUserLeftEmbed.addFields([
+            {
+              name: config.logUserLeftEmbed.field_user || "• Ticket Creator",
+              value: `> <@!${member.user.id}>\n> ${sanitizeInput(member.user.tag)}`,
+            },
+            {
+              name: config.logUserLeftEmbed.field_ticket || "• Ticket",
+              value: `> #${sanitizeInput(channelName)}`,
+            },
+          ]);
+          if (config.toggleLogs.userLeft) {
+            try {
+              await logChannel.send({ embeds: [logUserLeftEmbed] });
+            } catch (error) {
+              error.errorContext = `[Logging Error]: please make sure to at least configure your default log channel`;
+              client.emit("error", error);
+            }
           }
         }
       }
