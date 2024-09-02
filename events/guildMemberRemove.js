@@ -13,6 +13,8 @@ const {
   configEmbed,
   sanitizeInput,
   getChannel,
+  getUser,
+  logMessage,
 } = require("../utils/mainUtils.js");
 const { autoCloseTicket } = require("../utils/ticketAutoClose.js");
 const { autoDeleteTicket } = require("../utils/ticketAutoDelete.js");
@@ -23,7 +25,8 @@ module.exports = {
     await member.guild.channels.cache.forEach(async (channel) => {
       const channelID = channel.id;
       if (await ticketsDB.has(channelID)) {
-        const { userID } = await ticketsDB.get(channelID);
+        const { userID, ticketType, creationTime, claimUser } =
+          await ticketsDB.get(channelID);
         if (userID && userID === member.id) {
           let ticketChannel = member.guild.channels.cache.get(channelID);
           const channelName = ticketChannel.name;
@@ -102,9 +105,30 @@ module.exports = {
             },
             {
               name: config.logUserLeftEmbed.field_ticket || "• Ticket",
-              value: `> #${sanitizeInput(channelName)}`,
+              value: `> #${sanitizeInput(channelName)}\n> ${ticketType}`,
+            },
+            {
+              name: config.logUserLeftEmbed.field_creation || "• Creation Time",
+              value: `> <t:${creationTime}:F>`,
+            },
+            {
+              name:
+                config.logUserLeftEmbed.field_action || "• Automated Action",
+              value: `> ${onUserLeave}`,
             },
           ]);
+
+          let ticketClaimUser;
+          if (claimUser) {
+            ticketClaimUser = await getUser(claimUser);
+          }
+
+          if (ticketClaimUser)
+            logUserLeftEmbed.addFields({
+              name: "• Claimed By",
+              value: `> <@!${ticketClaimUser.id}>\n> ${sanitizeInput(ticketClaimUser.tag)}`,
+            });
+
           if (config.toggleLogs.userLeft) {
             try {
               await logChannel.send({ embeds: [logUserLeftEmbed] });
@@ -113,6 +137,9 @@ module.exports = {
               client.emit("error", error);
             }
           }
+          await logMessage(
+            `${member.user.username} (${member.displayName}) left the server while having the ticket #${channelName} open`,
+          );
         }
       }
     });
