@@ -1434,7 +1434,7 @@ logReopenEmbed:
 deleteEmbed:
   color: "#FF0000"
   title: ""
-  description: "Deleting ticket in {time} seconds" # Use {time} for the time in seconds
+  description: "Deleting ticket in {time} seconds" # Use {time} for the time in seconds and {reason} for the reason
   timestamp: false
   URL: ""
   image: ""
@@ -1484,6 +1484,7 @@ logDeleteEmbed:
   field_user: "• Ticket Creator"
   field_ticket: "• Ticket"
   field_creation: "• Creation Time"
+  field_reason: "• Reason"
 
 # Log embed for automatically deleted tickets
 logAutoDeleteEmbed:

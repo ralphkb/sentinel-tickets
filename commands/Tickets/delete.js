@@ -12,6 +12,12 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("delete")
     .setDescription("Delete a ticket.")
+    .addStringOption((option) =>
+      option
+        .setName("reason")
+        .setDescription("The reason for deleting the ticket")
+        .setRequired(false),
+    )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.delete.permission],
     )
@@ -35,6 +41,8 @@ module.exports = {
     }
 
     await interaction.deferReply();
-    await deleteTicket(interaction);
+    const reason =
+      interaction.options.getString("reason") || "No reason provided.";
+    await deleteTicket(interaction, reason);
   },
 };

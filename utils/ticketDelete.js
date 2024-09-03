@@ -21,7 +21,7 @@ const {
   lastUserMsgTimestamp,
 } = require("./mainUtils.js");
 
-async function deleteTicket(interaction) {
+async function deleteTicket(interaction, reason = "No reason provided.") {
   const channelID = interaction.channel.id;
   const channelName = interaction.channel.name;
   const totalMessages = await mainDB.get("totalMessages");
@@ -66,6 +66,10 @@ async function deleteTicket(interaction) {
       name: config.logDeleteEmbed.field_creation || "• Creation Time",
       value: `> <t:${await ticketsDB.get(`${channelID}.creationTime`)}:F>`,
     },
+    {
+      name: config.logDeleteEmbed.field_reason || "• Reason",
+      value: `> ${reason}`,
+    },
   ]);
 
   if (claimUser)
@@ -97,7 +101,9 @@ async function deleteTicket(interaction) {
 
   if (deleteEmbed.data && deleteEmbed.data.description) {
     deleteEmbed.setDescription(
-      deleteEmbed.data.description.replace(/\{time\}/g, `${deleteTicketTime}`),
+      deleteEmbed.data.description
+        .replace(/\{time\}/g, `${deleteTicketTime}`)
+        .replace(/\{reason\}/g, reason),
     );
   }
 
