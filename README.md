@@ -65,7 +65,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Precise and organized logs of errors and all ticket events in a logs.txt file.
 - Option to edit the activity of the bot.
 - Blacklist system with the ability to add users or roles with an optional reason and view them in a list.
-- Option to automatically close tickets after X amount of time from the ticket creator's last message.
+- Option to automatically close tickets after X amount of time from the last message sent in that ticket, with an option to ignore bots.
 - Option to automatically close or delete a ticket after the ticket creator left the discord server.
 - Option to automatically close or delete a ticket after an alert was sent and the ticket creator did not reply in time.
 - Option to automatically delete closed tickets after X amount of time from the ticket's closure time.
@@ -98,6 +98,9 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Ticket Pin
     - Ticket Transcript
     - Tickets List
+    - Ticket Close Request
+    - Ticket Claim
+    - Ticket Unclaim
 - Useful statistics such as:
     - Total Tickets
     - Total Open Tickets
