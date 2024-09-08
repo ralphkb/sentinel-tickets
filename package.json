@@ -19,14 +19,14 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@discordjs/rest": "^2.2.0",
-    "better-sqlite3": "^11.1.2",
+    "@discordjs/rest": "^2.4.0",
+    "better-sqlite3": "^11.2.1",
     "discord-html-transcripts": "^3.2.0",
     "discord.js": "^14.16.1",
     "dotenv": "^16.4.5",
     "moment-timezone": "^0.5.45",
     "quick.db": "^9.1.7",
-    "yaml": "^2.5.0"
+    "yaml": "^2.5.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
