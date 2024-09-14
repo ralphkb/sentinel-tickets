@@ -706,6 +706,15 @@ async function listUserTickets(interaction, user, isEphemeral) {
   });
 }
 
+async function getFirstClosedTicket(userID) {
+  const tickets = (await ticketsDB.all()) || [];
+  const userTickets = tickets.filter(
+    (ticket) =>
+      ticket.value.userID === userID && ticket.value.status === "Closed",
+  );
+  return userTickets[0];
+}
+
 module.exports = {
   logMessage,
   checkSupportRole,
@@ -730,4 +739,5 @@ module.exports = {
   lastChannelMsgTimestamp,
   updateStatsChannels,
   listUserTickets,
+  getFirstClosedTicket,
 };

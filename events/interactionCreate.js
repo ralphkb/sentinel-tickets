@@ -30,6 +30,7 @@ const {
   isBlacklistExpired,
   addTicketCreator,
   parseDurationToMilliseconds,
+  getFirstClosedTicket,
 } = require("../utils/mainUtils.js");
 const { closeTicket } = require("../utils/ticketClose.js");
 const { reopenTicket } = require("../utils/ticketReopen.js");
@@ -439,6 +440,52 @@ module.exports = {
                 embeds: [categoryNotAllowedEmbed],
                 ephemeral: true,
               });
+            }
+
+            const preventNewTicket =
+              config.preventNewTicket !== undefined
+                ? config.preventNewTicket
+                : false;
+            if (preventNewTicket && parseInt(maxOpenTickets) === 1) {
+              const defaultValues = {
+                color: "#FF0000",
+                title: "Closed ticket already exists",
+                description:
+                  "Your ticket {ticket} is still archived in the closed category, feel free to reopen it.",
+                timestamp: true,
+                thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+                footer: {
+                  text: `${interaction.user.tag}`,
+                  iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+                },
+              };
+
+              const preventNewTicketEmbed = await configEmbed(
+                "preventNewTicketEmbed",
+                defaultValues,
+              );
+
+              const ticketChannel = await getFirstClosedTicket(
+                interaction.user.id,
+              );
+
+              if (ticketChannel) {
+                if (
+                  preventNewTicketEmbed.data &&
+                  preventNewTicketEmbed.data.description
+                ) {
+                  preventNewTicketEmbed.setDescription(
+                    preventNewTicketEmbed.data.description.replace(
+                      /\{ticket\}/g,
+                      `<#${ticketChannel.id}>`,
+                    ),
+                  );
+                }
+                return interaction.reply({
+                  embeds: [preventNewTicketEmbed],
+                  ephemeral: true,
+                });
+              }
             }
 
             const userTicketCount = interaction.guild.channels.cache.reduce(
@@ -1055,6 +1102,52 @@ module.exports = {
               embeds: [categoryNotAllowedEmbed],
               ephemeral: true,
             });
+          }
+
+          const preventNewTicket =
+            config.preventNewTicket !== undefined
+              ? config.preventNewTicket
+              : false;
+          if (preventNewTicket && parseInt(maxOpenTickets) === 1) {
+            const defaultValues = {
+              color: "#FF0000",
+              title: "Closed ticket already exists",
+              description:
+                "Your ticket {ticket} is still archived in the closed category, feel free to reopen it.",
+              timestamp: true,
+              thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+              footer: {
+                text: `${interaction.user.tag}`,
+                iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+              },
+            };
+
+            const preventNewTicketEmbed = await configEmbed(
+              "preventNewTicketEmbed",
+              defaultValues,
+            );
+
+            const ticketChannel = await getFirstClosedTicket(
+              interaction.user.id,
+            );
+
+            if (ticketChannel) {
+              if (
+                preventNewTicketEmbed.data &&
+                preventNewTicketEmbed.data.description
+              ) {
+                preventNewTicketEmbed.setDescription(
+                  preventNewTicketEmbed.data.description.replace(
+                    /\{ticket\}/g,
+                    `<#${ticketChannel.id}>`,
+                  ),
+                );
+              }
+              return interaction.reply({
+                embeds: [preventNewTicketEmbed],
+                ephemeral: true,
+              });
+            }
           }
 
           const userTicketCount = interaction.guild.channels.cache.reduce(

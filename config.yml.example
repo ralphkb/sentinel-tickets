@@ -13,6 +13,7 @@ deleteStaffOnly: true # When enabled, only staff members with support roles can 
 commands_cooldown: "5" # The cooldown of commands in seconds
 buttons_cooldown: "5" # The cooldown of buttons in seconds
 maxOpenTickets: "1" # The maximum number of open tickets a user can have at one time
+preventNewTicket: false # This feature will check if the user has a closed ticket before creating a new one, do not enable it unless you really need it and it fits your use-case. Enabling it without allowing the user to reopen or see their closed ticket will cause issues, please be aware. The feature will disable itself if maxOpenTickets is not equal to 1.
 deleteTicketTime: "5" # The time in seconds before a ticket is deleted
 claimFeature: false # Enable or disable the claim button/feature
 claimRename: false # Enable or disable renaming a ticket to category-USERNAME when it gets claimed, it will use the username of the support staff who claimed it
@@ -1641,6 +1642,22 @@ ticketsEmbed:
   color: "#2FF200"
   title: "Current tickets of {user}" # Use {user} for the name of the user
   description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+preventNewTicketEmbed:
+  color: "#FF0000"
+  title: "Closed ticket already exists"
+  description: "Your ticket {ticket} is still archived in the closed category, feel free to reopen it." # Use {ticket} for the closed ticket channel of the user
   timestamp: true
   URL: ""
   image: ""
