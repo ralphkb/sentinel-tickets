@@ -465,9 +465,13 @@ module.exports = {
                 defaultValues,
               );
 
-              const ticketChannel = await getFirstClosedTicket(
+              const ticketChannelID = await getFirstClosedTicket(
                 interaction.user.id,
               );
+              let ticketChannel = null;
+              if (ticketChannelID) {
+                ticketChannel = await getChannel(ticketChannelID);
+              }
 
               if (ticketChannel) {
                 if (
@@ -477,7 +481,7 @@ module.exports = {
                   preventNewTicketEmbed.setDescription(
                     preventNewTicketEmbed.data.description.replace(
                       /\{ticket\}/g,
-                      `<#${ticketChannel.id}>`,
+                      `<#${ticketChannelID}>`,
                     ),
                   );
                 }
@@ -1127,9 +1131,13 @@ module.exports = {
               defaultValues,
             );
 
-            const ticketChannel = await getFirstClosedTicket(
+            const ticketChannelID = await getFirstClosedTicket(
               interaction.user.id,
             );
+            let ticketChannel = null;
+            if (ticketChannelID) {
+              ticketChannel = await getChannel(ticketChannelID);
+            }
 
             if (ticketChannel) {
               if (
@@ -1139,7 +1147,7 @@ module.exports = {
                 preventNewTicketEmbed.setDescription(
                   preventNewTicketEmbed.data.description.replace(
                     /\{ticket\}/g,
-                    `<#${ticketChannel.id}>`,
+                    `<#${ticketChannelID}>`,
                   ),
                 );
               }

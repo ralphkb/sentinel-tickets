@@ -712,7 +712,7 @@ async function getFirstClosedTicket(userID) {
     (ticket) =>
       ticket.value.userID === userID && ticket.value.status === "Closed",
   );
-  return userTickets[0];
+  return userTickets[0]?.id;
 }
 
 module.exports = {
