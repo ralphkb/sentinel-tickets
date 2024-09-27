@@ -26,7 +26,7 @@ status:
   botStatus: "online" # The status of the bot, can be "online", "idle", "dnd", "invisible", note that the streaming type requires the "online" status
 alertReply:
   enabled: false # Enable or disable listening to the ticket creator reply for the amount of time specified in the config below, after the alert is sent.
-  time: "300" # The amount of time in seconds, avoid using values which are too high
+  time: "300" # The default amount of time in seconds, avoid using values which are too high or too low
   autoAction: "none" # The automated action the bot will take if the user did not reply within the time defined above, can be "close" or "delete" which will either automatically close or delete their ticket, you may also put it as "none" to disable the automation
 autoCloseTickets:
   enabled: false # Enable or disable automatically closing tickets

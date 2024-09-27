@@ -15,6 +15,13 @@ module.exports = {
     .addUserOption((option) =>
       option.setName("user").setDescription("Select a user").setRequired(false),
     )
+    .addIntegerOption((option) =>
+      option
+        .setName("time")
+        .setDescription("Input a time in seconds")
+        .setRequired(false)
+        .setMinValue(30),
+    )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.alert.permission],
     )
@@ -55,6 +62,7 @@ module.exports = {
       });
     }
     await interaction.deferReply();
-    await alertTicket(interaction, user);
+    const time = interaction.options.getInteger("time");
+    await alertTicket(interaction, user, time);
   },
 };

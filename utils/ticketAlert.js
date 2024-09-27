@@ -15,7 +15,7 @@ const {
 const { autoCloseTicket } = require("./ticketAutoClose.js");
 const { autoDeleteTicket } = require("./ticketAutoDelete.js");
 
-async function alertTicket(interaction, user) {
+async function alertTicket(interaction, user, time = null) {
   const closeButton = new ButtonBuilder()
     .setCustomId("closeTicket")
     .setLabel(config.closeButton.label)
@@ -72,7 +72,7 @@ async function alertTicket(interaction, user) {
 
   const alertEmbed = await configEmbed("alertEmbed", defaultValues);
 
-  const collectorTimeInSeconds = config.alertReply.time || 120;
+  const collectorTimeInSeconds = time || config.alertReply.time || 120;
   const now = new Date();
   const future = new Date(now.getTime() + collectorTimeInSeconds * 1000);
   const inTime = Math.floor(future.getTime() / 1000);
