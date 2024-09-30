@@ -330,6 +330,7 @@ commands:
   stats:
     enabled: true
     permission: "KickMembers"
+    support_role_ids: [] # The IDs of the admin role(s) on your server that can use the stats set subcommand, which can be dangerous in allowing the modification of some statistics. Keeping it empty will allow no roles to modify the stats. This command has been added to adjust stats mistakes in case of issues or inconsistencies.
   help:
     enabled: true
     permission: "KickMembers"
@@ -1547,7 +1548,7 @@ transcriptReplyEmbed:
     iconURL: ""
     url: ""
 
-# Stats command embed
+# Stats list command embed
 statsEmbed:
   ephemeral: false
   color: "#2FF200"
@@ -1557,6 +1558,24 @@ statsEmbed:
   URL: ""
   image: ""
 #  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Stats set command embed
+statsSetEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "📊 Statistics Modification"
+  description: "The statistic **{stat}** has been set to **{value}** by **{user}** ({user.tag})" # Use {stat} for the statistic, {value} for the new value, {user} for the staff who changed it and {user.tag} to have the staff tagged
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
 #  footer:
 #    text: ""
 #    iconURL: ""
