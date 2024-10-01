@@ -114,7 +114,7 @@ async function deleteTicket(interaction, reason = "No reason provided.") {
 
   setTimeout(async () => {
     await ticketsDB.delete(channelID);
-    await mainDB.pull("openTickets", channelID);
+    await mainDB.sub("openTickets", 1);
     await interaction.channel.delete();
   }, deleteTime);
 

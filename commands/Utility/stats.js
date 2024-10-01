@@ -56,7 +56,7 @@ module.exports = {
           : false;
       await interaction.deferReply({ ephemeral: isEphemeral });
       const totalTickets = (await mainDB.get("totalTickets")) ?? 0;
-      const openTickets = (await mainDB.get("openTickets")) ?? [];
+      const openTickets = (await mainDB.get("openTickets")) ?? 0;
       const totalClaims = (await mainDB.get("totalClaims")) ?? 0;
       const totalReviews = (await mainDB.get("totalReviews")) ?? 0;
       const ratingsArray = (await mainDB.get("ratings")) ?? [];
@@ -65,7 +65,6 @@ module.exports = {
       const averageRating =
         ratingsArray.reduce((total, current) => total + current, 0) /
         ratingsArray.length;
-      const totalOpenTickets = openTickets.length;
       const ramUsage = process.memoryUsage().heapUsed;
       const ramUsageMB = (ramUsage / 1024 / 1024).toFixed(2);
       const totalTicketCreators = ticketCreators.length;
@@ -96,7 +95,7 @@ module.exports = {
       statsEmbed.addFields([
         {
           name: "🎫 Tickets",
-          value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${totalOpenTickets}\n> Total Claimed Tickets: ${totalClaims}\n> Total Messages: ${totalMessages}\n> Total Ticket Creators: ${totalTicketCreators}\n> Average Tickets Created Per User: ${ticketCreators.length ? averageTicketsCreated.toFixed(0) : 0}`,
+          value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${openTickets}\n> Total Claimed Tickets: ${totalClaims}\n> Total Messages: ${totalMessages}\n> Total Ticket Creators: ${totalTicketCreators}\n> Average Tickets Created Per User: ${ticketCreators.length ? averageTicketsCreated.toFixed(0) : 0}`,
         },
         {
           name: "⭐ Reviews",

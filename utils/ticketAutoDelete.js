@@ -116,7 +116,7 @@ async function autoDeleteTicket(channelID) {
 
   setTimeout(async () => {
     await ticketsDB.delete(channelID);
-    await mainDB.pull("openTickets", channelID);
+    await mainDB.sub("openTickets", 1);
     await ticketChannel.delete();
   }, deleteTime);
 

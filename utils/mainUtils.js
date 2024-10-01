@@ -608,7 +608,7 @@ async function updateStatsChannels() {
       continue;
     }
     let stats = await mainDB.get(type);
-    if (type === "openTickets" || type === "ticketCreators") {
+    if (type === "ticketCreators") {
       stats = stats.length;
     }
     if (type === "ratings") {

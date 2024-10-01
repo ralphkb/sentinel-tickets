@@ -33,7 +33,7 @@ const blacklistDB = new QuickDB({ filePath: "data/blacklist.sqlite" });
 
   // Initialize openTickets to an empty array if it doesn't exist
   if (!(await mainDB.has("openTickets"))) {
-    await mainDB.set("openTickets", []);
+    await mainDB.set("openTickets", 0);
   }
 
   // Initialize totalClaims to 0 if it doesn't exist

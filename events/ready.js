@@ -112,6 +112,7 @@ module.exports = {
       }
 
       client.user.setPresence(presence);
+      // Delete any possible leftover claim keys
       const keysToDelete = (await mainDB.startsWith("isClaimInProgress")).map(
         ({ id }) => id,
       );
@@ -120,6 +121,11 @@ module.exports = {
           await mainDB.delete(key);
         }),
       );
+      // Convert openTickets from an array to a number - from older versions
+      const openTickets = (await mainDB.get("openTickets")) ?? 0;
+      if (Array.isArray(openTickets)) {
+        await mainDB.set("openTickets", openTickets.length);
+      }
       console.log(
         `The ticket bot is now ready! Logged in as ${client.user.tag}`,
       );

@@ -1786,7 +1786,7 @@ module.exports = {
                       closedAt: 0,
                     });
 
-                    await mainDB.push("openTickets", `${channel.id}`);
+                    await mainDB.add("openTickets", 1);
                     await addTicketCreator(interaction.user.id);
 
                     const logDefaultValues = {

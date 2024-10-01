@@ -226,7 +226,7 @@ async function reopenTicket(interaction) {
     });
   await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
   await ticketsDB.set(`${interaction.channel.id}.closedAt`, 0);
-  await mainDB.push("openTickets", interaction.channel.id);
+  await mainDB.add("openTickets", 1);
   await interaction.editReply({ embeds: [reopenEmbed] });
   let logChannelId = config.logs.ticketReopen || config.logs.default;
   let logsChannel = await getChannel(logChannelId);

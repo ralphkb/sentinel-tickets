@@ -297,7 +297,7 @@ async function closeTicket(interaction, reason = "No reason provided.") {
   await ticketsDB.set(`${interaction.channel.id}.closeMsgID`, messageID);
   await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
   await ticketsDB.set(`${interaction.channel.id}.closedAt`, Date.now());
-  await mainDB.pull("openTickets", interaction.channel.id);
+  await mainDB.sub("openTickets", 1);
   let logChannelId = config.logs.ticketClose || config.logs.default;
   let logsChannel = await getChannel(logChannelId);
   if (config.toggleLogs.ticketClose) {
