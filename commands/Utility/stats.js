@@ -30,6 +30,7 @@ module.exports = {
             .setRequired(true)
             .addChoices(
               { name: "Total Tickets", value: "totalTickets" },
+              { name: "Total Open Tickets", value: "openTickets" },
               { name: "Total Claims", value: "totalClaims" },
               { name: "Total Messages", value: "totalMessages" },
             ),
@@ -135,7 +136,7 @@ module.exports = {
         color: "#2FF200",
         title: "📊 Statistics Modification",
         description:
-          "The statistic **{stat}** has been set to **{value}** by **{user}** ({user.tag})",
+          "The statistic `{stat}` has been set to `{value}` by **{user}** ({user.tag})",
         timestamp: true,
         footer: {
           text: `Executed by ${interaction.user.username}`,
@@ -143,11 +144,27 @@ module.exports = {
         },
       };
 
+      let statName;
+      switch (statistic) {
+        case "totalTickets":
+          statName = "Total Tickets";
+          break;
+        case "openTickets":
+          statName = "Total Open Tickets";
+          break;
+        case "totalClaims":
+          statName = "Total Claimed Tickets";
+          break;
+        case "totalMessages":
+          statName = "Total Messages";
+          break;
+      }
+
       const statsSetEmbed = await configEmbed("statsSetEmbed", defaultValues);
       if (statsSetEmbed.data && statsSetEmbed.data.description) {
         statsSetEmbed.setDescription(
           statsSetEmbed.data.description
-            .replace(/\{stat\}/g, statistic)
+            .replace(/\{stat\}/g, statName)
             .replace(/\{value\}/g, value)
             .replace(/\{user\}/g, interaction.user)
             .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag)),

@@ -1571,7 +1571,7 @@ statsSetEmbed:
   ephemeral: true
   color: "#2FF200"
   title: "📊 Statistics Modification"
-  description: "The statistic **{stat}** has been set to **{value}** by **{user}** ({user.tag})" # Use {stat} for the statistic, {value} for the new value, {user} for the staff who changed it and {user.tag} to have the staff tagged
+  description: "The statistic `{stat}` has been set to `{value}` by **{user}** ({user.tag})" # Use {stat} for the statistic, {value} for the new value, {user} for the staff who changed it and {user.tag} to have the staff tagged
   timestamp: true
   URL: ""
   image: ""
