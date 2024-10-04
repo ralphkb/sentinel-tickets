@@ -1918,7 +1918,7 @@ module.exports = {
                 }
               });
 
-            await mainDB.set("totalTickets", TICKETCOUNT + 1);
+            await mainDB.add("totalTickets", 1);
           } catch (error) {
             console.error("Error creating ticket:", error);
             return null;

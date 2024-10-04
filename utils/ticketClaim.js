@@ -18,7 +18,6 @@ const {
 } = require("./mainUtils.js");
 
 async function claimTicket(interaction) {
-  const totalClaims = await mainDB.get("totalClaims");
   const defaultValues = {
     color: "#2FF200",
     title: "Ticket Claimed",
@@ -153,7 +152,7 @@ async function claimTicket(interaction) {
         `${interaction.channel.id}.claimUser`,
         interaction.user.id,
       );
-      await mainDB.set("totalClaims", totalClaims + 1);
+      await mainDB.add("totalClaims", 1);
       await mainDB
         .delete(`isClaimInProgress-${interaction.channel.id}`)
         .catch((error) => {

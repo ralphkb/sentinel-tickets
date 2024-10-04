@@ -24,7 +24,6 @@ const {
 async function deleteTicket(interaction, reason = "No reason provided.") {
   const channelID = interaction.channel.id;
   const channelName = interaction.channel.name;
-  const totalMessages = await mainDB.get("totalMessages");
   const ticketUserID = await getUser(
     await ticketsDB.get(`${channelID}.userID`),
   );
@@ -108,7 +107,7 @@ async function deleteTicket(interaction, reason = "No reason provided.") {
   }
 
   const ticketMessages = await countMessagesInTicket(interaction.channel);
-  await mainDB.set("totalMessages", totalMessages + ticketMessages);
+  await mainDB.add("totalMessages", ticketMessages);
   const lastMsgTime = await lastUserMsgTimestamp(ticketUserID.id, channelID);
   await interaction.editReply({ embeds: [deleteEmbed] });
 

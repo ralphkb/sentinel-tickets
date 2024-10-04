@@ -18,7 +18,6 @@ const {
 } = require("./mainUtils.js");
 
 async function unclaimTicket(interaction) {
-  const totalClaims = await mainDB.get("totalClaims");
   const ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
   const category = ticketCategories[ticketButton];
 
@@ -156,7 +155,7 @@ async function unclaimTicket(interaction) {
           client.emit("error", error);
         }
       }
-      await mainDB.set("totalClaims", totalClaims - 1);
+      await mainDB.sub("totalClaims", 1);
       logMessage(
         `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,
       );

@@ -24,7 +24,6 @@ const {
 } = require("./mainUtils.js");
 
 async function autoDeleteTicket(channelID) {
-  const totalMessages = await mainDB.get("totalMessages");
   const ticketChannel = await getChannel(channelID);
   const channelName = ticketChannel.name;
   const ticketUserID = await getUser(
@@ -110,7 +109,7 @@ async function autoDeleteTicket(channelID) {
   }
 
   const ticketMessages = await countMessagesInTicket(ticketChannel);
-  await mainDB.set("totalMessages", totalMessages + ticketMessages);
+  await mainDB.add("totalMessages", ticketMessages);
   const lastMsgTime = await lastUserMsgTimestamp(ticketUserID.id, channelID);
   await ticketChannel.send({ embeds: [autoDeleteEmbed] });
 

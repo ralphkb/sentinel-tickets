@@ -11,7 +11,6 @@ const {
 } = require("./mainUtils.js");
 
 async function getFeedback(interaction, i, withModal = true) {
-  const totalReviews = await mainDB.get("totalReviews");
   const message = await interaction.user.dmChannel.messages.fetch(
     interaction.message.id,
   );
@@ -75,7 +74,7 @@ async function getFeedback(interaction, i, withModal = true) {
       client.emit("error", error);
     }
   }
-  await mainDB.set("totalReviews", totalReviews + 1);
+  await mainDB.add("totalReviews", 1);
   await mainDB.push("ratings", i);
   await interaction.editReply({
     content: "Your feedback has been sent successfully!",
