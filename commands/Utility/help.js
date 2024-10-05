@@ -106,7 +106,7 @@ module.exports = {
             ? "> `/blacklist add` - Add users or roles to the blacklist.\n> `/blacklist remove` - Remove users or roles from the blacklist.\n> `/blacklist list` - List users or roles currently in the blacklist.\n"
             : "") +
           (config.commands.stats?.enabled
-            ? "> `/stats` - Get useful statistics.\n"
+            ? "> `/stats list` - List useful stats.\n > `/stats set` - Adjust some of the statistics.\n"
             : "") +
           (config.commands.preference?.enabled
             ? "> `/preference` - Allows users to set their own preference for receiving DMs.\n"

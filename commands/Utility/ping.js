@@ -3,6 +3,7 @@ const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
 const config = yaml.parse(configFile);
+const { client } = require("../../init.js");
 const { configEmbed } = require("../../utils/mainUtils.js");
 
 module.exports = {
@@ -20,6 +21,7 @@ module.exports = {
         ? config.pingEmbed.ephemeral
         : false;
     await interaction.deferReply({ ephemeral: isEphemeral });
+    const startTime = performance.now();
 
     const defaultDMValues = {
       color: "#2FF200",
@@ -33,22 +35,31 @@ module.exports = {
 
     const pingEmbed = await configEmbed("pingEmbed", defaultDMValues);
 
-    pingEmbed.addFields([
-      {
-        name: "Ping",
-        value: interaction.client.ws.ping + "ms",
-        inline: true,
-      },
-      {
-        name: "Latency",
-        value: `${performance.now() - interaction.createdTimestamp}ms`,
-        inline: true,
-      },
-    ]);
+    try {
+      const wsPing = await interaction.client.ws.ping;
+      const endTime = performance.now();
+      const latency = Math.round((endTime - startTime) * 1000);
 
-    await interaction.editReply({
-      embeds: [pingEmbed],
-      ephemeral: isEphemeral,
-    });
+      pingEmbed.addFields([
+        {
+          name: "Websocket Ping",
+          value: `${wsPing}ms`,
+          inline: true,
+        },
+        {
+          name: "Latency",
+          value: `${latency}ms`,
+          inline: true,
+        },
+      ]);
+
+      await interaction.editReply({
+        embeds: [pingEmbed],
+        ephemeral: isEphemeral,
+      });
+    } catch (error) {
+      error.errorContext = `[Ping Command Error]: there was an error while executing the ping command.`;
+      client.emit("error", error);
+    }
   },
 };
