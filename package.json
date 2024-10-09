@@ -24,7 +24,7 @@
     "discord-html-transcripts": "^3.2.0",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
-    "moment-timezone": "^0.5.45",
+    "moment-timezone": "^0.5.46",
     "quick.db": "^9.1.7",
     "yaml": "^2.5.1"
   },
@@ -33,7 +33,7 @@
     "@eslint/js": "^9.12.0",
     "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
-    "globals": "^15.10.0",
+    "globals": "^15.11.0",
     "prettier": "^3.3.3"
   }
 }
