@@ -132,8 +132,8 @@ async function autoDeleteTicket(channelID) {
       client.emit("error", error);
     }
   }
-  logMessage(
-    `${client.user.tag} deleted the ticket #${channelName} which was created by ${ticketUserID.tag}`,
+  await logMessage(
+    `${client.user.tag} automatically deleted the ticket #${channelName} which was created by ${ticketUserID.tag}`,
   );
 
   // DM the user with an embed and the transcript of the ticket depending on the enabled settings

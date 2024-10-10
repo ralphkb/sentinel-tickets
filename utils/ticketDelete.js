@@ -127,8 +127,8 @@ async function deleteTicket(interaction, reason = "No reason provided.") {
       client.emit("error", error);
     }
   }
-  logMessage(
-    `${interaction.user.tag} deleted the ticket #${channelName} which was created by ${ticketUserID.tag}`,
+  await logMessage(
+    `${interaction.user.tag} deleted the ticket #${channelName} which was created by ${ticketUserID.tag} with the reason: ${reason}`,
   );
 
   // DM the user with an embed and the transcript of the ticket depending on the enabled settings

@@ -308,8 +308,8 @@ async function closeTicket(interaction, reason = "No reason provided.") {
       client.emit("error", error);
     }
   }
-  logMessage(
-    `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
+  await logMessage(
+    `${interaction.user.tag} closed the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag} with the reason: ${reason}`,
   );
 
   if (config.closeDMEmbed.enabled && interaction.user.id !== ticketUserID.id) {

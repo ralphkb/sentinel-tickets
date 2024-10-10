@@ -299,7 +299,7 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
       client.emit("error", error);
     }
   }
-  logMessage(
+  await logMessage(
     `${client.user.tag} automatically closed the ticket #${ticketChannel.name} which was created by ${ticketUserID.tag}`,
   );
 
