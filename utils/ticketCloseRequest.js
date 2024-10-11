@@ -6,7 +6,7 @@ const config = yaml.parse(configFile);
 const { ticketsDB, ticketCategories } = require("../init.js");
 const { configEmbed, sanitizeInput, logMessage } = require("./mainUtils.js");
 
-async function closeRequestTicket(interaction) {
+async function closeRequestTicket(interaction, reason = "No reason provided.") {
   const ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
 
   const closeButton = new ButtonBuilder()
@@ -21,7 +21,7 @@ async function closeRequestTicket(interaction) {
     color: "#FF2400",
     title: "Ticket Close Request",
     description:
-      "**{user} ({user.tag})** has requested to have his ticket closed.",
+      "**{user} ({user.tag})** has requested to have their ticket closed.\nReason: **{reason}**",
     timestamp: true,
     footer: {
       text: `${interaction.user.tag}`,
@@ -38,7 +38,8 @@ async function closeRequestTicket(interaction) {
     closeRequestEmbed.setDescription(
       closeRequestEmbed.data.description
         .replace(/\{user\}/g, `${interaction.user}`)
-        .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag)),
+        .replace(/\{user\.tag\}/g, sanitizeInput(interaction.user.tag))
+        .replace(/\{reason\}/g, reason),
     );
   }
 
@@ -58,8 +59,8 @@ async function closeRequestTicket(interaction) {
 
   await interaction.editReply(requestReply);
 
-  logMessage(
-    `${interaction.user.tag} requested his ticket #${interaction.channel.name} to be closed by staff.`,
+  await logMessage(
+    `${interaction.user.tag} requested their ticket #${interaction.channel.name} to be closed by staff for the reason: ${reason}`,
   );
 }
 

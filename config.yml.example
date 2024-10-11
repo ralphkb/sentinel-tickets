@@ -1382,7 +1382,7 @@ logAutoCloseEmbed:
 closeRequestEmbed:
   color: "#FF2400"
   title: "Ticket Close Request"
-  description: "**{user} ({user.tag})** has requested to have his ticket closed." # Use {user} for the username of the user and {user.tag} to have the user tagged
+  description: "**{user} ({user.tag})** has requested to have their ticket closed.\nReason: **{reason}**" # Use {user} for the username of the user, {user.tag} to have the user tagged and {reason} for the reason
   timestamp: true
   URL: ""
   image: ""

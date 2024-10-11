@@ -12,6 +12,12 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("closerequest")
     .setDescription("Request closing a ticket.")
+    .addStringOption((option) =>
+      option
+        .setName("reason")
+        .setDescription("The reason for requesting closing the ticket")
+        .setRequired(false),
+    )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.closerequest.permission],
     )
@@ -53,6 +59,8 @@ module.exports = {
     }
 
     await interaction.deferReply();
-    await closeRequestTicket(interaction);
+    const reason =
+      interaction.options.getString("reason") || "No reason provided.";
+    await closeRequestTicket(interaction, reason);
   },
 };
