@@ -158,40 +158,40 @@ async function autoDeleteTicket(channelID) {
       deleteDMEmbed
         .addFields(
           {
-            name: "Server",
+            name: config.deleteDMEmbed.field_server || "Server",
             value: `> ${guild.name}`,
             inline: true,
           },
           {
-            name: "Ticket",
+            name: config.deleteDMEmbed.field_ticket || "Ticket",
             value: `> #${sanitizeInput(channelName)}`,
             inline: true,
           },
           {
-            name: "Category",
+            name: config.deleteDMEmbed.field_category || "Category",
             value: `> ${ticketType}`,
             inline: true,
           },
         )
         .addFields(
           {
-            name: "Ticket Author",
+            name: config.deleteDMEmbed.field_author || "Ticket Author",
             value: `> ${sanitizeInput(ticketUserID.tag)}`,
             inline: true,
           },
           {
-            name: "Deleted By",
+            name: config.deleteDMEmbed.field_deletedBy || "Deleted By",
             value: `> ${sanitizeInput(client.user.tag)}`,
             inline: true,
           },
           {
-            name: "Claimed By",
+            name: config.deleteDMEmbed.field_claimedBy || "Claimed By",
             value: `> ${claimUser ? sanitizeInput(claimUser.tag) : "None"}`,
             inline: true,
           },
         )
         .addFields({
-          name: "Ticket Creation Time",
+          name: config.deleteDMEmbed.field_creation || "Ticket Creation Time",
           value: `> <t:${await ticketsDB.get(`${channelID}.creationTime`)}:F>`,
           inline: true,
         });

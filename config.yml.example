@@ -1709,6 +1709,13 @@ deleteDMEmbed:
     name: ""
     iconURL: ""
     url: ""
+  field_server: "Server"
+  field_ticket: "Ticket"
+  field_category: "Category"
+  field_author: "Ticket Author"
+  field_deletedBy: "Deleted By"
+  field_claimedBy: "Claimed By"
+  field_creation: "Ticket Creation Time"
 
 # The embed that gets sent in a user's DMs with the delete DM Embed if the rating system is enabled in the DM user settings
 ratingDMEmbed:
