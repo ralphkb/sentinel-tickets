@@ -1751,6 +1751,9 @@ logRatingEmbed:
     name: ""
     iconURL: ""
     url: ""
+  field_creator: "• Ticket Creator 1"
+  field_ticket: "• Ticket 1"
+  field_rating: "• Ticket Rating 1"
 
 # The embed that gets sent in a user's DMs when a staff uses the alert command in their ticket
 alertDMEmbed:

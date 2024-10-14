@@ -30,12 +30,12 @@ async function getFeedback(interaction, i, withModal = true) {
   const logRatingEmbed = await configEmbed("logRatingEmbed", defaultValues);
 
   logRatingEmbed.addFields({
-    name: "• Ticket Creator",
+    name: config.logRatingEmbed.field_creator || "• Ticket Creator",
     value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
   });
 
   logRatingEmbed.addFields({
-    name: "• Ticket",
+    name: config.logRatingEmbed.field_ticket || "• Ticket",
     value: `> ${sanitizeInput(currentFooter)}`,
   });
 
@@ -60,7 +60,7 @@ async function getFeedback(interaction, i, withModal = true) {
   }
 
   logRatingEmbed.addFields({
-    name: "• Ticket Rating",
+    name: config.logRatingEmbed.field_rating || "• Ticket Rating",
     value: `${"⭐".repeat(i)} **(${i}/5)**`,
   });
 
@@ -80,7 +80,7 @@ async function getFeedback(interaction, i, withModal = true) {
     content: "Your feedback has been sent successfully!",
     ephemeral: true,
   });
-  logMessage(
+  await logMessage(
     `${interaction.user.tag} rated the ticket "${currentFooter}" with ${i} stars`,
   );
 }
