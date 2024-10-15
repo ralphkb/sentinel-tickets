@@ -840,6 +840,7 @@ logAlertEmbed:
   field_user: "• Alert Sent To"
   field_creator: "• Ticket Creator"
   field_ticket: "• Ticket"
+  field_time: "• Time"
 
 # User and role remove embed
 removeEmbed:

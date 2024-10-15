@@ -82,6 +82,11 @@ async function alertTicket(interaction, user, time = null) {
     );
   }
 
+  logAlertEmbed.addFields({
+    name: config.logAlertEmbed.field_time || "• Time",
+    value: `> ${collectorTimeInSeconds} seconds`,
+  });
+
   await interaction
     .editReply({
       embeds: [alertEmbed],
