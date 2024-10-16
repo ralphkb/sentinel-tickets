@@ -72,11 +72,21 @@ async function autoDeleteTicket(channelID) {
     },
   ]);
 
-  if (claimUser)
+  const closedAt = await ticketsDB.get(`${channelID}.closedAt`);
+  if (closedAt !== 0 && closedAt !== undefined) {
+    const closedTime = Math.floor(closedAt / 1000);
+    logAutoDeleteEmbed.addFields({
+      name: "• Closed at",
+      value: `> <t:${closedTime}:F>`,
+    });
+  }
+
+  if (claimUser) {
     logAutoDeleteEmbed.addFields({
       name: "• Claimed By",
       value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
     });
+  }
 
   let attachment;
   const transcriptType = config.transcriptType || "HTML";
