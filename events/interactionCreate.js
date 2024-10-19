@@ -205,10 +205,9 @@ module.exports = {
       try {
         await command.execute(interaction);
       } catch (error) {
-        console.error(
-          `[InteractionCreate] ${command.data.name} command error: ${error}`,
-        );
-        await interaction.reply({
+        error.errorContext = `[InteractionCreate]: an error occurred while executing the ${command.data.name} command.`;
+        client.emit("error", error);
+        await interaction.editReply({
           content: "There was an error while executing this command!",
           ephemeral: true,
         });
