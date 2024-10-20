@@ -14,6 +14,7 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits["ManageChannels"])
     .setDMPermission(false),
   async execute(interaction) {
+    await interaction.deferReply({ ephemeral: true });
     const rest = new REST({ version: "10" }).setToken(process.env.BOT_TOKEN);
     await rest.put(
       Routes.applicationGuildCommands(
@@ -32,11 +33,13 @@ module.exports = {
     console.log(
       Array.from(client.commands.values()).map((command) => command.data.name),
     );
-    await interaction.reply({
+    await interaction.editReply({
       content:
         "Reloaded all slash commands, use with caution due to rate limits. This command should only be used if you had issues loading slash commands changes due to bot updates.",
       ephemeral: true,
     });
-    logMessage(`${interaction.user.tag} reloaded all the slash commands.`);
+    await logMessage(
+      `${interaction.user.tag} reloaded all the slash commands.`,
+    );
   },
 };
