@@ -200,6 +200,15 @@ async function deleteTicket(interaction, reason = "No reason provided.") {
           inline: true,
         });
 
+      if (closedAt !== 0 && closedAt !== undefined) {
+        const closedTime = Math.floor(closedAt / 1000);
+        deleteDMEmbed.addFields({
+          name: "Closed at",
+          value: `> <t:${closedTime}:F>`,
+          inline: true,
+        });
+      }
+
       const options = [];
       for (let i = 1; i <= 5; i++) {
         const option = new StringSelectMenuOptionBuilder()
