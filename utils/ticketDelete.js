@@ -75,14 +75,14 @@ async function deleteTicket(interaction, reason = "No reason provided.") {
   if (closedAt !== 0 && closedAt !== undefined) {
     const closedTime = Math.floor(closedAt / 1000);
     logDeleteEmbed.addFields({
-      name: "• Closed at",
+      name: config.logDeleteEmbed.field_closedAt || "• Closed at",
       value: `> <t:${closedTime}:F>`,
     });
   }
 
   if (claimUser) {
     logDeleteEmbed.addFields({
-      name: "• Claimed By",
+      name: config.logDeleteEmbed.field_claimedBy || "• Claimed By",
       value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
     });
   }

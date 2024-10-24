@@ -76,14 +76,14 @@ async function autoDeleteTicket(channelID) {
   if (closedAt !== 0 && closedAt !== undefined) {
     const closedTime = Math.floor(closedAt / 1000);
     logAutoDeleteEmbed.addFields({
-      name: "• Closed at",
+      name: config.logAutoDeleteEmbed.field_closedAt || "• Closed at",
       value: `> <t:${closedTime}:F>`,
     });
   }
 
   if (claimUser) {
     logAutoDeleteEmbed.addFields({
-      name: "• Claimed By",
+      name: config.logAutoDeleteEmbed.field_claimedBy || "• Claimed By",
       value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
     });
   }
@@ -209,7 +209,7 @@ async function autoDeleteTicket(channelID) {
       if (closedAt !== 0 && closedAt !== undefined) {
         const closedTime = Math.floor(closedAt / 1000);
         deleteDMEmbed.addFields({
-          name: "Closed at",
+          name: config.deleteDMEmbed.field_closedAt || "Closed at",
           value: `> <t:${closedTime}:F>`,
           inline: true,
         });

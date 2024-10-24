@@ -71,7 +71,7 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
 
   if (claimUser) {
     logAutoCloseEmbed.addFields({
-      name: "• Claimed By",
+      name: config.logAutoCloseEmbed.field_claimedBy || "• Claimed By",
       value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
     });
   }

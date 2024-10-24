@@ -76,7 +76,7 @@ async function closeTicket(interaction, reason = "No reason provided.") {
 
   if (claimUser) {
     logCloseEmbed.addFields({
-      name: "• Claimed By",
+      name: config.logCloseEmbed.field_claimedBy || "• Claimed By",
       value: `> <@!${claimUser.id}>\n> ${sanitizeInput(claimUser.tag)}`,
     });
   }

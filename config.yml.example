@@ -1358,6 +1358,7 @@ logCloseEmbed:
   field_user: "• Ticket Creator"
   field_ticket: "• Ticket"
   field_reason: "• Reason"
+  field_claimedBy: "Claimed By"
 
 # Log embed for automatically closed tickets
 logAutoCloseEmbed:
@@ -1378,6 +1379,7 @@ logAutoCloseEmbed:
   field_staff: "• Auto Closed By"
   field_user: "• Ticket Creator"
   field_ticket: "• Ticket"
+  field_claimedBy: "Claimed By"
 
 # Close request command embed
 closeRequestEmbed:
@@ -1488,6 +1490,8 @@ logDeleteEmbed:
   field_ticket: "• Ticket"
   field_creation: "• Creation Time"
   field_reason: "• Reason"
+  field_closedAt: "Closed At"
+  field_claimedBy: "Claimed By"
 
 # Log embed for automatically deleted tickets
 logAutoDeleteEmbed:
@@ -1509,6 +1513,8 @@ logAutoDeleteEmbed:
   field_user: "• Ticket Creator"
   field_ticket: "• Ticket"
   field_creation: "• Creation Time"
+  field_closedAt: "Closed At"
+  field_claimedBy: "Claimed By"
 
 # Embed for manual transcripts via the button or command
 transcriptEmbed:
@@ -1620,6 +1626,11 @@ userInfoEmbed:
     name: ""
     iconURL: ""
     url: ""
+  field_info: "Information"
+  field_avatar: "Avatar"
+  field_roles: "Roles"
+  field_createdAt: "Created At"
+  field_joinedAt: "Joined At"
 
 # Help command embed
 helpEmbed:
@@ -1673,6 +1684,8 @@ ticketsEmbed:
     name: ""
     iconURL: ""
     url: ""
+  field_openTickets: "List of Currently Open Tickets"
+  field_closedTickets: "List of Currently Closed Tickets"
 
 preventNewTicketEmbed:
   color: "#FF0000"
@@ -1717,6 +1730,7 @@ deleteDMEmbed:
   field_deletedBy: "Deleted By"
   field_claimedBy: "Claimed By"
   field_creation: "Ticket Creation Time"
+  field_closedAt: "Closed At"
 
 # The embed that gets sent in a user's DMs with the delete DM Embed if the rating system is enabled in the DM user settings
 ratingDMEmbed:

@@ -673,7 +673,8 @@ async function listUserTickets(interaction, user, isEphemeral) {
   closedTickets.sort((a, b) => b.creationTime - a.creationTime);
 
   const openTicketsField = {
-    name: "List of Currently Open Tickets",
+    name:
+      config.ticketsEmbed.field_openTickets || "List of Currently Open Tickets",
     value:
       openTickets.length > 0
         ? openTickets
@@ -686,7 +687,9 @@ async function listUserTickets(interaction, user, isEphemeral) {
   };
 
   const closedTicketsField = {
-    name: "List of Currently Closed Tickets",
+    name:
+      config.ticketsEmbed.field_closedTickets ||
+      "List of Currently Closed Tickets",
     value:
       closedTickets.length > 0
         ? closedTickets

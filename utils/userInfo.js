@@ -1,3 +1,7 @@
+const fs = require("fs");
+const yaml = require("yaml");
+const configFile = fs.readFileSync("./config.yml", "utf8");
+const config = yaml.parse(configFile);
 const { configEmbed, sanitizeInput } = require("./mainUtils.js");
 
 async function userInfo(interaction, member, isEphemeral) {
@@ -36,25 +40,25 @@ async function userInfo(interaction, member, isEphemeral) {
 
   userInfoEmbed.addFields([
     {
-      name: "Information",
+      name: config.userInfoEmbed.field_info || "Information",
       value: `> **Username:** ${sanitizeInput(user.username)}\n> **Display Name:** ${member.displayName}\n> **User ID:** ${user.id}`,
     },
     {
-      name: "Avatar",
+      name: config.userInfoEmbed.field_avatar || "Avatar",
       value: `> ${avatarLinks}`,
     },
     {
-      name: "Roles",
+      name: config.userInfoEmbed.field_roles || "Roles",
       value: userRoles
         ? `> ${userRoles}`
         : "> This user currently has no roles.",
     },
     {
-      name: "Created At",
+      name: config.userInfoEmbed.field_createdAt || "Created At",
       value: `> ${createdAtTimestamp}`,
     },
     {
-      name: "Joined At",
+      name: config.userInfoEmbed.field_joinedAt || "Joined At",
       value: `> ${joinedAtTimestamp}`,
     },
   ]);
