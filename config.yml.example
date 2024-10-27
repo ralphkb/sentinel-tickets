@@ -321,6 +321,12 @@ commands:
   blacklist:
     enabled: true
     permission: "KickMembers"
+    userOrRoleError: "Please provide either a user or a role, but not both or none."
+    wrongDuration: "Invalid duration format, please use one of the following formats: 1s 1m 1h 1d 1w (e.g. 5s, 10m, 2h, 3d, 4w)"
+    validPage: "Please provide a valid page number greater than or equal to 1."
+    blacklistEmpty: "The blacklist is currently empty!"
+    blacklistEmptyType: "The {type} blacklist is currently empty!" # Use {type} for the blacklist type which is either user or role
+    pageError: "The specified page does not exist. Please choose a page between 1 and {maxPage}." # Use {maxPage} for the maximum number of pages available
   unblacklist:
     enabled: true
     permission: "KickMembers"
@@ -919,6 +925,7 @@ logUserLeftEmbed:
   field_ticket: "• Ticket"
   field_creation: "• Creation Time"
   field_action: "• Automated Action"
+  field_claimedBy: "• Claimed By"
 
 # Move command embed
 moveEmbed:

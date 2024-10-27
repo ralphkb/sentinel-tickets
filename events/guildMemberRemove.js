@@ -125,7 +125,7 @@ module.exports = {
 
           if (ticketClaimUser)
             logUserLeftEmbed.addFields({
-              name: "• Claimed By",
+              name: config.logUserLeftEmbed.field_claimedBy || "• Claimed By",
               value: `> <@!${ticketClaimUser.id}>\n> ${sanitizeInput(ticketClaimUser.tag)}`,
             });
 

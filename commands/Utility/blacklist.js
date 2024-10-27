@@ -124,6 +124,7 @@ module.exports = {
       if ((!user && !role) || (user && role)) {
         return interaction.reply({
           content:
+            config.commands.blacklist.userOrRoleError ||
             "Please provide either a user or a role, but not both or none.",
           ephemeral: true,
         });
@@ -134,6 +135,7 @@ module.exports = {
         if (!durationRegex.test(duration)) {
           return interaction.reply({
             content:
+              config.commands.blacklist.wrongDuration ||
               "Invalid duration format, please use one of the following formats: 1s 1m 1h 1d 1w (e.g. 5s, 10m, 2h, 3d, 4w)",
             ephemeral: true,
           });
@@ -157,6 +159,7 @@ module.exports = {
       if ((!user && !role) || (user && role)) {
         return interaction.reply({
           content:
+            config.commands.blacklist.userOrRoleError ||
             "Please provide either a user or a role, but not both or none.",
           ephemeral: true,
         });
@@ -172,6 +175,7 @@ module.exports = {
         if (page < 0) {
           return interaction.editReply({
             content:
+              config.commands.blacklist.validPage ||
               "Please provide a valid page number greater than or equal to 1.",
             ephemeral: true,
           });
@@ -181,9 +185,15 @@ module.exports = {
         const startIndex = (page - 1) * pageSize;
         const endIndex = page * pageSize;
         const blacklistData = await blacklistDB.all();
-        if (blacklistData.length === 0) {
+        const filteredEntries = blacklistData.filter(
+          (entry) =>
+            entry.id.startsWith("user-") || entry.id.startsWith("role-"),
+        );
+        if (filteredEntries.length === 0) {
           return interaction.editReply({
-            content: `The blacklist is currently empty!`,
+            content:
+              config.commands.blacklist.blacklistEmpty ||
+              "The blacklist is currently empty!",
             ephemeral: true,
           });
         }
@@ -192,15 +202,27 @@ module.exports = {
         );
         const totalEntriesCount = totalEntries.length;
         if (totalEntriesCount === 0) {
+          let blacklistEmptyType;
+          blacklistEmptyType =
+            `${config.commands.blacklist.blacklistEmptyType || "The {type} blacklist is currently empty!"}`.replace(
+              /\{type\}/g,
+              type,
+            );
           return interaction.editReply({
-            content: `The ${type} blacklist is currently empty!`,
+            content: blacklistEmptyType,
             ephemeral: true,
           });
         }
         const maxPage = Math.ceil(totalEntriesCount / pageSize);
         if (page > maxPage) {
+          let pageError;
+          pageError =
+            `${config.commands.blacklist.pageError || "The specified page does not exist. Please choose a page between 1 and {maxPage}."}`.replace(
+              /\{maxPage\}/g,
+              maxPage,
+            );
           return interaction.editReply({
-            content: `The specified page does not exist. Please choose a page between 1 and ${maxPage}.`,
+            content: pageError,
             ephemeral: true,
           });
         }
