@@ -243,7 +243,8 @@ async function saveTranscript(interaction, ticketChannel, saveImages = false) {
   }
 
   if (channel) {
-    const fileName = `${channel.name}-transcript.html`;
+    let fileName = config.transcriptName || "{channelName}-transcript";
+    fileName = fileName.replace(/\{channelName\}/g, channel.name);
     const attachmentBuffer = await discordHtmlTranscripts.createTranscript(
       channel,
       {
@@ -252,7 +253,7 @@ async function saveTranscript(interaction, ticketChannel, saveImages = false) {
       },
     );
     return new AttachmentBuilder(Buffer.from(attachmentBuffer), {
-      name: fileName,
+      name: `${fileName}.html`,
     });
   }
 
@@ -350,9 +351,11 @@ async function saveTranscriptTxt(interaction, ticketChannel) {
   const additionalInfo = `Server: ${guildName}\nTicket: #${channel.name}\nCategory: ${await ticketsDB.get(`${channel.id}.ticketType`)}\nTicket Author: ${ticketUserID.tag}\nDeleted By: ${deletedBy}\nClaimed By: ${claimUser ? claimUser.tag : "None"}\n`;
   const finalTranscript = [additionalInfo, ...transcript.reverse()];
   finalTranscript.push(`\nTotal messages: ${totalFetched}`);
+  let fileName = config.transcriptName || "{channelName}-transcript";
+  fileName = fileName.replace(/\{channelName\}/g, channel.name);
 
   return new AttachmentBuilder(Buffer.from(finalTranscript.join("\n")), {
-    name: `${channel.name}-transcript.txt`,
+    name: `${fileName}.txt`,
   });
 }
 
