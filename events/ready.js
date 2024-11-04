@@ -61,7 +61,9 @@ module.exports = {
             console.log("New slash commands registered successfully.");
             console.log(commands.map((command) => command.name));
           } else {
-            console.log("No new slash commands to register.");
+            if (!config.silentStartup) {
+              console.log("No new slash commands to register.");
+            }
           }
 
           // Remove the existing slash commands if there are any
@@ -81,7 +83,9 @@ module.exports = {
             console.log("Existing slash commands removed successfully.");
             console.log(removedCommands.map((command) => command.name));
           } else {
-            console.log("No existing slash commands to remove.");
+            if (!config.silentStartup) {
+              console.log("No existing slash commands to remove.");
+            }
           }
         } catch (error) {
           if (error) {

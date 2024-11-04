@@ -102,7 +102,9 @@ for (const folder of commandFolders) {
   for (const file of commandFiles) {
     const command = require(`./commands/${folder}/${file}`);
     if (command.enabled) {
-      console.log(`The slash command [${file}] has been loaded!`);
+      if (!config.silentStartup) {
+        console.log(`The slash command [${file}] has been loaded!`);
+      }
       client.commands.set(command.data.name, command);
     }
   }
