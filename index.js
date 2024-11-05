@@ -15,6 +15,7 @@ const {
 } = require("./utils/mainUtils.js");
 const { autoCloseTicket } = require("./utils/ticketAutoClose.js");
 const { autoDeleteTicket } = require("./utils/ticketAutoDelete.js");
+client.startingTime = Date.now();
 
 const blacklistInterval = config.blacklistCleanup || 120;
 // Schedule the blacklist cleanup check every blacklistInterval seconds

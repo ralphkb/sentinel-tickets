@@ -8,6 +8,7 @@ const config = yaml.parse(configFile);
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 const { client, mainDB } = require("../init.js");
+const { logMessage } = require("../utils/mainUtils.js");
 
 module.exports = {
   name: Events.ClientReady,
@@ -130,8 +131,14 @@ module.exports = {
       if (Array.isArray(openTickets)) {
         await mainDB.set("openTickets", openTickets.length);
       }
+      const totalCommands = client.commands.size;
+      const now = Date.now();
+      const startupTime = (now - client.startingTime) / 1000;
       console.log(
-        `The ticket bot is now ready! Logged in as ${client.user.tag}`,
+        `The ticket bot is now ready! Logged in as ${client.user.tag}. Startup time was ${startupTime.toFixed(2)} seconds. A total of ${totalCommands} commands were registered.`,
+      );
+      await logMessage(
+        `The ticket bot is now ready! Logged in as ${client.user.tag}. Startup time was ${startupTime.toFixed(2)} seconds. A total of ${totalCommands} commands were registered.`,
       );
     } catch (error) {
       error.errorContext = `[Ready Event Error]: an error occurred during initialization`;
