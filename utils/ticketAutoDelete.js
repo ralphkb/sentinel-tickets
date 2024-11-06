@@ -36,6 +36,7 @@ async function autoDeleteTicket(channelID) {
     claimUser = await getUser(claimUserID);
   }
   const ticketType = await ticketsDB.get(`${channelID}.ticketType`);
+  const ticketStatus = await ticketsDB.get(`${channelID}.status`);
 
   const logDefaultValues = {
     color: "#FF0000",
@@ -124,8 +125,10 @@ async function autoDeleteTicket(channelID) {
   await ticketChannel.send({ embeds: [autoDeleteEmbed] });
 
   setTimeout(async () => {
+    if (ticketStatus === "Open") {
+      await mainDB.sub("openTickets", 1);
+    }
     await ticketsDB.delete(channelID);
-    await mainDB.sub("openTickets", 1);
     await ticketChannel.delete();
   }, deleteTime);
 
