@@ -94,9 +94,14 @@ async function autoDeleteTicket(channelID) {
   const transcriptImages =
     config.transcriptImages !== undefined ? config.transcriptImages : false;
   if (transcriptType === "HTML") {
-    attachment = await saveTranscript(null, ticketChannel, transcriptImages);
+    attachment = await saveTranscript(
+      null,
+      ticketChannel,
+      transcriptImages,
+      ticketUserID,
+    );
   } else if (transcriptType === "TXT") {
-    attachment = await saveTranscriptTxt(null, ticketChannel);
+    attachment = await saveTranscriptTxt(null, ticketChannel, ticketUserID);
   }
 
   const deleteTicketTime =

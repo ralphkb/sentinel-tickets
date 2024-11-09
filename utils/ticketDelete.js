@@ -93,9 +93,14 @@ async function deleteTicket(interaction, reason = "No reason provided.") {
   const transcriptImages =
     config.transcriptImages !== undefined ? config.transcriptImages : false;
   if (transcriptType === "HTML") {
-    attachment = await saveTranscript(interaction, null, transcriptImages);
+    attachment = await saveTranscript(
+      interaction,
+      null,
+      transcriptImages,
+      ticketUserID,
+    );
   } else if (transcriptType === "TXT") {
-    attachment = await saveTranscriptTxt(interaction);
+    attachment = await saveTranscriptTxt(interaction, null, ticketUserID);
   }
 
   const deleteTicketTime =

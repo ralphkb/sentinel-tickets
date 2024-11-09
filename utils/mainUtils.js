@@ -227,7 +227,12 @@ async function configEmbed(configPath, defaultValues = {}) {
   return embed;
 }
 
-async function saveTranscript(interaction, ticketChannel, saveImages = false) {
+async function saveTranscript(
+  interaction,
+  ticketChannel,
+  saveImages = false,
+  user = null,
+) {
   const createTranscriptOptions = {
     limit: -1,
     saveImages,
@@ -245,6 +250,9 @@ async function saveTranscript(interaction, ticketChannel, saveImages = false) {
   if (channel) {
     let fileName = config.transcriptName || "{channelName}-transcript";
     fileName = fileName.replace(/\{channelName\}/g, channel.name);
+    if (user) {
+      fileName = fileName.replace(/\{username\}/g, user.username);
+    }
     const attachmentBuffer = await discordHtmlTranscripts.createTranscript(
       channel,
       {
@@ -260,7 +268,7 @@ async function saveTranscript(interaction, ticketChannel, saveImages = false) {
   return null;
 }
 
-async function saveTranscriptTxt(interaction, ticketChannel) {
+async function saveTranscriptTxt(interaction, ticketChannel, user = null) {
   let channel;
   if (interaction) {
     channel = interaction.channel;
@@ -353,6 +361,9 @@ async function saveTranscriptTxt(interaction, ticketChannel) {
   finalTranscript.push(`\nTotal messages: ${totalFetched}`);
   let fileName = config.transcriptName || "{channelName}-transcript";
   fileName = fileName.replace(/\{channelName\}/g, channel.name);
+  if (user) {
+    fileName = fileName.replace(/\{username\}/g, user.username);
+  }
 
   return new AttachmentBuilder(Buffer.from(finalTranscript.join("\n")), {
     name: `${fileName}.txt`,
