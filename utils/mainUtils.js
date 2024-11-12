@@ -79,6 +79,24 @@ async function getUser(id) {
   }
 }
 
+async function getMember(id) {
+  const guild = client.guilds.cache.get(process.env.GUILD_ID);
+  let member = guild.members.cache.get(id);
+
+  if (member) {
+    return member;
+  } else {
+    try {
+      member = await guild.members.fetch(id);
+      return member;
+    } catch (error) {
+      error.errorContext = `[getMember Function Error]: error fetching member with ID ${id}`;
+      client.emit("error", error);
+      return null;
+    }
+  }
+}
+
 async function getRole(id) {
   let role = client.guilds.cache.get(process.env.GUILD_ID).roles.cache.get(id);
 
@@ -251,7 +269,10 @@ async function saveTranscript(
     let fileName = config.transcriptName || "{channelName}-transcript";
     fileName = fileName.replace(/\{channelName\}/g, channel.name);
     if (user) {
-      fileName = fileName.replace(/\{username\}/g, user.username);
+      const member = await getMember(user.id);
+      fileName = fileName
+        .replace(/\{username\}/g, user.username)
+        .replace(/\{displayName\}/g, member.displayName);
     }
     const attachmentBuffer = await discordHtmlTranscripts.createTranscript(
       channel,
@@ -362,7 +383,10 @@ async function saveTranscriptTxt(interaction, ticketChannel, user = null) {
   let fileName = config.transcriptName || "{channelName}-transcript";
   fileName = fileName.replace(/\{channelName\}/g, channel.name);
   if (user) {
-    fileName = fileName.replace(/\{username\}/g, user.username);
+    const member = await getMember(user.id);
+    fileName = fileName
+      .replace(/\{username\}/g, user.username)
+      .replace(/\{displayName\}/g, member.displayName);
   }
 
   return new AttachmentBuilder(Buffer.from(finalTranscript.join("\n")), {
@@ -737,6 +761,7 @@ module.exports = {
   checkSupportRole,
   addTicketCreator,
   getUser,
+  getMember,
   getRole,
   getChannel,
   findAvailableCategory,
