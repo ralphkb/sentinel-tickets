@@ -93,6 +93,9 @@ module.exports = {
             error.errorContext = `[Commands Registration Error]: an error occurred during slash command registration`;
             client.emit("error", error);
             console.log(
+              'If you received an error saying "Unknown Application" then double check your client ID and guild ID in your .env file.',
+            );
+            console.log(
               `The bot may have been invited with some missing options. Please use the link below to re-invite your bot if that is the case.`,
             );
             console.log(
