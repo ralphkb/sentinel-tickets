@@ -59,7 +59,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Options to DM users upon ticket close, ticket reopen or the usage of the alert command.
 - Option to DM users on ticket deletion with their transcript and an embed with useful information.
 - Configurable rating/feedback system with logs of the responses.
-- Option to save the transcripts as HTML or TXT, with the possibility to save images in HTML transcripts.
+- Option to save the transcripts as HTML or TXT, with the possibility to save images in HTML transcripts. Also includes the option to change the transcript file name.
 - Ticket logs for multiple ticket events, such as ticket create, close, delete, force delete, reopen, claim, unclaim etc.
 - Option to select a channel for each log event to be sent to.
 - Precise and organized logs of errors and all ticket events in a logs.txt file.
@@ -71,6 +71,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 - Option to automatically delete closed tickets after X amount of time from the ticket's closure time.
 - DM preference system, allowing users to toggle their preference regarding receiving DMs from the bot such as alert, close, reopen & delete.
 - The ability to create stats channels that will be automatically updated after a configurable amount of time.
+- The ability to adjust some of the stats in case of migrating from a different bot or due to any inconsistency or issues.
 - Multiple Commands: Efficiently manage tickets with various commands.
     - Send the ticket panels in any channel using the panel id
     - Add Users or Roles to a ticket
@@ -112,7 +113,7 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Average Rating
 
 ## Sponsor
-If you find value in this project, you can support the continued development by joining my Patreon! https://www.patreon.com/Ralphkb  
+If you find value in this project, you can support the development by donating on my Patreon! https://www.patreon.com/Ralphkb  
 You may also consider leaving a star, all support is welcome and really appreciated, thank you! ❤️ 
 
 ## Documentation
@@ -120,8 +121,8 @@ You can find the documentation website of the bot here: https://sentineltickets.
 
 ## Bug Reporting
 - For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
-This is a free project that I enjoy working on in my free time, I cannot guarantee support however I will try my best to fix bugs, sort issues and add new features! I am constantly learning and improving, thank you for your understanding. 😄  
-Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support. Patreon members receive unique roles and perks on the discord.
+This is a free project that I enjoy working on in my free time, I cannot guarantee support or updates however I will try my best to fix bugs, sort issues and add new features. Thank you for your understanding. 😄  
+Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support. Patreon members receive unique roles on the discord.
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
