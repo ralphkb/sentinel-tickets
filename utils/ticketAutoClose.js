@@ -22,6 +22,7 @@ const {
   getUserPreference,
   getChannel,
   getRole,
+  logError,
 } = require("./mainUtils.js");
 
 async function autoCloseTicket(channelID, creatorLeft = false) {
@@ -332,7 +333,7 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
           await ticketUserID.send({ embeds: [closeDMEmbed] });
         } catch (error) {
           error.errorContext = `[Auto Close Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
-          client.emit("error", error);
+          await logError("ERROR", error);
           const defaultErrorValues = {
             color: "#FF0000",
             title: "DMs Disabled",

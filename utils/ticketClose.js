@@ -20,6 +20,7 @@ const {
   getUserPreference,
   getChannel,
   getRole,
+  logError,
 } = require("./mainUtils.js");
 
 async function closeTicket(interaction, reason = "No reason provided.") {
@@ -337,7 +338,7 @@ async function closeTicket(interaction, reason = "No reason provided.") {
         await ticketUserID.send({ embeds: [closeDMEmbed] });
       } catch (error) {
         error.errorContext = `[Close Slash Command Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
-        client.emit("error", error);
+        await logError("ERROR", error);
         const defaultErrorValues = {
           color: "#FF0000",
           title: "DMs Disabled",

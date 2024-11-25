@@ -11,6 +11,7 @@ const {
   getChannel,
   getUserPreference,
   getUser,
+  logError,
 } = require("./mainUtils.js");
 const { autoCloseTicket } = require("./ticketAutoClose.js");
 const { autoDeleteTicket } = require("./ticketAutoDelete.js");
@@ -184,7 +185,7 @@ async function alertTicket(interaction, user, time = null) {
         await user.send({ embeds: [alertDMEmbed] });
       } catch (error) {
         error.errorContext = `[Alert Slash Command Error]: failed to DM ${user.tag} because their DMs were closed.`;
-        client.emit("error", error);
+        await logError("ERROR", error);
         const defaultErrorValues = {
           color: "#FF0000",
           title: "DMs Disabled",

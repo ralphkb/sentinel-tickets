@@ -19,6 +19,7 @@ const {
   countMessagesInTicket,
   getChannel,
   lastUserMsgTimestamp,
+  logError,
 } = require("./mainUtils.js");
 
 async function deleteTicket(interaction, reason = "No reason provided.") {
@@ -280,7 +281,7 @@ async function deleteTicket(interaction, reason = "No reason provided.") {
         }
       } catch (error) {
         error.errorContext = `[Delete Slash Command Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
-        client.emit("error", error);
+        await logError("ERROR", error);
         const defaultErrorValues = {
           color: "#FF0000",
           title: "DMs Disabled",

@@ -13,6 +13,7 @@ const {
   getUserPreference,
   getChannel,
   getRole,
+  logError,
 } = require("./mainUtils.js");
 
 async function reopenTicket(interaction) {
@@ -267,7 +268,7 @@ async function reopenTicket(interaction) {
         await ticketUserID.send({ embeds: [reopenDMEmbed] });
       } catch (error) {
         error.errorContext = `[Reopen Slash Command Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
-        client.emit("error", error);
+        await logError("ERROR", error);
         const defaultErrorValues = {
           color: "#FF0000",
           title: "DMs Disabled",

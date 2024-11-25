@@ -21,6 +21,7 @@ const {
   countMessagesInTicket,
   getChannel,
   lastUserMsgTimestamp,
+  logError,
 } = require("./mainUtils.js");
 
 async function autoDeleteTicket(channelID) {
@@ -274,9 +275,7 @@ async function autoDeleteTicket(channelID) {
         }
         if (sendRatingSystem === true) {
           if (Object.keys(messageDM).length !== 0) {
-            await ticketUserID.send(messageDM).catch(() => {
-              // Stops the useless console logging
-            });
+            await ticketUserID.send(messageDM);
           }
           if (lastMsgTime !== null) {
             await mainDB.set(`ratingMenuOptions`, options);
@@ -288,7 +287,7 @@ async function autoDeleteTicket(channelID) {
         }
       } catch (error) {
         error.errorContext = `[Delete Slash Command Error]: failed to DM ${ticketUserID.tag} because their DMs were closed.`;
-        client.emit("error", error);
+        await logError("ERROR", error);
         const defaultErrorValues = {
           color: "#FF0000",
           title: "DMs Disabled",
