@@ -87,7 +87,7 @@ async function getMember(id) {
     return member;
   } else {
     try {
-      member = await guild.members.fetch(id);
+      member = await guild.members.fetch(id).catch(() => null);
       return member;
     } catch (error) {
       error.errorContext = `[getMember Function Error]: error fetching member with ID ${id}`;
@@ -272,7 +272,7 @@ async function saveTranscript(
       const member = await getMember(user.id);
       fileName = fileName
         .replace(/\{username\}/g, user.username)
-        .replace(/\{displayName\}/g, member.displayName);
+        .replace(/\{displayName\}/g, member ? member.displayName : user.username);
     }
     const attachmentBuffer = await discordHtmlTranscripts.createTranscript(
       channel,

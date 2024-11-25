@@ -274,7 +274,9 @@ async function autoDeleteTicket(channelID) {
         }
         if (sendRatingSystem === true) {
           if (Object.keys(messageDM).length !== 0) {
-            await ticketUserID.send(messageDM);
+            await ticketUserID.send(messageDM).catch(() => {
+              // Stops the useless console logging
+            });
           }
           if (lastMsgTime !== null) {
             await mainDB.set(`ratingMenuOptions`, options);
