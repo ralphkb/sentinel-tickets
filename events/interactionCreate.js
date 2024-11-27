@@ -1636,14 +1636,23 @@ module.exports = {
 
             let channelName;
             switch (configValue) {
-              case "USERNAME":
-                channelName = `${category.name}-${USERNAME}`;
+              case "CATEGORY-USERNAME":
+                    channelName = `${category.name}-${USERNAME}`;
                 break;
-              case "TICKETCOUNT":
-                channelName = `${category.name}-${TICKETCOUNT}`;
+              case "CATEGORY-TICKETCOUNT":
+                    channelName = `${category.name}-${TICKETCOUNT}`;
                 break;
-              case "BOTH":
-                channelName = `${USERNAME}-${TICKETCOUNT}`;
+              case "USERNAME-TICKETCOUNT":
+                    channelName = `${USERNAME}-${TICKETCOUNT}`;
+                break;
+              case "USERNAME-CATEGORY":
+                    channelName = `${USERNAME}-${category.name}`;
+                break;
+              case "USERNAME-CATEGORY-TICKETCOUNT":
+                    channelName = `${USERNAME}-${category.name}-${TICKETCOUNT}`;
+                break;
+              case "CATEGORY-USERNAME-TICKETCOUNT":
+                    channelName = `${category.name}-${USERNAME}-${TICKETCOUNT}`;
                 break;
               default:
                 throw new Error(
