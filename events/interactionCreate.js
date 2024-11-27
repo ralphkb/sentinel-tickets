@@ -1651,7 +1651,7 @@ module.exports = {
               case "USERNAME-CATEGORY-TICKETCOUNT":
                     channelName = `${USERNAME}-${category.name}-${TICKETCOUNT}`;
                 break;
-              case "DEFAULT":
+              case "CATEGORY-USERNAME-TICKETCOUNT":
                     channelName = `${category.name}-${USERNAME}-${TICKETCOUNT}`;
                 break;
               default:
