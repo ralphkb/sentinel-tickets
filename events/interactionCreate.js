@@ -1635,28 +1635,29 @@ module.exports = {
             );
 
             let channelName;
-            switch (configValue) {
-              case "CATEGORY-USERNAME":
-                    channelName = `${category.name}-${USERNAME}`;
+            switch (configValue.toLowerCase()) {
+              case "category-username":
+                channelName = `${category.name}-${USERNAME}`;
                 break;
-              case "CATEGORY-TICKETCOUNT":
-                    channelName = `${category.name}-${TICKETCOUNT}`;
+              case "category-ticketcount":
+                channelName = `${category.name}-${TICKETCOUNT}`;
                 break;
-              case "USERNAME-TICKETCOUNT":
-                    channelName = `${USERNAME}-${TICKETCOUNT}`;
+              case "username-ticketcount":
+                channelName = `${USERNAME}-${TICKETCOUNT}`;
                 break;
-              case "USERNAME-CATEGORY":
-                    channelName = `${USERNAME}-${category.name}`;
+              case "username-category":
+                channelName = `${USERNAME}-${category.name}`;
                 break;
-              case "USERNAME-CATEGORY-TICKETCOUNT":
-                    channelName = `${USERNAME}-${category.name}-${TICKETCOUNT}`;
+              case "username-category-ticketcount":
+                channelName = `${USERNAME}-${category.name}-${TICKETCOUNT}`;
                 break;
-              case "CATEGORY-USERNAME-TICKETCOUNT":
-                    channelName = `${category.name}-${USERNAME}-${TICKETCOUNT}`;
+              case "category-username-ticketcount":
+                channelName = `${category.name}-${USERNAME}-${TICKETCOUNT}`;
                 break;
               default:
-                throw new Error(
-                  `Invalid category ticketName configuration value: ${configValue}`,
+                channelName = `${category.name}-${TICKETCOUNT}`;
+                console.log(
+                  `WARNING: Invalid category ticketName configuration value: ${configValue}, falling back to category-ticketcount as the value.`,
                 );
             }
             const nameEmoji = category.nameEmoji ?? "";
