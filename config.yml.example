@@ -1581,6 +1581,9 @@ statsEmbed:
     name: ""
     iconURL: ""
     url: ""
+  field_tickets: "🎫 Tickets"
+  field_reviews: "⭐ Reviews"
+  field_bot: "🤖 Bot"
 
 # Stats set command embed
 statsSetEmbed:

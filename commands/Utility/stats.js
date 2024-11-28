@@ -95,15 +95,15 @@ module.exports = {
 
       statsEmbed.addFields([
         {
-          name: "🎫 Tickets",
+          name: config.statsEmbed.field_tickets || "🎫 Tickets",
           value: `> Total Tickets: ${totalTickets}\n> Total Open Tickets: ${openTickets}\n> Total Claimed Tickets: ${totalClaims}\n> Total Messages: ${totalMessages}\n> Total Ticket Creators: ${totalTicketCreators}\n> Average Tickets Created Per User: ${ticketCreators.length ? averageTicketsCreated.toFixed(0) : 0}`,
         },
         {
-          name: "⭐ Reviews",
+          name: config.statsEmbed.field_reviews || "⭐ Reviews",
           value: `> Total Reviews: ${totalReviews}\n> Average Rating: ${ratingsArray.length ? averageRating.toFixed(1) : 0}/5.0`,
         },
         {
-          name: "🤖 Bot",
+          name: config.statsEmbed.field_bot || "🤖 Bot",
           value: `> Version: v${packageJson.version}\n> RAM Usage: ${ramUsageMB} MB\n> Uptime: ${formatTime(totalUptime)}`,
         },
       ]);
