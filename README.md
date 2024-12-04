@@ -4,7 +4,7 @@
 [![GitHub release (latest)](https://img.shields.io/github/v/release/ralphkb/sentinel-tickets)](https://github.com/ralphkb/sentinel-tickets/releases/latest)
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ralphkb/sentinel-tickets/latest)](https://github.com/ralphkb/sentinel-tickets/commits/main/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/ralphkb/sentinel-tickets)](https://github.com/ralphkb/sentinel-tickets/commits/main/)
-[![Patreon Sponsor](https://img.shields.io/badge/Patreon-Sponsor-blue?logo=patreon)](https://patreon.com/ralphkb)
+[![Patreon Sponsor](https://img.shields.io/badge/Patreon-Donate-blue?logo=patreon)](https://patreon.com/ralphkb)
 
 ## Introduction
 This is a ticket bot that aims to provide a free and open source solution for managing tickets on Discord. The bot is designed to be lightweight, without any watermarks or unnecessary bloat. It allows users to create, track, and manage tickets seamlessly.
@@ -12,11 +12,14 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 ## Requirements
 - Tested on latest Node.js v18
 
+## Sponsor
+If you find value in this project, you can support the development by donating $3 on my Patreon! https://www.patreon.com/Ralphkb  
+Consider leaving a star, all support is welcome and really appreciated, thank you! ❤️ 
+
 ## Table of Contents
 - [🛠️ Installation](#installation)
 - [🔄 Updating](#updating)
 - [✨ Features](#features)
-- [💖 Sponsor](#sponsor)
 - [📚 Documentation](#documentation)
 - [🐛 Bug Reporting](#bug-reporting)
 - [📃 License](#license)
@@ -111,10 +114,6 @@ This is a ticket bot that aims to provide a free and open source solution for ma
     - Average Tickets Created Per User
     - Total Reviews
     - Average Rating
-
-## Sponsor
-If you find value in this project, you can support the development by donating on my Patreon! https://www.patreon.com/Ralphkb  
-You may also consider leaving a star, all support is welcome and really appreciated, thank you! ❤️ 
 
 ## Documentation
 You can find the documentation website of the bot here: https://sentineltickets.com
