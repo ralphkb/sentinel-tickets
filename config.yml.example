@@ -1583,6 +1583,7 @@ statsEmbed:
     url: ""
   field_tickets: "🎫 Tickets"
   field_reviews: "⭐ Reviews"
+  field_server: "🏢 Server"
   field_bot: "🤖 Bot"
 
 # Stats set command embed

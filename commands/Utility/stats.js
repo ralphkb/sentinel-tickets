@@ -75,6 +75,8 @@ module.exports = {
           0,
         ) / totalTicketCreators;
       const totalUptime = Math.floor(process.uptime());
+      const memberCount = interaction.guild.memberCount;
+      const creationDate = `<t:${Math.floor(interaction.guild.createdAt.getTime() / 1000)}:F>`;
 
       const defaultValues = {
         color: "#2FF200",
@@ -101,6 +103,10 @@ module.exports = {
         {
           name: config.statsEmbed.field_reviews || "⭐ Reviews",
           value: `> Total Reviews: ${totalReviews}\n> Average Rating: ${ratingsArray.length ? averageRating.toFixed(1) : 0}/5.0`,
+        },
+        {
+          name: config.statsEmbed.field_server || "🏢 Server",
+          value: `> Creation Date: ${creationDate}\n> Total Members: ${memberCount}`,
         },
         {
           name: config.statsEmbed.field_bot || "🤖 Bot",
