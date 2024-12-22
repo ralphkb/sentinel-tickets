@@ -45,7 +45,7 @@ statsChannels:
   interval: "600" # The interval in seconds for the stats channels to update, cannot be lower than 600 which is 10 minutes in order to avoid discord channel rename rate limits
   channels:
     - channelID: "111111111111111111" # The ID of the voice channel that will be renamed frequently with the updated stats
-      type: "totalTickets" # The type of statistic to display, the options are the following: totalTickets, openTickets, totalClaims, totalReviews, ratings, totalMessages, ticketCreators, avgTicketCreators
+      type: "totalTickets" # The type of statistic to display, the options are the following: totalTickets, openTickets, totalClaims, totalReviews, ratings, totalMessages, ticketCreators, avgTicketCreators, memberCount
       name: "Total Tickets: {stats}" # The name of the stats channel, use the placeholder {stats} to display the result of the stats based on the type selected above
     - channelID: "111111111111111111"
       type: "openTickets"

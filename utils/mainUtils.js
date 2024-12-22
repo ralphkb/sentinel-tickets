@@ -632,6 +632,11 @@ async function updateStatsChannels() {
       );
       continue;
     }
+    if (type === "memberCount") {
+      const memberCount = channel.guild.memberCount;
+      await channel.setName(name.replace(/\{stats\}/g, memberCount));
+      continue;
+    }
     if (type === "avgTicketCreators") {
       const ticketCreators = (await mainDB.get("ticketCreators")) ?? [];
       const totalTicketCreators = ticketCreators.length;
