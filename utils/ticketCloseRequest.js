@@ -11,9 +11,9 @@ async function closeRequestTicket(interaction, reason = "No reason provided.") {
 
   const closeButton = new ButtonBuilder()
     .setCustomId("closeTicket")
-    .setLabel(config.closeButton.label)
-    .setEmoji(config.closeButton.emoji)
-    .setStyle(ButtonStyle[config.closeButton.style]);
+    .setLabel(config.closeRequestButton.label)
+    .setEmoji(config.closeRequestButton.emoji)
+    .setStyle(ButtonStyle[config.closeRequestButton.style]);
 
   const row = new ActionRowBuilder().addComponents(closeButton);
 

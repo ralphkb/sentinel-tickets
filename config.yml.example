@@ -428,6 +428,11 @@ newTicketButton:
   label: "Click Here" # The label of the button
   emoji: "🎫" # The emoji of the button
 
+closeRequestButton:
+  label: "Accept & Close" # The label of the button
+  emoji: "✅" # The emoji of the button
+  style: "Success" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"  
+
 # ==============================================
 # Working Hours Settings
 # ==============================================
