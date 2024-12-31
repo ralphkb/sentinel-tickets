@@ -10,7 +10,7 @@
 This is a ticket bot that aims to provide a free and open source solution for managing tickets on Discord. The bot is designed to be lightweight, without any watermarks or unnecessary bloat. It allows users to create, track, and manage tickets seamlessly.
 
 ## Requirements
-- Tested on latest Node.js v18
+- Tested on latest Node.js v22
 
 ## Sponsor
 If you find value in this project, you can support the development by donating $3 on my Patreon! https://www.patreon.com/Ralphkb  
@@ -25,7 +25,7 @@ Consider leaving a star, all support is welcome and really appreciated, thank yo
 - [📃 License](#license)
 
 ## Installation
-1. Install Node.js if not already installed (v18 recommended): [Node.js Installation Guide](https://nodejs.org/en/download/)
+1. Install Node.js if not already installed (v22 recommended): [Node.js Installation Guide](https://nodejs.org/en/download/)
 2. Clone the repository: `git clone https://github.com/ralphkb/sentinel-tickets.git` or download the latest release: https://github.com/ralphkb/sentinel-tickets/releases
 3. Change to the project directory, for example: `cd sentinel-tickets` or the directory where you uploaded the release files.
 4. Run `npm install` to install the dependencies
