@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -33,7 +37,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_in_a_ticket || "You are not in a ticket channel!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -42,7 +46,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_allowed || "You are not allowed to use this!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
     const isEphemeral =
@@ -50,7 +54,9 @@ module.exports = {
         ? config.topicEmbed.ephemeral
         : false;
 
-    await interaction.deferReply({ ephemeral: isEphemeral });
+    await interaction.deferReply({
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+    });
     const oldTopic = interaction.channel.topic;
     let newTopic = interaction.options.getString("topic");
     const user = await getUser(
@@ -114,7 +120,7 @@ module.exports = {
 
     await interaction.editReply({
       embeds: [topicEmbed],
-      ephemeral: isEphemeral,
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
     });
     if (config.toggleLogs.ticketTopic) {
       try {
@@ -124,7 +130,7 @@ module.exports = {
         client.emit("error", error);
       }
     }
-    logMessage(
+    await logMessage(
       `${interaction.user.tag} changed the topic of the ticket #${interaction.channel.name} to ${newTopic}`,
     );
   },

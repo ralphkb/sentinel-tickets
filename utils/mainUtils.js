@@ -1,4 +1,4 @@
-const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
+const { EmbedBuilder, AttachmentBuilder, MessageFlags } = require("discord.js");
 const dotenv = require("dotenv");
 dotenv.config();
 const discordHtmlTranscripts = require("discord-html-transcripts");
@@ -751,7 +751,7 @@ async function listUserTickets(interaction, user, isEphemeral) {
 
   await interaction.editReply({
     embeds: [ticketsEmbed],
-    ephemeral: isEphemeral,
+    flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
   });
 }
 

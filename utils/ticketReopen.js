@@ -239,7 +239,7 @@ async function reopenTicket(interaction) {
       client.emit("error", error);
     }
   }
-  logMessage(
+  await logMessage(
     `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
   );
 
@@ -314,7 +314,7 @@ async function reopenTicket(interaction) {
             client.emit("error", error);
           }
         }
-        logMessage(
+        await logMessage(
           `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
         );
       }

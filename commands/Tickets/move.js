@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -34,7 +38,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_in_a_ticket || "You are not in a ticket channel!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -43,7 +47,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_allowed || "You are not allowed to use this!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -60,14 +64,14 @@ module.exports = {
     if (!choices.includes(option)) {
       return interaction.reply({
         content: `Invalid option. Available options are: ${choices.join(", ")}`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
     if (option === ticketType) {
       return interaction.reply({
         content: "This ticket is already in that category.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -75,7 +79,9 @@ module.exports = {
       config.moveEmbed.ephemeral !== undefined
         ? config.moveEmbed.ephemeral
         : false;
-    await interaction.deferReply({ ephemeral: isEphemeral });
+    await interaction.deferReply({
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+    });
 
     // Find the categoryID based on the name
     const category = Object.values(ticketCategories).find(
@@ -152,9 +158,9 @@ module.exports = {
 
     await interaction.editReply({
       embeds: [moveEmbed],
-      ephemeral: isEphemeral,
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
     });
-    logMessage(
+    await logMessage(
       `${interaction.user.tag} moved the ticket #${interaction.channel.name} to the category ${option}.`,
     );
   },

@@ -2,6 +2,7 @@ const {
   ContextMenuCommandBuilder,
   ApplicationCommandType,
   PermissionFlagsBits,
+  MessageFlags,
 } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
@@ -27,7 +28,7 @@ module.exports = {
       return interaction.reply({
         content:
           "This feature is currently disabled because you have the permission to close your own ticket.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -35,7 +36,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_in_a_ticket || "You are not in a ticket channel!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -44,7 +45,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "This ticket is already closed!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -54,7 +55,7 @@ module.exports = {
     if (interaction.user !== ticketUserID) {
       return interaction.reply({
         content: "You are not the ticket creator!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
     await interaction.deferReply();

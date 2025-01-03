@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -104,7 +108,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_allowed || "You are not allowed to use this!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -126,7 +130,7 @@ module.exports = {
           content:
             config.commands.blacklist.userOrRoleError ||
             "Please provide either a user or a role, but not both or none.",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
 
@@ -137,12 +141,12 @@ module.exports = {
             content:
               config.commands.blacklist.wrongDuration ||
               "Invalid duration format, please use one of the following formats: 1s 1m 1h 1d 1w (e.g. 5s, 10m, 2h, 3d, 4w)",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
       }
 
-      await interaction.deferReply({ ephemeral: true });
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
       await blacklistAdd(interaction, user, member, duration, reason, role);
     }
 
@@ -161,15 +165,15 @@ module.exports = {
           content:
             config.commands.blacklist.userOrRoleError ||
             "Please provide either a user or a role, but not both or none.",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
-      await interaction.deferReply({ ephemeral: true });
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
       await blacklistRemove(interaction, user, member, reason, role);
     }
 
     if (subcommand === "list") {
-      await interaction.deferReply({ ephemeral: true });
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
       try {
         const page = interaction.options.getInteger("page") || 1;
         if (page < 0) {
@@ -177,7 +181,7 @@ module.exports = {
             content:
               config.commands.blacklist.validPage ||
               "Please provide a valid page number greater than or equal to 1.",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
         const type = interaction.options.getString("type") || "users";
@@ -194,7 +198,7 @@ module.exports = {
             content:
               config.commands.blacklist.blacklistEmpty ||
               "The blacklist is currently empty!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
         const totalEntries = blacklistData.filter((entry) =>
@@ -210,7 +214,7 @@ module.exports = {
             );
           return interaction.editReply({
             content: blacklistEmptyType,
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
         const maxPage = Math.ceil(totalEntriesCount / pageSize);
@@ -223,7 +227,7 @@ module.exports = {
             );
           return interaction.editReply({
             content: pageError,
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
         const sortedBlacklistedEntries = totalEntries.sort(

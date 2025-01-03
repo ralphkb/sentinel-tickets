@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -34,7 +38,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_in_a_ticket || "You are not in a ticket channel!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -43,7 +47,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_allowed || "You are not allowed to use this!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -51,7 +55,7 @@ module.exports = {
     if (time < 0) {
       return interaction.reply({
         content: "The specified time must be a positive number.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
     const currentSlowmode = interaction.channel.rateLimitPerUser;
@@ -61,7 +65,7 @@ module.exports = {
         content:
           config.commands.slowmode.alreadySlowmode ||
           "This ticket channel already has that slowmode.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -71,7 +75,7 @@ module.exports = {
         content:
           config.commands.slowmode.slowmodeRemoved ||
           "The slowmode has been removed from this ticket.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
     const isEphemeral =
@@ -79,7 +83,9 @@ module.exports = {
         ? config.slowmodeEmbed.ephemeral
         : false;
 
-    await interaction.deferReply({ ephemeral: isEphemeral });
+    await interaction.deferReply({
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+    });
     await interaction.channel.setRateLimitPerUser(time);
     const formattedTime = formatTime(time);
 
@@ -131,7 +137,7 @@ module.exports = {
     }
     await interaction.editReply({
       embeds: [slowmodeEmbed],
-      ephemeral: isEphemeral,
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
     });
     if (config.toggleLogs.ticketSlowmode) {
       try {
@@ -141,7 +147,7 @@ module.exports = {
         client.emit("error", error);
       }
     }
-    logMessage(
+    await logMessage(
       `${interaction.user.tag} added a slow mode of ${formattedTime} to the ticket #${interaction.channel.name}`,
     );
   },

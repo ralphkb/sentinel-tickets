@@ -19,10 +19,10 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@discordjs/rest": "^2.4.0",
+    "@discordjs/rest": "^2.4.2",
     "better-sqlite3": "^11.7.0",
     "discord-html-transcripts": "^3.2.0",
-    "discord.js": "^14.16.3",
+    "discord.js": "^14.17.2",
     "dotenv": "^16.4.7",
     "moment-timezone": "^0.5.46",
     "quick.db": "^9.1.7",

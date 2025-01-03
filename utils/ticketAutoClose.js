@@ -379,7 +379,7 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
               client.emit("error", error);
             }
           }
-          logMessage(
+          await logMessage(
             `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
           );
         }

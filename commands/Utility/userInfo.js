@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -24,7 +28,9 @@ module.exports = {
         : true;
     const user = interaction.options.getUser("user") || interaction.user;
     const member = interaction.guild.members.cache.get(user.id);
-    await interaction.deferReply({ ephemeral: isEphemeral });
+    await interaction.deferReply({
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+    });
     await userInfo(interaction, member, isEphemeral);
   },
 };

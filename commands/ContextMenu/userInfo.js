@@ -2,6 +2,7 @@ const {
   ContextMenuCommandBuilder,
   ApplicationCommandType,
   PermissionFlagsBits,
+  MessageFlags,
 } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
@@ -24,7 +25,9 @@ module.exports = {
         ? config.userInfoEmbed.ephemeral
         : true;
     const member = interaction.targetMember;
-    await interaction.deferReply({ ephemeral: isEphemeral });
+    await interaction.deferReply({
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+    });
     await userInfo(interaction, member, isEphemeral);
   },
 };

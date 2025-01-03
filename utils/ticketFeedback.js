@@ -1,3 +1,4 @@
+const { MessageFlags } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -78,7 +79,7 @@ async function getFeedback(interaction, i, withModal = true) {
   await mainDB.push("ratings", i);
   await interaction.editReply({
     content: "Your feedback has been sent successfully!",
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
   await logMessage(
     `${interaction.user.tag} rated the ticket "${currentFooter}" with ${i} stars`,

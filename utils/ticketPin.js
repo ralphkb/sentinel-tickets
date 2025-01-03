@@ -1,3 +1,4 @@
+const { MessageFlags } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -55,7 +56,10 @@ async function pinTicket(interaction, pinEmoji, isEphemeral) {
   };
 
   const pinEmbed = await configEmbed("pinEmbed", defaultValues);
-  await interaction.editReply({ embeds: [pinEmbed], ephemeral: isEphemeral });
+  await interaction.editReply({
+    embeds: [pinEmbed],
+    flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+  });
   if (config.toggleLogs.ticketPin) {
     try {
       await logChannel.send({ embeds: [logPinEmbed] });
@@ -64,7 +68,7 @@ async function pinTicket(interaction, pinEmoji, isEphemeral) {
       client.emit("error", error);
     }
   }
-  logMessage(
+  await logMessage(
     `${interaction.user.tag} pinned the ticket #${interaction.channel.name}`,
   );
 }

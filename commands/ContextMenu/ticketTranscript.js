@@ -2,6 +2,7 @@ const {
   ContextMenuCommandBuilder,
   ApplicationCommandType,
   PermissionFlagsBits,
+  MessageFlags,
 } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
@@ -27,7 +28,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_in_a_ticket || "You are not in a ticket channel!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -36,14 +37,16 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_allowed || "You are not allowed to use this!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
     const isEphemeral =
       config.transcriptReplyEmbed.ephemeral !== undefined
         ? config.transcriptReplyEmbed.ephemeral
         : true;
-    await interaction.deferReply({ ephemeral: isEphemeral });
+    await interaction.deferReply({
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+    });
     await transcriptTicket(interaction);
   },
 };

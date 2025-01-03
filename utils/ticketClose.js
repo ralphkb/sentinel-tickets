@@ -384,7 +384,7 @@ async function closeTicket(interaction, reason = "No reason provided.") {
             client.emit("error", error);
           }
         }
-        logMessage(
+        await logMessage(
           `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
         );
       }

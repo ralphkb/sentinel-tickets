@@ -1,3 +1,4 @@
+const { MessageFlags } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -65,7 +66,7 @@ async function userInfo(interaction, member, isEphemeral) {
 
   await interaction.editReply({
     embeds: [userInfoEmbed],
-    ephemeral: isEphemeral,
+    flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
   });
 }
 

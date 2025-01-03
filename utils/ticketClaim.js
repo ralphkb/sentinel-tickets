@@ -4,6 +4,7 @@ const {
   ActionRowBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  MessageFlags,
 } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
@@ -39,9 +40,9 @@ async function claimTicket(interaction) {
 
   await interaction.editReply({
     content: "You successfully claimed this ticket!",
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
-  await interaction.channel.send({ embeds: [claimedEmbed], ephemeral: false });
+  await interaction.channel.send({ embeds: [claimedEmbed] });
   await interaction.channel.messages
     .fetch(await ticketsDB.get(`${interaction.channel.id}.msgID`))
     .then(async (message) => {
@@ -200,7 +201,7 @@ async function claimTicket(interaction) {
           client.emit("error", error);
         }
       }
-      logMessage(
+      await logMessage(
         `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
       );
     });

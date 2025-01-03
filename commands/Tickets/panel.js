@@ -6,6 +6,7 @@ const {
   ButtonStyle,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  MessageFlags,
 } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
@@ -49,7 +50,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_allowed || "You are not allowed to use this!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -74,11 +75,11 @@ module.exports = {
     if (!panels.some((panel) => panel.id === panelId)) {
       return interaction.reply({
         content: "A panel with this ID does not exist.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const defaultValues = {
       color: "#2FF200",
@@ -134,14 +135,14 @@ module.exports = {
       // Send an initial response to acknowledge receipt of the command
       await interaction.editReply({
         content: `Sending the panel with id ${panelId} in this channel...`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       // Send the panel embed and action rows
       await interaction.channel.send({
         embeds: [panelEmbed],
         components: actionRows,
       });
-      logMessage(
+      await logMessage(
         `${interaction.user.tag} sent the ticket panel with id ${panelId} in the channel #${interaction.channel.name}`,
       );
     } else if (layout === "Menu") {
@@ -181,7 +182,7 @@ module.exports = {
       // Send an initial response to acknowledge receipt of the command
       await interaction.editReply({
         content: `Sending the panel with id ${panelId} in this channel...`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       // Send the panel embed and action row
       await interaction.channel
@@ -194,7 +195,7 @@ module.exports = {
               "Select a category to open a ticket.",
           });
         });
-      logMessage(
+      await logMessage(
         `${interaction.user.tag} sent the ticket panel with id ${panelId} in the channel #${interaction.channel.name}`,
       );
     }

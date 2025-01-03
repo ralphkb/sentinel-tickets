@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -55,7 +59,9 @@ module.exports = {
         config.statsEmbed.ephemeral !== undefined
           ? config.statsEmbed.ephemeral
           : false;
-      await interaction.deferReply({ ephemeral: isEphemeral });
+      await interaction.deferReply({
+        flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+      });
       const totalTickets = (await mainDB.get("totalTickets")) ?? 0;
       const openTickets = (await mainDB.get("openTickets")) ?? 0;
       const totalClaims = (await mainDB.get("totalClaims")) ?? 0;
@@ -116,7 +122,7 @@ module.exports = {
 
       await interaction.editReply({
         embeds: [statsEmbed],
-        ephemeral: isEphemeral,
+        flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
       });
     } else if (subcommand === "set") {
       if (
@@ -128,7 +134,7 @@ module.exports = {
         return interaction.reply({
           content:
             config.errors.not_allowed || "You are not allowed to use this!",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
       const isEphemeral =
@@ -137,7 +143,9 @@ module.exports = {
           : true;
       const statistic = interaction.options.getString("statistic");
       const value = interaction.options.getInteger("value");
-      await interaction.deferReply({ ephemeral: isEphemeral });
+      await interaction.deferReply({
+        flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+      });
       const defaultValues = {
         color: "#2FF200",
         title: "📊 Statistics Modification",
@@ -180,7 +188,7 @@ module.exports = {
       await mainDB.set(statistic, value);
       await interaction.editReply({
         embeds: [statsSetEmbed],
-        ephemeral: isEphemeral,
+        flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
       });
     }
   },

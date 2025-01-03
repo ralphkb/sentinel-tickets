@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -38,7 +42,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_in_a_ticket || "You are not in a ticket channel!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -47,7 +51,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_allowed || "You are not allowed to use this!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -65,7 +69,7 @@ module.exports = {
     if ((!user && !role) || (user && role)) {
       return interaction.reply({
         content: "Please provide either a user or a role, but not both.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -74,7 +78,7 @@ module.exports = {
       if (!interaction.channel.members.has(user.id)) {
         return interaction.reply({
           content: "That user is not in this ticket.",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
 
@@ -85,11 +89,13 @@ module.exports = {
       if (user.id === ticketCreatorID) {
         return interaction.reply({
           content: "You cannot remove the ticket creator.",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
 
-      await interaction.deferReply({ ephemeral: isEphemeral });
+      await interaction.deferReply({
+        flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+      });
       await interaction.channel.permissionOverwrites.delete(user);
 
       const logDefaultValues = {
@@ -147,7 +153,7 @@ module.exports = {
       await ticketsDB.pull(`${interaction.channel.id}.addedUsers`, user.id);
       await interaction.editReply({
         embeds: [userRemoveEmbed],
-        ephemeral: isEphemeral,
+        flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
       });
       if (config.toggleLogs.userRemove) {
         try {
@@ -157,7 +163,7 @@ module.exports = {
           client.emit("error", error);
         }
       }
-      logMessage(
+      await logMessage(
         `${interaction.user.tag} removed ${user.tag} from the ticket #${interaction.channel.name} with reason ${reason}`,
       );
     }
@@ -167,11 +173,13 @@ module.exports = {
       if (!interaction.channel.permissionsFor(role.id).has("ViewChannel")) {
         return interaction.reply({
           content: "That role is not in this ticket.",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
 
-      await interaction.deferReply({ ephemeral: isEphemeral });
+      await interaction.deferReply({
+        flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+      });
       await interaction.channel.permissionOverwrites.delete(role);
 
       const logDefaultValues = {
@@ -229,7 +237,7 @@ module.exports = {
       await ticketsDB.pull(`${interaction.channel.id}.addedRoles`, role.id);
       await interaction.editReply({
         embeds: [roleRemoveEmbed],
-        ephemeral: isEphemeral,
+        flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
       });
       if (config.toggleLogs.userRemove) {
         try {
@@ -239,7 +247,7 @@ module.exports = {
           client.emit("error", error);
         }
       }
-      logMessage(
+      await logMessage(
         `${interaction.user.tag} removed ${role.name} from the ticket #${interaction.channel.name} with reason ${reason}`,
       );
     }

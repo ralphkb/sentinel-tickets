@@ -2,6 +2,7 @@ const {
   ContextMenuCommandBuilder,
   ApplicationCommandType,
   PermissionFlagsBits,
+  MessageFlags,
 } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
@@ -24,7 +25,7 @@ module.exports = {
     if (user.bot) {
       return interaction.reply({
         content: "Bots cannot have tickets.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
     if (user !== interaction.user) {
@@ -37,7 +38,7 @@ module.exports = {
         return interaction.reply({
           content:
             config.errors.not_allowed || "You are not allowed to use this!",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
     }
@@ -46,7 +47,9 @@ module.exports = {
       config.ticketsEmbed.ephemeral !== undefined
         ? config.ticketsEmbed.ephemeral
         : true;
-    await interaction.deferReply({ ephemeral: isEphemeral });
+    await interaction.deferReply({
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+    });
     await listUserTickets(interaction, user, isEphemeral);
   },
 };

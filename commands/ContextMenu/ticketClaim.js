@@ -2,6 +2,7 @@ const {
   ContextMenuCommandBuilder,
   ApplicationCommandType,
   PermissionFlagsBits,
+  MessageFlags,
 } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
@@ -26,7 +27,7 @@ module.exports = {
     if (isClaimInProgress) {
       return interaction.reply({
         content: "Another user is already claiming this ticket.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -42,7 +43,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_in_a_ticket || "You are not in a ticket channel!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -57,7 +58,7 @@ module.exports = {
       return interaction.reply({
         content:
           config.errors.not_allowed || "You are not allowed to use this!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -70,7 +71,7 @@ module.exports = {
       });
       return interaction.reply({
         content: "The claim feature is currently disabled.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -93,7 +94,7 @@ module.exports = {
       });
       return interaction.reply({
         content: `This ticket has already been claimed by ${claimUser}`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -108,11 +109,11 @@ module.exports = {
       });
       return interaction.reply({
         content: "You cannot claim a closed ticket!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     await claimTicket(interaction);
   },
 };

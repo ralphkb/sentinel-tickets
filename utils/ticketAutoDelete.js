@@ -333,7 +333,7 @@ async function autoDeleteTicket(channelID) {
             client.emit("error", error);
           }
         }
-        logMessage(
+        await logMessage(
           `The bot could not DM ${ticketUserID.tag} because their DMs were closed`,
         );
       }

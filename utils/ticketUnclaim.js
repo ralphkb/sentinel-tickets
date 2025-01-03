@@ -4,6 +4,7 @@ const {
   ActionRowBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  MessageFlags,
 } = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
@@ -53,7 +54,7 @@ async function unclaimTicket(interaction) {
 
   await interaction.editReply({
     content: "You successfully unclaimed this ticket!",
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
   await interaction.channel.permissionOverwrites.delete(interaction.user);
   await interaction.channel.send({ embeds: [unclaimedEmbed] });
@@ -156,7 +157,7 @@ async function unclaimTicket(interaction) {
         }
       }
       await mainDB.sub("totalClaims", 1);
-      logMessage(
+      await logMessage(
         `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,
       );
     });

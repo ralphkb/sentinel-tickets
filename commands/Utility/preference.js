@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -40,7 +44,7 @@ module.exports = {
     .setDMPermission(false),
   async execute(interaction) {
     if (interaction.options.getSubcommand() === "dm") {
-      await interaction.deferReply({ ephemeral: true });
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
       const action = interaction.options.getString("type");
       const enabled = interaction.options.getBoolean("enabled");
       const id = interaction.user.id;
@@ -75,7 +79,7 @@ module.exports = {
 
       await interaction.editReply({
         embeds: [preferenceEmbed],
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
   },

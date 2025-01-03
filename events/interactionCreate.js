@@ -11,6 +11,7 @@ const {
   PermissionFlagsBits,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  MessageFlags,
 } = require("discord.js");
 const {
   client,
@@ -194,7 +195,7 @@ module.exports = {
           }
           return interaction.reply({
             embeds: [commandCooldownEmbed],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
       }
@@ -209,7 +210,7 @@ module.exports = {
         client.emit("error", error);
         await interaction.editReply({
           content: "There was an error while executing this command!",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
     } else if (interaction.isStringSelectMenu()) {
@@ -340,14 +341,14 @@ module.exports = {
 
           return interaction.reply({
             embeds: [blacklistedEmbed],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
 
         if (buttonCooldown.has(interaction.user.id))
           return interaction.reply({
             embeds: [cooldownEmbed],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
 
         if (timeRegex.test(openingTime) && timeRegex.test(closingTime)) {
@@ -396,7 +397,7 @@ module.exports = {
                 }
                 return interaction.reply({
                   embeds: [workingHoursEmbed],
-                  ephemeral: true,
+                  flags: MessageFlags.Ephemeral,
                 });
               }
             }
@@ -437,7 +438,7 @@ module.exports = {
               );
               return interaction.reply({
                 embeds: [categoryNotAllowedEmbed],
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
               });
             }
 
@@ -486,7 +487,7 @@ module.exports = {
                 }
                 return interaction.reply({
                   embeds: [preventNewTicketEmbed],
-                  ephemeral: true,
+                  flags: MessageFlags.Ephemeral,
                 });
               }
             }
@@ -508,7 +509,7 @@ module.exports = {
               if ((await userTicketCount) >= maxOpenTickets) {
                 return interaction.reply({
                   embeds: [maxOpenTicketsEmbed],
-                  ephemeral: true,
+                  flags: MessageFlags.Ephemeral,
                 });
               }
             }
@@ -660,7 +661,7 @@ module.exports = {
 
               await interaction.showModal(modal);
             } else {
-              await interaction.deferReply({ ephemeral: true });
+              await interaction.deferReply({ flags: MessageFlags.Ephemeral });
               await getFeedback(interaction, i, false);
             }
           }
@@ -696,7 +697,7 @@ module.exports = {
           ) {
             return interaction.reply({
               content: "This ticket is already closed!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
 
@@ -710,7 +711,7 @@ module.exports = {
                 content:
                   config.errors.not_allowed ||
                   "You are not allowed to use this!",
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
               });
             }
           }
@@ -725,7 +726,7 @@ module.exports = {
             return interaction.reply({
               content:
                 config.errors.not_allowed || "You are not allowed to use this!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
 
@@ -739,7 +740,7 @@ module.exports = {
           if (isClaimInProgress) {
             return interaction.reply({
               content: "Another user is already claiming this ticket.",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
 
@@ -755,7 +756,7 @@ module.exports = {
             return interaction.reply({
               content:
                 config.errors.not_allowed || "You are not allowed to use this!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
 
@@ -771,11 +772,11 @@ module.exports = {
             });
             return interaction.reply({
               content: "You cannot claim a closed ticket!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
 
-          await interaction.deferReply({ ephemeral: true });
+          await interaction.deferReply({ flags: MessageFlags.Ephemeral });
           await claimTicket(interaction);
         }
 
@@ -785,7 +786,7 @@ module.exports = {
           )
             return interaction.reply({
               content: "This ticket has not been claimed!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           if (
             (await ticketsDB.get(`${interaction.channel.id}.claimUser`)) !==
@@ -793,10 +794,10 @@ module.exports = {
           )
             return interaction.reply({
               content: `You did not claim this ticket, only the user that claimed this ticket can unclaim it! (<@!${await ticketsDB.get(`${interaction.channel.id}.claimUser`)}>)`,
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
 
-          await interaction.deferReply({ ephemeral: true });
+          await interaction.deferReply({ flags: MessageFlags.Ephemeral });
           await unclaimTicket(interaction);
         }
       }
@@ -835,7 +836,7 @@ module.exports = {
                 content:
                   config.errors.not_allowed ||
                   "You are not allowed to use this!",
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
               });
             }
           }
@@ -850,7 +851,7 @@ module.exports = {
             return interaction.reply({
               content:
                 config.errors.not_allowed || "You are not allowed to use this!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
 
@@ -864,14 +865,16 @@ module.exports = {
             return interaction.reply({
               content:
                 config.errors.not_allowed || "You are not allowed to use this!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
           const isEphemeral =
             config.transcriptReplyEmbed.ephemeral !== undefined
               ? config.transcriptReplyEmbed.ephemeral
               : true;
-          await interaction.deferReply({ ephemeral: isEphemeral });
+          await interaction.deferReply({
+            flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+          });
           await transcriptTicket(interaction);
         }
 
@@ -887,7 +890,7 @@ module.exports = {
                 content:
                   config.errors.not_allowed ||
                   "You are not allowed to use this!",
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
               });
             }
           }
@@ -902,7 +905,7 @@ module.exports = {
             return interaction.reply({
               content:
                 config.errors.not_allowed || "You are not allowed to use this!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
 
@@ -1010,12 +1013,15 @@ module.exports = {
 
         return interaction.reply({
           embeds: [blacklistedEmbed],
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
 
       if (buttonCooldown.has(interaction.user.id))
-        return interaction.reply({ embeds: [cooldownEmbed], ephemeral: true });
+        return interaction.reply({
+          embeds: [cooldownEmbed],
+          flags: MessageFlags.Ephemeral,
+        });
 
       const customIds = Object.keys(ticketCategories);
 
@@ -1074,7 +1080,7 @@ module.exports = {
                   }
                   return interaction.reply({
                     embeds: [workingHoursEmbed],
-                    ephemeral: true,
+                    flags: MessageFlags.Ephemeral,
                   });
                 }
               }
@@ -1103,7 +1109,7 @@ module.exports = {
             );
             return interaction.reply({
               embeds: [categoryNotAllowedEmbed],
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
 
@@ -1152,7 +1158,7 @@ module.exports = {
               }
               return interaction.reply({
                 embeds: [preventNewTicketEmbed],
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
               });
             }
           }
@@ -1174,7 +1180,7 @@ module.exports = {
             if ((await userTicketCount) >= maxOpenTickets) {
               return interaction.reply({
                 embeds: [maxOpenTicketsEmbed],
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
               });
             }
           }
@@ -1237,14 +1243,16 @@ module.exports = {
           return interaction.reply({
             content:
               config.errors.not_allowed || "You are not allowed to use this!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
         const isEphemeral =
           config.transcriptReplyEmbed.ephemeral !== undefined
             ? config.transcriptReplyEmbed.ephemeral
             : true;
-        await interaction.deferReply({ ephemeral: isEphemeral });
+        await interaction.deferReply({
+          flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+        });
         await transcriptTicket(interaction);
       }
 
@@ -1258,7 +1266,7 @@ module.exports = {
             return interaction.reply({
               content:
                 config.errors.not_allowed || "You are not allowed to use this!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
         }
@@ -1273,7 +1281,7 @@ module.exports = {
           return interaction.reply({
             content:
               config.errors.not_allowed || "You are not allowed to use this!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
 
@@ -1290,7 +1298,7 @@ module.exports = {
             return interaction.reply({
               content:
                 config.errors.not_allowed || "You are not allowed to use this!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
         }
@@ -1305,7 +1313,7 @@ module.exports = {
           return interaction.reply({
             content:
               config.errors.not_allowed || "You are not allowed to use this!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
 
@@ -1320,7 +1328,7 @@ module.exports = {
         ) {
           return interaction.reply({
             content: "This ticket is already closed!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
 
@@ -1333,7 +1341,7 @@ module.exports = {
             return interaction.reply({
               content:
                 config.errors.not_allowed || "You are not allowed to use this!",
-              ephemeral: true,
+              flags: MessageFlags.Ephemeral,
             });
           }
         }
@@ -1348,7 +1356,7 @@ module.exports = {
           return interaction.reply({
             content:
               config.errors.not_allowed || "You are not allowed to use this!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
 
@@ -1363,7 +1371,7 @@ module.exports = {
         if (isClaimInProgress) {
           return interaction.reply({
             content: "Another user is already claiming this ticket.",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
 
@@ -1379,7 +1387,7 @@ module.exports = {
           return interaction.reply({
             content:
               config.errors.not_allowed || "You are not allowed to use this!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
 
@@ -1394,11 +1402,11 @@ module.exports = {
           });
           return interaction.reply({
             content: "You cannot claim a closed ticket!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
 
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         await claimTicket(interaction);
       }
 
@@ -1409,7 +1417,7 @@ module.exports = {
         )
           return interaction.reply({
             content: "This ticket has not been claimed!",
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         if (
           (await ticketsDB.get(`${interaction.channel.id}.claimUser`)) !==
@@ -1417,10 +1425,10 @@ module.exports = {
         )
           return interaction.reply({
             content: `You did not claim this ticket, only the user that claimed this ticket can unclaim it! (<@!${await ticketsDB.get(`${interaction.channel.id}.claimUser`)}>)`,
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
 
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         await unclaimTicket(interaction);
       }
     } else if (interaction.type === InteractionType.ModalSubmit) {
@@ -1430,7 +1438,7 @@ module.exports = {
         if (interaction.customId === `${customId}-modal`) {
           const category = ticketCategories[customId];
 
-          await interaction.deferReply({ ephemeral: true });
+          await interaction.deferReply({ flags: MessageFlags.Ephemeral });
           const embedDescription = category.description
             .replace(/\{user\}/g, interaction.user)
             .replace(/\{user.tag\}/g, interaction.user.username);
@@ -1773,7 +1781,7 @@ module.exports = {
                     await interaction.editReply({
                       embeds: [newTicketEmbed],
                       components: [actionRow4],
-                      ephemeral: true,
+                      flags: MessageFlags.Ephemeral,
                     });
 
                     const creationTime = Math.floor(
@@ -1847,7 +1855,7 @@ module.exports = {
                         client.emit("error", error);
                       }
                     }
-                    logMessage(
+                    await logMessage(
                       `${interaction.user.tag} created the ticket #${channel.name}`,
                     );
 
@@ -1937,7 +1945,7 @@ module.exports = {
 
       for (let i = 1; i <= 5; i++) {
         if (interaction.customId === `${i}-ratingModal`) {
-          await interaction.deferReply({ ephemeral: true });
+          await interaction.deferReply({ flags: MessageFlags.Ephemeral });
           await getFeedback(interaction, i);
         }
       }

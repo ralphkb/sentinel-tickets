@@ -157,7 +157,7 @@ async function alertTicket(interaction, user, time = null) {
     }
   }
 
-  logMessage(
+  await logMessage(
     `${interaction.user.tag} sent an alert to ${user.tag} in the ticket #${interaction.channel.name}`,
   );
 

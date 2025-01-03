@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+} = require("discord.js");
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");
@@ -20,7 +24,9 @@ module.exports = {
       config.pingEmbed.ephemeral !== undefined
         ? config.pingEmbed.ephemeral
         : false;
-    await interaction.deferReply({ ephemeral: isEphemeral });
+    await interaction.deferReply({
+      flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
+    });
     const startTime = performance.now();
 
     const defaultDMValues = {
@@ -55,7 +61,7 @@ module.exports = {
 
       await interaction.editReply({
         embeds: [pingEmbed],
-        ephemeral: isEphemeral,
+        flags: isEphemeral ? MessageFlags.Ephemeral : undefined,
       });
     } catch (error) {
       error.errorContext = `[Ping Command Error]: there was an error while executing the ping command.`;
