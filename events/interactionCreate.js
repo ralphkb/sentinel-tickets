@@ -216,28 +216,34 @@ module.exports = {
     } else if (interaction.isStringSelectMenu()) {
       if (interaction.customId === "categoryMenu") {
         // Reset the select menu upon selection
-        const messageId = interaction.message.id;
+        const messageId = await interaction.message.id;
         const selectMenuOptions = await mainDB.get(
           `selectMenuOptions-${messageId}`,
         );
-        await interaction.channel.messages
-          .fetch(messageId)
-          .then(async (message) => {
-            const selectMenu = new StringSelectMenuBuilder()
-              .setCustomId("categoryMenu")
-              .setPlaceholder(
-                selectMenuOptions?.placeholder ||
-                  "Select a category to open a ticket.",
-              )
-              .setMinValues(1)
-              .setMaxValues(1)
-              .addOptions(selectMenuOptions.options);
+        if (selectMenuOptions) {
+          await interaction.channel.messages
+            .fetch(messageId)
+            .then(async (message) => {
+              const selectMenu = new StringSelectMenuBuilder()
+                .setCustomId("categoryMenu")
+                .setPlaceholder(
+                  selectMenuOptions?.placeholder ||
+                    "Select a category to open a ticket.",
+                )
+                .setMinValues(1)
+                .setMaxValues(1)
+                .addOptions(selectMenuOptions.options);
 
-            const updatedActionRow = new ActionRowBuilder().addComponents(
-              selectMenu,
-            );
-            await message.edit({ components: [updatedActionRow] });
-          });
+              const updatedActionRow = new ActionRowBuilder().addComponents(
+                selectMenu,
+              );
+              await message.edit({ components: [updatedActionRow] });
+            });
+        } else {
+          console.error(
+            `No select menu options found for message ID: ${messageId}, please try restarting the bot and re-sending the panel.`,
+          );
+        }
 
         const userRoles = interaction.member.roles.cache.map((role) => role.id);
         let isUserBlacklisted = await blacklistDB.get(
