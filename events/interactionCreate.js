@@ -30,8 +30,8 @@ const {
   findAvailableCategory,
   isBlacklistExpired,
   addTicketCreator,
-  parseDurationToMilliseconds,
   getFirstClosedTicket,
+  getBlacklistedEmbed,
 } = require("../utils/mainUtils.js");
 const { closeTicket } = require("../utils/ticketClose.js");
 const { reopenTicket } = require("../utils/ticketReopen.js");
@@ -289,55 +289,11 @@ module.exports = {
         }
 
         if (isUserBlacklisted || isRoleBlacklisted) {
-          let expiryDate;
-          let blacklistReason;
-          let blacklistType;
-          if (isUserBlacklisted) {
-            const expirationTime =
-              isUserBlacklisted?.timestamp +
-              parseDurationToMilliseconds(isUserBlacklisted?.duration);
-            expiryDate =
-              isUserBlacklisted?.duration === "permanent"
-                ? "Never"
-                : `<t:${Math.floor(expirationTime / 1000)}:R>`;
-            blacklistReason = isUserBlacklisted?.reason;
-            blacklistType = "User";
-          } else if (isRoleBlacklisted) {
-            const expirationTime =
-              isRoleBlacklisted?.timestamp +
-              parseDurationToMilliseconds(isRoleBlacklisted?.duration);
-            expiryDate =
-              isRoleBlacklisted?.duration === "permanent"
-                ? "Never"
-                : `<t:${Math.floor(expirationTime / 1000)}:R>`;
-            blacklistReason = isRoleBlacklisted?.reason;
-            blacklistType = "Role";
-          }
-          const defaultblacklistedValues = {
-            color: "#FF0000",
-            title: "Blacklisted",
-            description:
-              "You are currently blacklisted from creating tickets.\nExpires: {time}",
-            timestamp: true,
-            footer: {
-              text: `${interaction.user.tag}`,
-              iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
-            },
-          };
-
-          const blacklistedEmbed = await configEmbed(
-            "blacklistedEmbed",
-            defaultblacklistedValues,
+          const blacklistedEmbed = await getBlacklistedEmbed(
+            interaction,
+            isUserBlacklisted,
+            isRoleBlacklisted,
           );
-
-          if (blacklistedEmbed.data && blacklistedEmbed.data.description) {
-            blacklistedEmbed.setDescription(
-              blacklistedEmbed.data.description
-                .replace(/\{time\}/g, expiryDate)
-                .replace(/\{reason\}/g, blacklistReason)
-                .replace(/\{type\}/g, blacklistType),
-            );
-          }
 
           return interaction.reply({
             embeds: [blacklistedEmbed],
@@ -961,55 +917,11 @@ module.exports = {
       }
 
       if (isUserBlacklisted || isRoleBlacklisted) {
-        let expiryDate;
-        let blacklistReason;
-        let blacklistType;
-        if (isUserBlacklisted) {
-          const expirationTime =
-            isUserBlacklisted?.timestamp +
-            parseDurationToMilliseconds(isUserBlacklisted?.duration);
-          expiryDate =
-            isUserBlacklisted?.duration === "permanent"
-              ? "Never"
-              : `<t:${Math.floor(expirationTime / 1000)}:R>`;
-          blacklistReason = isUserBlacklisted?.reason;
-          blacklistType = "User";
-        } else if (isRoleBlacklisted) {
-          const expirationTime =
-            isRoleBlacklisted?.timestamp +
-            parseDurationToMilliseconds(isRoleBlacklisted?.duration);
-          expiryDate =
-            isRoleBlacklisted?.duration === "permanent"
-              ? "Never"
-              : `<t:${Math.floor(expirationTime / 1000)}:R>`;
-          blacklistReason = isRoleBlacklisted?.reason;
-          blacklistType = "Role";
-        }
-        const defaultblacklistedValues = {
-          color: "#FF0000",
-          title: "Blacklisted",
-          description:
-            "You are currently blacklisted from creating tickets.\nExpires: {time}",
-          timestamp: true,
-          footer: {
-            text: `${interaction.user.tag}`,
-            iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
-          },
-        };
-
-        const blacklistedEmbed = await configEmbed(
-          "blacklistedEmbed",
-          defaultblacklistedValues,
+        const blacklistedEmbed = await getBlacklistedEmbed(
+          interaction,
+          isUserBlacklisted,
+          isRoleBlacklisted,
         );
-
-        if (blacklistedEmbed.data && blacklistedEmbed.data.description) {
-          blacklistedEmbed.setDescription(
-            blacklistedEmbed.data.description
-              .replace(/\{time\}/g, expiryDate)
-              .replace(/\{reason\}/g, blacklistReason)
-              .replace(/\{type\}/g, blacklistType),
-          );
-        }
 
         return interaction.reply({
           embeds: [blacklistedEmbed],

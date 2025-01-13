@@ -764,6 +764,66 @@ async function getFirstClosedTicket(userID) {
   return userTickets[0]?.id;
 }
 
+async function getBlacklistedEmbed(
+  interaction,
+  isUserBlacklisted,
+  isRoleBlacklisted,
+) {
+  let expiryDate;
+  let blacklistReason;
+  let blacklistType;
+
+  if (isUserBlacklisted) {
+    const expirationTime =
+      isUserBlacklisted?.timestamp +
+      parseDurationToMilliseconds(isUserBlacklisted?.duration);
+    expiryDate =
+      isUserBlacklisted?.duration === "permanent"
+        ? "Never"
+        : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+    blacklistReason = isUserBlacklisted?.reason;
+    blacklistType = "User";
+  } else if (isRoleBlacklisted) {
+    const expirationTime =
+      isRoleBlacklisted?.timestamp +
+      parseDurationToMilliseconds(isRoleBlacklisted?.duration);
+    expiryDate =
+      isRoleBlacklisted?.duration === "permanent"
+        ? "Never"
+        : `<t:${Math.floor(expirationTime / 1000)}:R>`;
+    blacklistReason = isRoleBlacklisted?.reason;
+    blacklistType = "Role";
+  }
+
+  const defaultblacklistedValues = {
+    color: "#FF0000",
+    title: "Blacklisted",
+    description:
+      "You are currently blacklisted from creating tickets.\nExpires: **{time}**\nReason: **{reason}**\nType: **{type}**",
+    timestamp: true,
+    footer: {
+      text: `${interaction.user.tag}`,
+      iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+    },
+  };
+
+  const blacklistedEmbed = await configEmbed(
+    "blacklistedEmbed",
+    defaultblacklistedValues,
+  );
+
+  if (blacklistedEmbed.data && blacklistedEmbed.data.description) {
+    blacklistedEmbed.setDescription(
+      blacklistedEmbed.data.description
+        .replace(/\{time\}/g, expiryDate)
+        .replace(/\{reason\}/g, blacklistReason)
+        .replace(/\{type\}/g, blacklistType),
+    );
+  }
+
+  return blacklistedEmbed;
+}
+
 module.exports = {
   logMessage,
   checkSupportRole,
@@ -790,4 +850,5 @@ module.exports = {
   updateStatsChannels,
   listUserTickets,
   getFirstClosedTicket,
+  getBlacklistedEmbed,
 };
