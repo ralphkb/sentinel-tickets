@@ -824,6 +824,18 @@ async function getBlacklistedEmbed(
   return blacklistedEmbed;
 }
 
+async function getUserTicketCount(interaction) {
+  return interaction.guild.channels.cache.reduce(async (count, channel) => {
+    if (await ticketsDB.has(channel.id)) {
+      const { userID, status } = await ticketsDB.get(channel.id);
+      if (userID === interaction.user.id && status !== "Closed") {
+        return (await count) + 1;
+      }
+    }
+    return await count;
+  }, Promise.resolve(0));
+}
+
 module.exports = {
   logMessage,
   checkSupportRole,
@@ -851,4 +863,5 @@ module.exports = {
   listUserTickets,
   getFirstClosedTicket,
   getBlacklistedEmbed,
+  getUserTicketCount,
 };
