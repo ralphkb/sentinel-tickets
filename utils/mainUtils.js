@@ -541,9 +541,9 @@ function sanitizeInput(input) {
 async function logError(errorType, error) {
   const errorContext =
     error?.errorContext !== undefined
-      ? `\n[Error Context] ${error?.errorContext}`
+      ? `\n[Error Context] -> ${error?.errorContext}`
       : "";
-  const errorMessage = `[${timeString}] [Bot v${packageJson.version}] [NodeJS ${process.version}] [${errorType}]\n${error.stack}${errorContext}\n\n`;
+  const errorMessage = `[${timeString}] -> [Bot v${packageJson.version}] [Node.JS ${process.version}] [Type: ${errorType}]\n\n${error.stack}\n\n${errorContext}`;
   const logsFileToChannel = config?.logsFileToChannel ?? false;
   const logsFileChannelID = config?.logsFileChannelID ?? "";
 
@@ -551,7 +551,7 @@ async function logError(errorType, error) {
     if (logsFileToChannel && logsFileChannelID) {
       const channel = await getChannel(logsFileChannelID);
       if (channel) {
-        await channel.send(`\`\`\`${errorMessage}\`\`\``);
+        await channel.send(`\`\`\`\n${errorMessage}\n\`\`\``);
       } else {
         throw new Error("Channel not found for logging errors.");
       }
