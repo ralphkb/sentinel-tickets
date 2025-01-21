@@ -32,6 +32,7 @@ const {
   addTicketCreator,
   getFirstClosedTicket,
   getBlacklistedEmbed,
+  getUserTicketCount,
 } = require("../utils/mainUtils.js");
 const { closeTicket } = require("../utils/ticketClose.js");
 const { reopenTicket } = require("../utils/ticketReopen.js");
@@ -454,26 +455,12 @@ module.exports = {
               }
             }
 
-            const userTicketCount = interaction.guild.channels.cache.reduce(
-              async (count, channel) => {
-                if (await ticketsDB.has(channel.id)) {
-                  const { userID, status } = await ticketsDB.get(channel.id);
-                  if (userID === interaction.user.id && status !== "Closed") {
-                    return (await count) + 1;
-                  }
-                }
-                return await count;
-              },
-              Promise.resolve(0),
-            );
-
-            if (maxOpenTickets > 0) {
-              if ((await userTicketCount) >= maxOpenTickets) {
-                return interaction.reply({
-                  embeds: [maxOpenTicketsEmbed],
-                  flags: MessageFlags.Ephemeral,
-                });
-              }
+            const userTicketCount = await getUserTicketCount(interaction);
+            if (maxOpenTickets > 0 && userTicketCount >= maxOpenTickets) {
+              return interaction.reply({
+                embeds: [maxOpenTicketsEmbed],
+                flags: MessageFlags.Ephemeral,
+              });
             }
 
             const modal = new ModalBuilder()
@@ -1081,26 +1068,12 @@ module.exports = {
             }
           }
 
-          const userTicketCount = interaction.guild.channels.cache.reduce(
-            async (count, channel) => {
-              if (await ticketsDB.has(channel.id)) {
-                const { userID, status } = await ticketsDB.get(channel.id);
-                if (userID === interaction.user.id && status !== "Closed") {
-                  return (await count) + 1;
-                }
-              }
-              return await count;
-            },
-            Promise.resolve(0),
-          );
-
-          if (maxOpenTickets > 0) {
-            if ((await userTicketCount) >= maxOpenTickets) {
-              return interaction.reply({
-                embeds: [maxOpenTicketsEmbed],
-                flags: MessageFlags.Ephemeral,
-              });
-            }
+          const userTicketCount = await getUserTicketCount(interaction);
+          if (maxOpenTickets > 0 && userTicketCount >= maxOpenTickets) {
+            return interaction.reply({
+              embeds: [maxOpenTicketsEmbed],
+              flags: MessageFlags.Ephemeral,
+            });
           }
 
           const modal = new ModalBuilder()
