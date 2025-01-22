@@ -7,6 +7,9 @@
   "scripts": {
     "start": "node index.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "keywords": [
     "node",
     "javascript",
