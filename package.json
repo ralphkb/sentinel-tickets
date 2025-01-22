@@ -7,6 +7,9 @@
   "scripts": {
     "start": "node index.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "keywords": [
     "node",
     "javascript",
@@ -15,9 +18,6 @@
   ],
   "author": "ralphkb",
   "license": "MIT",
-  "engines": {
-    "node": ">=18"
-  },
   "dependencies": {
     "@discordjs/rest": "^2.4.2",
     "better-sqlite3": "^11.8.1",
