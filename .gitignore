@@ -12,6 +12,3 @@ config.yml
 
 # Database directories
 data/
-
-# Misc
-package-lock.json
