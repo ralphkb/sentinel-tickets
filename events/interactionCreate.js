@@ -486,8 +486,11 @@ module.exports = {
                 .setLabel(label)
                 .setStyle(style)
                 .setPlaceholder(placeholder)
-                .setMinLength(minLength)
                 .setRequired(required);
+
+              if (typeof minLength === "number" && minLength > 0) {
+                modalQuestion.setMinLength(minLength);
+              }
 
               if (style === "Paragraph") {
                 if (
@@ -576,8 +579,11 @@ module.exports = {
                   .setLabel(label)
                   .setStyle(style)
                   .setPlaceholder(placeholder)
-                  .setMinLength(minLength)
                   .setRequired(required);
+
+                if (typeof minLength === "number" && minLength > 0) {
+                  modalQuestion.setMinLength(minLength);
+                }
 
                 if (style === "Paragraph") {
                   if (
@@ -1093,8 +1099,11 @@ module.exports = {
               .setLabel(label)
               .setStyle(style)
               .setPlaceholder(placeholder)
-              .setMinLength(minLength)
               .setRequired(required);
+
+            if (typeof minLength === "number" && minLength > 0) {
+              modalQuestion.setMinLength(minLength);
+            }
 
             if (style === "Paragraph") {
               if (
