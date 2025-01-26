@@ -210,7 +210,9 @@ module.exports = {
         error.errorContext = `[InteractionCreate]: an error occurred while executing the ${command.data.name} command.`;
         client.emit("error", error);
         await interaction.editReply({
-          content: "There was an error while executing this command!",
+          content:
+            config.errors.command_error ||
+            "There was an error while executing this command!",
           flags: MessageFlags.Ephemeral,
         });
       }

@@ -1867,6 +1867,7 @@ dmErrorEmbed:
 errors:
   not_in_a_ticket: "You are not in a ticket channel!" # Error displayed when a user tries to use a command in a non-ticket channel
   not_allowed: "You are not allowed to use this!" # Error displayed when a user tries to use a staff-only command, button etc
+  command_error: "There was an error while executing this command!" # Error displayed when a slash or context menu command does not work
 
 cooldownEmbed:
   color: "#FF0000"
