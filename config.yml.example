@@ -40,6 +40,7 @@ autoDeleteTickets:
   interval: "60" # The interval in seconds for the automatic ticket delete task to run
   time: "86400" # The amount of time in seconds from the ticket "closed at" time before the ticket gets automatically deleted. For example, if this is specified as 1 day in seconds, the ticket will be deleted if it was closed 1 day ago without it being reopened by anyone. Default time is 1 day.
 onUserLeave: "close" # The automated action the bot will take when a user leaves the server while having a ticket open, can be "close" or "delete" which will either automatically close or delete their ticket, you may also put it as "none" to disable the automation
+addUsersBack: true # When enabled, the bot will add users back to any ticket they created that still exists in the server, works for both open and closed tickets. Note that this will also give the users "ViewChannel" and "ReadMessageHistory" permissions if they were added back to a closed ticket.
 statsChannels:
   enabled: false # Enable or disable the stats channels
   interval: "600" # The interval in seconds for the stats channels to update, cannot be lower than 600 which is 10 minutes in order to avoid discord channel rename rate limits
