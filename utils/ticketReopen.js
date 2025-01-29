@@ -136,10 +136,17 @@ async function reopenTicket(interaction) {
     },
   );
 
-  await interaction.channel.permissionOverwrites.edit(
-    ticketUserID.id,
-    creatorOpenPerms,
-  );
+  try {
+    await interaction.channel.permissionOverwrites.edit(
+      ticketUserID.id,
+      creatorOpenPerms,
+    );
+  } catch (error) {
+    console.error(
+      "An error occurred while editing permission overwrites of the ticket creator, they might have left the server.",
+      error,
+    );
+  }
 
   if (!category.categoryID.some((catId) => catId === ticketChannel.parentId)) {
     await ticketChannel.setParent(categoryID, {
