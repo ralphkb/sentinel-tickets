@@ -15,6 +15,8 @@ const {
   getRole,
   logError,
 } = require("./mainUtils.js");
+const moment = require("moment-timezone");
+const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 async function reopenTicket(interaction) {
   const ticketUserID = await getUser(
@@ -246,6 +248,83 @@ async function reopenTicket(interaction) {
       client.emit("error", error);
     }
   }
+
+  const userTimezone = config.workingHours.timezone;
+  const workingHours = {};
+  config.workingHours.days.forEach((dayConfig) => {
+    workingHours[dayConfig.day.toLowerCase()] = {
+      min: dayConfig.min,
+      max: dayConfig.max,
+      blockTicketCreation: dayConfig.blockTicketCreation,
+    };
+  });
+  const userCurrentTime = moment.tz(userTimezone);
+  const dayToday = userCurrentTime.format("dddd").toLowerCase();
+  const openingTime =
+    workingHours[dayToday]?.min || config.workingHours.default.min;
+  const closingTime =
+    workingHours[dayToday]?.max || config.workingHours.default.max;
+  let blockTicketCreation;
+  if (workingHours[dayToday]?.blockTicketCreation !== undefined) {
+    blockTicketCreation = workingHours[dayToday].blockTicketCreation;
+  } else {
+    blockTicketCreation = config.workingHours.default.blockTicketCreation;
+  }
+  const openingTimeToday = userCurrentTime
+    .clone()
+    .startOf("day")
+    .set({
+      hour: openingTime.split(":")[0],
+      minute: openingTime.split(":")[1],
+    });
+  const closingTimeToday = userCurrentTime
+    .clone()
+    .startOf("day")
+    .set({
+      hour: closingTime.split(":")[0],
+      minute: closingTime.split(":")[1],
+    });
+
+  if (timeRegex.test(openingTime) && timeRegex.test(closingTime)) {
+    if (
+      config.workingHours.enabled &&
+      !blockTicketCreation &&
+      config.workingHours.outsideWarning
+    ) {
+      if (
+        userCurrentTime.isBefore(openingTimeToday) ||
+        userCurrentTime.isAfter(closingTimeToday)
+      ) {
+        const defaultValues = {
+          color: "#FF0000",
+          title: "Outside Working Hours",
+          description:
+            "You created a ticket outside of our working hours. Please be aware that our response time may be delayed.\nOur working hours for today are from {openingTime} to {closingTime}.",
+          timestamp: true,
+        };
+
+        const outsideWorkingHoursEmbed = await configEmbed(
+          "outsideWorkingHoursEmbed",
+          defaultValues,
+        );
+
+        if (
+          outsideWorkingHoursEmbed.data &&
+          outsideWorkingHoursEmbed.data.description
+        ) {
+          outsideWorkingHoursEmbed.setDescription(
+            outsideWorkingHoursEmbed.data.description
+              .replace(/\{openingTime\}/g, `<t:${openingTimeToday.unix()}:t>`)
+              .replace(/\{closingTime\}/g, `<t:${closingTimeToday.unix()}:t>`),
+          );
+        }
+        await interaction.channel.send({
+          embeds: [outsideWorkingHoursEmbed],
+        });
+      }
+    }
+  }
+
   await logMessage(
     `${interaction.user.tag} re-opened the ticket #${interaction.channel.name} which was created by ${ticketUserID.tag}`,
   );
