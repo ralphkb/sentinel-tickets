@@ -23,6 +23,7 @@ const {
   addTicketCreator,
   findAvailableCategory,
 } = require("./mainUtils.js");
+const { autoResponses } = require("./autoResponses.js");
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 async function createTicket(
@@ -32,6 +33,7 @@ async function createTicket(
   timeObject,
   withModal = true,
 ) {
+  const automatedResponses = [];
   const embedDescription = category.description
     .replace(/\{user\}/g, interaction.user)
     .replace(/\{user.tag\}/g, interaction.user.username);
@@ -67,6 +69,13 @@ async function createTicket(
       let value = interaction.fields.getTextInputValue(
         `question${questionIndex + 1}`,
       );
+
+      if (config.autoResponses.enabled) {
+        const autoResponse = await autoResponses(value, interaction.member);
+        if (autoResponse !== null) {
+          automatedResponses.push(...autoResponse.matches);
+        }
+      }
 
       if (category?.useCodeBlocks) {
         value = `\`\`\`${value}\`\`\``;
@@ -446,6 +455,45 @@ async function createTicket(
                 await message.channel.bulkDelete(1);
               }, 1250);
             });
+
+            if (automatedResponses.length > 0) {
+              const defaultValues = {
+                color: category.color || "#2FF200",
+                description: ">>> Q: {question}\nA: {answer}\n\n",
+                timestamp: true,
+                thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+                footer: {
+                  text: `${interaction.user.tag}`,
+                  iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+                },
+              };
+
+              const autoResponsesEmbed = await configEmbed(
+                "autoResponsesEmbed",
+                defaultValues,
+              );
+
+              if (
+                autoResponsesEmbed.data &&
+                autoResponsesEmbed.data.description
+              ) {
+                autoResponsesEmbed.setDescription(
+                  automatedResponses
+                    .map((response) =>
+                      autoResponsesEmbed.data.description
+                        .replace(/\{question\}/g, response.question)
+                        .replace(/\{answer\}/g, response.answer),
+                    )
+                    .join(""),
+                );
+              }
+
+              setTimeout(async () => {
+                await channel.send({
+                  embeds: [autoResponsesEmbed],
+                });
+              }, 4000);
+            }
           });
 
         await channel

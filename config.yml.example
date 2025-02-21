@@ -1951,6 +1951,105 @@ categoryNotAllowedEmbed:
     url: ""
 
 # ==============================================
+# Auto Responses Settings
+# ==============================================
+
+# You can add as many triggers as you want, each will be tried in order
+# For each trigger, the bot will check if the message matches the condition
+# If the message matches, the bot will send a response
+
+# The condition can be one of the following:
+# - startswith: The message starts with the specified text (case-insensitive)
+# - exact: The message is exactly the specified text (case-insensitive)
+# - endswith: The message ends with the specified text (case-insensitive)
+# - contains: The message contains the specified text (case-insensitive)
+# - strict: The message is exactly the specified text (case-sensitive)
+
+# The separator config is used to format the detected input inside the response.
+# It helps highlight the detected word or phrase in the response.
+# Recommended options include:
+# - "`" for inline code formatting
+# - "**" for bold text formatting
+# - "*" for italic text formatting
+
+# The ignoreMembers option is an array of user IDs that should be ignored
+# If a user is in the array, the bot will not send a response to them
+
+# The ignoreRoles option is an array of role IDs that should be ignored
+# If a user has at least one of the roles in the array, the bot will not send a response to them
+# If the ignoreRoles array is empty, this feature will be disabled
+
+# The requiredRoles option is an array of role IDs that are required to trigger the response
+# If a user does not have at least one of the roles, the bot will not send a response to them
+# If the requiredRoles array is empty, this feature will be disabled
+
+autoResponses:
+  enabled: false # False by default, set to true to enable auto responses
+  triggers:
+    - condition: contains
+      contains:
+        - "help"
+        - "support"
+        - "assistance"
+      response: "Here is some help."
+      separator: "`"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+    - condition: startswith
+      startsWith:
+        - "hello"
+        - "hi"
+      response: "Hello! How can I assist you?"
+      separator: "*"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+    - condition: endswith
+      endsWith:
+        - "thanks"
+        - "thank you"
+      response: "You're welcome!"
+      separator: "**"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+    - condition: exact
+      exact:
+        - "what is your purpose?"
+        - "what can you do?"
+      response: "I can assist you with various tasks and answer your questions."
+      separator: "`"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+    - condition: strict
+      strict:
+        - "Ping"
+        - "Pong"
+      response: "Pong"
+      separator: "`"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+
+autoResponsesEmbed:
+  color: "#2FF200"
+  title: "Automated Responses"
+  description: ">>> Q: {question}\n A: {answer}\n\n" # Use {question} for the question and {answer} for the response, the bot will map all questions & answers to use this configured format
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# ==============================================
 # Logs.txt channel settings
 # ==============================================
 
