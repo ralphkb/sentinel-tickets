@@ -2036,7 +2036,7 @@ autoResponses:
 autoResponsesEmbed:
   color: "#2FF200"
   title: "Automated Responses"
-  description: ">>> Q: {question}\n A: {answer}\n\n" # Use {question} for the question and {answer} for the response, the bot will map all questions & answers to use this configured format
+  description: "Q: {question}\n A: {answer}\n\n" # Use {question} for the question and {answer} for the response, the bot will map all questions & answers to use this configured format
   timestamp: true
   URL: ""
   image: ""

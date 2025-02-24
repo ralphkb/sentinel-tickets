@@ -459,7 +459,7 @@ async function createTicket(
             if (automatedResponses.length > 0) {
               const defaultValues = {
                 color: category.color || "#2FF200",
-                description: ">>> Q: {question}\nA: {answer}\n\n",
+                description: "Q: {question}\nA: {answer}\n\n",
                 timestamp: true,
                 thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
                 footer: {
