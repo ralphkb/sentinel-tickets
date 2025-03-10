@@ -72,6 +72,7 @@ Consider leaving a star, all support is welcome and really appreciated, thank yo
 - Option to automatically close or delete a ticket after the ticket creator left the discord server.
 - Option to automatically close or delete a ticket after an alert was sent and the ticket creator did not reply in time.
 - Option to automatically delete closed tickets after X amount of time from the ticket's closure time.
+- Automated responses system that will check the input of user questions and reply with pre-configured answers after the ticket is created.
 - DM preference system, allowing users to toggle their preference regarding receiving DMs from the bot such as alert, close, reopen & delete.
 - The ability to create stats channels that will be automatically updated after a configurable amount of time.
 - The ability to adjust some of the stats in case of migrating from a different bot or due to any inconsistency or issues.
