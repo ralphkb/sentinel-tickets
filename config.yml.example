@@ -116,6 +116,7 @@ TicketCategories:
     ticketTopic: "Ticket Creator: {user} | Ticket Type: {type}" # The topic of the ticket channel
     slowmode: "0" # The slowmode of the ticket channel in seconds, keep it 0 if you don't want a slowmode and do not use negative values
     useCodeBlocks: false # Set this to true if you want to use code blocks to display the answers of the ticket category questions
+    modal: true # Set this to true if you want to use a modal with questions before a ticket gets opened or false if you want the ticket to directly open without questions
     modalTitle: "User Report Format" # The title of the modal
     questions: # Maximum number of questions is 5, you should at least keep 1 question since that information will always help you in any ticket
       - label: "What is your username?"
@@ -187,6 +188,7 @@ TicketCategories:
     ticketTopic: "Ticket Creator: {user} | Ticket Type: {type}" # The topic of the ticket channel
     slowmode: "0" # The slowmode of the ticket channel in seconds, keep it 0 if you don't want a slowmode and do not use negative values
     useCodeBlocks: false # Set this to true if you want to use code blocks to display the answers of the ticket category questions
+    modal: true # Set this to true if you want to use a modal with questions before a ticket gets opened or false if you want the ticket to directly open without questions
     modalTitle: "Other Ticket Format" # The title of the modal
     questions: # Maximum number of questions is 5, you should at least keep 1 question since that information will always help you in any ticket
       - label: "What is your question?"

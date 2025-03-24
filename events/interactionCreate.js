@@ -468,6 +468,21 @@ module.exports = {
               });
             }
 
+            const withModal =
+              category.modal !== undefined ? category.modal : true;
+
+            if (!withModal) {
+              await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+              await createTicket(
+                interaction,
+                category,
+                customId,
+                timeObject,
+                false,
+              );
+              return;
+            }
+
             const modal = new ModalBuilder()
               .setCustomId(`${customId}-modal`)
               .setTitle(category.modalTitle);
@@ -1085,6 +1100,21 @@ module.exports = {
               embeds: [maxOpenTicketsEmbed],
               flags: MessageFlags.Ephemeral,
             });
+          }
+
+          const withModal =
+            category.modal !== undefined ? category.modal : true;
+
+          if (!withModal) {
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+            await createTicket(
+              interaction,
+              category,
+              customId,
+              timeObject,
+              false,
+            );
+            return;
           }
 
           const modal = new ModalBuilder()
