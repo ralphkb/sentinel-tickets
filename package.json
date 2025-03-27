@@ -24,7 +24,7 @@
     "discord-html-transcripts": "^3.2.0",
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
-    "moment-timezone": "^0.5.47",
+    "moment-timezone": "^0.5.48",
     "quick.db": "^9.1.7",
     "yaml": "^2.7.0"
   },
