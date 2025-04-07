@@ -450,10 +450,16 @@ async function createTicket(
               `${interaction.user.tag} created the ticket #${channel.name}`,
             );
 
-            await message.pin().then(() => {
-              setTimeout(async () => {
-                await message.channel.bulkDelete(1);
-              }, 1250);
+            await message.pin().then(async () => {
+              const fetchedMessages = await message.channel.messages.fetch({
+                limit: 10,
+              });
+              const systemMessage = fetchedMessages.find(
+                (msg) => msg.system === true,
+              );
+              if (systemMessage) {
+                await systemMessage.delete();
+              }
             });
 
             if (automatedResponses.length > 0) {
