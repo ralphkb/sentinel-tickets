@@ -19,9 +19,9 @@ Consider leaving a star, all support is welcome and really appreciated, thank yo
 ## Table of Contents
 - [🛠️ Installation](#installation)
 - [🔄 Updating](#updating)
+- [🐛 Bug Reporting](#bug-reporting)
 - [✨ Features](#features)
 - [📚 Documentation](#documentation)
-- [🐛 Bug Reporting](#bug-reporting)
 - [📃 License](#license)
 
 ## Installation
@@ -42,12 +42,19 @@ Consider leaving a star, all support is welcome and really appreciated, thank yo
 5. If any dependencies got updated, you will have to delete your `node_modules` directory and run `npm install` again after you've already uploaded the new files.
 6. Start the updated bot using `npm start`
 
+## Bug Reporting
+- For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
+This is a free project that I enjoy working on in my free time, I cannot guarantee support or updates however I will try my best to fix bugs, maintain the bot and possibly add new features. Thank you for your understanding. 😄  
+You can reach out via Discord or Email if you want to commission a custom feature for the bot tailored to your own needs or use-case.  
+Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support. Patreon members receive unique roles on the Discord.
+
 ## Features
 
 - Up to 25 Categories: Organize support requests in different categories.
 - Intuitive Ticket Panel: Create and manage tickets with ease using buttons or a select menu.
 - Option to create many ticket panels and send them to any channel.
 - Modal Questions: Gather necessary information before opening a ticket.
+- Option to disable modal questions per ticket category.
 - Configuration to customize many of the messages and embed options.
 - Option to configure support roles per ticket category.
 - Option to require one or more roles to create a ticket per ticket category.
@@ -117,12 +124,7 @@ Consider leaving a star, all support is welcome and really appreciated, thank yo
     - Average Rating
 
 ## Documentation
-You can find the documentation website of the bot here: https://sentineltickets.com
-
-## Bug Reporting
-- For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
-This is a free project that I enjoy working on in my free time, I cannot guarantee support or updates however I will try my best to fix bugs, sort issues and add new features. Thank you for your understanding. 😄  
-Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support. Patreon members receive unique roles on the discord.
+For more information about creating a bot, installation, updating, configuration, permissions, common questions and common errors, check out the documentation website of the bot here: https://sentineltickets.com
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
