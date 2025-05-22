@@ -16,6 +16,15 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 If you find value in this project, you can support the development by donating $3 on my Patreon! https://www.patreon.com/Ralphkb  
 Consider leaving a star, all support is welcome and really appreciated, thank you! ❤️ 
 
+## Patreon Sponsors
+
+<div style="display: flex; align-items: center;">
+  <div style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden; margin-right: 8px;">
+    <img src="https://github.com/mods-hd.png?size=32" width="32" height="32" alt="Mods HD" />
+  </div>
+  <a href="https://github.com/mods-hd">Mods HD</a> <span style="margin-left: 8px;">(Tier II)</span>
+</div>
+
 ## Table of Contents
 - [🛠️ Installation](#installation)
 - [🔄 Updating](#updating)
