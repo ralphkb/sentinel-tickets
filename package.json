@@ -20,20 +20,20 @@
   "license": "MIT",
   "dependencies": {
     "@discordjs/rest": "^2.5.0",
-    "better-sqlite3": "^11.9.1",
+    "better-sqlite3": "^11.10.0",
     "discord-html-transcripts": "^3.2.0",
     "discord.js": "^14.19.3",
     "dotenv": "^16.5.0",
     "moment-timezone": "^0.5.48",
     "quick.db": "^9.1.7",
-    "yaml": "^2.7.1"
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.26.0",
-    "eslint": "^9.26.0",
-    "eslint-config-prettier": "^10.1.2",
-    "globals": "^16.0.0",
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "globals": "^16.1.0",
     "prettier": "^3.5.3"
   }
 }
