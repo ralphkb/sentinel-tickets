@@ -434,7 +434,29 @@ newTicketButton:
 closeRequestButton:
   label: "Accept & Close" # The label of the button
   emoji: "✅" # The emoji of the button
-  style: "Success" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"  
+  style: "Success" # Options: "Primary" which is blurple, "Secondary" which is grey, "Success" which is green, "Danger" which is red and do NOT use "Link"
+
+closeButtonModal:
+  enabled: false # Enable or disable sending a modal when clicking the close button, for now it's only used to input a reason.
+  modalTitle: "Close Ticket"
+  questions: # Just one question for now to input the reason for closing the ticket
+    - label: "What is the reason for closing this ticket?"
+      placeholder: "Write your reason here."
+      style: "Paragraph" # Short or Paragraph
+      required: true # Keep this set to true since it's just one question
+      minLength: 1 # Set the minimum number of characters required for submission
+      maxLength: 1000 # Set the maximum number of characters allowed for submission the limit is 1000
+
+deleteButtonModal:
+  enabled: false # Enable or disable sending a modal when clicking the delete button, for now it's only used to input a reason.
+  modalTitle: "Delete Ticket"
+  questions: # Just one question for now to input the reason for deleting the ticket
+    - label: "What is the reason for deleting this ticket?"
+      placeholder: "Write your reason here."
+      style: "Paragraph" # Short or Paragraph
+      required: true # Keep this set to true since it's just one question
+      minLength: 1 # Set the minimum number of characters required for submission
+      maxLength: 1000 # Set the maximum number of characters allowed for submission the limit is 1000
 
 # ==============================================
 # Working Hours Settings

@@ -1147,7 +1147,6 @@ module.exports = {
               );
             }
             modalQuestion.setMaxLength(maxLength);
-          
 
             modalQuestions.push(modalQuestion);
             questionIndex++;
@@ -1247,8 +1246,66 @@ module.exports = {
           });
         }
 
-        await interaction.deferReply();
-        await deleteTicket(interaction);
+        const withModal =
+          config.deleteButtonModal.enabled !== undefined
+            ? config.deleteButtonModal.enabled
+            : false;
+
+        if (!withModal) {
+          await interaction.deferReply();
+          await deleteTicket(interaction);
+          return;
+        }
+
+        const modal = new ModalBuilder()
+          .setCustomId("deleteButtonModal")
+          .setTitle(config.deleteButtonModal.modalTitle || "Delete Ticket");
+
+        const modalQuestions = [];
+        const actionRows = [];
+        let questionIndex = 0;
+
+        config.deleteButtonModal.questions.forEach((question) => {
+          let { label, placeholder, style, required, minLength, maxLength } =
+            question;
+
+          const modalQuestion = new TextInputBuilder()
+            .setCustomId(`question${questionIndex + 1}`)
+            .setLabel(label)
+            .setStyle(style)
+            .setPlaceholder(placeholder)
+            .setRequired(required);
+
+          if (typeof minLength === "number" && minLength > 0) {
+            modalQuestion.setMinLength(minLength);
+          }
+
+          if (
+            typeof maxLength !== "number" ||
+            maxLength < minLength ||
+            maxLength > 1000
+          ) {
+            maxLength = 1000;
+            console.log(
+              `[WARN]: Invalid maxLength value for question ${questionIndex + 1}, falling back to the default 1000`,
+            );
+          }
+          modalQuestion.setMaxLength(maxLength);
+
+          modalQuestions.push(modalQuestion);
+          questionIndex++;
+        });
+
+        modalQuestions.forEach((question) => {
+          const actionRow = new ActionRowBuilder().addComponents(question);
+          actionRows.push(actionRow);
+        });
+
+        actionRows.forEach((actionRow) => {
+          modal.addComponents(actionRow);
+        });
+
+        await interaction.showModal(modal);
       }
 
       // Ticket Close Button
@@ -1290,8 +1347,66 @@ module.exports = {
           });
         }
 
-        await interaction.deferReply();
-        await closeTicket(interaction);
+        const withModal =
+          config.closeButtonModal.enabled !== undefined
+            ? config.closeButtonModal.enabled
+            : false;
+
+        if (!withModal) {
+          await interaction.deferReply();
+          await closeTicket(interaction);
+          return;
+        }
+
+        const modal = new ModalBuilder()
+          .setCustomId("closeButtonModal")
+          .setTitle(config.closeButtonModal.modalTitle || "Close Ticket");
+
+        const modalQuestions = [];
+        const actionRows = [];
+        let questionIndex = 0;
+
+        config.closeButtonModal.questions.forEach((question) => {
+          let { label, placeholder, style, required, minLength, maxLength } =
+            question;
+
+          const modalQuestion = new TextInputBuilder()
+            .setCustomId(`question${questionIndex + 1}`)
+            .setLabel(label)
+            .setStyle(style)
+            .setPlaceholder(placeholder)
+            .setRequired(required);
+
+          if (typeof minLength === "number" && minLength > 0) {
+            modalQuestion.setMinLength(minLength);
+          }
+
+          if (
+            typeof maxLength !== "number" ||
+            maxLength < minLength ||
+            maxLength > 1000
+          ) {
+            maxLength = 1000;
+            console.log(
+              `[WARN]: Invalid maxLength value for question ${questionIndex + 1}, falling back to the default 1000`,
+            );
+          }
+          modalQuestion.setMaxLength(maxLength);
+
+          modalQuestions.push(modalQuestion);
+          questionIndex++;
+        });
+
+        modalQuestions.forEach((question) => {
+          const actionRow = new ActionRowBuilder().addComponents(question);
+          actionRows.push(actionRow);
+        });
+
+        actionRows.forEach((actionRow) => {
+          modal.addComponents(actionRow);
+        });
+
+        await interaction.showModal(modal);
       }
 
       // Ticket Claim button
@@ -1378,6 +1493,18 @@ module.exports = {
           await interaction.deferReply({ flags: MessageFlags.Ephemeral });
           await getFeedback(interaction, i);
         }
+      }
+
+      if (interaction.customId === "closeButtonModal") {
+        await interaction.deferReply();
+        const reason = interaction.fields.getTextInputValue("question1");
+        await closeTicket(interaction, reason);
+      }
+
+      if (interaction.customId === "deleteButtonModal") {
+        await interaction.deferReply();
+        const reason = interaction.fields.getTextInputValue("question1");
+        await deleteTicket(interaction, reason);
       }
     }
   },
