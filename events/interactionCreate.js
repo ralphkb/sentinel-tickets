@@ -512,19 +512,17 @@ module.exports = {
                 modalQuestion.setMinLength(minLength);
               }
 
-              if (style === "Paragraph") {
-                if (
-                  typeof maxLength !== "number" ||
-                  maxLength < minLength ||
-                  maxLength > 1000
-                ) {
-                  maxLength = 1000;
-                  console.log(
-                    `[WARN]: Invalid maxLength value for question ${questionIndex + 1}, falling back to the default 1000`,
-                  );
-                }
-                modalQuestion.setMaxLength(maxLength);
+              if (
+                typeof maxLength !== "number" ||
+                maxLength < minLength ||
+                maxLength > 1000
+              ) {
+                maxLength = 1000;
+                console.log(
+                  `[WARN]: Invalid maxLength value for question ${questionIndex + 1}, falling back to the default 1000`,
+                );
               }
+              modalQuestion.setMaxLength(maxLength);
 
               modalQuestions.push(modalQuestion);
               questionIndex++;
@@ -605,19 +603,17 @@ module.exports = {
                   modalQuestion.setMinLength(minLength);
                 }
 
-                if (style === "Paragraph") {
-                  if (
-                    typeof maxLength !== "number" ||
-                    maxLength < minLength ||
-                    maxLength > 1000
-                  ) {
-                    maxLength = 1000;
-                    console.log(
-                      `[WARN]: Invalid maxLength value for rating question ${questionIndex + 1}, falling back to the default 1000`,
-                    );
-                  }
-                  modalQuestion.setMaxLength(maxLength);
+                if (
+                  typeof maxLength !== "number" ||
+                  maxLength < minLength ||
+                  maxLength > 1000
+                ) {
+                  maxLength = 1000;
+                  console.log(
+                    `[WARN]: Invalid maxLength value for rating question ${questionIndex + 1}, falling back to the default 1000`,
+                  );
                 }
+                modalQuestion.setMaxLength(maxLength);
 
                 modalQuestions.push(modalQuestion);
                 questionIndex++;
@@ -1140,19 +1136,18 @@ module.exports = {
               modalQuestion.setMinLength(minLength);
             }
 
-            if (style === "Paragraph") {
-              if (
-                typeof maxLength !== "number" ||
-                maxLength < minLength ||
-                maxLength > 1000
-              ) {
-                maxLength = 1000;
-                console.log(
-                  `[WARN]: Invalid maxLength value for question ${questionIndex + 1}, falling back to the default 1000`,
-                );
-              }
-              modalQuestion.setMaxLength(maxLength);
+            if (
+              typeof maxLength !== "number" ||
+              maxLength < minLength ||
+              maxLength > 1000
+            ) {
+              maxLength = 1000;
+              console.log(
+                `[WARN]: Invalid maxLength value for question ${questionIndex + 1}, falling back to the default 1000`,
+              );
             }
+            modalQuestion.setMaxLength(maxLength);
+          
 
             modalQuestions.push(modalQuestion);
             questionIndex++;
