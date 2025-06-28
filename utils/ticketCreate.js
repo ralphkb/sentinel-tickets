@@ -9,7 +9,7 @@ const {
   ChannelType,
 } = require("discord.js");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ quiet: true });
 const fs = require("fs");
 const yaml = require("yaml");
 const configFile = fs.readFileSync("./config.yml", "utf8");

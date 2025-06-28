@@ -1,6 +1,6 @@
 const { Collection } = require("discord.js");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ quiet: true });
 const fs = require("fs");
 const path = require("path");
 const yaml = require("yaml");

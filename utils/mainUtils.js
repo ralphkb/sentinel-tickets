@@ -1,6 +1,6 @@
 const { EmbedBuilder, AttachmentBuilder, MessageFlags } = require("discord.js");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ quiet: true });
 const discordHtmlTranscripts = require("discord-html-transcripts");
 const fs = require("fs");
 const yaml = require("yaml");

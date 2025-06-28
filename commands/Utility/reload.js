@@ -4,7 +4,7 @@ const {
   MessageFlags,
 } = require("discord.js");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ quiet: true });
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 const { client } = require("../../init.js");
