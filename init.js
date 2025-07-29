@@ -3,6 +3,7 @@ const path = require("path");
 const yaml = require("yaml");
 const { QuickDB } = require("quick.db");
 const fs = require("fs");
+require("dotenv").config({ quiet: true });
 
 const client = new Client({
   intents: [
