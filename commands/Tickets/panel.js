@@ -9,7 +9,7 @@ const {
   MessageFlags,
 } = require("discord.js");
 
-const fs = require("fs");
+
 
 
 const { ticketCategories, mainDB } = require("../../init.js");

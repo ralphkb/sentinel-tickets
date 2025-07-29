@@ -6,7 +6,7 @@ const {
 } = require("discord.js");
 
 
-const fs = require("fs");
+
 
 const { listUserTickets } = require("../../utils/mainUtils.js");
 

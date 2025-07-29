@@ -5,7 +5,6 @@ const {
   MessageFlags,
 } = require("discord.js");
 const { blacklistRemove } = require("../../utils/userBlacklist.js");
-const fs = require("fs");
 module.exports = {
   enabled: config.contextMenuCommands.blacklistRemove.enabled,
   data: new ContextMenuCommandBuilder()

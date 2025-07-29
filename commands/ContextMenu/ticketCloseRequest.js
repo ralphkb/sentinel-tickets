@@ -5,9 +5,6 @@ const {
   MessageFlags,
 } = require("discord.js");
 
-const fs = require("fs");
-
-
 const { ticketsDB } = require("../../init.js");
 const { getUser } = require("../../utils/mainUtils.js");
 const { closeRequestTicket } = require("../../utils/ticketCloseRequest.js");

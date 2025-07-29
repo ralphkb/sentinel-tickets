@@ -4,8 +4,6 @@ const {
   MessageFlags,
 } = require("discord.js");
 
-const fs = require("fs");
-
 
 const { client, ticketsDB, ticketCategories } = require("../../init.js");
 const {

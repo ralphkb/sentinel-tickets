@@ -5,7 +5,7 @@ const {
 } = require("discord.js");
 
 
-const fs = require("fs");
+
 
 const { ticketsDB, mainDB } = require("../../init.js");
 const { checkSupportRole, getUser } = require("../../utils/mainUtils.js");

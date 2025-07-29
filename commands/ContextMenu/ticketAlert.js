@@ -7,7 +7,6 @@ const {
 const { ticketsDB } = require("../../init.js");
 const { checkSupportRole, getUser } = require("../../utils/mainUtils.js");
 const { alertTicket } = require("../../utils/ticketAlert.js");
-const fs = require("fs");
 module.exports = {
   enabled: config.contextMenuCommands.ticketAlert.enabled,
   data: new ContextMenuCommandBuilder()
