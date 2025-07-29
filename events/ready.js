@@ -1,10 +1,6 @@
 const { Events, ActivityType } = require("discord.js");
 const dotenv = require("dotenv");
 dotenv.config({ quiet: true });
-const fs = require("fs");
-const yaml = require("yaml");
-const configFile = fs.readFileSync("./config.yml", "utf8");
-const config = yaml.parse(configFile);
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 const { client, mainDB } = require("../init.js");
@@ -31,14 +27,12 @@ module.exports = {
             ),
           );
 
-          // Filter out the new slash commands that are not already registered
           const newCommands = commands.filter((command) => {
             return !registeredCommands.some((registeredCommand) => {
               return registeredCommand.name === command.name;
             });
           });
 
-          // Filter out the existing slash commands that are not in the new commands
           const removedCommands = registeredCommands.filter(
             (registeredCommand) => {
               return !commands.some((command) => {

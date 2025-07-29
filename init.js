@@ -1,10 +1,8 @@
 const { Client, GatewayIntentBits } = require("discord.js");
-const fs = require("fs");
 const path = require("path");
 const yaml = require("yaml");
-const configFile = fs.readFileSync("./config.yml", "utf8");
-const config = yaml.parse(configFile);
 const { QuickDB } = require("quick.db");
+const fs = require("fs");
 
 const client = new Client({
   intents: [
@@ -15,6 +13,8 @@ const client = new Client({
   ],
 });
 
+const configFile = fs.readFileSync("./config.yml", "utf8");
+globalThis.config = yaml.parse(configFile);
 
 let dbPath = "";
 if (config.dbPath?.includes("{root}")) {
@@ -30,9 +30,9 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
-const mainDB = new QuickDB({ filePath: path.join(dataDir, "data/main.sqlite") });
-const ticketsDB = new QuickDB({ filePath: path.join(dataDir, "data/tickets.sqlite") });
-const blacklistDB = new QuickDB({ filePath: path.join(dataDir, "data/blacklist.sqlite") });
+const mainDB = new QuickDB({ filePath: path.join(dataDir, "main.sqlite") });
+const ticketsDB = new QuickDB({ filePath: path.join(dataDir, "tickets.sqlite") });
+const blacklistDB = new QuickDB({ filePath: path.join(dataDir, "blacklist.sqlite") });
 
 (async function () {
   // Initialize totalTickets to 1 if it doesn't exist

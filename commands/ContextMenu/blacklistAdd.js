@@ -4,12 +4,8 @@ const {
   PermissionFlagsBits,
   MessageFlags,
 } = require("discord.js");
-const fs = require("fs");
-const yaml = require("yaml");
-const configFile = fs.readFileSync("./config.yml", "utf8");
-const config = yaml.parse(configFile);
 const { blacklistAdd } = require("../../utils/userBlacklist.js");
-
+const fs = require("fs");
 module.exports = {
   enabled: config.contextMenuCommands.blacklistAdd.enabled,
   data: new ContextMenuCommandBuilder()

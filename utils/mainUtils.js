@@ -3,9 +3,6 @@ const dotenv = require("dotenv");
 dotenv.config({ quiet: true });
 const discordHtmlTranscripts = require("discord-html-transcripts");
 const fs = require("fs");
-const yaml = require("yaml");
-const configFile = fs.readFileSync("./config.yml", "utf8");
-const config = yaml.parse(configFile);
 const packageJson = require("../package.json");
 const {
   client,

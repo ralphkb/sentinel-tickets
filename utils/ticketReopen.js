@@ -1,7 +1,7 @@
-const fs = require("fs");
-const yaml = require("yaml");
-const configFile = fs.readFileSync("./config.yml", "utf8");
-const config = yaml.parse(configFile);
+
+
+
+
 const { mainDB, ticketsDB, client, ticketCategories } = require("../init.js");
 const {
   configEmbed,
