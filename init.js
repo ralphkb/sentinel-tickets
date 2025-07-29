@@ -15,15 +15,24 @@ const client = new Client({
   ],
 });
 
-// Check if the data directory exists, and if not, create it
-const dataDir = path.join(__dirname, "data");
+
+let dbPath = "";
+if (config.dbPath?.includes("{root}")) {
+  dbPath = config.dbPath.replace("{root}", __dirname);
+} else {
+  dbPath = config.dbPath;
+}
+
+const dataDir = path.resolve(dbPath);
+console.log(`Using data directory: ${dataDir}`);
+
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
-const mainDB = new QuickDB({ filePath: "data/main.sqlite" });
-const ticketsDB = new QuickDB({ filePath: "data/tickets.sqlite" });
-const blacklistDB = new QuickDB({ filePath: "data/blacklist.sqlite" });
+const mainDB = new QuickDB({ filePath: path.join(dataDir, "data/main.sqlite") });
+const ticketsDB = new QuickDB({ filePath: path.join(dataDir, "data/tickets.sqlite") });
+const blacklistDB = new QuickDB({ filePath: path.join(dataDir, "data/blacklist.sqlite") });
 
 (async function () {
   // Initialize totalTickets to 1 if it doesn't exist
