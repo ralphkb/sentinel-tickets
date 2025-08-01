@@ -1,8 +1,4 @@
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
-
-
-
-
 const { ticketsDB, ticketCategories } = require("../init.js");
 const { configEmbed, sanitizeInput, logMessage } = require("./mainUtils.js");
 

@@ -1,8 +1,4 @@
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
-
-
-
-
 const { client, ticketsDB } = require("../init.js");
 const {
   configEmbed,

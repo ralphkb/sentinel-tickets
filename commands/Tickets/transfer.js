@@ -3,10 +3,6 @@ const {
   PermissionFlagsBits,
   MessageFlags,
 } = require("discord.js");
-
-
-
-
 const { client, ticketsDB, ticketCategories } = require("../../init.js");
 const {
   checkSupportRole,

@@ -32,8 +32,12 @@ if (!fs.existsSync(dataDir)) {
 }
 
 const mainDB = new QuickDB({ filePath: path.join(dataDir, "main.sqlite") });
-const ticketsDB = new QuickDB({ filePath: path.join(dataDir, "tickets.sqlite") });
-const blacklistDB = new QuickDB({ filePath: path.join(dataDir, "blacklist.sqlite") });
+const ticketsDB = new QuickDB({
+  filePath: path.join(dataDir, "tickets.sqlite"),
+});
+const blacklistDB = new QuickDB({
+  filePath: path.join(dataDir, "blacklist.sqlite"),
+});
 
 (async function () {
   // Initialize totalTickets to 1 if it doesn't exist

@@ -1,8 +1,4 @@
 const { MessageFlags } = require("discord.js");
-
-
-
-
 const { blacklistDB, client } = require("../init.js");
 const {
   configEmbed,

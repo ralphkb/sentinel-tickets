@@ -3,10 +3,6 @@ const {
   PermissionFlagsBits,
   MessageFlags,
 } = require("discord.js");
-
-
-
-
 const { client, blacklistDB } = require("../../init.js");
 const {
   configEmbed,

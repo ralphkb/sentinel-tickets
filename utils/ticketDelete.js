@@ -3,10 +3,6 @@ const {
   StringSelectMenuBuilder,
   ActionRowBuilder,
 } = require("discord.js");
-
-
-
-
 const { mainDB, ticketsDB, client } = require("../init.js");
 const {
   configEmbed,

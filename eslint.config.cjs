@@ -33,6 +33,7 @@ module.exports = [
       globals: {
         ...globals.commonjs,
         ...globals.node,
+        config: "readonly",
       },
 
       ecmaVersion: "latest",

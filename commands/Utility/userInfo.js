@@ -3,10 +3,6 @@ const {
   PermissionFlagsBits,
   MessageFlags,
 } = require("discord.js");
-
-
-
-
 const { userInfo } = require("../../utils/userInfo.js");
 
 module.exports = {

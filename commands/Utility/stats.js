@@ -3,10 +3,6 @@ const {
   PermissionFlagsBits,
   MessageFlags,
 } = require("discord.js");
-
-
-
-
 const packageJson = require("../../package.json");
 const { mainDB } = require("../../init.js");
 const {

@@ -10,10 +10,6 @@ const {
 } = require("discord.js");
 const dotenv = require("dotenv");
 dotenv.config({ quiet: true });
-
-
-
-
 const { client, mainDB, ticketsDB } = require("../init.js");
 const {
   configEmbed,

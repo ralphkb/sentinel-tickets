@@ -1,7 +1,3 @@
-
-
-
-
 const { mainDB, ticketsDB, client, ticketCategories } = require("../init.js");
 const {
   configEmbed,

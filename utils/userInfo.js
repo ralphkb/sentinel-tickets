@@ -1,8 +1,4 @@
 const { MessageFlags } = require("discord.js");
-
-
-
-
 const { configEmbed, sanitizeInput } = require("./mainUtils.js");
 
 async function userInfo(interaction, member, isEphemeral) {

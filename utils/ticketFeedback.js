@@ -1,8 +1,4 @@
 const { MessageFlags } = require("discord.js");
-
-
-
-
 const { mainDB, client } = require("../init.js");
 const {
   configEmbed,

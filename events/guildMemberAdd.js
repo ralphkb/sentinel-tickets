@@ -1,8 +1,4 @@
 const { Events } = require("discord.js");
-
-
-
-
 const { ticketCategories, ticketsDB } = require("../init.js");
 const {
   getChannel,

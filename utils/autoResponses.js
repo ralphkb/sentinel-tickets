@@ -1,8 +1,3 @@
-
-
-
-
-
 async function autoResponses(inputString, member) {
   if (config.autoResponses.enabled) {
     const responses = { matches: [] };

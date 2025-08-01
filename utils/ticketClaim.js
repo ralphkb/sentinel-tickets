@@ -6,10 +6,6 @@ const {
   StringSelectMenuOptionBuilder,
   MessageFlags,
 } = require("discord.js");
-
-
-
-
 const { mainDB, ticketsDB, ticketCategories, client } = require("../init.js");
 const {
   configEmbed,

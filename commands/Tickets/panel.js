@@ -8,10 +8,6 @@ const {
   StringSelectMenuOptionBuilder,
   MessageFlags,
 } = require("discord.js");
-
-
-
-
 const { ticketCategories, mainDB } = require("../../init.js");
 const { configEmbed, logMessage } = require("../../utils/mainUtils.js");
 

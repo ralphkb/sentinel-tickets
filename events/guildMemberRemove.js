@@ -4,10 +4,6 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
-
-
-
-
 const { ticketsDB, client } = require("../init.js");
 const {
   configEmbed,
