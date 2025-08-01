@@ -4,10 +4,6 @@ const {
   PermissionFlagsBits,
   MessageFlags,
 } = require("discord.js");
-const fs = require("fs");
-const yaml = require("yaml");
-const configFile = fs.readFileSync("./config.yml", "utf8");
-const config = yaml.parse(configFile);
 const { ticketsDB, mainDB } = require("../../init.js");
 const { checkSupportRole, getUser } = require("../../utils/mainUtils.js");
 const { claimTicket } = require("../../utils/ticketClaim.js");

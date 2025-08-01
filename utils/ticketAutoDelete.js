@@ -5,10 +5,10 @@ const {
 } = require("discord.js");
 const dotenv = require("dotenv");
 dotenv.config({ quiet: true });
-const fs = require("fs");
-const yaml = require("yaml");
-const configFile = fs.readFileSync("./config.yml", "utf8");
-const config = yaml.parse(configFile);
+
+
+
+
 const { mainDB, ticketsDB, client } = require("../init.js");
 const {
   configEmbed,

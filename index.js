@@ -1,11 +1,6 @@
 const { Collection } = require("discord.js");
-const dotenv = require("dotenv");
-dotenv.config({ quiet: true });
-const fs = require("fs");
+require("dotenv").config({ quiet: true });
 const path = require("path");
-const yaml = require("yaml");
-const configFile = fs.readFileSync("./config.yml", "utf8");
-const config = yaml.parse(configFile);
 const { client, ticketsDB } = require("./init.js");
 const {
   cleanBlacklist,
@@ -15,6 +10,7 @@ const {
 } = require("./utils/mainUtils.js");
 const { autoCloseTicket } = require("./utils/ticketAutoClose.js");
 const { autoDeleteTicket } = require("./utils/ticketAutoDelete.js");
+const fs = require("fs");
 client.startingTime = Date.now();
 
 const blacklistInterval = config.blacklistCleanup || 120;

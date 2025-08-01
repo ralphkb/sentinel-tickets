@@ -2,6 +2,10 @@
 # Ticket bot general settings
 # ==============================================
 
+# Vars:
+# {root} - Base directory, same place as this file
+dbPath: "{root}" # Base path for the data folder.
+
 rolesThatCanBlacklist: ["111111111111111111"] # The IDs of the staff roles on your server which should have access to blacklisting and unblacklisting users from creating tickets, for example ["000000000000000000", "111111111111111111"]
 rolesOnBlacklist: [] # The IDs of the roles that the bot will add to blacklisted users, leave it empty to disable this feature
 blacklistCleanup: "120" # The amount of time in seconds between blacklist cleanup checks, to automatically remove expired blacklisted users/roles
