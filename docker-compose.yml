@@ -1,0 +1,14 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ticket-bot
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    volumes:
+      - ticketbotdata:./data # must match the dbpath value in config.yml
+
+volumes:
+  ticketbotdata:
