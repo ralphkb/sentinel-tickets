@@ -14,28 +14,52 @@ const {
   getChannel,
 } = require("./mainUtils.js");
 
-async function claimTicket(interaction) {
+async function claimTicket(interaction, targetUser, reason) {
+  const staffUser = targetUser || interaction.user;
+  const isAssignment = staffUser.id !== interaction.user.id;
+
   const defaultValues = {
     color: "#2FF200",
-    title: "Ticket Claimed",
-    description: `This ticket has been claimed by {user}.\nThey will be assisting you shortly!`,
+    title: isAssignment ? "Ticket Assigned" : "Ticket Claimed",
+    description: isAssignment
+      ? `This ticket has been assigned to {user}.\nReason: **${reason || "No reason provided"}**\n\nThey will be assisting you shortly!`
+      : `This ticket has been claimed by {user}.\nThey will be assisting you shortly!`,
     timestamp: true,
     footer: {
-      text: `Claimed by ${interaction.user.tag}`,
+      text: isAssignment
+        ? `Assigned by ${interaction.user.tag}`
+        : `Claimed by ${interaction.user.tag}`,
       iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
     },
   };
 
-  const claimedEmbed = await configEmbed("claimedEmbed", defaultValues);
+  const claimedEmbed = await configEmbed(
+    isAssignment ? "assignedEmbed" : "claimedEmbed",
+    defaultValues,
+  );
 
   if (claimedEmbed.data && claimedEmbed.data.description) {
     claimedEmbed.setDescription(
-      claimedEmbed.data.description.replace(/\{user\}/g, interaction.user),
+      claimedEmbed.data.description
+        .replace(/\{user\}/g, staffUser)
+        .replace(/\{reason\}/g, reason || "No reason provided")
+        .replace(/\{assigner\}/g, interaction.user.tag),
     );
+  }
+  if (isAssignment) {
+    claimedEmbed.setFooter({
+      text: `Assigned by ${interaction.user.tag}`,
+      iconURL: interaction.user.displayAvatarURL({
+        extension: "png",
+        size: 1024,
+      }),
+    });
   }
 
   await interaction.editReply({
-    content: "You successfully claimed this ticket!",
+    content: isAssignment
+      ? `You successfully assigned this ticket to **${staffUser.tag}**!`
+      : "You successfully claimed this ticket!",
     flags: MessageFlags.Ephemeral,
   });
   await interaction.channel.send({ embeds: [claimedEmbed] });
@@ -44,8 +68,8 @@ async function claimTicket(interaction) {
     .then(async (message) => {
       const embed = message.embeds[0];
       const claimedByField = {
-        name: "Claimed by",
-        value: `> <@!${interaction.user.id}> (${sanitizeInput(interaction.user.tag)})`,
+        name: isAssignment ? "Assigned to" : "Claimed by",
+        value: `> <@!${staffUser.id}> (${sanitizeInput(staffUser.tag)})`,
       };
       embed.fields.push(claimedByField);
       let actionRow2 = new ActionRowBuilder();
@@ -112,8 +136,14 @@ async function claimTicket(interaction) {
       const category = ticketCategories[ticketButton];
       if (config.claimRename) {
         let claimRenameName = config.claimRenameName || "{category}-{username}";
-        const claimUsername = interaction.user.username;
-        const claimDisplayname = interaction.member.displayName;
+        const claimUsername = staffUser.username;
+        let claimDisplayname = staffUser.username;
+        try {
+          const member = await interaction.guild.members.fetch(staffUser.id);
+          claimDisplayname = member.displayName;
+        } catch {
+          // Ignore
+        }
 
         claimRenameName = claimRenameName
           .replace(/\{category\}/g, category.name)
@@ -136,7 +166,7 @@ async function claimTicket(interaction) {
         });
       }
 
-      await interaction.channel.permissionOverwrites.edit(interaction.user, {
+      await interaction.channel.permissionOverwrites.edit(staffUser, {
         SendMessages: true,
         ViewChannel: true,
         AttachFiles: true,
@@ -145,10 +175,7 @@ async function claimTicket(interaction) {
       });
 
       await ticketsDB.set(`${interaction.channel.id}.claimed`, true);
-      await ticketsDB.set(
-        `${interaction.channel.id}.claimUser`,
-        interaction.user.id,
-      );
+      await ticketsDB.set(`${interaction.channel.id}.claimUser`, staffUser.id);
       await mainDB.add("totalClaims", 1);
       await mainDB
         .delete(`isClaimInProgress-${interaction.channel.id}`)
@@ -164,30 +191,51 @@ async function claimTicket(interaction) {
 
       const logDefaultValues = {
         color: "#2FF200",
-        title: "Ticket Logs | Ticket Claimed",
+        title: isAssignment
+          ? "Ticket Logs | Ticket Assigned"
+          : "Ticket Logs | Ticket Claimed",
         timestamp: true,
-        thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+        thumbnail: `${staffUser.displayAvatarURL({ extension: "png", size: 1024 })}`,
         footer: {
-          text: `${interaction.user.tag}`,
-          iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+          text: `${staffUser.tag}`,
+          iconURL: `${staffUser.displayAvatarURL({ extension: "png", size: 1024 })}`,
         },
       };
 
       const logClaimedEmbed = await configEmbed(
-        "logClaimedEmbed",
+        isAssignment ? "logAssignedEmbed" : "logClaimedEmbed",
         logDefaultValues,
       );
 
       logClaimedEmbed.addFields([
         {
-          name: config.logClaimedEmbed.field_staff || "• Staff",
-          value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+          name:
+            (isAssignment
+              ? config.logAssignedEmbed.field_staff
+              : config.logClaimedEmbed.field_staff) || "• Staff",
+          value: `> <@!${staffUser.id}>\n> ${sanitizeInput(staffUser.tag)}`,
         },
         {
-          name: config.logClaimedEmbed.field_ticket || "• Ticket",
+          name:
+            (isAssignment
+              ? config.logAssignedEmbed.field_ticket
+              : config.logClaimedEmbed.field_ticket) || "• Ticket",
           value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
         },
       ]);
+
+      if (isAssignment) {
+        logClaimedEmbed.addFields([
+          {
+            name: config.logAssignedEmbed.field_assigner || "• Assigned By",
+            value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+          },
+          {
+            name: config.logAssignedEmbed.field_reason || "• Reason",
+            value: `> ${reason || "No reason provided"}`,
+          },
+        ]);
+      }
 
       if (config.toggleLogs.ticketClaim) {
         try {
@@ -198,7 +246,9 @@ async function claimTicket(interaction) {
         }
       }
       await logMessage(
-        `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
+        isAssignment
+          ? `${interaction.user.tag} assigned the ticket #${interaction.channel.name} to ${staffUser.tag}`
+          : `${interaction.user.tag} claimed the ticket #${interaction.channel.name}`,
       );
     });
 }

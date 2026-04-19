@@ -12,12 +12,43 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("claim")
     .setDescription("Claim a ticket")
+    .addUserOption((option) =>
+      option
+        .setName("user")
+        .setDescription("The user to assign the ticket to")
+        .setRequired(false),
+    )
+    .addStringOption((option) =>
+      option
+        .setName("reason")
+        .setDescription("The reason for assigning the ticket")
+        .setRequired(false),
+    )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.claim.permission],
     )
     .setDMPermission(false),
   async execute(interaction) {
+    const optionUser = interaction.options.getUser("user");
+    const optionReason = interaction.options.getString("reason");
     const claimKey = `isClaimInProgress-${interaction.channel.id}`;
+
+    if (optionUser && optionUser.id !== interaction.user.id) {
+      const assignPermission =
+        config.commands.claim.assignPermission || "ManageMessages";
+      if (
+        !interaction.member.permissions.has(
+          PermissionFlagsBits[assignPermission],
+        )
+      ) {
+        return interaction.reply({
+          content:
+            config.errors.not_allowed || "You are not allowed to use this!",
+          flags: MessageFlags.Ephemeral,
+        });
+      }
+    }
+
     const isClaimInProgress = await mainDB.get(claimKey);
     if (isClaimInProgress) {
       return interaction.reply({
@@ -109,6 +140,6 @@ module.exports = {
     }
 
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    await claimTicket(interaction);
+    await claimTicket(interaction, optionUser, optionReason);
   },
 };

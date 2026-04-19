@@ -270,9 +270,11 @@ commands:
   claim:
     enabled: true
     permission: "KickMembers"
+    assignPermission: "ManageMessages"
   unclaim:
     enabled: true
     permission: "KickMembers"
+    assignPermission: "ManageMessages"
   move:
     enabled: true
     permission: "KickMembers"
@@ -1283,6 +1285,13 @@ claimedEmbed:
     iconURL: ""
     url: ""
 
+# The embed that is sent when a ticket is assigned to a staff member
+assignedEmbed:
+  color: "#2FF200"
+  title: "Ticket Assigned"
+  description: "This ticket has been assigned to {user}.\nReason: **{reason}**\n\nThey will be assisting you shortly!" # Use {user} for the staff member being assigned the ticket, {reason} for the reason of the assignment and {assigner} for the name of the staff who assigned it.
+  timestamp: true
+
 # Log embed for claiming tickets
 logClaimedEmbed:
   color: "#2FF200"
@@ -1302,6 +1311,21 @@ logClaimedEmbed:
   field_staff: "• Staff"
   field_ticket: "• Ticket"
 
+# Log embed for assigned tickets
+logAssignedEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Assigned"
+  description: ""
+  timestamp: true
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_assigner: "• Assigned By"
+  field_reason: "• Reason"
+
 # Unclaimed ticket embed
 unclaimedEmbed:
   color: "#FF2400"
@@ -1318,6 +1342,13 @@ unclaimedEmbed:
     name: ""
     iconURL: ""
     url: ""
+
+# The embed that is sent when a ticket gets unclaimed forcefully by a manager
+unclaimedForcedEmbed:
+  color: "#FF2400"
+  title: "Ticket Unclaimed (Forced)"
+  description: "This ticket has been unclaimed from {user} by {unclaimer}.\nReason: **{reason}**" # Use {user} for the staff member being unclaimed from the ticket, {reason} for the reason of the unclaim and {unclaimer} for the name of the staff who unclaimed it.
+  timestamp: true
 
 # Log embed for unclaiming tickets
 logUnclaimedEmbed:
@@ -1796,6 +1827,17 @@ ratingDMEmbed:
     name: ""
     iconURL: ""
     url: ""
+
+# Log embed for unclaiming tickets forcefully by a manager
+logUnclaimedForcedEmbed:
+  color: "#FF2400"
+  title: "Ticket Logs | Ticket Unclaimed (Forced)"
+  description: ""
+  timestamp: true
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_unclaimer: "• Unclaimed By"
+  field_reason: "• Reason"
 
 # Log embed for rating and feedback system
 logRatingEmbed:

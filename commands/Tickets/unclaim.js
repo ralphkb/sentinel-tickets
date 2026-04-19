@@ -12,11 +12,19 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("unclaim")
     .setDescription("Unclaim a ticket")
+    .addStringOption((option) =>
+      option
+        .setName("reason")
+        .setDescription("The reason for unclaiming the ticket")
+        .setRequired(false),
+    )
     .setDefaultMemberPermissions(
       PermissionFlagsBits[config.commands.unclaim.permission],
     )
     .setDMPermission(false),
   async execute(interaction) {
+    const optionReason = interaction.options.getString("reason");
+
     if (!(await ticketsDB.has(interaction.channel.id))) {
       return interaction.reply({
         content:
@@ -48,17 +56,26 @@ module.exports = {
       });
     }
 
-    if (
-      (await ticketsDB.get(`${interaction.channel.id}.claimUser`)) !==
-      interaction.user.id
-    ) {
-      return interaction.reply({
-        content: `You did not claim this ticket, only the user that claimed this ticket can unclaim it! (<@!${await ticketsDB.get(`${interaction.channel.id}.claimUser`)}>)`,
-        flags: MessageFlags.Ephemeral,
-      });
+    const claimUserID = await ticketsDB.get(
+      `${interaction.channel.id}.claimUser`,
+    );
+
+    if (claimUserID !== interaction.user.id) {
+      const assignPermission =
+        config.commands.unclaim.assignPermission || "ManageMessages";
+      if (
+        !interaction.member.permissions.has(
+          PermissionFlagsBits[assignPermission],
+        )
+      ) {
+        return interaction.reply({
+          content: `You did not claim this ticket, only the user that claimed this ticket can unclaim it! (<@!${claimUserID}>)`,
+          flags: MessageFlags.Ephemeral,
+        });
+      }
     }
 
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    await unclaimTicket(interaction);
+    await unclaimTicket(interaction, null, optionReason);
   },
 };

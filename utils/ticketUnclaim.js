@@ -12,9 +12,16 @@ const {
   sanitizeInput,
   logMessage,
   getChannel,
+  getUser,
 } = require("./mainUtils.js");
 
-async function unclaimTicket(interaction) {
+async function unclaimTicket(interaction, targetUser, reason) {
+  const claimUserID = await ticketsDB.get(
+    `${interaction.channel.id}.claimUser`,
+  );
+  const staffUser = targetUser || (await getUser(claimUserID));
+  const isForcedUnclaim = staffUser.id !== interaction.user.id;
+
   const ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
   const category = ticketCategories[ticketButton];
 
@@ -31,8 +38,10 @@ async function unclaimTicket(interaction) {
 
   const defaultValues = {
     color: "#FF2400",
-    title: "Ticket Unclaimed",
-    description: `This ticket has been unclaimed by {user}.`,
+    title: isForcedUnclaim ? "Ticket Unclaimed (Forced)" : "Ticket Unclaimed",
+    description: isForcedUnclaim
+      ? `This ticket has been unclaimed from {user} by ${interaction.user}.\nReason: **${reason || "No reason provided"}**`
+      : `This ticket has been unclaimed by {user}.`,
     timestamp: true,
     footer: {
       text: `Unclaimed by ${interaction.user.tag}`,
@@ -40,19 +49,36 @@ async function unclaimTicket(interaction) {
     },
   };
 
-  const unclaimedEmbed = await configEmbed("unclaimedEmbed", defaultValues);
+  const unclaimedEmbed = await configEmbed(
+    isForcedUnclaim ? "unclaimedForcedEmbed" : "unclaimedEmbed",
+    defaultValues,
+  );
 
   if (unclaimedEmbed.data && unclaimedEmbed.data.description) {
     unclaimedEmbed.setDescription(
-      unclaimedEmbed.data.description.replace(/\{user\}/g, interaction.user),
+      unclaimedEmbed.data.description
+        .replace(/\{user\}/g, staffUser)
+        .replace(/\{reason\}/g, reason || "No reason provided")
+        .replace(/\{unclaimer\}/g, interaction.user),
     );
+  }
+  if (isForcedUnclaim) {
+    unclaimedEmbed.setFooter({
+      text: `Unclaimed by ${interaction.user.tag}`,
+      iconURL: interaction.user.displayAvatarURL({
+        extension: "png",
+        size: 1024,
+      }),
+    });
   }
 
   await interaction.editReply({
-    content: "You successfully unclaimed this ticket!",
+    content: isForcedUnclaim
+      ? `You successfully unclaimed this ticket from **${staffUser.tag}**!`
+      : "You successfully unclaimed this ticket!",
     flags: MessageFlags.Ephemeral,
   });
-  await interaction.channel.permissionOverwrites.delete(interaction.user);
+  await interaction.channel.permissionOverwrites.delete(staffUser);
   await interaction.channel.send({ embeds: [unclaimedEmbed] });
 
   await interaction.channel.messages
@@ -119,30 +145,53 @@ async function unclaimTicket(interaction) {
 
       const logDefaultValues = {
         color: "#FF2400",
-        title: "Ticket Logs | Ticket Unclaimed",
+        title: isForcedUnclaim
+          ? "Ticket Logs | Ticket Unclaimed (Forced)"
+          : "Ticket Logs | Ticket Unclaimed",
         timestamp: true,
-        thumbnail: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+        thumbnail: `${staffUser.displayAvatarURL({ extension: "png", size: 1024 })}`,
         footer: {
-          text: `${interaction.user.tag}`,
-          iconURL: `${interaction.user.displayAvatarURL({ extension: "png", size: 1024 })}`,
+          text: `${staffUser.tag}`,
+          iconURL: `${staffUser.displayAvatarURL({ extension: "png", size: 1024 })}`,
         },
       };
 
       const logUnclaimedEmbed = await configEmbed(
-        "logUnclaimedEmbed",
+        isForcedUnclaim ? "logUnclaimedForcedEmbed" : "logUnclaimedEmbed",
         logDefaultValues,
       );
 
       logUnclaimedEmbed.addFields([
         {
-          name: config.logUnclaimedEmbed.field_staff || "• Staff",
-          value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+          name:
+            (isForcedUnclaim
+              ? config.logUnclaimedForcedEmbed.field_staff
+              : config.logUnclaimedEmbed.field_staff) || "• Staff",
+          value: `> <@!${staffUser.id}>\n> ${sanitizeInput(staffUser.tag)}`,
         },
         {
-          name: config.logUnclaimedEmbed.field_ticket || "• Ticket",
+          name:
+            (isForcedUnclaim
+              ? config.logUnclaimedForcedEmbed.field_ticket
+              : config.logUnclaimedEmbed.field_ticket) || "• Ticket",
           value: `> <#${interaction.channel.id}>\n> #${sanitizeInput(interaction.channel.name)}\n> ${await ticketsDB.get(`${interaction.channel.id}.ticketType`)}`,
         },
       ]);
+
+      if (isForcedUnclaim) {
+        logUnclaimedEmbed.addFields([
+          {
+            name:
+              config.logUnclaimedForcedEmbed.field_unclaimer ||
+              "• Unclaimed By",
+            value: `> <@!${interaction.user.id}>\n> ${sanitizeInput(interaction.user.tag)}`,
+          },
+          {
+            name: config.logUnclaimedForcedEmbed.field_reason || "• Reason",
+            value: `> ${reason || "No reason provided"}`,
+          },
+        ]);
+      }
 
       if (config.toggleLogs.ticketUnclaim) {
         try {
@@ -154,7 +203,9 @@ async function unclaimTicket(interaction) {
       }
       await mainDB.sub("totalClaims", 1);
       await logMessage(
-        `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,
+        isForcedUnclaim
+          ? `${interaction.user.tag} forcefully unclaimed the ticket #${interaction.channel.name} from ${staffUser.tag}`
+          : `${interaction.user.tag} unclaimed the ticket #${interaction.channel.name}`,
       );
     });
 }
