@@ -494,7 +494,7 @@ module.exports = {
                 style,
                 required,
                 minLength,
-                maxLength,
+                maxLength = 0,
               } = question;
 
               const modalQuestion = new TextInputBuilder()
@@ -508,7 +508,9 @@ module.exports = {
                 modalQuestion.setMinLength(minLength);
               }
 
-              if (
+              if (maxLength === 0 || maxLength === undefined) {
+                maxLength = 1000;
+              } else if (
                 typeof maxLength !== "number" ||
                 maxLength < minLength ||
                 maxLength > 1000
@@ -585,7 +587,7 @@ module.exports = {
                   style,
                   required,
                   minLength,
-                  maxLength,
+                  maxLength = 0,
                 } = question;
 
                 const modalQuestion = new TextInputBuilder()
@@ -599,7 +601,9 @@ module.exports = {
                   modalQuestion.setMinLength(minLength);
                 }
 
-                if (
+                if (maxLength === 0 || maxLength === undefined) {
+                  maxLength = 1000;
+                } else if (
                   typeof maxLength !== "number" ||
                   maxLength < minLength ||
                   maxLength > 1000
@@ -1118,8 +1122,14 @@ module.exports = {
           let questionIndex = 0;
 
           category.questions.forEach((question) => {
-            let { label, placeholder, style, required, minLength, maxLength } =
-              question;
+            let {
+              label,
+              placeholder,
+              style,
+              required,
+              minLength,
+              maxLength = 0,
+            } = question;
 
             const modalQuestion = new TextInputBuilder()
               .setCustomId(`question${questionIndex + 1}`)
@@ -1132,7 +1142,9 @@ module.exports = {
               modalQuestion.setMinLength(minLength);
             }
 
-            if (
+            if (maxLength === 0 || maxLength === undefined) {
+              maxLength = 1000;
+            } else if (
               typeof maxLength !== "number" ||
               maxLength < minLength ||
               maxLength > 1000
@@ -1262,8 +1274,14 @@ module.exports = {
         let questionIndex = 0;
 
         config.deleteButtonModal.questions.forEach((question) => {
-          let { label, placeholder, style, required, minLength, maxLength } =
-            question;
+          let {
+            label,
+            placeholder,
+            style,
+            required,
+            minLength,
+            maxLength = 0,
+          } = question;
 
           const modalQuestion = new TextInputBuilder()
             .setCustomId(`question${questionIndex + 1}`)
@@ -1276,7 +1294,9 @@ module.exports = {
             modalQuestion.setMinLength(minLength);
           }
 
-          if (
+          if (maxLength === 0 || maxLength === undefined) {
+            maxLength = 1000;
+          } else if (
             typeof maxLength !== "number" ||
             maxLength < minLength ||
             maxLength > 1000
@@ -1363,8 +1383,14 @@ module.exports = {
         let questionIndex = 0;
 
         config.closeButtonModal.questions.forEach((question) => {
-          let { label, placeholder, style, required, minLength, maxLength } =
-            question;
+          let {
+            label,
+            placeholder,
+            style,
+            required,
+            minLength,
+            maxLength = 0,
+          } = question;
 
           const modalQuestion = new TextInputBuilder()
             .setCustomId(`question${questionIndex + 1}`)
@@ -1377,7 +1403,9 @@ module.exports = {
             modalQuestion.setMinLength(minLength);
           }
 
-          if (
+          if (maxLength === 0 || maxLength === undefined) {
+            maxLength = 1000;
+          } else if (
             typeof maxLength !== "number" ||
             maxLength < minLength ||
             maxLength > 1000
