@@ -567,7 +567,12 @@ async function createTicket(
         }
       });
 
-    await mainDB.add("totalTickets", 1);
+    // Handle TICKETCOUNT increment: skip 1488 on servers with Discovery enabled
+    const incrementAmount =
+      TICKETCOUNT === 1487 && interaction.guild.features.includes("DISCOVERABLE")
+        ? 2
+        : 1;
+    await mainDB.add("totalTickets", incrementAmount);
   } catch (error) {
     console.error("Error creating ticket:", error);
     return null;
