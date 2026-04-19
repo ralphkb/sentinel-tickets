@@ -19,21 +19,21 @@
   "author": "ralphkb",
   "license": "MIT",
   "dependencies": {
-    "@discordjs/rest": "^2.6.0",
-    "better-sqlite3": "^12.6.2",
+    "@discordjs/rest": "^2.6.1",
+    "better-sqlite3": "^12.9.0",
     "discord-html-transcripts": "^3.2.0",
-    "discord.js": "^14.25.1",
-    "dotenv": "^17.2.3",
-    "moment-timezone": "^0.6.0",
+    "discord.js": "^14.26.3",
+    "dotenv": "^17.4.2",
+    "moment-timezone": "^0.6.1",
     "quick.db": "^9.1.7",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.3"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.3",
-    "@eslint/js": "^9.39.2",
-    "eslint": "^9.39.2",
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.0.0",
-    "prettier": "^3.8.0"
+    "globals": "^17.5.0",
+    "prettier": "^3.8.3"
   }
 }
