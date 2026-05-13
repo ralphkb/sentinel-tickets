@@ -264,6 +264,10 @@ commands:
   alert:
     enabled: true
     permission: "KickMembers"
+  remind:
+    enabled: true
+    permission: "KickMembers"
+    sendTicketMessage: false
   transcript:
     enabled: true
     permission: "KickMembers"
@@ -558,6 +562,7 @@ toggleLogs:
   ticketCreate: true
   ticketClose: true
   ticketAlert: true
+  ticketRemind: true
   ticketReopen: true
   ticketDelete: true
   ticketClaim: true
@@ -585,6 +590,7 @@ logs:
   ticketCreate: ""
   ticketClose: ""
   ticketAlert: ""
+  ticketRemind: ""
   ticketReopen: ""
   ticketDelete: ""
   ticketClaim: ""
@@ -885,6 +891,44 @@ logAlertEmbed:
   field_creator: "• Ticket Creator"
   field_ticket: "• Ticket"
   field_time: "• Time"
+
+# Remind command embed
+remindEmbed:
+  color: "#2FF200"
+  title: "Ticket Reminder"
+  description: "This is a friendly reminder regarding your open ticket. Please provide an update when you are available so we may assist you further." # You can use {user} for the name of the user who is being reminded
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for ticket reminders
+logRemindEmbed:
+  color: "#2FF200"
+  title: "Ticket Logs | Ticket Reminder"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Reminder Sent By"
+  field_user: "• Reminder Sent To"
+  field_creator: "• Ticket Creator"
+  field_ticket: "• Ticket"
 
 # User and role remove embed
 removeEmbed:
@@ -1865,6 +1909,24 @@ alertDMEmbed:
   color: "#FF0000"
   title: "Ticket Close Notification"
   description: "Your ticket **#{ticketName}** in **{server}** will be closed soon if no response has been received." # You can use {ticketName} for the name of the ticket, {server} for your server name & \n for a new line
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# The embed that gets sent in a user's DMs when a staff uses the remind command in their ticket
+remindDMEmbed:
+  enabled: true
+  color: "#2FF200"
+  title: "Ticket Reminder"
+  description: "This is a reminder that you have an active support ticket (**#{ticketName}**) in **{server}**. We are awaiting your response to proceed with your request. Please check the ticket for further details." # You can use {ticketName} for the name of the ticket, {server} for your server name & \n for a new line
   timestamp: false
   URL: ""
   image: ""

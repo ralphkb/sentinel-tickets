@@ -22,6 +22,7 @@ module.exports = {
             .setRequired(true)
             .addChoices(
               { name: "Alert", value: "alert" },
+              { name: "Remind", value: "remind" },
               { name: "Reopen", value: "reopen" },
               { name: "Close", value: "close" },
               { name: "Delete", value: "delete" },
