@@ -4,7 +4,6 @@
 [![GitHub release (latest)](https://img.shields.io/github/v/release/ralphkb/sentinel-tickets)](https://github.com/ralphkb/sentinel-tickets/releases/latest)
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ralphkb/sentinel-tickets/latest)](https://github.com/ralphkb/sentinel-tickets/commits/main/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/ralphkb/sentinel-tickets)](https://github.com/ralphkb/sentinel-tickets/commits/main/)
-[![Patreon Sponsor](https://img.shields.io/badge/Patreon-Donate-blue?logo=patreon)](https://patreon.com/ralphkb)
 
 ## Introduction
 This is a ticket bot that aims to provide a free and open source solution for managing tickets on Discord. The bot is designed to be lightweight, without any watermarks or unnecessary bloat. It allows users to create, track, and manage tickets seamlessly.
@@ -12,18 +11,20 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 ## Requirements
 - Tested on latest Node.js v22
 
-## Sponsor
-If you find value in this project, you can support the development by donating $3 on my Patreon! https://www.patreon.com/Ralphkb  
-Consider leaving a star, all support is welcome and really appreciated, thank you! ❤️ 
+## Sponsor & Commissions
+This is a free project that I enjoy working on in my free time. Our current sponsors are the primary reason for the latest feature additions. As more people sponsor the project, I will be able to justify dedicating more time to implementing features and fixing bugs. If you find value in this project or need specific enhancements, consider the following:
 
-## Patreon Sponsors
+- **Sponsorship**: Help support the project's growth by becoming a sponsor. Reach out via [Discord](https://discord.gg/vhXCzj9S3J) to discuss sponsorship opportunities.
+- **Custom Commissions**: If you want a custom feature tailored to your needs or require **priority work**, you can reach out via [Discord](https://discord.gg/vhXCzj9S3J) for a commission.
+- **Support with a Star**: Even if you can't contribute financially, leaving a star is greatly appreciated! ❤️
 
-<div style="display: flex; align-items: center;">
-  <div style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden; margin-right: 8px;">
-    <img src="https://github.com/mods-hd.png?size=32" width="32" height="32" alt="Mods HD" />
-  </div>
-  <a href="https://github.com/mods-hd">Mods HD</a> <span style="margin-left: 8px;">(Tier II)</span>
-</div>
+## Current Sponsors
+
+<p>
+  <a href="https://foryouhost.fr/">
+    <img src="./sponsors/foryouhost.png" alt="ForYouHost Logo" width="400">
+  </a>
+</p>
 
 ## Table of Contents
 - [🛠️ Installation](#installation)
@@ -53,9 +54,7 @@ Consider leaving a star, all support is welcome and really appreciated, thank yo
 
 ## Bug Reporting
 - For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
-This is a free project that I enjoy working on in my free time, I cannot guarantee support or updates however I will try my best to fix bugs, maintain the bot and possibly add new features. Thank you for your understanding. 😄  
-You can reach out via Discord or Email if you want to commission a custom feature for the bot tailored to your own needs or use-case.  
-Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support. Patreon members receive unique roles on the Discord.
+Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support.
 
 ## Features
 
