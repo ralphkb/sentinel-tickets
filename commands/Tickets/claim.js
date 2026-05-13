@@ -101,27 +101,29 @@ module.exports = {
       });
     }
 
-    let claimStatus = await ticketsDB.get(`${interaction.channel.id}.claimed`);
-    let claimUserID = await ticketsDB.get(
+    const claimStatus = await ticketsDB.get(`${interaction.channel.id}.claimed`);
+    const claimUserID = await ticketsDB.get(
       `${interaction.channel.id}.claimUser`,
     );
-    let claimUser;
-
-    if (claimUserID) {
-      claimUser = await getUser(claimUserID);
-    }
 
     if (claimStatus) {
-      await mainDB.delete(claimKey).catch((error) => {
-        console.error(
-          `Error deleting claim key for ticket #${interaction.channel.name}:`,
-          error,
-        );
-      });
-      return interaction.reply({
-        content: `This ticket has already been claimed by ${claimUser}`,
-        flags: MessageFlags.Ephemeral,
-      });
+      const isReassigning = optionUser && optionUser.id !== claimUserID;
+      if (!isReassigning) {
+        await mainDB.delete(claimKey).catch((error) => {
+          console.error(
+            `Error deleting claim key for ticket #${interaction.channel.name}:`,
+            error,
+          );
+        });
+        const claimUser = claimUserID ? await getUser(claimUserID) : "another user";
+        return interaction.reply({
+          content:
+            claimUserID === interaction.user.id
+              ? "You have already claimed this ticket!"
+              : `This ticket has already been claimed by ${claimUser}`,
+          flags: MessageFlags.Ephemeral,
+        });
+      }
     }
 
     if (

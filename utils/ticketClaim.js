@@ -12,11 +12,30 @@ const {
   sanitizeInput,
   logMessage,
   getChannel,
+  getUser,
 } = require("./mainUtils.js");
 
 async function claimTicket(interaction, targetUser, reason) {
   const staffUser = targetUser || interaction.user;
   const isAssignment = staffUser.id !== interaction.user.id;
+
+  const oldClaimUserID = await ticketsDB.get(
+    `${interaction.channel.id}.claimUser`,
+  );
+  const isReassignment = !!oldClaimUserID && oldClaimUserID !== staffUser.id;
+
+  if (isReassignment) {
+    try {
+      const oldStaffUser = await getUser(oldClaimUserID);
+      if (oldStaffUser) {
+        await interaction.channel.permissionOverwrites
+          .delete(oldStaffUser)
+          .catch(() => {});
+      }
+    } catch {
+      // Ignore if user not found
+    }
+  }
 
   const defaultValues = {
     color: "#2FF200",
@@ -71,7 +90,19 @@ async function claimTicket(interaction, targetUser, reason) {
         name: isAssignment ? "Assigned to" : "Claimed by",
         value: `> <@!${staffUser.id}> (${sanitizeInput(staffUser.tag)})`,
       };
-      embed.fields.push(claimedByField);
+
+      if (isReassignment) {
+        const fieldIndex = embed.fields.findIndex(
+          (f) => f.name === "Claimed by" || f.name === "Assigned to",
+        );
+        if (fieldIndex !== -1) {
+          embed.fields[fieldIndex] = claimedByField;
+        } else {
+          embed.fields.push(claimedByField);
+        }
+      } else {
+        embed.fields.push(claimedByField);
+      }
       let actionRow2 = new ActionRowBuilder();
 
       if (config.ticketOpenEmbed.useMenu) {
@@ -176,7 +207,9 @@ async function claimTicket(interaction, targetUser, reason) {
 
       await ticketsDB.set(`${interaction.channel.id}.claimed`, true);
       await ticketsDB.set(`${interaction.channel.id}.claimUser`, staffUser.id);
-      await mainDB.add("totalClaims", 1);
+      if (!isReassignment) {
+        await mainDB.add("totalClaims", 1);
+      }
       await mainDB
         .delete(`isClaimInProgress-${interaction.channel.id}`)
         .catch((error) => {
