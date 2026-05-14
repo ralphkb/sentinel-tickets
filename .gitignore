@@ -7,8 +7,9 @@ node_modules/
 # Environment variables
 .env
 
-# Config file
+# Config files
 config.yml
+locale.yml
 
 # Database directories
 data/

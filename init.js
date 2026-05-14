@@ -15,18 +15,73 @@ const client = new Client({
 });
 
 const configFile = fs.readFileSync("./config.yml", "utf8");
-globalThis.config = yaml.parse(configFile);
-
-let dbPath = "";
-if (config.dbPath === undefined) {
-  dbPath = path.join(__dirname, "data");
-} else if (config.dbPath?.includes("{root}")) {
-  dbPath = config.dbPath.replace("{root}", __dirname);
-} else {
-  dbPath = config.dbPath;
+let localeFile = "";
+try {
+  localeFile = fs.readFileSync("./locale.yml", "utf8");
+} catch {
+  console.log("No locale.yml found, proceeding with config.yml only.");
 }
 
-const dataDir = path.resolve(dbPath);
+function isObject(item) {
+  return item && typeof item === "object" && !Array.isArray(item);
+}
+
+function deepMerge(target, source) {
+  if (Array.isArray(target) && Array.isArray(source)) {
+    if (
+      target.length > 0 &&
+      isObject(target[0]) &&
+      target[0].id !== undefined
+    ) {
+      const result = [...target];
+      for (const sourceItem of source) {
+        if (!isObject(sourceItem) || sourceItem.id === undefined) {
+          result.push(sourceItem);
+          continue;
+        }
+        const targetIndex = result.findIndex((t) => t.id === sourceItem.id);
+        if (targetIndex !== -1) {
+          result[targetIndex] = deepMerge(result[targetIndex], sourceItem);
+        } else {
+          result.push(sourceItem);
+        }
+      }
+      return result;
+    }
+    return source;
+  }
+
+  if (isObject(target) && isObject(source)) {
+    const result = { ...target };
+    for (const key in source) {
+      if (isObject(source[key]) || Array.isArray(source[key])) {
+        if (key in target) {
+          result[key] = deepMerge(target[key], source[key]);
+        } else {
+          result[key] = source[key];
+        }
+      } else {
+        result[key] = source[key];
+      }
+    }
+    return result;
+  }
+
+  return source;
+}
+
+const configData = yaml.parse(configFile) || {};
+const localeData = (localeFile ? yaml.parse(localeFile) : {}) || {};
+
+globalThis.config = deepMerge(configData, localeData);
+
+if (config.dbPath === undefined) {
+  config.dbPath = path.join(__dirname, "data");
+} else if (config.dbPath?.includes("{root}")) {
+  config.dbPath = config.dbPath.replace("{root}", __dirname);
+}
+
+const dataDir = path.resolve(config.dbPath);
 console.log(`Using data directory: ${dataDir}`);
 
 if (!fs.existsSync(dataDir)) {
