@@ -1,0 +1,634 @@
+# ==============================================
+# Paramètres généraux du bot de tickets
+# ==============================================
+
+dbPath: "{root}/data" # Chemin de base pour le dossier de données, utilisez {root} pour le répertoire de travail actuel du bot.
+rolesThatCanBlacklist: ["111111111111111111"] # Les identifiants (ID) des rôles du personnel de votre serveur autorisés à blacklister et déblacklister des utilisateurs pour la création de tickets, par ex. ["000000000000000000", "111111111111111111"].
+rolesOnBlacklist: [] # Les ID des rôles que le bot attribuera aux utilisateurs blacklistés. Laissez vide pour désactiver cette fonctionnalité.
+blacklistCleanup: "120" # Le délai en secondes entre chaque vérification de nettoyage de la blacklist, pour retirer automatiquement les utilisateurs/rôles dont la sanction a expiré.
+transcriptType: "HTML" # Le format de la transcription, peut être "HTML" ou "TXT".
+transcriptName: "{channelName}-transcript" # Le nom du fichier de transcription généré. Utilisez {channelName} pour le nom du salon du ticket, {username} pour le pseudo du créateur du ticket et {displayName} pour son nom d'affichage. L'extension du fichier s'adaptera au type de transcription : .html pour HTML et .txt pour TXT.
+transcriptImages: false # Activer ou désactiver la sauvegarde des images dans les transcriptions HTML. Notez que cela augmentera la taille du fichier et le temps de génération.
+reOpenStaffOnly: false # Si activé, seuls les membres du personnel avec un rôle de support peuvent rouvrir un ticket.
+closeStaffOnly: true # Si activé, seuls les membres du personnel avec un rôle de support peuvent utiliser le bouton pour fermer un ticket.
+deleteStaffOnly: true # Si activé, seuls les membres du personnel avec un rôle de support peuvent utiliser le bouton de suppression. Il est recommandé de le laisser activé, sauf si vous comptez utiliser l'option de rôles autorisés (allowedRoles) lors de la configuration des boutons plus bas.
+commands_cooldown: "5" # Le temps de recharge (cooldown) des commandes, en secondes.
+buttons_cooldown: "5" # Le temps de recharge des boutons, en secondes.
+maxOpenTickets: "1" # Le nombre maximum de tickets qu'un utilisateur peut avoir ouverts simultanément.
+preventNewTicket: false # Vérifie si l'utilisateur possède déjà un ticket fermé avant d'en créer un nouveau. Ne l'activez que si cela correspond vraiment à vos besoins. L'activer sans permettre à l'utilisateur de rouvrir ou de voir son ticket fermé causera des problèmes. Cette fonctionnalité se désactivera automatiquement si maxOpenTickets n'est pas défini sur 1.
+silentStartup: false # Si activé, le bot évitera de polluer la console au démarrage avec des messages inutiles.
+deleteTicketTime: "5" # Le délai en secondes avant la suppression définitive d'un ticket.
+claimFeature: false # Activer ou désactiver le bouton/la fonctionnalité de prise en charge (claim).
+claimRename: false # Si activé, renomme le ticket en catégorie-UTILISATEUR lors de sa prise en charge, en utilisant le pseudo du membre du staff qui s'en occupe.
+claimRenameName: "{category}-{username}" # Le nouveau nom du ticket une fois pris en charge. Options : {category} pour la catégorie, {username} pour le pseudo du staff, {displayname} pour le nom d'affichage/surnom du staff.
+claim1on1: false # Si activé, lors de la prise en charge d'un ticket, seuls le créateur du ticket et le membre du staff l'ayant réclamé pourront y discuter.
+status:
+  botActivityText: "Tickets de support" # Le message d'activité du bot
+  botActivityType: "Watching" # Le type d'activité du bot ("Playing" = Joue à, "Streaming" = Diffuse, "Listening" = Écoute, "Watching" = Regarde, "Competing" = Participe à).
+  streamingOptionURL: "" # L'URL si vous utilisez l'option de streaming.
+  botStatus: "online" # Le statut du bot ("online" = en ligne, "idle" = inactif, "dnd" = ne pas déranger, "invisible"). Notez que le statut "Streaming" requiert le statut "online".
+alertReply:
+  enabled: false # Activer ou désactiver l'attente de la réponse du créateur du ticket pendant le délai spécifié ci-dessous, une fois l'alerte envoyée.
+  time: "300" # Le délai par défaut en secondes. Évitez les valeurs trop extrêmes.
+  autoAction: "none" # L'action automatique du bot si l'utilisateur ne répond pas dans le temps imparti. Peut être "close" (fermer) ou "delete" (supprimer). Mettez "none" pour désactiver l'automatisation.
+autoCloseTickets:
+  enabled: false # Activer ou désactiver la fermeture automatique des tickets
+  interval: "60" # L'intervalle en secondes de la tâche de fermeture automatique
+  time: "86400" # Le délai en secondes depuis le dernier message du ticket avant sa fermeture. Par ex., si défini sur 1 jour (en secondes), le ticket sera fermé si le dernier message date de plus de 24h. Le temps par défaut est de 1 jour.
+  ignoreBots: false # Ignorer les messages des bots lors de la vérification du dernier message d'un ticket
+autoDeleteTickets:
+  enabled: false # Activer ou désactiver la suppression automatique des tickets fermés
+  interval: "60" # L'intervalle en secondes de la tâche de suppression automatique
+  time: "86400" # Le délai en secondes depuis l'heure de fermeture du ticket avant sa suppression. Par ex., si défini sur 1 jour, le ticket sera supprimé s'il a été fermé il y a 24h sans avoir été rouvert. Le temps par défaut est de 1 jour.
+onUserLeave: "close" # L'action automatique du bot si un utilisateur quitte le serveur avec un ticket ouvert ("close", "delete" ou "none").
+addUsersBack: true # Si activé, le bot rajoutera l'utilisateur à ses tickets (ouverts ou fermés) s'il revient sur le serveur. Attention : cela redonnera les permissions "Voir le salon" et "Voir les anciens messages" s'il est réajouté à un ticket fermé.
+statsChannels:
+  enabled: false # Activer ou désactiver les salons de statistiques
+  interval: "600" # L'intervalle en secondes pour la mise à jour (minimum 600s/10min pour éviter les limites de l'API Discord).
+  channels:
+    - channelID: "111111111111111111" # L'ID du salon vocal qui sera renommé avec les statistiques
+      type: "totalTickets" # Le type de stat : totalTickets, openTickets, totalClaims, totalReviews, ratings, totalMessages, ticketCreators, avgTicketCreators, memberCount
+      name: "Total des Tickets : {stats}" # Le nom du salon. Utilisez {stats} pour afficher la valeur.
+    - channelID: "111111111111111111"
+      type: "openTickets"
+      name: "Tickets Ouverts : {stats}"
+    - channelID: "111111111111111111"
+      type: "ratings"
+      name: "Note Moyenne : {stats}/5.0"
+
+# ==============================================
+# Paramètres des catégories de tickets
+# ==============================================
+
+# La limite de Discord est de 25, bien qu'il soit conseillé de ne pas utiliser autant de types puisque chaque type utilise 2 catégories et la limite globale Discord est de 50 catégories.
+# Permissions possibles : ViewChannel, SendMessages, EmbedLinks, AttachFiles, ReadMessageHistory, ManageChannels...
+# NOTE : Le bot peut nécessiter la permission Administrateur selon la configuration. Si vous obtenez l'erreur "Missing Permissions", votre bot manque de droits.
+TicketCategories:
+  - id: 1 # ID unique pour chaque catégorie, UTILISEZ UNIQUEMENT DES NOMBRES
+    name: "signalement" # Nom de la catégorie (sera mis en minuscules)
+    nameEmoji: "⌛️" # Émoji du nom. Laissez "" pour ne pas en mettre.
+    categoryID: ["111111111111111111"] # Les ID des catégories où les tickets seront créés
+    closedCategoryID: ["111111111111111111"] # Les ID des catégories où iront les tickets fermés
+    support_role_ids: ["000000000000000000", "111111111111111111"] # Les rôles du staff pouvant accéder à cette catégorie
+    permissions: # N'ajoutez jamais la même permission dans 'allow' et 'deny'
+      ticketCreator:
+        open:
+          allow: [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ] # Permissions accordées au créateur dans un ticket ouvert
+          deny: [] # Permissions refusées au créateur dans un ticket ouvert
+        close:
+          allow: [] # Permissions accordées au créateur dans un ticket fermé
+          deny: ["SendMessages"] # Permissions refusées au créateur dans un ticket fermé
+      supportRoles:
+        open:
+          allow:
+            [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      addedRoles:
+        open:
+          allow:
+            [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      addedUsers:
+        open:
+          allow:
+            [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+    pingRoles: false # Activer ou désactiver la mention des rôles lors de l'ouverture
+    ping_role_ids: [] # Les ID des rôles à mentionner, ex. ["000000000000000000"]
+    ghostPingRoles: false # Activer le "ghost ping" (mention fantôme). Utilisez soit cette option, soit {support-roles} dans textContent. N'utilisez pas les deux.
+    textContent: "" # Le texte accompagnant l'embed. Utilisez {support-roles}, {user} et {user.tag}
+    creatorRoles: [] # Rôles pouvant créer des tickets ici. Laissez vide pour autoriser tout le monde.
+    buttonEmoji: "👮" # L'émoji du bouton
+    buttonLabel: "Signaler un membre" # Le nom du bouton
+    buttonStyle: "Success" # Options: "Primary" (bleu), "Secondary" (gris), "Success" (vert), "Danger" (rouge)
+    menuEmoji: "👮" # L'émoji de l'option du menu déroulant
+    menuLabel: "Signaler un membre" # Nom de l'option
+    menuDescription: "Cliquez ici pour signaler un utilisateur !"
+    embedTitle: "Ticket de Signalement" # Le titre de l'embed
+    color: "#FFD700" # La couleur de l'embed
+    description: "Bienvenue {user} ({user.tag}) dans votre ticket de signalement ! Veuillez patienter pendant qu'un membre du personnel traite votre demande."
+    ticketName: "category-ticketcount" # Format du nom du salon. Options : category-username, category-ticketcount, etc.
+    ticketTopic: "Créateur : {user} | Type de ticket : {type}" # Le sujet (topic) du salon
+    slowmode: "0" # Mode lent du ticket en secondes (0 pour désactiver)
+    useCodeBlocks: false # Utiliser des blocs de code pour afficher les réponses aux questions de la catégorie
+    modal: true # Afficher un formulaire (modal) avant l'ouverture du ticket
+    modalTitle: "Formulaire de Signalement" # Le titre du formulaire
+    questions: # Maximum 5 questions, gardez-en au moins 1.
+      - label: "Quel est votre pseudo ?"
+        placeholder: "Saisissez votre pseudo"
+        style: "Short" # Short (Court) ou Paragraph (Paragraphe)
+        required: true # Question obligatoire (true) ou non (false)
+        minLength: 3 # Nombre de caractères minimum
+      - label: "Pseudo du membre signalé ?"
+        placeholder: "Saisissez son pseudo"
+        style: "Short"
+        required: true
+        minLength: 3
+      - label: "Pourquoi le signalez-vous ?"
+        placeholder: "Expliquez en détail"
+        style: "Paragraph"
+        required: true
+        minLength: 50
+        maxLength: 1000 # Nombre de caractères maximum
+  - id: 2 # ID unique pour chaque catégorie
+    name: "autre"
+    nameEmoji: ""
+    categoryID: ["111111111111111111"]
+    closedCategoryID: ["111111111111111111"]
+    support_role_ids: ["000000000000000000"]
+    permissions:
+      ticketCreator:
+        open:
+          allow:
+            [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      supportRoles:
+        open:
+          allow:
+            [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      addedRoles:
+        open:
+          allow:
+            [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+      addedUsers:
+        open:
+          allow:
+            [
+              "ViewChannel",
+              "SendMessages",
+              "EmbedLinks",
+              "AttachFiles",
+              "ReadMessageHistory",
+            ]
+          deny: []
+        close:
+          allow: []
+          deny: ["SendMessages"]
+    pingRoles: true
+    ping_role_ids: ["000000000000000000"]
+    ghostPingRoles: false
+    textContent: "Merci de patienter pendant que le {support-roles} vérifie votre ticket !"
+    creatorRoles: []
+    buttonEmoji: "🤔"
+    buttonLabel: "Autre demande"
+    buttonStyle: "Primary"
+    menuEmoji: "🤔"
+    menuLabel: "Autre demande"
+    menuDescription: "Cliquez ici pour ouvrir un ticket divers !"
+    embedTitle: "Ticket Autre"
+    color: "#ADD8E6"
+    description: "Bienvenue {user} ({user.tag}) dans votre ticket ! Veuillez patienter pendant qu'un membre du personnel vous répond."
+    ticketName: "category-username"
+    ticketTopic: "Créateur : {user} | Type de ticket : {type}"
+    slowmode: "0"
+    useCodeBlocks: false
+    modal: true
+    modalTitle: "Formulaire de Ticket"
+    questions:
+      - label: "Quelle est votre question ?"
+        placeholder: "Saisissez votre question"
+        style: "Paragraph"
+        required: true
+        minLength: 10
+        maxLength: 1000
+
+# ==============================================
+# Paramètres du panel multi-tickets
+# ==============================================
+
+panels:
+  - id: 1 # ID unique
+    categories: ["1, 2"] # Les catégories du panel
+    maxButtonsPerRow: "5" # Nombre maximum de boutons par ligne
+    menuPlaceholder: "Sélectionnez une catégorie pour ouvrir un ticket."
+    panelEmbed:
+      color: "#2FF200"
+      title: "Tickets de Support"
+      description: "Pour créer un ticket, cliquez sur l'un des boutons ci-dessous en fonction de votre demande."
+      timestamp: true
+      URL: ""
+      image: ""
+      thumbnail: ""
+      footer:
+        text: "Sentinel Tickets"
+        iconURL: ""
+      author:
+        name: ""
+        iconURL: ""
+        url: ""
+
+# ==============================================
+# Paramètres de messages privés (MP)
+# ==============================================
+# Activer ou désactiver l'envoi d'un MP à l'utilisateur une fois son ticket supprimé.
+# Si les 3 options sont sur false, aucun MP ne sera envoyé.
+DMUserSettings:
+  embed: true # Envoyer un embed dans le MP
+  transcript: true # Envoyer la transcription dans le MP
+  ratingSystem:
+    enabled: false # Activer le système de notation (même si les 2 options ci-dessus sont désactivées)
+    menu:
+      emoji: "⭐"
+      placeholder: "Sélectionnez une note"
+    modal: true # Afficher un formulaire d'avis dans le MP
+    modalTitle: "Avis sur le ticket"
+    questions: # Maximum 5 questions, gardez-en au moins 1
+      - label: "Quel est votre retour d'expérience ?"
+        placeholder: "Rédigez votre avis ici."
+        style: "Paragraph"
+        required: true
+        minLength: 80
+        maxLength: 1000
+
+# ==============================================
+# Paramètres des commandes Slash
+# ==============================================
+
+# Vous pouvez désactiver une commande en réglant enabled sur false.
+commands:
+  add:
+    enabled: true
+    permission: "KickMembers"
+    pingUser: false # Mentionner le nouvel utilisateur ajouté
+  alert:
+    enabled: true
+    permission: "KickMembers"
+  remind:
+    enabled: true
+    permission: "KickMembers"
+    sendTicketMessage: false
+  transcript:
+    enabled: true
+    permission: "KickMembers"
+  claim:
+    enabled: true
+    permission: "KickMembers"
+    assignPermission: "ManageMessages"
+  unclaim:
+    enabled: true
+    permission: "KickMembers"
+    assignPermission: "ManageMessages"
+  move:
+    enabled: true
+    permission: "KickMembers"
+    updateTopic: true
+  transfer:
+    enabled: true
+    permission: "KickMembers"
+    pingUser: false # Mentionner le nouveau créateur du ticket
+    updateTopic: true # Mettre à jour le sujet du salon
+  pin:
+    enabled: true
+    permission: "KickMembers"
+    emoji: "📌"
+    alreadyPinned: "Ce ticket est déjà épinglé !"
+  priority:
+    enabled: true
+    permission: "KickMembers"
+    emojis:
+      low: "🟢"
+      medium: "🟡"
+      high: "🔴"
+    alreadyPriority: "Ce ticket a déjà une priorité assignée !"
+    notPriority: "Aucune priorité n'est assignée à ce ticket !"
+  slowmode:
+    enabled: true
+    permission: "KickMembers"
+    alreadySlowmode: "Ce salon de ticket a déjà ce mode lent."
+    slowmodeRemoved: "Le mode lent a été retiré de ce ticket."
+  close:
+    enabled: true
+    permission: "KickMembers"
+  closerequest:
+    enabled: true
+    permission: "ViewChannel"
+    pingRoles: false # Mentionner les rôles de support de la catégorie.
+  reopen:
+    enabled: true
+    permission: "KickMembers"
+  delete:
+    enabled: true
+    permission: "KickMembers"
+  panel:
+    enabled: true
+    permission: "ManageChannels"
+    support_role_ids: [] # ID des rôles pouvant utiliser la commande panel. Laissez vide pour ne pas exiger de rôle.
+  remove:
+    enabled: true
+    permission: "KickMembers"
+  rename:
+    enabled: true
+    permission: "KickMembers"
+  topic:
+    enabled: true
+    permission: "KickMembers"
+  blacklist:
+    enabled: true
+    permission: "KickMembers"
+    userOrRoleError: "Veuillez fournir soit un utilisateur, soit un rôle, mais pas les deux ou aucun."
+    wrongDuration: "Format de durée invalide. Utilisez : 1s 1m 1h 1d 1w (ex: 5s, 10m, 2h, 3d, 4w)"
+    validPage: "Veuillez fournir un numéro de page valide (supérieur ou égal à 1)."
+    blacklistEmpty: "La blacklist est actuellement vide !"
+    blacklistEmptyType: "La blacklist pour le type {type} est actuellement vide !" # Utilisez {type} pour le type de blacklist (utilisateur ou rôle)
+    pageError: "La page spécifiée n'existe pas. Choisissez une page entre 1 et {maxPage}."
+  unblacklist:
+    enabled: true
+    permission: "KickMembers"
+  ping:
+    enabled: true
+    permission: "KickMembers"
+  stats:
+    enabled: true
+    permission: "KickMembers"
+    support_role_ids: [] # ID des rôles admin pouvant utiliser la sous-commande stats set. Laissez vide pour bloquer la modification des stats.
+  help:
+    enabled: true
+    permission: "KickMembers"
+  preference:
+    enabled: false
+    permission: "ViewChannel"
+    defaultDM: true # Valeur par défaut de la préférence
+  tickets:
+    enabled: true
+    permission: "ViewChannel"
+    support_role_ids: [] # Rôles pouvant voir la liste des tickets d'autres utilisateurs.
+  userInfo:
+    enabled: true
+    permission: "KickMembers"
+
+contextMenuCommands:
+  userInfo:
+    enabled: true
+    permission: "KickMembers"
+  blacklistAdd:
+    enabled: true
+    permission: "KickMembers"
+  blacklistRemove:
+    enabled: true
+    permission: "KickMembers"
+  ticketAlert:
+    enabled: true
+    permission: "KickMembers"
+  ticketPin:
+    enabled: true
+    permission: "KickMembers"
+  ticketTranscript:
+    enabled: true
+    permission: "KickMembers"
+  ticketsList: # Partage le même tableau support_role_ids que la commande slash ci-dessus.
+    enabled: true
+    permission: "ViewChannel"
+  ticketCloseRequest:
+    enabled: true
+    permission: "ViewChannel"
+  ticketClaim:
+    enabled: true
+    permission: "KickMembers"
+  ticketUnclaim:
+    enabled: true
+    permission: "KickMembers"
+
+# ==============================================
+# Paramètres des boutons généraux
+# ==============================================
+# Si vous utilisez les options allowedRoles ici, il vaut mieux désactiver reOpenStaffOnly, closeStaffOnly & deleteStaffOnly en haut du fichier.
+closeButton:
+  label: "Fermer" # Nom du bouton
+  emoji: "🔒" # Émoji du bouton
+  style: "Danger" # Options : Primary, Secondary, Success, Danger. Ne pas utiliser Link.
+  allowedRoles: [] # Rôles autorisés. Laissez vide pour ne pas exiger de rôle.
+
+reOpenButton:
+  label: "Rouvrir"
+  emoji: "🔓"
+  style: "Success"
+  allowedRoles: []
+
+transcriptButton:
+  label: "Transcription"
+  emoji: "📝"
+  style: "Primary"
+
+deleteButton:
+  label: "Supprimer"
+  emoji: "⛔"
+  style: "Danger"
+  allowedRoles: []
+
+claimButton:
+  label: "Prendre en charge"
+  emoji: "👋"
+  style: "Success"
+
+unclaimButton:
+  label: "Relâcher"
+  emoji: "👋"
+  style: "Danger"
+
+newTicketButton:
+  label: "Cliquez ici"
+  emoji: "🎫"
+
+closeRequestButton:
+  label: "Accepter & Fermer"
+  emoji: "✅"
+  style: "Success"
+
+closeButtonModal:
+  enabled: false # Afficher un formulaire lors du clic sur fermer (pour demander la raison).
+  modalTitle: "Fermeture du ticket"
+  questions:
+    - label: "Raison de la fermeture du ticket ?"
+      placeholder: "Rédigez votre raison ici."
+      style: "Paragraph"
+      required: true
+      minLength: 1
+      maxLength: 1000
+
+deleteButtonModal:
+  enabled: false # Afficher un formulaire lors du clic sur supprimer (pour demander la raison).
+  modalTitle: "Suppression du ticket"
+  questions:
+    - label: "Raison de la suppression du ticket ?"
+      placeholder: "Rédigez votre raison ici."
+      style: "Paragraph"
+      required: true
+      minLength: 1
+      maxLength: 1000
+
+# ==============================================
+# Paramètres des horaires d'ouverture
+# ==============================================
+
+# Note : si le système d'horaires ne fonctionne pas, c'est sûrement à cause d'une mauvaise configuration des heures min et max.
+workingHours:
+  enabled: false # Activer les horaires d'ouverture
+  timezone: "Europe/Paris" # Fuseau horaire
+  bypassRoles: [] # Rôles pouvant contourner la restriction de création de tickets
+  default: # Horaires par défaut pour tout jour non spécifié ci-dessous
+    min: "09:00"
+    max: "17:00"
+    blockTicketCreation: true
+  days:
+    - day: "monday" # Options : "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
+      min: "09:00" # Heure minimum (format HH:MM, ex: 00:59, 05:00)
+      max: "17:00" # Heure maximum (format HH:MM, ex: 00:59, 17:00)
+      blockTicketCreation: true # Bloquer la création de tickets en dehors des horaires
+    - day: "tuesday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "wednesday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "thursday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "friday"
+      min: "09:00"
+      max: "17:00"
+      blockTicketCreation: true
+    - day: "saturday"
+      min: "09:00"
+      max: "12:00"
+      blockTicketCreation: true
+    - day: "sunday"
+      min: "09:00"
+      max: "12:00"
+      blockTicketCreation: true
+  outsideWarning: true # Afficher un avertissement si un ticket est créé hors des heures d'ouverture
+  addField: true # Ajouter le champ "Horaires d'ouverture" à l'embed de création de ticket
+  fieldTitle: "Horaires d'ouverture" # Titre du champ
+  valueDays: "TODAY" # "TODAY" (afficher les horaires du jour) ou "ALL" (afficher tous les jours)
+  fieldValue: "> {day} : de {openingTime} à {closingTime}" # Valeur affichée
+
+# ==============================================
+# Salons de logs
+# ==============================================
+
+# Activez ou désactivez certains logs ici. Par défaut, tous sont activés.
+toggleLogs:
+  userAdd: true
+  userRemove: true
+  userLeft: true
+  ticketCreate: true
+  ticketClose: true
+  ticketAlert: true
+  ticketRemind: true
+  ticketReopen: true
+  ticketDelete: true
+  ticketClaim: true
+  ticketUnclaim: true
+  ticketMove: true
+  ticketRename: true
+  ticketTopic: true
+  ticketTransfer: true
+  ticketPin: true
+  ticketSlowmode: true
+  ticketPriority: true
+  ticketFeedback: true
+  DMErrors: true
+  blacklistAdd: true
+  blacklistRemove: true
+
+# Configurer les salons où le bot enverra les logs. Assurez-vous de configurer au moins le salon par défaut.
+# En laissant une valeur vide "", le bot utilisera le salon par défaut.
+logs:
+  default: "111111111111111111" # ID du salon de logs par défaut
+  transcripts: "111111111111111111" # ID du salon pour les transcriptions manuelles
+  userAdd: ""
+  userRemove: ""
+  userLeft: ""
+  ticketCreate: ""
+  ticketClose: ""
+  ticketAlert: ""
+  ticketRemind: ""
+  ticketReopen: ""
+  ticketDelete: ""
+  ticketClaim: ""
+  ticketUnclaim: ""
+  ticketMove: ""
+  ticketRename: ""
+  ticketTopic: ""
+  ticketTransfer: ""
+  ticketPin: ""
+  ticketSlowmode: ""
+  ticketPriority: ""
+  ticketFeedback: ""
+  DMErrors: ""
+  blacklistAdd: ""
+  blacklistRemove: ""
+
+# ==============================================
+# Paramètres du salon Logs.txt
+# ==============================================
+
+# Pour ceux qui hébergent le bot dans un environnement sans accès en écriture à un fichier logs.txt.
+# Activer cette option forcera le bot à envoyer les erreurs dans un salon Discord.
+# Assurez-vous que l'ID du salon est privé et sécurisé.
+logsFileToChannel: false # False par défaut, ne l'activez que si nécessaire
+logsFileChannelID: ""

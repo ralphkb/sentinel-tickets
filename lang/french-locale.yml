@@ -1,0 +1,1599 @@
+# ==============================================
+# Textes des Embeds (Locale)
+# ==============================================
+
+# NOTE : Vous pouvez laisser une chaîne vide "" pour ne pas utiliser une option.
+# Si vous supprimez entièrement une option, le bot tentera d'utiliser une valeur par défaut.
+# L'embed envoyé quand la création de ticket est bloquée hors horaires d'ouverture
+workingHoursEmbed:
+  color: "#FF0000"
+  title: "Horaires d'ouverture"
+  description: "Les tickets ne sont ouverts qu'entre {openingTime} et {closingTime}.\nIl est actuellement {now}."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# L'embed envoyé quand un ticket est créé hors horaires d'ouverture
+outsideWorkingHoursEmbed:
+  color: "#FF0000"
+  title: "En dehors des horaires d'ouverture"
+  description: "Vous avez créé un ticket en dehors de nos horaires d'ouverture. Veuillez noter que notre temps de réponse peut être allongé.\nNos horaires d'ouverture aujourd'hui sont de {openingTime} à {closingTime}."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Embed envoyé à la création d'un ticket avec les questions incluses
+ticketOpenEmbed:
+  title: "" # Laissez vide pour utiliser le champ author comme titre
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  useMenu: false # Utiliser un menu déroulant au lieu des boutons
+  menuPlaceholder: "Sélectionnez une option" # Placeholder du menu
+  closeDescription: "Fermer ce ticket."
+  claimDescription: "Prendre en charge ce ticket."
+  unclaimDescription: "Relâcher ce ticket."
+
+# Embed de log pour les tickets nouvellement créés
+logTicketOpenEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Ticket Créé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_creator: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_creation: "• Heure de création"
+
+# Embed redirigeant l'utilisateur vers son nouveau ticket
+newTicketEmbed:
+  color: "#2FF200"
+  title: "Ticket Créé !"
+  description: "Votre nouveau ticket ({channel}) a été créé, **{user}** !"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Embed lorsque la commande blacklist échoue
+blacklistFailedEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** est déjà sur la blacklist."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Embed lorsque la commande blacklist réussit
+blacklistSuccessEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** a été ajouté à la blacklist.\nRaison : **{reason}**\nDurée : **{duration}**"
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Embed de log pour la blacklist
+logBlacklistEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Cible Blacklistée"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_target: "• Cible"
+  field_reason: "• Raison"
+  field_duration: "• Durée"
+
+# Embed lorsque la commande unblacklist échoue
+unblacklistFailedEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** n'est pas sur la blacklist."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Embed lorsque la commande unblacklist réussit
+unblacklistSuccessEmbed:
+  color: "#2FF200"
+  title: ""
+  description: "**{target} ({target.tag})** a été retiré de la blacklist.\nRaison : **{reason}**"
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Embed de log pour unblacklist
+logUnblacklistEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Cible Déblacklistée"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_target: "• Cible"
+  field_reason: "• Raison"
+
+# Liste de la blacklist
+blacklistListEmbed:
+  color: "#2FF200"
+  title: "{type} Blacklistés - Page {page}"
+  #  description: ""
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Commande Add (Ajout au ticket)
+addEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: ""
+  description: "A ajouté **{target} ({target.tag})** au ticket.\nRaison : **{reason}**"
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log pour la commande Add
+logAddEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Cible Ajoutée"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_target: "• Cible"
+  field_ticket: "• Ticket"
+  field_reason: "• Raison"
+
+# Embed de réponse d'alerte (si alertReply activé)
+alertReplyEmbed:
+  color: "#2FF200"
+  title: "Notification de réponse à l'alerte"
+  description: "L'utilisateur a répondu à l'alerte et semble être disponible."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Commande d'alerte
+alertEmbed:
+  color: "#2FF200"
+  title: "Notification de fermeture de ticket"
+  description: "Ce ticket sera fermé prochainement si aucune réponse n'est reçue."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log pour l'alerte
+logAlertEmbed:
+  color: "#FF2400"
+  title: "Logs Ticket | Alerte de Ticket"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Alerte envoyée par"
+  field_user: "• Alerte envoyée à"
+  field_creator: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_time: "• Heure"
+
+# Commande de rappel (remind)
+remindEmbed:
+  color: "#2FF200"
+  title: "Rappel de Ticket"
+  description: "Ceci est un rappel amical concernant votre ticket ouvert. Merci de nous fournir une mise à jour dès que vous êtes disponible afin que nous puissions vous assister."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log pour les rappels
+logRemindEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Rappel de Ticket"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Rappel envoyé par"
+  field_user: "• Rappel envoyé à"
+  field_creator: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+
+# Commande Remove (Retirer du ticket)
+removeEmbed:
+  ephemeral: false
+  color: "#FF0000"
+  title: ""
+  description: "A retiré **{target} ({target.tag})** du ticket.\nRaison : **{reason}**"
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log pour la commande Remove
+logRemoveEmbed:
+  color: "#FF0000"
+  title: "Logs Ticket | Cible Retirée"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_target: "• Cible"
+  field_ticket: "• Ticket"
+  field_reason: "• Raison"
+
+# Embed quand l'utilisateur quitte le serveur
+userLeftEmbed:
+  color: "#FF0000"
+  title: "Utilisateur parti du serveur"
+  description: "L'utilisateur **{user}** a quitté le serveur."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log quand l'utilisateur quitte
+logUserLeftEmbed:
+  color: "#FF0000"
+  title: "Logs Ticket | Utilisateur Parti"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_user: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_creation: "• Heure de création"
+  field_action: "• Action automatisée"
+  field_claimedBy: "• Pris en charge par"
+
+# Commande Move
+moveEmbed:
+  ephemeral: false
+  color: "2FF200"
+  title: ""
+  description: "A déplacé ce ticket vers la catégorie **{category}**."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log pour la commande Move
+logMoveEmbed:
+  color: "2FF200"
+  title: "Logs Ticket | Ticket Déplacé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+  field_category: "• Catégorie"
+
+# Commande Pin (Épingler)
+pinEmbed:
+  ephemeral: false
+  color: "2FF200"
+  title: ""
+  description: "Ce ticket a été épinglé."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log pour la commande Pin
+logPinEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Ticket Épinglé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+
+# Commande d'ajout de priorité
+priorityAddEmbed:
+  ephemeral: false
+  color: "2FF200"
+  title: ""
+  description: "La priorité de ce ticket a été définie sur **{priority}**.\nRaison : **{reason}**"
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log de priorité ajoutée
+logPriorityAddEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Priorité de Ticket Ajoutée"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+  field_priority: "• Priorité"
+  field_reason: "• Raison"
+
+# Commande de retrait de priorité
+priorityRemoveEmbed:
+  ephemeral: false
+  color: "FF2400"
+  title: ""
+  description: "La priorité de ce ticket a été retirée."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log de priorité retirée
+logPriorityRemoveEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Priorité de Ticket Retirée"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+
+# Commande Rename
+renameEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: ""
+  description: "Ce ticket a été renommé en **{name}** !"
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log Rename
+logRenameEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Ticket Renommé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_oldname: "• Ancien nom du ticket"
+  field_newname: "• Nouveau nom du ticket"
+
+# Commande Topic
+topicEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: ""
+  description: "Le sujet de ce ticket a été changé en **{topic}**"
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log Topic
+logTopicEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Sujet du Ticket Modifié"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_oldtopic: "• Ancien sujet du ticket"
+  field_newtopic: "• Nouveau sujet du ticket"
+
+# Commande Slowmode
+slowmodeEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: ""
+  description: "Un mode lent de **{time}** a été ajouté à ce ticket."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log Slowmode
+logSlowmodeEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Mode Lent du Ticket"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+  field_slowmode: "• Mode lent"
+
+# Commande Transfer (Transfert de ticket)
+transferEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: ""
+  description: "La propriété de ce ticket a été transférée à **{user} ({user.tag})**."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log Transfer
+logTransferEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Créateur Transféré"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+  field_transfer: "• Détails du transfert"
+
+# Ticket pris en charge (Claim)
+claimedEmbed:
+  color: "#2FF200"
+  title: "Ticket Pris en Charge"
+  description: "Ce ticket a été pris en charge par {user}.\nUn membre de l'équipe va vous assister très bientôt !"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Ticket assigné
+assignedEmbed:
+  color: "#2FF200"
+  title: "Ticket Assigné"
+  description: "Ce ticket a été assigné à {user}.\nRaison : **{reason}**\n\nUn membre de l'équipe va vous assister très bientôt !"
+  timestamp: true
+
+# Log Claim
+logClaimedEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Ticket Pris en Charge"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+
+# Log Assigné
+logAssignedEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Ticket Assigné"
+  description: ""
+  timestamp: true
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+  field_assigner: "• Assigné par"
+  field_reason: "• Raison"
+
+# Ticket relâché (Unclaim)
+unclaimedEmbed:
+  color: "#FF2400"
+  title: "Ticket Relâché"
+  description: "Ce ticket n'est plus pris en charge par {user}."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Ticket relâché de force
+unclaimedForcedEmbed:
+  color: "#FF2400"
+  title: "Ticket Relâché (Forcé)"
+  description: "La prise en charge de {user} a été annulée par {unclaimer}.\nRaison : **{reason}**"
+  timestamp: true
+
+# Log Unclaim
+logUnclaimedEmbed:
+  color: "#FF2400"
+  title: "Logs Ticket | Ticket Relâché"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+
+# Ticket fermé
+closeEmbed:
+  color: "#FF2400"
+  title: "Ticket Fermé"
+  description: "Ce ticket a été fermé par **{user} ({user.tag})**\nRaison : **{reason}**"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  reOpenButton: true
+  transcriptButton: true
+  deleteButton: true
+  useMenu: false
+  menuPlaceholder: "Sélectionnez une option"
+  reopenDescription: "Rouvrir ce ticket."
+  transcriptDescription: "Générer une transcription de ce ticket."
+  deleteDescription: "Supprimer ce ticket."
+
+# Fermeture automatique
+autoCloseEmbed:
+  color: "#FF2400"
+  title: "Ticket Automatiquement Fermé"
+  description: "Ce ticket a été automatiquement fermé par **{user} ({user.tag})**"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log Fermeture
+logCloseEmbed:
+  color: "#FF2400"
+  title: "Logs Ticket | Ticket Fermé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Fermé par"
+  field_user: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_reason: "• Raison"
+  field_claimedBy: "Pris en charge par"
+
+# Log Fermeture Auto
+logAutoCloseEmbed:
+  color: "#FF2400"
+  title: "Logs Ticket | Ticket Fermé Auto"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Auto-Fermé par"
+  field_user: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_claimedBy: "Pris en charge par"
+
+# Demande de fermeture
+closeRequestEmbed:
+  color: "#FF2400"
+  title: "Demande de Fermeture de Ticket"
+  description: "**{user} ({user.tag})** a demandé la fermeture de son ticket.\nRaison : **{reason}**"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Ticket rouvert
+reopenEmbed:
+  color: "#2FF200"
+  title: "Ticket Rouvert"
+  description: "Ce ticket a été rouvert par **{user} ({user.tag})**"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log Rouvert
+logReopenEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Ticket Rouvert"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Rouvert par"
+  field_user: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+
+# Ticket supprimé
+deleteEmbed:
+  color: "#FF0000"
+  title: ""
+  description: "Suppression du ticket dans {time} secondes"
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Ticket supprimé automatiquement
+autoDeleteEmbed:
+  color: "#FF0000"
+  title: ""
+  description: "Suppression automatique du ticket dans {time} secondes"
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log Suppression
+logDeleteEmbed:
+  color: "#FF0000"
+  title: "Logs Ticket | Ticket Supprimé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Supprimé par"
+  field_user: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_creation: "• Heure de création"
+  field_reason: "• Raison"
+  field_closedAt: "Fermé à"
+  field_claimedBy: "Pris en charge par"
+
+# Log Suppression Automatique
+logAutoDeleteEmbed:
+  color: "#FF0000"
+  title: "Logs Ticket | Ticket Auto-Supprimé"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Auto-Supprimé par"
+  field_user: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_creation: "• Heure de création"
+  field_closedAt: "Fermé à"
+  field_claimedBy: "Pris en charge par"
+
+# Embed pour les transcriptions manuelles
+transcriptEmbed:
+  color: "#2FF200"
+  title: "Transcription du Ticket"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_creator: "Créateur du ticket"
+  field_ticket: "Nom du ticket"
+  field_category: "Catégorie"
+  field_creation: "Heure de création"
+
+# Réponse lors de la génération d'une transcription manuelle
+transcriptReplyEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "Transcription Sauvegardée"
+  description: "Une transcription a été sauvegardée par {user} ({user.tag}) dans le salon {channel}"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Commande de liste des statistiques
+statsEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: "📊 Statistiques"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_tickets: "🎫 Tickets"
+  field_reviews: "⭐ Avis"
+  field_server: "🏢 Serveur"
+  field_bot: "🤖 Bot"
+
+# Commande de modification des statistiques
+statsSetEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "📊 Modification des Statistiques"
+  description: "La statistique `{stat}` a été modifiée à `{value}` par **{user}** ({user.tag})"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Commande Ping
+pingEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: "Ping & Latence"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Commande Informations Utilisateur
+userInfoEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "Informations Utilisateur"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_info: "Informations"
+  field_avatar: "Avatar"
+  field_roles: "Rôles"
+  field_createdAt: "Créé le"
+  field_joinedAt: "Rejoint le"
+
+# Commande Help (Aide)
+helpEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "Aide"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Commande Préférence (DM)
+preferenceEmbed:
+  color: "#2FF200"
+  title: "Préférences Utilisateur"
+  description: "Vous allez maintenant {result} recevoir de messages privés pour **{action}**."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Commande Liste des Tickets
+ticketsEmbed:
+  ephemeral: true
+  color: "#2FF200"
+  title: "Tickets actuels de {user}"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_openTickets: "Liste des Tickets Ouverts Actuellement"
+  field_closedTickets: "Liste des Tickets Fermés Actuellement"
+
+# Embed prévention nouveau ticket
+preventNewTicketEmbed:
+  color: "#FF0000"
+  title: "Un ticket fermé existe déjà"
+  description: "Votre ticket {ticket} est toujours archivé dans la catégorie des tickets fermés, n'hésitez pas à le rouvrir."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# ==============================================
+# Textes des Embeds en Messages Privés (MP)
+# ==============================================
+
+# Embed envoyé en MP si le ticket est supprimé
+deleteDMEmbed:
+  color: "#2FF200"
+  title: "Ticket Supprimé"
+  description: "Votre ticket de support a été supprimé. Voici votre transcription ainsi que quelques informations supplémentaires."
+  timestamp: false
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_server: "Serveur"
+  field_ticket: "Ticket"
+  field_category: "Catégorie"
+  field_author: "Auteur du ticket"
+  field_deletedBy: "Supprimé par"
+  field_claimedBy: "Pris en charge par"
+  field_creation: "Heure de création du ticket"
+  field_closedAt: "Fermé à"
+
+# Système d'avis et de notation envoyé en MP
+ratingDMEmbed:
+  color: "#2FF200"
+  title: "Avis & Évaluation du Ticket"
+  description: "Nous accordons beaucoup d'importance à votre avis ! Prenez un instant pour partager vos impressions et évaluer notre service d'assistance. Vous pouvez attribuer une note entre 1 et 5 étoiles grâce au menu déroulant ci-dessous. Merci de nous aider à nous améliorer."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  # Le footer n'est pas disponible pour cet embed spécifique.
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log Ticket relâché de force
+logUnclaimedForcedEmbed:
+  color: "#FF2400"
+  title: "Logs Ticket | Ticket Relâché (Forcé)"
+  description: ""
+  timestamp: true
+  field_staff: "• Membre du staff"
+  field_ticket: "• Ticket"
+  field_unclaimer: "• Relâché par"
+  field_reason: "• Raison"
+
+# Log Évaluation
+logRatingEmbed:
+  color: "#2FF200"
+  title: "Logs Ticket | Évaluation du Ticket"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_creator: "• Créateur du ticket"
+  field_ticket: "• Ticket"
+  field_rating: "• Note du ticket"
+
+# MP pour la commande Alerte
+alertDMEmbed:
+  enabled: false
+  color: "#FF0000"
+  title: "Notification de Fermeture de Ticket"
+  description: "Votre ticket **#{ticketName}** sur le serveur **{server}** sera bientôt fermé si nous ne recevons aucune réponse."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# MP pour la commande Rappel (Remind)
+remindDMEmbed:
+  enabled: true
+  color: "#2FF200"
+  title: "Rappel de Ticket"
+  description: "Ceci est un rappel vous informant que vous avez un ticket de support actif (**#{ticketName}**) sur le serveur **{server}**. Nous attendons votre réponse pour pouvoir traiter votre demande. Veuillez consulter le ticket pour plus de détails."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# MP de fermeture
+closeDMEmbed:
+  enabled: false
+  color: "#FF0000"
+  title: "Ticket Fermé"
+  description: "Votre ticket **#{ticketName}** a été fermé par {user} sur le serveur **{server}**."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# MP de réouverture
+reopenDMEmbed:
+  enabled: false
+  color: "#2FF200"
+  title: "Ticket Rouvert"
+  description: "Votre ticket **#{ticketName}** a été rouvert par {user} sur le serveur **{server}**."
+  timestamp: false
+  URL: ""
+  image: ""
+  thumbnail: ""
+  footer:
+    text: ""
+    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Erreur d'envoi de MP
+dmErrorEmbed:
+  pingUser: false # Mentionner l'utilisateur
+  color: "#FF0000"
+  title: "Messages Privés Désactivés"
+  description: "Le bot n'a pas pu envoyer de MP à **{user} ({user.tag})** car ses messages privés étaient fermés.\nVeuillez activer `Autoriser les messages directs` pour ce serveur afin de recevoir les communications du bot !\n\nPour obtenir de l'aide, veuillez consulter [cet article](https://support.discord.com/hc/fr/articles/217916488-Param%C3%A8tres-de-confidentialit%C3%A9-et-de-blocage)."
+  timestamp: true
+  URL: ""
+  image: ""
+  #  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# ==============================================
+# Textes Divers (Locale)
+# ==============================================
+
+errors:
+  not_in_a_ticket: "Vous n'êtes pas dans un salon de ticket !"
+  not_allowed: "Vous n'êtes pas autorisé à utiliser ceci !"
+  command_error: "Une erreur est survenue lors de l'exécution de cette commande !"
+
+cooldownEmbed:
+  color: "#FF0000"
+  title: "Temps de recharge"
+  description: "Vous devez attendre **{time}** secondes avant de pouvoir cliquer à nouveau sur ce bouton !"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+commandCooldownEmbed:
+  color: "#FF0000"
+  title: "Temps de recharge de la commande"
+  description: "Veuillez patienter, la commande `{command}` est en cours de recharge.\nVous pourrez l'utiliser à nouveau dans {time}."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+maxOpenTicketsEmbed:
+  color: "#FF0000"
+  title: "Nombre maximum de tickets atteints"
+  description: "Vous ne pouvez avoir que **{max} ticket(s)** ouvert(s) simultanément."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+blacklistedEmbed:
+  color: "#FF0000"
+  title: "Blacklisté"
+  description: "Vous êtes actuellement banni de la création de tickets (blacklisté).\nExpire : **{time}**\nRaison : **{reason}**\nType : **{type}**"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+categoryNotAllowedEmbed:
+  color: "#FF0000"
+  title: "Non Autorisé"
+  description: "Vous n'êtes pas autorisé à créer des tickets dans cette catégorie."
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# ==============================================
+# Paramètres des Réponses Automatiques
+# ==============================================
+
+# Vous pouvez ajouter autant de déclencheurs (triggers) que vous le souhaitez, ils seront testés dans l'ordre
+# Pour chaque déclencheur, le bot vérifiera si le message remplit la condition
+# Si le message correspond, le bot enverra une réponse
+
+# La condition peut être l'une des suivantes :
+# - startswith: Le message commence par le texte spécifié (insensible à la casse)
+# - exact: Le message correspond exactement au texte spécifié (insensible à la casse)
+# - endswith: Le message se termine par le texte spécifié (insensible à la casse)
+# - contains: Le message contient le texte spécifié (insensible à la casse)
+# - strict: Le message correspond exactement au texte spécifié (sensible à la casse)
+
+# Le paramètre séparateur (separator) est utilisé pour mettre en forme le texte détecté dans la réponse.
+# Il permet de mettre en surbrillance le mot ou l'expression détecté(e).
+# Options recommandées :
+# - "`" pour le code en ligne
+# - "**" pour le texte en gras
+# - "*" pour le texte en italique
+
+# L'option ignoreMembers est un tableau d'ID d'utilisateurs à ignorer.
+# Le bot n'enverra aucune réponse automatique à ces utilisateurs.
+
+# L'option ignoreRoles est un tableau d'ID de rôles à ignorer.
+# Le bot n'enverra pas de réponse aux utilisateurs possédant l'un de ces rôles. Laissez vide pour désactiver.
+
+# L'option requiredRoles est un tableau d'ID de rôles requis pour déclencher la réponse.
+# Si l'utilisateur ne possède pas au moins l'un des rôles listés, le bot ne répondra pas. Laissez vide pour désactiver.
+
+autoResponses:
+  enabled: false # False par défaut, mettez sur true pour activer les réponses automatiques
+  triggers:
+    - condition: contains
+      contains:
+        - "aide"
+        - "support"
+        - "assistance"
+      response: "Voici de l'aide concernant votre demande."
+      separator: "`"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+    - condition: startswith
+      startsWith:
+        - "bonjour"
+        - "salut"
+      response: "Bonjour ! Comment puis-je vous aider ?"
+      separator: "*"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+    - condition: endswith
+      endsWith:
+        - "merci"
+        - "merci beaucoup"
+      response: "Je vous en prie !"
+      separator: "**"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+    - condition: exact
+      exact:
+        - "quel est ton but ?"
+        - "que peux tu faire ?"
+      response: "Je peux vous assister dans diverses tâches et répondre à vos questions."
+      separator: "`"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+    - condition: strict
+      strict:
+        - "Ping"
+        - "Pong"
+      response: "Pong"
+      separator: "`"
+      ignoreMembers: []
+      ignoreRoles: []
+      requiredRoles: []
+
+autoResponsesEmbed:
+  color: "#2FF200"
+  title: "Réponses Automatisées"
+  description: "Q : {question}\nR : {answer}\n\n"
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+  #  footer:
+  #    text: ""
+  #    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
