@@ -33,8 +33,6 @@ const { unclaimTicket } = require("../utils/ticketUnclaim.js");
 const { transcriptTicket } = require("../utils/ticketTranscript.js");
 const { getFeedback } = require("../utils/ticketFeedback.js");
 const { createTicket } = require("../utils/ticketCreate.js");
-const dotenv = require("dotenv");
-dotenv.config({ quiet: true });
 const buttonCooldown = new Map();
 const moment = require("moment-timezone");
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;

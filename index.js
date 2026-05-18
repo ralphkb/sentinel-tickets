@@ -86,81 +86,86 @@ if (config.statsChannels.enabled) {
   setInterval(updateStatsChannels, statsIntervalMs);
 }
 
-// Holding commands cooldown data
-client.cooldowns = new Collection();
-
 // Reading command files
 client.commands = new Collection();
-const commandFolders = fs.readdirSync("./commands");
-for (const folder of commandFolders) {
-  const commandFiles = fs
-    .readdirSync(`./commands/${folder}`)
-    .filter((file) => file.endsWith(".js"));
-  for (const file of commandFiles) {
-    const command = require(`./commands/${folder}/${file}`);
-    if (command.enabled) {
-      if (!config.silentStartup) {
-        console.log(`The slash command [${file}] has been loaded!`);
+client.cooldowns = new Collection();
+
+async function init() {
+  const commandFolders = await fs.promises.readdir("./commands");
+  await Promise.all(
+    commandFolders.map(async (folder) => {
+      const commandFiles = (
+        await fs.promises.readdir(`./commands/${folder}`)
+      ).filter((file) => file.endsWith(".js"));
+      for (const file of commandFiles) {
+        const command = require(`./commands/${folder}/${file}`);
+        if (command.enabled) {
+          if (!config.silentStartup) {
+            console.log(`The slash command [${file}] has been loaded!`);
+          }
+          client.commands.set(command.data.name, command);
+        }
       }
-      client.commands.set(command.data.name, command);
+    }),
+  );
+
+  // Reading event files
+  const eventsPath = path.join(__dirname, "events");
+  const eventFiles = (await fs.promises.readdir(eventsPath)).filter((file) =>
+    file.endsWith(".js"),
+  );
+
+  for (const file of eventFiles) {
+    const filePath = path.join(eventsPath, file);
+    const event = require(filePath);
+    if (event.once) {
+      client.once(event.name, (...args) => event.execute(...args));
+    } else {
+      client.on(event.name, (...args) => event.execute(...args));
     }
   }
-}
 
-// Reading event files
-const eventsPath = path.join(__dirname, "events");
-const eventFiles = fs
-  .readdirSync(eventsPath)
-  .filter((file) => file.endsWith(".js"));
-
-for (const file of eventFiles) {
-  const filePath = path.join(eventsPath, file);
-  const event = require(filePath);
-  if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args));
-  } else {
-    client.on(event.name, (...args) => event.execute(...args));
-  }
-}
-
-// Error handlers
-client.on("warn", async (error) => {
-  console.log(error);
-  await logError("WARN", error);
-});
-
-client.on("error", async (error) => {
-  console.log(error);
-  await logError("ERROR", error);
-});
-
-process.on("unhandledRejection", async (error) => {
-  console.log(error);
-  await logError("unhandledRejection", error);
-});
-
-process.on("uncaughtException", async (error) => {
-  console.log(error);
-  await logError("uncaughtException", error);
-});
-
-// Log in to Discord with your app's token
-client.login(process.env.BOT_TOKEN).catch(async (error) => {
-  if (error.message.includes("An invalid token was provided")) {
+  // Error handlers
+  client.on("warn", async (error) => {
     console.log(error);
-    await logError("INVALID_TOKEN", error);
-    process.exit();
-  } else if (
-    error.message.includes(
-      "Privileged intent provided is not enabled or whitelisted.",
-    )
-  ) {
-    console.log(error);
-    await logError("DISALLOWED_INTENTS", error);
-    process.exit();
-  } else {
+    await logError("WARN", error);
+  });
+
+  client.on("error", async (error) => {
     console.log(error);
     await logError("ERROR", error);
-    process.exit();
-  }
-});
+  });
+
+  process.on("unhandledRejection", async (error) => {
+    console.log(error);
+    await logError("unhandledRejection", error);
+  });
+
+  process.on("uncaughtException", async (error) => {
+    console.log(error);
+    await logError("uncaughtException", error);
+  });
+
+  // Log in to Discord with your app's token
+  client.login(process.env.BOT_TOKEN).catch(async (error) => {
+    if (error.message.includes("An invalid token was provided")) {
+      console.log(error);
+      await logError("INVALID_TOKEN", error);
+      process.exit();
+    } else if (
+      error.message.includes(
+        "Privileged intent provided is not enabled or whitelisted.",
+      )
+    ) {
+      console.log(error);
+      await logError("DISALLOWED_INTENTS", error);
+      process.exit();
+    } else {
+      console.log(error);
+      await logError("ERROR", error);
+      process.exit();
+    }
+  });
+}
+
+init();

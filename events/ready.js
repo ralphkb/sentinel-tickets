@@ -1,10 +1,9 @@
 const { Events, ActivityType } = require("discord.js");
-const dotenv = require("dotenv");
-dotenv.config({ quiet: true });
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 const { client, mainDB } = require("../init.js");
 const { logMessage } = require("../utils/mainUtils.js");
+const crypto = require("crypto");
 
 module.exports = {
   name: Events.ClientReady,
@@ -13,36 +12,19 @@ module.exports = {
       const rest = new REST({
         version: "10",
       }).setToken(process.env.BOT_TOKEN);
-      const commands = Array.from(client.commands.values()).map((command) =>
-        command.data.toJSON(),
-      );
+      const commands = Array.from(client.commands.values())
+        .map((command) => command.data.toJSON())
+        .sort((a, b) => a.name.localeCompare(b.name));
 
       (async () => {
         try {
-          // Get the previously registered slash commands
-          const registeredCommands = await rest.get(
-            Routes.applicationGuildCommands(
-              process.env.CLIENT_ID,
-              process.env.GUILD_ID,
-            ),
-          );
+          const commandsHash = crypto
+            .createHash("md5")
+            .update(JSON.stringify(commands))
+            .digest("hex");
+          const lastHash = await mainDB.get("commandsHash");
 
-          const newCommands = commands.filter((command) => {
-            return !registeredCommands.some((registeredCommand) => {
-              return registeredCommand.name === command.name;
-            });
-          });
-
-          const removedCommands = registeredCommands.filter(
-            (registeredCommand) => {
-              return !commands.some((command) => {
-                return command.name === registeredCommand.name;
-              });
-            },
-          );
-
-          // Register the new slash commands if there are any
-          if (newCommands.length > 0) {
+          if (lastHash !== commandsHash) {
             await rest.put(
               Routes.applicationGuildCommands(
                 process.env.CLIENT_ID,
@@ -53,33 +35,13 @@ module.exports = {
               },
             );
 
-            console.log("New slash commands registered successfully.");
-            console.log(commands.map((command) => command.name));
+            await mainDB.set("commandsHash", commandsHash);
+            console.log("Slash commands registered successfully.");
           } else {
             if (!config.silentStartup) {
-              console.log("No new slash commands to register.");
-            }
-          }
-
-          // Remove the existing slash commands if there are any
-          if (removedCommands.length > 0) {
-            await Promise.all(
-              removedCommands.map((command) =>
-                rest.delete(
-                  Routes.applicationGuildCommand(
-                    process.env.CLIENT_ID,
-                    process.env.GUILD_ID,
-                    command.id,
-                  ),
-                ),
-              ),
-            );
-
-            console.log("Existing slash commands removed successfully.");
-            console.log(removedCommands.map((command) => command.name));
-          } else {
-            if (!config.silentStartup) {
-              console.log("No existing slash commands to remove.");
+              console.log(
+                "No changes detected in slash commands, skipping registration.",
+              );
             }
           }
         } catch (error) {
@@ -114,28 +76,33 @@ module.exports = {
       }
 
       client.user.setPresence(presence);
-      // Delete any possible leftover claim keys
-      const keysToDelete = (await mainDB.startsWith("isClaimInProgress")).map(
-        ({ id }) => id,
-      );
-      await Promise.all(
-        keysToDelete.map(async (key) => {
-          await mainDB.delete(key);
-        }),
-      );
-      // Convert openTickets from an array to a number - from older versions
-      const openTickets = (await mainDB.get("openTickets")) ?? 0;
-      if (Array.isArray(openTickets)) {
-        await mainDB.set("openTickets", openTickets.length);
-      }
+
+      // Startup cleanup tasks in parallel
+      await Promise.all([
+        (async () => {
+          // Delete any possible leftover claim keys
+          const keysToDelete = (
+            await mainDB.startsWith("isClaimInProgress")
+          ).map(({ id }) => id);
+          await Promise.all(keysToDelete.map((key) => mainDB.delete(key)));
+        })(),
+        (async () => {
+          // Convert openTickets from an array to a number - from older versions
+          const openTickets = (await mainDB.get("openTickets")) ?? 0;
+          if (Array.isArray(openTickets)) {
+            await mainDB.set("openTickets", openTickets.length);
+          }
+        })(),
+      ]);
+
       const totalCommands = client.commands.size;
       const now = Date.now();
       const startupTime = (now - client.startingTime) / 1000;
       console.log(
-        `The ticket bot is now ready! Logged in as ${client.user.tag}. Startup time was ${startupTime.toFixed(2)} seconds. A total of ${totalCommands} commands were registered.`,
+        `The ticket bot is now ready! Logged in as ${client.user.tag}. Startup time was ${startupTime.toFixed(2)} seconds. A total of ${totalCommands} commands were loaded.`,
       );
       await logMessage(
-        `The ticket bot is now ready! Logged in as ${client.user.tag}. Startup time was ${startupTime.toFixed(2)} seconds. A total of ${totalCommands} commands were registered.`,
+        `The ticket bot is now ready! Logged in as ${client.user.tag}. Startup time was ${startupTime.toFixed(2)} seconds. A total of ${totalCommands} commands were loaded.`,
       );
     } catch (error) {
       error.errorContext = `[Ready Event Error]: an error occurred during initialization`;
