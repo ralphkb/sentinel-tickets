@@ -1,7 +1,7 @@
 {
   "name": "sentinel-tickets",
   "private": true,
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "A free and open source discord tickets bot that has no watermark and bloat.",
   "main": "index.js",
   "scripts": {
@@ -20,18 +20,18 @@
   "license": "MIT",
   "dependencies": {
     "@discordjs/rest": "^2.6.1",
-    "better-sqlite3": "^12.9.0",
+    "better-sqlite3": "^12.10.0",
     "discord-html-transcripts": "^3.2.0",
     "discord.js": "^14.26.4",
     "dotenv": "^17.4.2",
     "moment-timezone": "^0.6.2",
     "quick.db": "^9.1.7",
-    "yaml": "^2.8.4"
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.6.0",
     "prettier": "^3.8.3"
