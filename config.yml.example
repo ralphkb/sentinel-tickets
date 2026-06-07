@@ -57,6 +57,15 @@ statsChannels:
       name: "Average Rating: {stats}/5.0"
 
 # ==============================================
+# Staff Thread / Notes Settings
+# ==============================================
+staffNotes:
+  enabled: false # If enabled, a private staff notes thread will be created alongside every ticket
+  name: "staff-notes" # The name of the private thread
+  welcomeMessage: "This is a private discussion thread for staff members. Use this to discuss the ticket or keep notes behind the scenes. Avoid mentioning the user in this private thread otherwise Discord will add them here." # Welcome message sent inside the thread
+  autoArchive: true # If enabled, the private thread will be automatically archived when the ticket closes and unarchived when reopened
+
+# ==============================================
 # Ticket Category settings
 # ==============================================
 

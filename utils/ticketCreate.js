@@ -377,6 +377,56 @@ async function createTicket(
 
             const creationTime = Math.floor(new Date().getTime() / 1000);
 
+            let staffThreadID = "";
+            if (config.staffNotes?.enabled) {
+              try {
+                const threadName = config.staffNotes.name || "staff-notes";
+                const thread = await channel.threads.create({
+                  name: threadName,
+                  type: ChannelType.PrivateThread,
+                  reason: "Staff discussion thread for ticket",
+                });
+                staffThreadID = thread.id;
+
+                const welcomeMessage =
+                  config.staffNotes.welcomeMessage ||
+                  "This is a private discussion thread for staff members. Use this to discuss the ticket/user behind the scenes.";
+                await thread.send({ content: welcomeMessage }).catch(() => {});
+
+                // Add support roles' members in the background
+                const supportRoleIds = category.support_role_ids || [];
+                (async () => {
+                  for (const roleId of supportRoleIds) {
+                    const role = interaction.guild.roles.cache.get(roleId);
+                    if (role) {
+                      try {
+                        const members = await interaction.guild.members.fetch({
+                          role: roleId,
+                        });
+                        for (const [memberId, member] of members) {
+                          if (!member.user.bot && memberId !== interaction.user.id) {
+                            await thread.members.add(memberId).catch(() => {});
+                          }
+                        }
+                      } catch {
+                        // Fallback to cache if fetch fails
+                        role.members.forEach((member) => {
+                          if (!member.user.bot && member.id !== interaction.user.id) {
+                            thread.members.add(member.id).catch(() => {});
+                          }
+                        });
+                      }
+                    }
+                  }
+                })();
+              } catch (threadErr) {
+                console.error(
+                  "Failed to create staff notes thread:",
+                  threadErr,
+                );
+              }
+            }
+
             await ticketsDB.set(`${channel.id}`, {
               userID: interaction.user.id,
               ticketType: category.name,
@@ -390,6 +440,7 @@ async function createTicket(
               addedUsers: [],
               addedRoles: [],
               closedAt: 0,
+              staffThreadID: staffThreadID,
             });
 
             await mainDB.add("openTickets", 1);
@@ -567,7 +618,8 @@ async function createTicket(
 
     // Handle TICKETCOUNT increment: skip 1488 on servers with Discovery enabled
     const incrementAmount =
-      TICKETCOUNT === 1487 && interaction.guild.features.includes("DISCOVERABLE")
+      TICKETCOUNT === 1487 &&
+      interaction.guild.features.includes("DISCOVERABLE")
         ? 2
         : 1;
     await mainDB.add("totalTickets", incrementAmount);

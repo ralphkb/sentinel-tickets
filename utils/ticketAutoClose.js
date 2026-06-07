@@ -284,6 +284,18 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
   await ticketsDB.set(`${channelID}.status`, "Closed");
   await ticketsDB.set(`${channelID}.closedAt`, Date.now());
   await mainDB.sub("openTickets", 1);
+
+  const staffThreadID = await ticketsDB.get(`${channelID}.staffThreadID`);
+  if (staffThreadID && (config.staffNotes?.autoArchive ?? true)) {
+    try {
+      const thread = await ticketChannel.guild.channels.fetch(staffThreadID).catch(() => null);
+      if (thread) {
+        await thread.setArchived(true, "Ticket auto-closed").catch(() => {});
+      }
+    } catch (err) {
+      console.error("Failed to archive staff notes thread on ticket auto close:", err);
+    }
+  }
   let logChannelId = config.logs.ticketClose || config.logs.default;
   let logsChannel = await getChannel(logChannelId);
   if (config.toggleLogs.ticketClose) {

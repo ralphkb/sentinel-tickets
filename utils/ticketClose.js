@@ -295,6 +295,18 @@ async function closeTicket(interaction, reason = "No reason provided.") {
   await ticketsDB.set(`${interaction.channel.id}.status`, "Closed");
   await ticketsDB.set(`${interaction.channel.id}.closedAt`, Date.now());
   await mainDB.sub("openTickets", 1);
+
+  const staffThreadID = await ticketsDB.get(`${interaction.channel.id}.staffThreadID`);
+  if (staffThreadID && (config.staffNotes?.autoArchive ?? true)) {
+    try {
+      const thread = await interaction.guild.channels.fetch(staffThreadID).catch(() => null);
+      if (thread) {
+        await thread.setArchived(true, "Ticket closed").catch(() => {});
+      }
+    } catch (err) {
+      console.error("Failed to archive staff notes thread on ticket close:", err);
+    }
+  }
   let logChannelId = config.logs.ticketClose || config.logs.default;
   let logsChannel = await getChannel(logChannelId);
   if (config.toggleLogs.ticketClose) {
