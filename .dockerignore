@@ -1,0 +1,29 @@
+# Dependency directories
+node_modules/
+
+# Local databases & user data
+data/
+*.sqlite
+
+# User configurations and environment files (should be manually configured instead of included)
+config.yml
+locale.yml
+.env
+
+# Log files
+logs.txt
+
+# Version control and editor files
+.git/
+.github/
+.vscode/
+
+# Linters and formatters
+eslint.config.cjs
+.prettierignore
+.prettierrc.json
+
+# Docker files
+Dockerfile
+docker-compose*.yml
+

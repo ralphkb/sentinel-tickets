@@ -1,0 +1,34 @@
+services:
+  sentinel-tickets:
+    # Pre-built image from GitHub Container Registry (recommended)
+    # To build locally from source instead, replace the image line with: build: .
+    image: ghcr.io/ralphkb/sentinel-tickets:latest
+    container_name: sentinel-tickets
+    restart: unless-stopped
+
+    # Load env variables from the local .env file
+    env_file:
+      - .env
+
+    # Mount configuration files and databases
+    # IMPORTANT: Ensure config.yml, locale.yml, logs.txt, and .env exist on your host machine before starting!
+    volumes:
+      - ./config.yml:/app/config.yml
+      - ./locale.yml:/app/locale.yml
+      - ./data:/app/data
+      - ./logs.txt:/app/logs.txt
+
+    # Limit log file growth on the host Docker daemon
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Basic liveness check, confirms the Node.js process is responsive
+    healthcheck:
+      test: ["CMD", "node", "-e", "process.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

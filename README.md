@@ -29,6 +29,7 @@ This is a free project that I enjoy working on in my free time. Our current spon
 ## Table of Contents
 - [🛠️ Installation](#installation)
 - [🔄 Updating](#updating)
+- [🐳 Docker Setup (Alternative)](#docker-setup-alternative)
 - [🐛 Bug Reporting](#bug-reporting)
 - [✨ Features](#features)
 - [📚 Documentation](#documentation)
@@ -48,9 +49,61 @@ This is a free project that I enjoy working on in my free time. Our current spon
 1. Make a backup of your current bot directory in case of issues so you have the option to revert back.
 2. Make sure not to delete your `data` directory otherwise you might run into issues with tickets that you did not delete yet.
 3. Download the new release/files and replace the current files with the ones you downloaded.
-4. If you already followed the installation process, you can use the latest `config.yml.example` you downloaded to manually add any new config options to your `config.yml`.
+4. If you already followed the installation process, use the latest `config.yml.example` and `locale.yml.example` you downloaded to manually add any new config or localization options to your `config.yml` and `locale.yml`.
 5. If any dependencies got updated, you will have to delete your `node_modules` directory and run `npm install` again after you've already uploaded the new files.
 6. Start the updated bot using `npm start`
+
+## 🐳 Docker Setup (Alternative)
+
+Using Docker allows you to run and update the bot without having to install Node.js or C++ build tools (required for compiles) directly on your host machine.
+
+You can run the bot in two ways:
+* **Option A: Pre-built Docker Image (Recommended & Easiest)**: Runs the bot using a pre-packaged image hosted on GitHub Container Registry. Updating requires running a simple command.
+* **Option B: Building from Source**: Builds the image locally using the repository files and the provided `Dockerfile`.
+
+---
+
+### Option A: Using the Pre-built Docker Image (Recommended)
+
+#### Installation
+1. Ensure you have **Docker** and **Docker Compose** installed on your system.
+2. Create a new folder on your server (e.g., `sentinel-tickets`) and download `docker-compose.yml`, `.env.example`, `config.yml.example`, and `locale.yml.example` into it.
+3. Set up your configuration files:
+   - Copy `.env.example` to `.env` and fill in your Discord token, guild ID, and client ID.
+   - Copy `config.yml.example` to `config.yml` and configure your bot settings.
+   - Copy `locale.yml.example` to `locale.yml` and configure your locale file.
+   - Create an empty file named `logs.txt` (e.g. `touch logs.txt` on Linux/macOS or create a new text file named `logs.txt` on Windows). This is necessary to mount and persist the bot's logs.
+4. Start the bot: `docker compose up -d`
+
+#### Updating
+To update the bot when a new version is released:
+1. Pull the newest image version: `docker compose pull`
+2. If new options were added to `config.yml.example` or `locale.yml.example` in the release, manually copy those new keys/values into your existing `config.yml` or `locale.yml`.
+3. Restart the container: `docker compose up -d`  
+   *(Note: Your tickets and user databases inside the `data/` folder, as well as your logs, will be safely preserved since they are mounted outside the container)*
+
+---
+
+### Option B: Building the Docker Image from Source
+
+#### Installation
+1. Ensure you have **Docker** and **Docker Compose** installed on your system.
+2. Clone this repository or download the latest release files to a folder on your server.
+3. Open the `docker-compose.yml` file and replace the `image:` line with: `build: .`
+4. Set up your configuration files:
+   - Copy `.env.example` to `.env` and fill in your Discord token, guild ID, and client ID.
+   - Copy `config.yml.example` to `config.yml` and configure your bot settings.
+   - Copy `locale.yml.example` to `locale.yml` and configure your locale file.
+   - Create an empty file named `logs.txt` (e.g. `touch logs.txt` on Linux/macOS or create a new text file named `logs.txt` on Windows). This is necessary to mount and persist the bot's logs.
+5. Run the following command to build the image and start the bot: `docker compose up -d`
+
+#### Updating
+When you want to update the bot:
+1. Stop and remove the current container: `docker compose down`
+2. Pull the latest code updates (or download the latest release files, replacing the files except `config.yml`, `locale.yml`, `.env`, `logs.txt`, and the `data/` folder).
+3. If new options were added to `config.yml.example` or `locale.yml.example` in the update, manually copy those new keys/values into your existing `config.yml` or `locale.yml`.
+4. Rebuild and restart the container: `docker compose up --build -d`  
+   *(Note: Your tickets and user databases inside the `data/` folder, as well as your logs, will be safely preserved since they are mounted outside the container)*
 
 ## Bug Reporting
 - For bug reports, open an issue [here](https://github.com/ralphkb/sentinel-tickets/issues).  
