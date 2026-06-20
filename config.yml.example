@@ -281,6 +281,9 @@ commands:
     enabled: true
     permission: "KickMembers"
     assignPermission: "ManageMessages"
+    updateTopic: true # Update the channel topic when a ticket is claimed or reassigned
+    claimedTopicSuffix: "| 🔒 Claimed by: {claim.tag} ({claim.user})" # Appended to the existing channel topic on claim, use {claim.tag} for the claimer's @mention and {claim.user} for their username. Set to "" to disable.
+    unclaimedTopicSuffix: "| ❌ Unclaimed" # Appended to the existing channel topic on unclaim. Set to "" to disable.
   unclaim:
     enabled: true
     permission: "KickMembers"

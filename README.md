@@ -53,7 +53,7 @@ This is a free project that I enjoy working on in my free time. Our current spon
 5. If any dependencies got updated, you will have to delete your `node_modules` directory and run `npm install` again after you've already uploaded the new files.
 6. Start the updated bot using `npm start`
 
-## 🐳 Docker Setup (Alternative)
+## Docker Setup (Alternative)
 
 Using Docker allows you to run and update the bot without having to install Node.js or C++ build tools (required for compiles) directly on your host machine.
 

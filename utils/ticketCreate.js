@@ -276,9 +276,25 @@ async function createTicket(
         type: ChannelType.GuildText,
         parent: selectedCategoryID,
         rateLimitPerUser: category.slowmode || 0,
-        topic: category.ticketTopic
-          .replace(/\{user\}/g, interaction.user.tag)
-          .replace(/\{type\}/g, category.name),
+        topic: (() => {
+          let t = category.ticketTopic
+            .replace(/\{user\}/g, interaction.user.tag)
+            .replace(/\{type\}/g, category.name);
+          if (
+            config.claimFeature !== false &&
+            config.commands.claim.updateTopic !== false
+          ) {
+            const unclaimedSuffix = (
+              config.commands.claim.unclaimedTopicSuffix !== undefined
+                ? config.commands.claim.unclaimedTopicSuffix
+                : "| ❌ Unclaimed"
+            ).trim();
+            if (unclaimedSuffix) {
+              t = `${t} ${unclaimedSuffix}`;
+            }
+          }
+          return t.slice(0, 1024);
+        })(),
         permissionOverwrites: [
           {
             id: interaction.guild.id,
@@ -404,14 +420,20 @@ async function createTicket(
                           role: roleId,
                         });
                         for (const [memberId, member] of members) {
-                          if (!member.user.bot && memberId !== interaction.user.id) {
+                          if (
+                            !member.user.bot &&
+                            memberId !== interaction.user.id
+                          ) {
                             await thread.members.add(memberId).catch(() => {});
                           }
                         }
                       } catch {
                         // Fallback to cache if fetch fails
                         role.members.forEach((member) => {
-                          if (!member.user.bot && member.id !== interaction.user.id) {
+                          if (
+                            !member.user.bot &&
+                            member.id !== interaction.user.id
+                          ) {
                             thread.members.add(member.id).catch(() => {});
                           }
                         });

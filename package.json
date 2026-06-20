@@ -37,6 +37,6 @@
     "prettier": "^3.8.4"
   },
   "overrides": {
-    "undici": "^6.24.0"
+    "undici": "^6.27.0"
   }
 }

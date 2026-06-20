@@ -207,6 +207,53 @@ async function claimTicket(interaction, targetUser, reason) {
 
       await ticketsDB.set(`${interaction.channel.id}.claimed`, true);
       await ticketsDB.set(`${interaction.channel.id}.claimUser`, staffUser.id);
+
+      // Update the channel topic with claim status if enabled
+      if (
+        config.claimFeature !== false &&
+        config.commands.claim.updateTopic !== false
+      ) {
+        const claimedSuffix =
+          config.commands.claim.claimedTopicSuffix !== undefined
+            ? config.commands.claim.claimedTopicSuffix
+            : "| 🔒 Claimed by: {claim.tag} ({claim.user})";
+
+        if (claimedSuffix) {
+          const unclaimedSuffix = (
+            config.commands.claim.unclaimedTopicSuffix !== undefined
+              ? config.commands.claim.unclaimedTopicSuffix
+              : "| ❌ Unclaimed"
+          ).trim();
+          let baseTopic = (interaction.channel.topic || "").trim();
+
+          // Remove unclaimed suffix if present
+          if (unclaimedSuffix && baseTopic.endsWith(unclaimedSuffix)) {
+            baseTopic = baseTopic.slice(0, -unclaimedSuffix.length).trim();
+          }
+          // Remove any previously set claimed suffix (handles reassignment).
+          // Use the static part before {claim.tag} or {claim.user} as a reliable anchor to trim from.
+          const suffixStaticPrefix = claimedSuffix
+            .split("{claim.user}")[0]
+            .split("{claim.tag}")[0]
+            .trim();
+          if (suffixStaticPrefix) {
+            const idx = baseTopic.lastIndexOf(suffixStaticPrefix);
+            if (idx !== -1) {
+              baseTopic = baseTopic.slice(0, idx).trim();
+            }
+          }
+
+          const newSuffix = claimedSuffix
+            .replace(/\{claim\.tag\}/g, `<@${staffUser.id}>`)
+            .replace(/\{claim\.user\}/g, staffUser.username);
+          const newTopic = baseTopic ? `${baseTopic} ${newSuffix}` : newSuffix;
+          // Discord topic limit is 1024 characters
+          await interaction.channel
+            .setTopic(newTopic.slice(0, 1024))
+            .catch(() => {});
+        }
+      }
+
       if (!isReassignment) {
         await mainDB.add("totalClaims", 1);
       }

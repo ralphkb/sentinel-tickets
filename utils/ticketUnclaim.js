@@ -140,6 +140,53 @@ async function unclaimTicket(interaction, targetUser, reason) {
       await ticketsDB.set(`${interaction.channel.id}.claimed`, false);
       await ticketsDB.set(`${interaction.channel.id}.claimUser`, "");
 
+      // Update the channel topic to reflect unclaimed status if enabled
+      if (
+        config.claimFeature !== false &&
+        config.commands.claim.updateTopic !== false
+      ) {
+        const claimedSuffix = (
+          config.commands.claim.claimedTopicSuffix !== undefined
+            ? config.commands.claim.claimedTopicSuffix
+            : "| 🔒 Claimed by: {claim.tag} ({claim.user})"
+        ).trim();
+        const unclaimedSuffix = (
+          config.commands.claim.unclaimedTopicSuffix !== undefined
+            ? config.commands.claim.unclaimedTopicSuffix
+            : "| ❌ Unclaimed"
+        ).trim();
+
+        let baseTopic = (interaction.channel.topic || "").trim();
+
+        // Remove the claimed suffix using the static prefix before {claim.user} as anchor
+        if (claimedSuffix) {
+          const suffixStaticPrefix = claimedSuffix
+            .split("{claim.user}")[0]
+            .split("{claim.tag}")[0]
+            .trim();
+          if (suffixStaticPrefix) {
+            const idx = baseTopic.lastIndexOf(suffixStaticPrefix);
+            if (idx !== -1) {
+              baseTopic = baseTopic.slice(0, idx).trim();
+            }
+          }
+        }
+
+        if (unclaimedSuffix) {
+          const newTopic = baseTopic
+            ? `${baseTopic} ${unclaimedSuffix}`
+            : unclaimedSuffix;
+          await interaction.channel
+            .setTopic(newTopic.slice(0, 1024))
+            .catch(() => {});
+        } else {
+          // If unclaimedTopicSuffix is empty, just restore the base topic without any suffix
+          await interaction.channel
+            .setTopic(baseTopic.slice(0, 1024))
+            .catch(() => {});
+        }
+      }
+
       let logChannelId = config.logs.ticketUnclaim || config.logs.default;
       let logsChannel = await getChannel(logChannelId);
 
