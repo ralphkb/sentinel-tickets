@@ -1,5 +1,6 @@
 const { MessageFlags } = require("discord.js");
-const { configEmbed, sanitizeInput } = require("./mainUtils.js");
+const { configEmbed, sanitizeInput, getUser } = require("./mainUtils.js");
+const { getNotes } = require("./userNotes.js");
 
 async function userInfo(interaction, member, isEphemeral) {
   if (!member || !interaction.guild.members.cache.has(member.id)) {
@@ -67,6 +68,26 @@ async function userInfo(interaction, member, isEphemeral) {
       value: `> ${joinedAtTimestamp}`,
     },
   ]);
+
+  const notes = await getNotes(user.id);
+  if (notes.length > 0) {
+    const noteLines = await Promise.all(
+      notes.map(async (note, i) => {
+        const staffUser = await getUser(note.addedBy);
+        const staffTag = staffUser
+          ? sanitizeInput(staffUser.username)
+          : "Unknown";
+        const timestamp = `<t:${Math.floor(note.addedAt / 1000)}:R>`;
+        return `**${i + 1}.** ${note.text}\n> Added by **${staffTag}** ${timestamp}`;
+      }),
+    );
+    userInfoEmbed.addFields([
+      {
+        name: config.userInfoEmbed.field_notes || "📋 Staff Notes",
+        value: noteLines.join("\n\n"),
+      },
+    ]);
+  }
 
   await interaction.editReply({
     embeds: [userInfoEmbed],

@@ -1178,6 +1178,7 @@ userInfoEmbed:
   field_roles: "Roles"
   field_createdAt: "Created At"
   field_joinedAt: "Joined At"
+  field_notes: "📋 Staff Notes" # Field shown in the userinfo embed when staff notes exist for this user
 
 # Help command embed
 helpEmbed:

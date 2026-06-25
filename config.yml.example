@@ -375,6 +375,9 @@ commands:
   userInfo:
     enabled: true
     permission: "KickMembers"
+  note:
+    enabled: true
+    permission: "KickMembers" # The permission required to use the note command
 
 contextMenuCommands:
   userInfo:
