@@ -232,17 +232,26 @@ async function reopenTicket(interaction) {
     });
   await ticketsDB.set(`${interaction.channel.id}.status`, "Open");
   await ticketsDB.set(`${interaction.channel.id}.closedAt`, 0);
+  await ticketsDB.set(`${interaction.channel.id}.pending`, false);
+  await ticketsDB.set(`${interaction.channel.id}.lastMessageBy`, "");
   await mainDB.add("openTickets", 1);
 
-  const staffThreadID = await ticketsDB.get(`${interaction.channel.id}.staffThreadID`);
+  const staffThreadID = await ticketsDB.get(
+    `${interaction.channel.id}.staffThreadID`,
+  );
   if (staffThreadID && (config.staffNotes?.autoArchive ?? true)) {
     try {
-      const thread = await interaction.guild.channels.fetch(staffThreadID).catch(() => null);
+      const thread = await interaction.guild.channels
+        .fetch(staffThreadID)
+        .catch(() => null);
       if (thread) {
         await thread.setArchived(false, "Ticket reopened").catch(() => {});
       }
     } catch (err) {
-      console.error("Failed to unarchive staff notes thread on ticket reopen:", err);
+      console.error(
+        "Failed to unarchive staff notes thread on ticket reopen:",
+        err,
+      );
     }
   }
   await interaction.editReply({ embeds: [reopenEmbed] });

@@ -838,6 +838,62 @@ logUnclaimedEmbed:
   field_staff: "• Staff"
   field_ticket: "• Ticket"
 
+# Pending ticket embed
+pendingEmbed:
+  ephemeral: false
+  color: "#FFA500"
+  title: "Ticket Set to Pending"
+  description: "This ticket has been set to **pending** by **{user}**.\nIt has been moved to the pending queue until further action is taken." # Use {user} for the user such as @User and {user.tag} for the name of the user without it being mentioned such as User
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: "Moved by {user.tag}"
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Unpending ticket embed
+unpendingEmbed:
+  ephemeral: false
+  color: "#2FF200"
+  title: "Ticket Moved to Active"
+  description: "This ticket has been moved back to the active queue by **{user}**." # Use {user} for the user such as @User and {user.tag} for the name of the user without it being mentioned such as User
+  timestamp: true
+  URL: ""
+  image: ""
+  thumbnail: ""
+#  footer:
+#    text: "Moved by {user.tag}"
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+
+# Log embed for pending tickets
+logPendingEmbed:
+  color: "#FFA500"
+  title: "Ticket Logs | Ticket Pending Status Changed"
+  description: ""
+  timestamp: true
+  URL: ""
+  image: ""
+#  thumbnail: ""
+#  footer:
+#    text: ""
+#    iconURL: ""
+  author:
+    name: ""
+    iconURL: ""
+    url: ""
+  field_staff: "• Staff"
+  field_ticket: "• Ticket"
+  field_status: "• Status"
+
 # Close ticket embed
 closeEmbed:
   color: "#FF2400"

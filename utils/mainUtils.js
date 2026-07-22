@@ -136,6 +136,12 @@ const findAvailableCategory = async (categoryIDs) => {
   }
   for (const categoryID of categoryIDs) {
     const category = await getChannel(categoryID);
+    if (!category) continue;
+    try {
+      await category.fetch();
+    } catch {
+      continue;
+    }
     const channelCount = category.children.cache.size;
     if (channelCount < 50) {
       return categoryID;
@@ -143,6 +149,52 @@ const findAvailableCategory = async (categoryIDs) => {
   }
   return null; // No available category found
 };
+
+const ticketLocks = new Map();
+
+async function withTicketLock(channelId, fn) {
+  if (ticketLocks.has(channelId)) return null;
+  ticketLocks.set(channelId, true);
+  try {
+    return await fn();
+  } finally {
+    ticketLocks.delete(channelId);
+  }
+}
+
+async function moveTicketToCategory(
+  channel,
+  categoryIDs,
+  { pending, lastMessageBy, logTag, onMissingCategory },
+) {
+  return withTicketLock(channel.id, async () => {
+    const targetCategoryID = await findAvailableCategory(categoryIDs);
+    if (!targetCategoryID) {
+      if (onMissingCategory) {
+        try {
+          await onMissingCategory(channel, logTag);
+        } catch {
+          // Best-effort user notification; don't block the lock release
+        }
+      } else {
+        console.error(
+          `[moveTicket] No available category found for ticket #${channel.name} (${logTag}).`,
+        );
+      }
+      return false;
+    }
+    await channel.setParent(targetCategoryID, { lockPermissions: false });
+    await ticketsDB.set(`${channel.id}`, {
+      ...(await ticketsDB.get(channel.id)),
+      pending,
+      lastMessageBy,
+    });
+    if (logTag) {
+      await logMessage(logTag);
+    }
+    return true;
+  });
+}
 
 async function getPermissionOverwrites(
   permissions,
@@ -840,6 +892,8 @@ module.exports = {
   getRole,
   getChannel,
   findAvailableCategory,
+  withTicketLock,
+  moveTicketToCategory,
   getPermissionOverwrites,
   configEmbed,
   saveTranscript,

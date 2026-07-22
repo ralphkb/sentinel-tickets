@@ -40,6 +40,8 @@ autoDeleteTickets:
   enabled: false # Enable or disable automatically deleting closed tickets
   interval: "60" # The interval in seconds for the automatic ticket delete task to run
   time: "86400" # The amount of time in seconds from the ticket "closed at" time before the ticket gets automatically deleted. For example, if this is specified as 1 day in seconds, the ticket will be deleted if it was closed 1 day ago without it being reopened by anyone. Default time is 1 day.
+autoPending:
+  enabled: false # Enable or disable the automatic pending lifecycle. When enabled, the bot watches messages in ticket channels and automatically moves the ticket to the pending category when a staff member replies (waiting on user), and back to the active category when the ticket creator replies (needs staff attention). Disabled by default to avoid surprising existing setups.
 onUserLeave: "close" # The automated action the bot will take when a user leaves the server while having a ticket open, can be "close" or "delete" which will either automatically close or delete their ticket, you may also put it as "none" to disable the automation
 addUsersBack: true # When enabled, the bot will add users back to any ticket they created that still exists in the server, works for both open and closed tickets. Note that this will also give the users "ViewChannel" and "ReadMessageHistory" permissions if they were added back to a closed ticket.
 statsChannels:
@@ -378,6 +380,10 @@ commands:
   note:
     enabled: true
     permission: "KickMembers" # The permission required to use the note command
+  pending:
+    enabled: false
+    permission: "KickMembers" # The permission required to use the pending command
+    pendingCategoryID: [] # The IDs of the Discord categories where pending tickets will be moved, for example ["000000000000000000", "111111111111111111"]. Supports multiple for overflow, just like categoryID.
 
 contextMenuCommands:
   userInfo:
@@ -546,6 +552,7 @@ toggleLogs:
   ticketClaim: true
   ticketUnclaim: true
   ticketMove: true
+  ticketPending: true
   ticketRename: true
   ticketTopic: true
   ticketTransfer: true
@@ -574,6 +581,7 @@ logs:
   ticketClaim: ""
   ticketUnclaim: ""
   ticketMove: ""
+  ticketPending: ""
   ticketRename: ""
   ticketTopic: ""
   ticketTransfer: ""
