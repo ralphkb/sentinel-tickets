@@ -1,7 +1,7 @@
 const { Collection } = require("discord.js");
 require("dotenv").config({ quiet: true });
 const path = require("path");
-const { client, ticketsDB } = require("./init.js");
+const { client, ticketsDB, mainDB } = require("./init.js");
 const {
   cleanBlacklist,
   logError,
@@ -12,6 +12,45 @@ const { autoCloseTicket } = require("./utils/ticketAutoClose.js");
 const { autoDeleteTicket } = require("./utils/ticketAutoDelete.js");
 const fs = require("fs");
 client.startingTime = Date.now();
+
+// Clean up all stale claim locks on startup
+async function cleanupStaleClaimLocks() {
+  try {
+    console.log("[Startup] Cleaning up stale claim locks...");
+    const allKeys = await mainDB.all();
+    const claimKeys = allKeys.filter((entry) =>
+      entry.id.startsWith("isClaimInProgress-"),
+    );
+
+    if (claimKeys.length === 0) {
+      console.log("[Startup] No claim locks found.");
+      return;
+    }
+
+    const claimTimeout = config.claimTimeout || 30000;
+    let cleaned = 0;
+
+    for (const entry of claimKeys) {
+      const lockData = entry.value;
+      const lockAge = Date.now() - (lockData.timestamp || lockData);
+
+      // Clean up any lock older than the timeout
+      if (lockAge > claimTimeout) {
+        await mainDB.delete(entry.id);
+        cleaned++;
+        console.log(
+          `[Startup] Cleaned stale claim lock: ${entry.id} (age: ${Math.floor(lockAge / 1000)}s)`,
+        );
+      }
+    }
+
+    console.log(
+      `[Startup] Claim lock cleanup complete. Removed ${cleaned} stale lock(s).`,
+    );
+  } catch (error) {
+    console.error("[Startup] Error cleaning up claim locks:", error);
+  }
+}
 
 const blacklistInterval = config.blacklistCleanup || 120;
 // Schedule the blacklist cleanup check every blacklistInterval seconds
@@ -91,6 +130,9 @@ client.commands = new Collection();
 client.cooldowns = new Collection();
 
 async function init() {
+  // Clean up stale claim locks before starting
+  await cleanupStaleClaimLocks();
+
   const commandFolders = await fs.promises.readdir("./commands");
   await Promise.all(
     commandFolders.map(async (folder) => {
