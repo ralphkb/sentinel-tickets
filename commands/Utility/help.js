@@ -63,11 +63,21 @@ module.exports = {
           (config.commands.panel?.enabled
             ? "> `/panel` - Send the ticket panel in the channel.\n"
             : "") +
+          (config.commands.pending?.enabled
+            ? "> `/pending` - Toggle a ticket between active and pending status.\n"
+            : "") +
           (config.commands.pin?.enabled
             ? "> `/pin` - Pin the ticket channel in the category.\n"
             : "") +
           (config.commands.priority?.enabled
             ? "> `/priority add` - Add a priority to a ticket.\n> `/priority remove` - Remove the priority from a ticket.\n"
+            : ""),
+      },
+      {
+        name: "",
+        value:
+          (config.commands.remind?.enabled
+            ? "> `/remind` - Send a reminder to the ticket creator.\n"
             : "") +
           (config.commands.remove?.enabled
             ? "> `/remove` - Remove a user or role from a ticket channel.\n"
@@ -80,6 +90,9 @@ module.exports = {
             : "") +
           (config.commands.slowmode?.enabled
             ? "> `/slowmode` - Add slowmode to a ticket channel.\n"
+            : "") +
+          (config.commands.tickets?.enabled
+            ? "> `/tickets` - List the current tickets of a user.\n"
             : "") +
           (config.commands.topic?.enabled
             ? "> `/topic` - Change the topic of a ticket | Placeholders: {user}, {user.tag}, {type}\n"
@@ -95,17 +108,17 @@ module.exports = {
             : ""),
       },
       {
-        name: "🎫 Tickets",
-        value: config.commands.tickets?.enabled
-          ? "> `/tickets` - List the current tickets of a user.\n"
-          : "",
-      },
-      {
         name: "🛠️ Utility",
         value:
           "> `/help` - Get helpful information and commands.\n" +
           (config.commands.blacklist?.enabled
             ? "> `/blacklist add` - Add users or roles to the blacklist.\n> `/blacklist remove` - Remove users or roles from the blacklist.\n> `/blacklist list` - List users or roles currently in the blacklist.\n"
+            : "") +
+          (config.commands.clearclaimlock?.enabled
+            ? "> `/clearclaimlock` - Clear stuck claim locks from a ticket.\n"
+            : "") +
+          (config.commands.note?.enabled
+            ? "> `/note add` - Add a note to a user.\n> `/note list` - List all notes for a user.\n> `/note edit` - Edit an existing note.\n> `/note delete` - Delete a note.\n"
             : "") +
           (config.commands.stats?.enabled
             ? "> `/stats list` - List useful stats.\n > `/stats set` - Adjust some of the statistics.\n"

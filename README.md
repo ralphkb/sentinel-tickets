@@ -144,12 +144,17 @@ Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support.
 - DM preference system, allowing users to toggle their preference regarding receiving DMs from the bot such as alert, close, reopen & delete.
 - The ability to create stats channels that will be automatically updated after a configurable amount of time.
 - The ability to adjust some of the stats in case of migrating from a different bot or due to any inconsistency or issues.
+- User annotation system allowing staff to add, view, edit, and delete notes on users for better support tracking.
+- Pending ticket status system with optional automatic pending lifecycle (moves tickets to pending when staff replies, back to active when user replies).
+- Claim status displayed in ticket channel topics for easy visibility of who's handling each ticket.
+- Private staff notes thread per ticket for internal staff discussion and note-keeping.
 - Multiple Commands: Efficiently manage tickets with various commands.
     - Send the ticket panels in any channel using the panel id
     - Add Users or Roles to a ticket
     - Remove Users or Roles from a ticket
     - Rename Ticket Channel
     - Alert Ticket Creator
+    - Remind Ticket Creator
     - Close Ticket to archive them until deleting them
     - Delete Tickets
     - Re-Open Tickets
@@ -157,12 +162,14 @@ Join my [Discord Server](https://discord.gg/vhXCzj9S3J) for community support.
     - Claim/Unclaim Tickets
     - Move tickets to another category
     - Pin tickets in a category
+    - Set tickets to pending status (waiting on user response)
     - Add a custom slowmode to a ticket
     - Transfer ticket ownership to another user
     - Add a priority to a ticket
     - Change the topic of a ticket, with placeholders support
     - Close Request so users can request that staff close their ticket
     - List current open and closed tickets of a user
+    - Add, view, edit, and delete staff notes on users
 - Context Menu Commands: Right click commands that are easy to use.
     - Get User Info
     - Blacklist Add
