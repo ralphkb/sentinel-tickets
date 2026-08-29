@@ -412,6 +412,9 @@ async function createTicket(
                 // Add support roles' members in the background
                 const supportRoleIds = category.support_role_ids || [];
                 (async () => {
+                  const addedMembers = new Set();
+
+                  // Add members with support roles
                   for (const roleId of supportRoleIds) {
                     const role = interaction.guild.roles.cache.get(roleId);
                     if (role) {
@@ -422,9 +425,11 @@ async function createTicket(
                         for (const [memberId, member] of members) {
                           if (
                             !member.user.bot &&
-                            memberId !== interaction.user.id
+                            memberId !== interaction.user.id &&
+                            !addedMembers.has(memberId)
                           ) {
                             await thread.members.add(memberId).catch(() => {});
+                            addedMembers.add(memberId);
                           }
                         }
                       } catch {
@@ -432,13 +437,42 @@ async function createTicket(
                         role.members.forEach((member) => {
                           if (
                             !member.user.bot &&
-                            member.id !== interaction.user.id
+                            member.id !== interaction.user.id &&
+                            !addedMembers.has(member.id)
                           ) {
                             thread.members.add(member.id).catch(() => {});
+                            addedMembers.add(member.id);
                           }
                         });
                       }
                     }
+                  }
+
+                  // Also add members with Administrator or ManageChannels permissions
+                  try {
+                    const allMembers = await interaction.guild.members.fetch();
+                    for (const [memberId, member] of allMembers) {
+                      if (
+                        !member.user.bot &&
+                        memberId !== interaction.user.id &&
+                        !addedMembers.has(memberId) &&
+                        (member.permissions.has(
+                          PermissionFlagsBits.Administrator,
+                        ) ||
+                          member.permissions.has(
+                            PermissionFlagsBits.ManageChannels,
+                          ))
+                      ) {
+                        await thread.members.add(memberId).catch(() => {});
+                        addedMembers.add(memberId);
+                      }
+                    }
+                  } catch (err) {
+                    // If fetching all members fails, continue with support role members only
+                    console.error(
+                      "Failed to fetch members with admin permissions for staff thread:",
+                      err,
+                    );
                   }
                 })();
               } catch (threadErr) {
