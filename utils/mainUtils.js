@@ -36,7 +36,10 @@ async function logMessage(message) {
 
 async function checkSupportRole(interaction) {
   const foundId = await ticketsDB.get(`${interaction.channel.id}.button`);
-  const allowedRoles = ticketCategories[foundId].support_role_ids;
+  const allowedRoles = ticketCategories[foundId]?.support_role_ids;
+  if (!allowedRoles) {
+    return false;
+  }
   return interaction.member.roles.cache.some((role) =>
     allowedRoles.includes(role.id),
   );

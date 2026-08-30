@@ -206,12 +206,17 @@ module.exports = {
       } catch (error) {
         error.errorContext = `[InteractionCreate]: an error occurred while executing the ${command.data.name} command.`;
         client.emit("error", error);
-        await interaction.editReply({
+        const commandErrorReply = {
           content:
             config.errors.command_error ||
             "There was an error while executing this command!",
           flags: MessageFlags.Ephemeral,
-        });
+        };
+        if (interaction.deferred || interaction.replied) {
+          await interaction.editReply(commandErrorReply);
+        } else {
+          await interaction.reply(commandErrorReply);
+        }
       }
     } else if (interaction.isStringSelectMenu()) {
       if (interaction.customId === "categoryMenu") {

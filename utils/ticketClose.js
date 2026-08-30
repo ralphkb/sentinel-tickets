@@ -20,12 +20,23 @@ const {
 } = require("./mainUtils.js");
 
 async function closeTicket(interaction, reason = "No reason provided.") {
+  const ticketCreatorID = await ticketsDB.get(
+    `${interaction.channel.id}.userID`,
+  );
+  const ticketUserID = ticketCreatorID ? await getUser(ticketCreatorID) : null;
+  if (!ticketUserID) {
+    await logMessage(
+      `Could not close the ticket in channel ${interaction.channel.id}: its database entry has no creator, or the creator could not be fetched.`,
+    );
+    await interaction.editReply({
+      content:
+        "The ticket data for this channel is missing, so it cannot be closed. Delete the channel manually instead.",
+    });
+    return;
+  }
   await ticketsDB.set(
     `${interaction.channel.id}.closeUserID`,
     interaction.user.id,
-  );
-  const ticketUserID = await getUser(
-    await ticketsDB.get(`${interaction.channel.id}.userID`),
   );
   const claimUserID = await ticketsDB.get(
     `${interaction.channel.id}.claimUser`,
