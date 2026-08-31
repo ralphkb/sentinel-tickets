@@ -448,10 +448,11 @@ async function createTicket(
                     }
                   }
 
-                  // Also add members with Administrator or ManageChannels permissions
+                  // Also add members with Administrator or ManageChannels permissions from cache
                   try {
-                    const allMembers = await interaction.guild.members.fetch();
-                    for (const [memberId, member] of allMembers) {
+                    // Use cached members only to avoid rate limits
+                    const cachedMembers = interaction.guild.members.cache;
+                    for (const [memberId, member] of cachedMembers) {
                       if (
                         !member.user.bot &&
                         memberId !== interaction.user.id &&
@@ -468,9 +469,9 @@ async function createTicket(
                       }
                     }
                   } catch (err) {
-                    // If fetching all members fails, continue with support role members only
+                    // If checking cached members fails, continue with support role members only
                     console.error(
-                      "Failed to fetch members with admin permissions for staff thread:",
+                      "Failed to add members with admin permissions to staff thread:",
                       err,
                     );
                   }
