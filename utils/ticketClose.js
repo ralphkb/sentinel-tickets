@@ -23,14 +23,30 @@ async function closeTicket(interaction, reason = "No reason provided.") {
   const ticketCreatorID = await ticketsDB.get(
     `${interaction.channel.id}.userID`,
   );
-  const ticketUserID = ticketCreatorID ? await getUser(ticketCreatorID) : null;
-  if (!ticketUserID) {
-    await logMessage(
-      `Could not close the ticket in channel ${interaction.channel.id}: its database entry has no creator, or the creator could not be fetched.`,
-    );
+  const ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
+  const category = ticketCategories[ticketButton];
+  if (
+    !ticketCreatorID ||
+    !category ||
+    !Array.isArray(category.support_role_ids) ||
+    !Array.isArray(category.closedCategoryID)
+  ) {
     await interaction.editReply({
       content:
-        "The ticket data for this channel is missing, so it cannot be closed. Delete the channel manually instead.",
+        config.errors.ticket_data_missing ||
+        "The ticket data or category configuration for this channel is missing. Restore it before retrying, or delete the channel manually if it is no longer needed.",
+    });
+    await logMessage(
+      `Could not close the ticket in channel ${interaction.channel.id}: its creator or category configuration is missing.`,
+    );
+    return;
+  }
+  const ticketUserID = await getUser(ticketCreatorID);
+  if (!ticketUserID) {
+    await interaction.editReply({
+      content:
+        config.errors.ticket_creator_unavailable ||
+        "The ticket creator could not be fetched from Discord. No changes were made. Please try again later.",
     });
     return;
   }
@@ -48,8 +64,6 @@ async function closeTicket(interaction, reason = "No reason provided.") {
   const ticketType = await ticketsDB.get(
     `${interaction.channel.id}.ticketType`,
   );
-  const ticketButton = await ticketsDB.get(`${interaction.channel.id}.button`);
-
   const logDefaultValues = {
     color: "#FF2400",
     title: "Ticket Logs | Ticket Closed",
@@ -190,7 +204,6 @@ async function closeTicket(interaction, reason = "No reason provided.") {
     );
   }
 
-  const category = ticketCategories[ticketButton];
   const categoryIDs = category.closedCategoryID;
   const closedCategoryID = await findAvailableCategory(categoryIDs);
   const ticketCreatorPerms = category?.permissions?.ticketCreator;

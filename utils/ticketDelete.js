@@ -21,9 +21,24 @@ const {
 async function deleteTicket(interaction, reason = "No reason provided.") {
   const channelID = interaction.channel.id;
   const channelName = interaction.channel.name;
-  const ticketUserID = await getUser(
-    await ticketsDB.get(`${channelID}.userID`),
-  );
+  const ticketCreatorID = await ticketsDB.get(`${channelID}.userID`);
+  if (!ticketCreatorID) {
+    await interaction.editReply({
+      content:
+        config.errors.ticket_data_missing ||
+        "The ticket data or category configuration for this channel is missing. Restore it before retrying, or delete the channel manually if it is no longer needed.",
+    });
+    return;
+  }
+  const ticketUserID = await getUser(ticketCreatorID);
+  if (!ticketUserID) {
+    await interaction.editReply({
+      content:
+        config.errors.ticket_creator_unavailable ||
+        "The ticket creator could not be fetched from Discord. No changes were made. Please try again later.",
+    });
+    return;
+  }
   const claimUserID = await ticketsDB.get(`${channelID}.claimUser`);
   let claimUser;
 

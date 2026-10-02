@@ -20,10 +20,21 @@ const {
 
 async function autoDeleteTicket(channelID) {
   const ticketChannel = await getChannel(channelID);
+  const ticketCreatorID = await ticketsDB.get(`${channelID}.userID`);
+  if (!ticketChannel || !ticketCreatorID) {
+    await logMessage(
+      `Could not automatically delete ticket ${channelID}: its channel or creator is missing.`,
+    );
+    return;
+  }
+  const ticketUserID = await getUser(ticketCreatorID);
+  if (!ticketUserID) {
+    await logMessage(
+      `Could not automatically delete ticket ${channelID}: its creator could not be fetched from Discord. No changes were made.`,
+    );
+    return;
+  }
   const channelName = ticketChannel.name;
-  const ticketUserID = await getUser(
-    await ticketsDB.get(`${channelID}.userID`),
-  );
   const claimUserID = await ticketsDB.get(`${channelID}.claimUser`);
   let claimUser;
 
