@@ -1480,6 +1480,8 @@ dmErrorEmbed:
 # ==============================================
 
 errors:
+  ticket_data_missing: "The ticket data or category configuration for this channel is missing. Restore it before retrying, or delete the channel manually if it is no longer needed."
+  ticket_creator_unavailable: "The ticket creator could not be fetched from Discord. No changes were made. Please try again later."
   not_in_a_ticket: "You are not in a ticket channel!" # Error displayed when a user tries to use a command in a non-ticket channel
   not_allowed: "You are not allowed to use this!" # Error displayed when a user tries to use a staff-only command, button etc
   command_error: "There was an error while executing this command!" # Error displayed when a slash or context menu command does not work

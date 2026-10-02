@@ -36,7 +36,10 @@ async function logMessage(message) {
 
 async function checkSupportRole(interaction) {
   const foundId = await ticketsDB.get(`${interaction.channel.id}.button`);
-  const allowedRoles = ticketCategories[foundId].support_role_ids;
+  const allowedRoles = ticketCategories[foundId]?.support_role_ids;
+  if (!Array.isArray(allowedRoles) || allowedRoles.length === 0) {
+    return false;
+  }
   return interaction.member.roles.cache.some((role) =>
     allowedRoles.includes(role.id),
   );
@@ -58,6 +61,7 @@ async function addTicketCreator(userID) {
 }
 
 async function getUser(id) {
+  if (!id) return null;
   let user = client.users.cache.get(id);
 
   if (user) {
@@ -75,6 +79,7 @@ async function getUser(id) {
 }
 
 async function getMember(id) {
+  if (!id) return null;
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
   let member = guild.members.cache.get(id);
 

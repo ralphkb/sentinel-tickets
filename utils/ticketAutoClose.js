@@ -21,18 +21,35 @@ const {
 
 async function autoCloseTicket(channelID, creatorLeft = false) {
   const ticketChannel = await getChannel(channelID);
+  const ticketCreatorID = await ticketsDB.get(`${channelID}.userID`);
+  const ticketButton = await ticketsDB.get(`${channelID}.button`);
+  const category = ticketCategories[ticketButton];
+  if (
+    !ticketChannel ||
+    !ticketCreatorID ||
+    !category ||
+    !Array.isArray(category.support_role_ids) ||
+    !Array.isArray(category.closedCategoryID)
+  ) {
+    await logMessage(
+      `Could not automatically close ticket ${channelID}: its channel, creator or category configuration is missing.`,
+    );
+    return;
+  }
+  const ticketUserID = await getUser(ticketCreatorID);
+  if (!ticketUserID) {
+    await logMessage(
+      `Could not automatically close ticket ${channelID}: its creator could not be fetched from Discord. No changes were made.`,
+    );
+    return;
+  }
   await ticketsDB.set(`${channelID}.closeUserID`, "Automation");
-  const ticketUserID = await getUser(
-    await ticketsDB.get(`${channelID}.userID`),
-  );
   const claimUserID = await ticketsDB.get(`${channelID}.claimUser`);
   let claimUser;
   if (claimUserID) {
     claimUser = await getUser(claimUserID);
   }
   const ticketType = await ticketsDB.get(`${channelID}.ticketType`);
-  const ticketButton = await ticketsDB.get(`${channelID}.button`);
-
   const logDefaultValues = {
     color: "#FF2400",
     title: "Ticket Logs | Ticket Closed",
@@ -171,7 +188,6 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
     );
   }
 
-  const category = ticketCategories[ticketButton];
   const categoryIDs = category.closedCategoryID;
   const closedCategoryID = await findAvailableCategory(categoryIDs);
   const ticketCreatorPerms = category?.permissions?.ticketCreator;
@@ -288,12 +304,17 @@ async function autoCloseTicket(channelID, creatorLeft = false) {
   const staffThreadID = await ticketsDB.get(`${channelID}.staffThreadID`);
   if (staffThreadID && (config.staffNotes?.autoArchive ?? true)) {
     try {
-      const thread = await ticketChannel.guild.channels.fetch(staffThreadID).catch(() => null);
+      const thread = await ticketChannel.guild.channels
+        .fetch(staffThreadID)
+        .catch(() => null);
       if (thread) {
         await thread.setArchived(true, "Ticket auto-closed").catch(() => {});
       }
     } catch (err) {
-      console.error("Failed to archive staff notes thread on ticket auto close:", err);
+      console.error(
+        "Failed to archive staff notes thread on ticket auto close:",
+        err,
+      );
     }
   }
   let logChannelId = config.logs.ticketClose || config.logs.default;

@@ -206,12 +206,28 @@ module.exports = {
       } catch (error) {
         error.errorContext = `[InteractionCreate]: an error occurred while executing the ${command.data.name} command.`;
         client.emit("error", error);
-        await interaction.editReply({
+        const commandErrorReply = {
           content:
             config.errors.command_error ||
             "There was an error while executing this command!",
           flags: MessageFlags.Ephemeral,
-        });
+        };
+        try {
+          if (interaction.replied) {
+            await interaction.followUp(commandErrorReply);
+          } else if (interaction.deferred) {
+            await interaction.editReply({
+              content: commandErrorReply.content,
+              embeds: [],
+              components: [],
+            });
+          } else {
+            await interaction.reply(commandErrorReply);
+          }
+        } catch (replyError) {
+          replyError.errorContext = `[InteractionCreate]: failed to send the error response for the ${command.data.name} command.`;
+          client.emit("error", replyError);
+        }
       }
     } else if (interaction.isStringSelectMenu()) {
       if (interaction.customId === "categoryMenu") {
