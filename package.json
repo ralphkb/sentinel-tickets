@@ -24,19 +24,19 @@
     "discord-html-transcripts": "3.2.0",
     "discord.js": "^14.27.0",
     "dotenv": "^17.4.2",
-    "moment-timezone": "^0.6.3",
+    "moment-timezone": "^0.6.4",
     "quick.db": "^9.1.7",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.6",
+    "@eslint/eslintrc": "^3.3.7",
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.8.1",
+    "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.11.0",
-    "prettier": "^3.9.6"
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9"
   },
-    "overrides": {
-    "undici": "^6.28.0"
-    }
+  "overrides": {
+    "undici": "^6.29.0"
+  }
 }
