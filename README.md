@@ -11,21 +11,6 @@ This is a ticket bot that aims to provide a free and open source solution for ma
 ## Requirements
 - Tested on latest Node.js v22
 
-## Sponsor & Commissions
-This is a free project that I enjoy working on in my free time. Our current sponsors are the primary reason for the latest feature additions. As more people sponsor the project, I will be able to justify dedicating more time to implementing features and fixing bugs. If you find value in this project or need specific enhancements, consider the following:
-
-- **Sponsorship**: Help support the project's growth by becoming a sponsor. Reach out via [Discord](https://discord.gg/vhXCzj9S3J) to discuss sponsorship opportunities.
-- **Custom Commissions**: If you want a custom feature tailored to your needs or require **priority work**, you can reach out via [Discord](https://discord.gg/vhXCzj9S3J) for a commission.
-- **Support with a Star**: Even if you can't contribute financially, leaving a star is greatly appreciated! ❤️
-
-## Current Sponsors
-
-<p>
-  <a href="https://foryouhost.fr/">
-    <img src="./sponsors/foryouhost.png" alt="ForYouHost Logo" width="400">
-  </a>
-</p>
-
 ## Table of Contents
 - [🛠️ Installation](#installation)
 - [🔄 Updating](#updating)
